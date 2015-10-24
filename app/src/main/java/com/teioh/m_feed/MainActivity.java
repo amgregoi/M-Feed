@@ -1,19 +1,20 @@
 package com.teioh.m_feed;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.parse.ParseAnonymousUtils;
 import com.parse.ParseUser;
 import com.teioh.m_feed.Adapter.ViewPagerAdapter;
+import com.teioh.m_feed.Fragment.LoginFragment;
 import com.teioh.m_feed.Utils.BusProvider;
 import com.teioh.m_feed.Utils.SlidingTabLayout;
+
 
 /*
  *http://www.androidhive.info/2013/10/android-tab-layout-with-swipeable-views-1/
@@ -40,24 +41,22 @@ public class MainActivity extends AppCompatActivity {
     private CharSequence Titles[] = {"Recent", "Library", "All"};
     private int Numbtabs = 3;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //Determines whether user needs to login/signup
         if (ParseAnonymousUtils.isLinked(ParseUser.getCurrentUser())) {
-            Intent intent = new Intent(MainActivity.this,
-                    LoginActivity.class);
-            startActivity(intent);
-            finish();
+            Fragment fragment = new LoginFragment();
+            getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack("MangaFragment").commit();
+
         } else {
             ParseUser currentUser = ParseUser.getCurrentUser();
             if (currentUser == null) {
                 Intent intent = new Intent(MainActivity.this,
-                        LoginActivity.class);
-                startActivity(intent);
-                finish();
+                        LoginFragment.class);
+                Fragment fragment = new LoginFragment();
+                getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack("MangaFragment").commit();
             }
         }
         setContentView(R.layout.activity_main);
@@ -84,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
         // Setting the ViewPager For the SlidingTabsLayout
         tabs.setViewPager(mViewPager);
 
-
     }
 
     @Override
@@ -103,10 +101,9 @@ public class MainActivity extends AppCompatActivity {
             return true;
         } else if (id == 0) {
             ParseUser.getCurrentUser().logOut();
-            Intent intent = new Intent(MainActivity.this,
-                    LoginActivity.class);
-            startActivity(intent);
-            finish();
+            Fragment fragment = new LoginFragment();
+            getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack("MangaFragment").commit();
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -126,19 +123,4 @@ public class MainActivity extends AppCompatActivity {
         // Always unregister when an object no longer should be on the bus.
         BusProvider.getInstance().unregister(this);
     }
-
-    //trying to solve double back button to exit mangafragment
-    @Override
-    public void onBackPressed() {
-        Log.e("OnbackPrssed", " nerp");
-        Fragment myFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        if (myFragment != null && myFragment.isVisible()) {
-            Log.e("FIXME", "I'm in mainactivity");
-            getSupportFragmentManager().popBackStackImmediate();
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-
 }

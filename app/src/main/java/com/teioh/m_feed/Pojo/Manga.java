@@ -1,17 +1,20 @@
-package com.teioh.m_feed;
+package com.teioh.m_feed.Pojo;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.Date;
 
+//TODO - subclassing parse object
 public class Manga implements Parcelable {
     private String mTitle;
     private String mLatestChapter;
     private String mPicUrl;
-    private Date mLastUpdated;
     private String mMangaUrl;
+    private Date mLastUpdated;
     private String mMangaId;
+    private boolean mFollowing;
+    private int mDBID;
 
     protected Manga(Parcel in) {
         mTitle = in.readString();
@@ -35,6 +38,7 @@ public class Manga implements Parcelable {
             return new Manga[size];
         }
     };
+
 
     public String getTitle() {
         return mTitle;
@@ -100,5 +104,22 @@ public class Manga implements Parcelable {
         dest.writeString(mPicUrl);
         dest.writeString(mMangaUrl);
         dest.writeString(mMangaId);
+    }
+
+    public boolean getFollowing() {
+        return this.mFollowing;
+    }
+
+    public boolean setFollowing(boolean val) {
+        this.mFollowing = val;
+        return this.mFollowing;
+    }
+
+    public int getDBID() {
+        return this.mDBID;
+    }
+
+    public void setDBID(int val) {
+        this.mDBID = val;
     }
 }

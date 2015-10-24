@@ -1,4 +1,4 @@
-package com.teioh.m_feed.Utils;
+package com.teioh.m_feed.Pojo;
 
 public class UpdateListEvent {
 }

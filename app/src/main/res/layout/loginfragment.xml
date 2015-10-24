@@ -6,7 +6,9 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.teioh.m_feed.Login">
+                tools:context="com.teioh.m_feed.Login"
+                android:clickable="true"
+                android:background="@android:color/white">
 
     <EditText
         android:id="@+id/username"
@@ -24,7 +26,8 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:layout_below="@+id/username"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentRight="true"
+        android:gravity="center_horizontal"/>
 
     <Button
         android:id="@+id/login"

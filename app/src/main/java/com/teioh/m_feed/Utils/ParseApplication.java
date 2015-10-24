@@ -14,6 +14,7 @@ public class ParseApplication extends Application {
         super.onCreate();
 
         // Add your initialization code here
+        //ParseObject.registerSubclass(Manga.class);
         Parse.initialize(this, "gr2JB7mjsp4PhtSP0fiiS02XMhQBzO6g3siQJ5nS", "9gtF6Yrz0XWpqvpXT8p7okWCto2e7szOS1oiShCC");
         ParseUser.enableAutomaticUser();
         ParseACL defaultACL = new ParseACL();

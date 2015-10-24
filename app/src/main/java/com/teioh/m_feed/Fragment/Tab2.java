@@ -5,43 +5,55 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import com.parse.ParseException;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.SaveCallback;
 import com.squareup.otto.Subscribe;
 import com.teioh.m_feed.Adapter.SearchableAdapter;
-import com.teioh.m_feed.Manga;
+import com.teioh.m_feed.Pojo.Manga;
+import com.teioh.m_feed.Pojo.RemoveFromLibrary;
+import com.teioh.m_feed.Pojo.UpdateListEvent;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.Utils.BusProvider;
-import com.teioh.m_feed.Utils.UpdateListEvent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class Tab2 extends Fragment implements SearchView.OnQueryTextListener {
 
-    private SearchView mSearchView;
-    private ListView mListView;
+    @Bind(R.id.search_view_2)
+    SearchView mSearchView;
+    @Bind(R.id.library_list_view)
+    ListView mListView;
     private ArrayList<Manga> list;
     private SearchableAdapter mAdapter;
     private parseGetLibrary rdt;
+    private int recentIndexUsed;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.tab3, container, false);
-
+        View v = inflater.inflate(R.layout.tab2, container, false);
         //Initialize variables
         list = new ArrayList<>();
-        mSearchView = (SearchView) v.findViewById(R.id.search_view);
-        mListView = (ListView) v.findViewById(R.id.list_view);
         mAdapter = new SearchableAdapter(getContext(), list);
+        ButterKnife.bind(this, v);
 
         //setup
         mListView.setAdapter(mAdapter);
@@ -53,9 +65,55 @@ public class Tab2 extends Fragment implements SearchView.OnQueryTextListener {
         mSearchView.setQueryHint("Search Here");
         rdt = new parseGetLibrary();
         rdt.execute();
-
-
+        registerForContextMenu(mListView);
         return v;
+
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        if (v.getId() == R.id.library_list_view) {
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+            recentIndexUsed = info.position;
+            menu.setHeaderTitle(list.get(recentIndexUsed).getTitle());
+            String[] menuItems = getResources().getStringArray(R.array.library_item_menu);
+            for (int i = 0; i < menuItems.length; i++) {
+                menu.add(Menu.NONE, i, i, menuItems[i]);
+            }
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem menuItem) {
+        int menuItemIndex = menuItem.getItemId();
+        switch (menuItemIndex) {
+            case 0:
+                ParseInstallation pi = ParseInstallation.getCurrentInstallation();
+                final Manga item = list.get(recentIndexUsed);
+                //TODO - fix this, not removing channel
+                ArrayList<String> channel = new ArrayList<>(Arrays.asList("m_" + item.getMangaId()));
+                ParseInstallation.getCurrentInstallation().removeAll("channels", channel);
+                pi.saveEventually(
+                        new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if (e == null) {
+                                    BusProvider.getInstance().post(new RemoveFromLibrary(item));
+                                } else {
+                                    Log.e("ParseException: fail,  ", e.toString());
+                                }
+                            }
+                        });
+                break;
+            case 1:
+                Log.e("cancel", "i messed up");
+                break;
+            default:
+                break;
+        }
+
+        return true;
     }
 
     @Override
@@ -67,6 +125,57 @@ public class Tab2 extends Fragment implements SearchView.OnQueryTextListener {
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
+    }
+
+    @Subscribe
+    public void onMangaAdded(Manga manga) {
+        Log.i("FOLLOW MANGA", manga.getTitle());
+        for (Manga m : list) {
+            if (m.getMangaId().equals(manga.getMangaId())) {
+                return;
+            }
+        }
+        list.add(manga);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Subscribe
+    public void onMangaAdded(RemoveFromLibrary rm) {
+        Manga manga = rm.getManga();
+        Log.i("UNFOLLOW MANGA", manga.getTitle());
+        for (Manga m : list) {
+            if (m.getMangaId().equals(manga.getMangaId())) {
+                list.remove(m);
+                break;
+            }
+        }
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Subscribe
+    public void onUpdateListEvent(UpdateListEvent event) {
+        //update list
+        //TODO
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        BusProvider.getInstance().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        BusProvider.getInstance().unregister(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (rdt.getStatus() == AsyncTask.Status.RUNNING) {
+            rdt.cancel(true);
+        }
     }
 
     // RemoteDataTask AsyncTask
@@ -102,60 +211,26 @@ public class Tab2 extends Fragment implements SearchView.OnQueryTextListener {
                         manga.setLastUpdate(d);
                         manga.setMangaUrl((String) obj.get("MangaUrl"));
                         manga.setMangaId(obj.getObjectId());
+                        manga.setPicUrl((String) obj.get("MangaPic"));
                         list.add(manga);
                     }
-
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mAdapter.notifyDataSetChanged();
-                        }
-                    });
                 }
             } catch (Exception e) {
-                Log.e("Error", e.getMessage());
+                Log.e("Error", "Message: " + e.getMessage());
                 e.printStackTrace();
             }
             return null;
         }
 
-    }
-
-
-    @Subscribe
-    public void onMangaAdded(Manga manga) {
-        list.add(manga);
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mAdapter.notifyDataSetChanged();
-            }
-        });
-    }
-
-    @Subscribe
-    public void onUpdateListEvent(UpdateListEvent event) {
-        //update list
-        //TODO
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        BusProvider.getInstance().register(this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        BusProvider.getInstance().unregister(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (rdt.getStatus() == AsyncTask.Status.RUNNING) {
-            rdt.cancel(true);
+        @Override
+        protected void onPostExecute(Void result) {
+            mAdapter.notifyDataSetChanged();
         }
+
+    }
+
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 }

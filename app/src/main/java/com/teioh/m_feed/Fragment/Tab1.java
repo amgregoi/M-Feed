@@ -15,10 +15,10 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.squareup.otto.Subscribe;
 import com.teioh.m_feed.Adapter.SearchableAdapter;
-import com.teioh.m_feed.Manga;
+import com.teioh.m_feed.Pojo.Manga;
+import com.teioh.m_feed.Pojo.UpdateListEvent;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.Utils.BusProvider;
-import com.teioh.m_feed.Utils.UpdateListEvent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -93,23 +93,22 @@ public class Tab1 extends Fragment {
                         recentCount++;
                     }
                 }
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Collections.sort(list, new Comparator<Manga>() {
-                            public int compare(Manga emp1, Manga emp2) {
-                                // -1 inverts the list, making the most updated on top
-                                return -1 * emp1.getLastUpdated().compareTo(emp2.getLastUpdated());
-                            }
-                        });
-                        mAdapter.notifyDataSetChanged();
-                    }
-                });
             } catch (Exception e) {
-                Log.e("Error", e.getMessage());
+                Log.e("Error", "Message: " + e.getMessage());
                 e.printStackTrace();
             }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            Collections.sort(list, new Comparator<Manga>() {
+                public int compare(Manga emp1, Manga emp2) {
+                    // -1 inverts the list, making the most recently updated on top
+                    return -1 * emp1.getLastUpdated().compareTo(emp2.getLastUpdated());
+                }
+            });
+            mAdapter.notifyDataSetChanged();
         }
 
     }

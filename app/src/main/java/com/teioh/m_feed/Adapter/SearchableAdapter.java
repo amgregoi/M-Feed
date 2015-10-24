@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.teioh.m_feed.Manga;
+import com.teioh.m_feed.Pojo.Manga;
 import com.teioh.m_feed.R;
 
 import java.util.ArrayList;
