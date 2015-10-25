@@ -3,8 +3,10 @@ package com.teioh.m_feed.Utils;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -19,7 +21,7 @@ public class MangaFeedDbHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + MangaFeedContract.MangaFeedEntry.TABLE_NAME + " (" +
                     MangaFeedContract.MangaFeedEntry._ID + " INTEGER PRIMARY KEY, " +
                     MangaFeedContract.MangaFeedEntry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + COMMA_SEP +
-                    MangaFeedContract.MangaFeedEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +
+                    MangaFeedContract.MangaFeedEntry.COLUMN_NAME_TITLE + TEXT_TYPE + " NOT NULL UNIQUE" + COMMA_SEP +
                     MangaFeedContract.MangaFeedEntry.COLUMN__NAME_OBJECT + TEXT_TYPE +
                     " )";
     //drops table if already exists
@@ -76,19 +78,29 @@ public class MangaFeedDbHelper extends SQLiteOpenHelper {
 
     public void addMangaToTable(ArrayList<Manga> list) {
         Gson gson = new GsonBuilder().create();
+        SQLiteDatabase sql = getWritableDatabase();
         int i = 0;
         for (Manga manga : list) {
-            ContentValues values = new ContentValues();
             manga.setDBID(i);
+            ContentValues values = new ContentValues();
             values.put(MangaFeedContract.MangaFeedEntry.COLUMN_NAME_ENTRY_ID, i);
             values.put(MangaFeedContract.MangaFeedEntry.COLUMN_NAME_TITLE, manga.getTitle());
             values.put(MangaFeedContract.MangaFeedEntry.COLUMN__NAME_OBJECT, gson.toJson(manga));
-            getWritableDatabase().insert(
-                    MangaFeedContract.MangaFeedEntry.TABLE_NAME,
-                    MangaFeedContract.MangaFeedEntry.COLUMN__NAME_OBJECT,
-                    values);
+            try {
+                sql.insertOrThrow(
+                        MangaFeedContract.MangaFeedEntry.TABLE_NAME,
+                        MangaFeedContract.MangaFeedEntry.COLUMN__NAME_OBJECT,
+                        values);
+            }catch(SQLiteConstraintException s){
+                Log.i("SQLite", "Insert fail - not a unique manga (" + manga.getTitle() + ")");
+            }
+            if(i%1000 == 0)
+            Log.e("Still adding", "to the db");
             i++;
         }
+        Log.e("finished", "finished");
+
+        sql.close();
     }
 
     public Manga getMangaById(int id) {

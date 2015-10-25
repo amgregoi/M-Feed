@@ -116,6 +116,7 @@ public class Tab1 extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        mListView.deferNotifyDataSetChanged();
         BusProvider.getInstance().register(this);
     }
 
@@ -130,6 +131,7 @@ public class Tab1 extends Fragment {
         //update list
         //should probably find a new way to populate recent list
         //TODO
+        mAdapter.notifyDataSetChanged();
     }
 
 }

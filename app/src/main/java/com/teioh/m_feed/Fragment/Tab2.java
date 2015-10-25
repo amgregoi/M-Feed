@@ -47,6 +47,7 @@ public class Tab2 extends Fragment implements SearchView.OnQueryTextListener {
     private parseGetLibrary rdt;
     private int recentIndexUsed;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab2, container, false);
@@ -84,6 +85,8 @@ public class Tab2 extends Fragment implements SearchView.OnQueryTextListener {
         }
     }
 
+
+    //TODO - needs to send object update to other tabs and update db as well
     @Override
     public boolean onContextItemSelected(MenuItem menuItem) {
         int menuItemIndex = menuItem.getItemId();
