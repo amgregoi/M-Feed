@@ -12,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
-
 import com.google.gson.Gson;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
@@ -26,8 +25,6 @@ import com.teioh.m_feed.R;
 import com.teioh.m_feed.Utils.BusProvider;
 import com.teioh.m_feed.Utils.MangaFeedContract.MangaFeedEntry;
 import com.teioh.m_feed.Utils.MangaFeedDbHelper;
-import com.trello.rxlifecycle.FragmentEvent;
-import com.trello.rxlifecycle.RxLifecycle;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,68 +35,56 @@ import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 import rx.Observable;
 import rx.schedulers.Schedulers;
-import rx.subjects.BehaviorSubject;
 
 public class Tab3 extends Fragment implements SearchView.OnQueryTextListener {
     @Bind(R.id.search_view_3) SearchView mSearchView;
-    @Bind(R.id.list_view) ListView mListView;
+    @Bind(R.id.all_list_view) ListView mListView;
     private ArrayList<Manga> list;
+    private ArrayList<Manga> temp;
     private List<ParseObject> ob;
     private SearchableAdapter mAdapter;
     private MangaFeedDbHelper mDbHelper;
-    private BehaviorSubject<FragmentEvent> lifecycle = BehaviorSubject.create();
     private int library_finish = 0;
 
     @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab3, container, false);
         ButterKnife.bind(this, v);
 
+        getActivity().setTitle("Manga Feed");
         list = new ArrayList<>();
+        temp = new ArrayList<>();
         mAdapter = new SearchableAdapter(getContext(), list);
         mListView.setFastScrollEnabled(true);
         mListView.setVisibility(View.GONE);
         mListView.setAdapter(mAdapter);
         mListView.setTextFilterEnabled(true);
         mDbHelper = new MangaFeedDbHelper(getContext());
-        //mDbHelper.onUpgrade(mDbHelper.getWritableDatabase(), 1, 1);     //used to manually reset db for testing
+        //mDbHelper.onUpgrade(mDbHelper.getWritableDatabase(), 1, 1);     // used to manually reset db for testing
 
         mSearchView.setIconifiedByDefault(false);
         mSearchView.setOnQueryTextListener(this);
         mSearchView.setSubmitButtonEnabled(true);
         mSearchView.setQueryHint("Search Here");
 
-        populateListView();
         return v;
     }
 
-    @OnItemClick(R.id.list_view) void onItemClick(AdapterView<?> adapter, View view, int pos) {
+    @OnItemClick(R.id.all_list_view) void onItemClick(AdapterView<?> adapter, View view, int pos) {
         final Manga item = (Manga) adapter.getItemAtPosition(pos);
         Bundle b = new Bundle();
         b.putParcelable("Manga", item);
         Fragment fragment = new MangaFragment();
         fragment.setArguments(b);
-        mSearchView.clearFocus();           //fixed trouble with double backpress
+        mSearchView.clearFocus();           // fixed trouble with double backpress
         getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack("MangaFragment").commit();
-    }
-
-    //querychange for searchview
-    public boolean onQueryTextChange(String newText) {
-        mAdapter.getFilter().filter(newText);
-        return true;
-    }
-
-    //text submit returns false, because we update dynamically while query changes in the above method <onQueryTextChange()>
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
-
-    @Override public void onStop() {
-        super.onStop();
     }
 
     @Override public void onResume() {
         super.onResume();
         BusProvider.getInstance().register(this);
+        list.clear();
+        temp.clear();
+        populateListView();
     }
 
     @Override public void onPause() {
@@ -113,15 +98,43 @@ public class Tab3 extends Fragment implements SearchView.OnQueryTextListener {
         ButterKnife.unbind(this);
     }
 
+    // Event method, that keeps track of when to update our listview when pulling from parse
+    @Subscribe public void onLibraryFinished(LibraryFinished l) {
+        library_finish++;
+        if (library_finish > 5) {
+            library_finish = 0;
+            rxUpdateList();
+        }
+    }
+
+    //Event method, update list when we recieve push for updated manga
+    @Subscribe public void onPushRecieved(UpdateListEvent event) {
+        //TODO
+        //sync local db to parse
+    }
+
+    //querychange for searchview
+    public boolean onQueryTextChange(String newText) {
+        mAdapter.getFilter().filter(newText);
+        return true;
+    }
+
+    //text submit returns false, because we update dynamically while query changes in the above method <onQueryTextChange()>
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+
     // calls the function that pulls in each section of the database
     // there are 6 groups total, each time this is called, it is run on a new thread
     public void rxSplitParseLibrary(String... chars) {
         Observable.from(chars)
                 .subscribeOn(Schedulers.newThread())
-                .compose(RxLifecycle.bindFragment(lifecycle))
                 .doOnCompleted(() -> {
-                    if (getActivity() == null)
+                    if (getActivity() == null) {
+                        Log.e("rxSplitParseLibrary", "activity gone");
                         return;
+                    }
                     getActivity().runOnUiThread(() -> {
                         BusProvider.getInstance().post(new LibraryFinished());
                     });
@@ -133,12 +146,15 @@ public class Tab3 extends Fragment implements SearchView.OnQueryTextListener {
     // so it is now done off the ui thread
     public void populateListView() {
         Observable.just("").subscribeOn(Schedulers.newThread())
-                .compose(RxLifecycle.bindFragment(lifecycle))
                 .doOnCompleted(() -> {
                             if (mDbHelper.dbExists() != null) {
-                                if (getActivity() == null)
+                                if (getActivity() == null) {
+                                    Log.e("populateListView", "activity gone");
                                     return;
+                                }
                                 getActivity().runOnUiThread(() -> {
+                                    for (Manga m : temp)
+                                        list.add(m);
                                     Collections.sort(list, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
 //                                    if(list.size() >= 1)
 //                                        list.get(0).setTitle(Integer.toString(list.size()));
@@ -150,21 +166,27 @@ public class Tab3 extends Fragment implements SearchView.OnQueryTextListener {
                 )
                 .subscribe(x -> {
                     Cursor c = mDbHelper.dbExists();
-                    list.clear();
-                    if (c == null || c.getCount() < 15000 || c.getCount() > 16000) {
+                    Log.e("cursor count", Integer.toString(c.getCount()));
+                    if (c == null || c.getCount() < 14000 || c.getCount() > 16000) {
                         Log.e("PARSE-Db", "Pulling from parse db");
+                        mDbHelper.onUpgrade(mDbHelper.getWritableDatabase(), 1, 1);
                         rxParseLibraryCall();
                     } else {
                         Log.e("LOCAL-Db", "Pulling from local sqlite db");
                         c.moveToFirst();
                         Gson gson = new Gson();
+                        ArrayList<String> parseIds = new ArrayList<String>();
                         while (!c.isAfterLast()) {
-                            String obj = c.getString(c.getColumnIndex(MangaFeedEntry.COLUMN__NAME_OBJECT));
+                            String obj = c.getString(c.getColumnIndex(MangaFeedEntry.COLUMN_NAME_OBJECT));
                             Manga m = gson.fromJson(obj, Manga.class);
-                            list.add(m);
+                            if (getActivity() == null)
+                                return;       // if app closes, and we lose the activity we stop the async task
+                            temp.add(m);
                             c.moveToNext();
                         }
+
                     }
+                    Log.e("List Size", Integer.toString(temp.size()));
                 });
     }
 
@@ -172,17 +194,15 @@ public class Tab3 extends Fragment implements SearchView.OnQueryTextListener {
     public void rxBuildDatabase() {
         Observable.just("").subscribeOn(Schedulers.newThread())
                 .doOnError(throwable -> throwable.printStackTrace())
-                .compose(RxLifecycle.bindFragment(lifecycle))
                 .subscribe(x -> mDbHelper.addMangaToTable(list));
     }
 
     // function that pulls the parse database to be stored locally
     private void rxParseLibrary(String s) {
-        Log.e("Section", s + "\t" + Integer.toString(list.size()));
+        Log.e("Section", s + "\t" + Integer.toString(temp.size()));
         try {
             int skip = 0, querySize = 1000;
             List<String> channels = ParseInstallation.getCurrentInstallation().getList("channels");
-
             do {
                 ParseQuery<ParseObject> query = new ParseQuery<>("Manga");
                 query.orderByAscending("MangaTitle");
@@ -202,7 +222,9 @@ public class Tab3 extends Fragment implements SearchView.OnQueryTextListener {
                     if (channels != null && channels.contains(objID)) {
                         manga.setFollowing(true);
                     }
-                    list.add(manga);
+                    if (getActivity() == null)
+                        return;       // if app closes, and we lose the activity we stop the async task
+                    temp.add(manga);
                 }
                 skip += querySize;
             } while (ob.size() == querySize);
@@ -213,9 +235,14 @@ public class Tab3 extends Fragment implements SearchView.OnQueryTextListener {
 
     // updates listview calls build database after we finish pulling from parse
     private void rxUpdateList() {
-        if(getActivity() == null)
+        if (getActivity() == null) {
+            Log.e("rxUpdateList", "activity gone");
             return;
+        }
         getActivity().runOnUiThread(() -> {
+            list.clear();
+            for (Manga m : temp)
+                list.add(m);
             Collections.sort(list, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
             mListView.setVisibility(View.VISIBLE);
             mAdapter.notifyDataSetChanged();
@@ -225,32 +252,14 @@ public class Tab3 extends Fragment implements SearchView.OnQueryTextListener {
 
     // function that calls the 6 groups that split the library into sections
     private void rxParseLibraryCall() {
-        //split the calls up to speed it up
+        // split the calls up to speed it up
         rxSplitParseLibrary("a", "b", "c", "d", "e");
         rxSplitParseLibrary("f", "g", "h", "i");
         rxSplitParseLibrary("j", "k", "l", "m", "n");
         rxSplitParseLibrary("o", "p", "q", "r");
         rxSplitParseLibrary("s", "t", "u", "v");
         rxSplitParseLibrary("w", "x", "y", "z", "0");
-        //hello("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0");
+        // hello("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0");
     }
 
-    // Event method, that keeps track of when to update our listview when pulling from parse
-    @Subscribe public void onLibraryFinished(LibraryFinished l) {
-        library_finish++;
-        if (library_finish > 5) {
-            library_finish = 0;
-            rxUpdateList();
-        }
-    }
-
-    //TODO
-    // When phone recieves push event, update db
-    @Subscribe public void onUpdateListEvent(UpdateListEvent event) {
-        //update list
-        //TODO - This does work (*)
-        //need to update list
-        //copy this method to update other two tabs
-        Log.e("ARE YOU WORKING", "YES I AM");
-    }
 }

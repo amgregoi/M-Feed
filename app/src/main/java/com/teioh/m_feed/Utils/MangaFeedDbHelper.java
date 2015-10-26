@@ -12,17 +12,21 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.teioh.m_feed.Pojo.Manga;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class MangaFeedDbHelper extends SQLiteOpenHelper {
     private static final String TEXT_TYPE = " TEXT";
+    private static final String DATE_TYPE = " DATE";
     private static final String COMMA_SEP = ", ";
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + MangaFeedContract.MangaFeedEntry.TABLE_NAME + " (" +
                     MangaFeedContract.MangaFeedEntry._ID + " INTEGER PRIMARY KEY, " +
                     MangaFeedContract.MangaFeedEntry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + COMMA_SEP +
                     MangaFeedContract.MangaFeedEntry.COLUMN_NAME_TITLE + TEXT_TYPE + " NOT NULL UNIQUE" + COMMA_SEP +
-                    MangaFeedContract.MangaFeedEntry.COLUMN__NAME_OBJECT + TEXT_TYPE +
+                    MangaFeedContract.MangaFeedEntry.COLUMN_NAME_OBJECT + TEXT_TYPE + COMMA_SEP +
+                    MangaFeedContract.MangaFeedEntry.COLUMN_NAME_DATETIME + DATE_TYPE + COMMA_SEP +
                     " )";
     //drops table if already exists
     private static final String SQL_DELETE_ENTRIES =
@@ -57,7 +61,7 @@ public class MangaFeedDbHelper extends SQLiteOpenHelper {
         String[] projection = {
                 MangaFeedContract.MangaFeedEntry._ID,
                 MangaFeedContract.MangaFeedEntry.COLUMN_NAME_TITLE,
-                MangaFeedContract.MangaFeedEntry.COLUMN__NAME_OBJECT,};
+                MangaFeedContract.MangaFeedEntry.COLUMN_NAME_OBJECT,};
         //sort order
         String sortOrder =
                 MangaFeedContract.MangaFeedEntry.COLUMN_NAME_ENTRY_ID + " ASC";
@@ -75,30 +79,27 @@ public class MangaFeedDbHelper extends SQLiteOpenHelper {
         return null;
     }
 
-
     public void addMangaToTable(ArrayList<Manga> list) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         Gson gson = new GsonBuilder().create();
         SQLiteDatabase sql = getWritableDatabase();
-        int i = 0;
         for (Manga manga : list) {
-            manga.setDBID(i);
             ContentValues values = new ContentValues();
-            values.put(MangaFeedContract.MangaFeedEntry.COLUMN_NAME_ENTRY_ID, i);
+
+            values.put(MangaFeedContract.MangaFeedEntry.COLUMN_NAME_ENTRY_ID, manga.getMangaId());
             values.put(MangaFeedContract.MangaFeedEntry.COLUMN_NAME_TITLE, manga.getTitle());
-            values.put(MangaFeedContract.MangaFeedEntry.COLUMN__NAME_OBJECT, gson.toJson(manga));
+            values.put(MangaFeedContract.MangaFeedEntry.COLUMN_NAME_OBJECT, gson.toJson(manga));
+            values.put(MangaFeedContract.MangaFeedEntry.COLUMN_NAME_DATETIME, dateFormat.format(manga.getLastUpdated()));
             try {
                 sql.insertOrThrow(
                         MangaFeedContract.MangaFeedEntry.TABLE_NAME,
-                        MangaFeedContract.MangaFeedEntry.COLUMN__NAME_OBJECT,
+                        MangaFeedContract.MangaFeedEntry.COLUMN_NAME_OBJECT,
                         values);
             }catch(SQLiteConstraintException s){
-                Log.i("SQLite", "Insert fail - not a unique manga (" + manga.getTitle() + ")");
+                Log.i("SQLite", "Insesrt fail - not a unique manga (" + manga.getTitle() + ")");
             }
-            if(i%1000 == 0)
-            Log.e("Still adding", "to the db");
-            i++;
         }
-        Log.e("finished", "finished");
+        Log.e("DB_Finished", "database finished building");
 
         sql.close();
     }
@@ -109,7 +110,7 @@ public class MangaFeedDbHelper extends SQLiteOpenHelper {
         String[] projection = {
                 MangaFeedContract.MangaFeedEntry._ID,
                 MangaFeedContract.MangaFeedEntry.COLUMN_NAME_TITLE,
-                MangaFeedContract.MangaFeedEntry.COLUMN__NAME_OBJECT,};
+                MangaFeedContract.MangaFeedEntry.COLUMN_NAME_OBJECT,};
         //sort order
         String sortOrder =
                 MangaFeedContract.MangaFeedEntry.COLUMN_NAME_ENTRY_ID + " ASC";
@@ -127,7 +128,7 @@ public class MangaFeedDbHelper extends SQLiteOpenHelper {
         );
         if (c.getCount() > 0) {
             c.moveToFirst();
-            String obj = c.getString(c.getColumnIndex(MangaFeedContract.MangaFeedEntry.COLUMN__NAME_OBJECT));
+            String obj = c.getString(c.getColumnIndex(MangaFeedContract.MangaFeedEntry.COLUMN_NAME_OBJECT));
             Manga manga = gson.fromJson(obj, Manga.class);
             return manga;
         }
@@ -137,8 +138,12 @@ public class MangaFeedDbHelper extends SQLiteOpenHelper {
     public void updateMangaFollow(Manga manga) {
         Gson gson = new Gson();
         ContentValues data = new ContentValues();
-        data.put(MangaFeedContract.MangaFeedEntry.COLUMN__NAME_OBJECT, gson.toJson(manga));
+        data.put(MangaFeedContract.MangaFeedEntry.COLUMN_NAME_OBJECT, gson.toJson(manga));
         getWritableDatabase().update(MangaFeedContract.MangaFeedEntry.TABLE_NAME, data, "_id=" + manga.getDBID(), null);
     }
 
+    //TODO
+    public void syncDatabase() {
+
+    }
 }

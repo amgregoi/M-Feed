@@ -64,6 +64,11 @@ public class MangaFragment extends Fragment {
         return v;
     }
 
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        getActivity().setTitle("Manga Feed");
+    }
+
     @OnClick(R.id.followButton) void onClick(View v) {
         final boolean follow = item.setFollowing(!item.getFollowing());
         ParseInstallation pi = ParseInstallation.getCurrentInstallation();

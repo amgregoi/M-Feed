@@ -12,7 +12,8 @@ public final class MangaFeedContract {
         public static final String TABLE_NAME = "Manga";
         public static final String COLUMN_NAME_ENTRY_ID = "mangaId";
         public static final String COLUMN_NAME_TITLE = "mangaTitle";
-        public static final String COLUMN__NAME_OBJECT = "mangaObj";
+        public static final String COLUMN_NAME_OBJECT = "mangaObj";
+        public static final String COLUMN_NAME_DATETIME = "dateTime";
     }
 
 
