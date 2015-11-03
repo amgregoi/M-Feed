@@ -16,10 +16,8 @@
         android:name="com.teioh.m_feed.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.teioh.m_feed.permission.C2D_MESSAGE" />
 
-    <!-- TODO REMOVE DEBUGGABLE -->
     <application
-        android:name=".Utils.ParseApplication"
-        android:debuggable="true"
+        android:name=".MFeedApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -62,9 +60,6 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
-                <!--
-                  IMPORTANT: Change "com.parse.starter" to match your app's package name.
-                -->
                 <category android:name="com.teioh.m_feed" />
             </intent-filter>
         </receiver>

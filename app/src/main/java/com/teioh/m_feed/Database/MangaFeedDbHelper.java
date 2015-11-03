@@ -12,6 +12,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.teioh.m_feed.MFeedApplication;
 import com.teioh.m_feed.Pojo.Manga;
 
 import java.io.File;
@@ -26,15 +27,10 @@ import java.util.Locale;
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 public class MangaFeedDbHelper extends SQLiteOpenHelper {
-
-
-    static {
-        cupboard().register(Manga.class);
-    }
-
     public static final int DATABASE_VERSION = 1;
     private static final String DB_PATH = "/data/data/com.teioh.m_feed/databases/";
     private static final String DB_NAME = "MangaFeed.db";
+    private static MangaFeedDbHelper aInstance;
 
 
     private Context myContext;
@@ -42,6 +38,13 @@ public class MangaFeedDbHelper extends SQLiteOpenHelper {
     public MangaFeedDbHelper(Context context) {
         super(context, DB_NAME, null, DATABASE_VERSION);
         myContext = context;
+    }
+
+    public static synchronized MangaFeedDbHelper getInstance() {
+        if (aInstance == null) {
+            aInstance = new MangaFeedDbHelper(MFeedApplication.getInstance());
+        }
+        return aInstance;
     }
 
     public void onCreate(SQLiteDatabase db) {
@@ -92,7 +95,7 @@ public class MangaFeedDbHelper extends SQLiteOpenHelper {
     private void copyDBFromResource() {
         String dbFilePath = DB_PATH + DB_NAME;
         try {
-            InputStream inputStream = myContext.getAssets().open(DB_NAME);
+            InputStream inputStream = MFeedApplication.getInstance().getAssets().open(DB_NAME);
             OutputStream outStream = new FileOutputStream(dbFilePath);
 
             byte[] buffer = new byte[1024];

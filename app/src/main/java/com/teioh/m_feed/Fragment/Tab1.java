@@ -42,17 +42,16 @@ public class Tab1 extends Fragment {
     private ArrayList<Manga> temp;
     private SearchableAdapter mAdapter;
     private MangaFeedDbHelper mDbHelper;
-    private ArrayList<String> recent;
     private int retry;
 
 
     MangaJoy mj = new MangaJoy();
-    Observable<List<String>> temp2 = mj.pullChaptersFromWebsite()
+    Observable<List<Manga>> temp2 = mj.pullUpdatedMangaFromWebsite()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .onErrorReturn(new Func1<Throwable, List<String>>() {
+            .onErrorReturn(new Func1<Throwable, List<Manga>>() {
                 @Override
-                public List<String> call(Throwable throwable) {
+                public List<Manga> call(Throwable throwable) {
                     Log.e("throwable", throwable.toString());
                     return null;
                 }
@@ -65,7 +64,6 @@ public class Tab1 extends Fragment {
         getActivity().setTitle("Manga Feed");
         list = new ArrayList<>();
         temp = new ArrayList<>();
-        recent = new ArrayList<>();
         mAdapter = new SearchableAdapter(getContext(), list);
         mListView.setAdapter(mAdapter);
         mListView.setTextFilterEnabled(true);
@@ -77,11 +75,11 @@ public class Tab1 extends Fragment {
         return v;
     }
 
-    private void udpateChapterList(List<String> manga) {
+    private void udpateChapterList(List<Manga> manga) {
         if (manga != null) {
-            recent = new ArrayList<>(manga);
-            Log.e("as;ldf", Integer.toString(recent.size()));
-            parseGetRecentUpdates();
+            for(Manga m : manga)
+                list.add(m);
+            mAdapter.notifyDataSetChanged();
             retry = 0;
         } else {
             if (retry > 3) { //allow 3 attempts before we stop
@@ -99,7 +97,6 @@ public class Tab1 extends Fragment {
         intent.putExtra("Manga", item);
         startActivityForResult(intent, 1);
     }
-
 
     @Override public void onResume() {
         super.onResume();
@@ -141,29 +138,5 @@ public class Tab1 extends Fragment {
     @Subscribe public void onPushRecieved(UpdateListEvent event) {
         //TODO
     }
-
-    // querys parse for manga we follow and populates with most recently updated
-    private void parseGetRecentUpdates() {
-        Observable.just("").subscribeOn(Schedulers.newThread())
-                .doOnCompleted(() -> {
-                    if (getActivity() != null)
-                        getActivity().runOnUiThread(() -> {
-                            for (Manga m : temp) {
-                                if (!list.contains(m)) list.add(m);
-                            }
-                            mAdapter.notifyDataSetChanged();
-                        });
-                })
-                .subscribe(s -> {
-                    for (String title : recent) {
-                        Manga manga = cupboard()
-                                .withDatabase(mDbHelper.getReadableDatabase())
-                                .query(Manga.class).withSelection("mTitle = ?", title).get();
-                        temp.add(manga);
-                    }
-                    //TODO set limit later
-                });
-    }
-
 
 }
