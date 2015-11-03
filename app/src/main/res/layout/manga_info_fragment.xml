@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@android:color/white"
+              android:orientation="vertical"
+              android:clickable="true"
+              android:showDividers="middle"
+
+    >
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:padding="@dimen/activity_horizontal_margin">
+
+            <ImageView
+                android:id="@+id/manga_image"
+                android:layout_width="198dp"
+                android:layout_height="@dimen/manga_header_img_height"
+                android:layout_alignParentTop="true"
+                android:padding="10dp"
+                android:adjustViewBounds="true"
+                android:layout_centerHorizontal="true"
+                android:scaleType="fitXY"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/mangaDescription"
+                android:layout_below="@id/manga_image"
+                />
+        </RelativeLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/ColorPrimary"
+        android:dividerPadding="2.5dp"
+        android:divider="?android:listDivider"
+        android:showDividers="middle"
+        >
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/editbox_background"
+            android:background="@color/ColorPrimary"
+            android:id="@+id/followButton"
+            android:layout_weight="1"
+            />
+
+        <Button
+            android:text="Read"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/editbox_background"
+            android:background="@color/ColorPrimary"
+            android:id="@+id/readButton"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
+</LinearLayout>

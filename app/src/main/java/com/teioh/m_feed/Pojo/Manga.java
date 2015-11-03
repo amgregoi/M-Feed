@@ -3,6 +3,7 @@ package com.teioh.m_feed.Pojo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Comparator;
 import java.util.Date;
 
 //TODO - subclassing parse object
@@ -13,8 +14,12 @@ public class Manga implements Parcelable {
     private String mMangaUrl;
     private Date mLastUpdated;
     private String mMangaId;
+    private String mDescription;
     private boolean mFollowing;
     private int mDBID;
+
+    public Manga() {
+    }
 
     protected Manga(Parcel in) {
         mTitle = in.readString();
@@ -22,9 +27,26 @@ public class Manga implements Parcelable {
         mPicUrl = in.readString();
         mMangaUrl = in.readString();
         mMangaId = in.readString();
+        mDescription = in.readString();
+        mDBID = in.readInt();
+        mFollowing = in.readByte() != 0;
     }
 
-    public Manga() {
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mTitle);
+        dest.writeString(mLatestChapter);
+        dest.writeString(mPicUrl);
+        dest.writeString(mMangaUrl);
+        dest.writeString(mMangaId);
+        dest.writeString(mDescription);
+        dest.writeInt(mDBID);
+        dest.writeByte((byte) (mFollowing ? 1 : 0));
     }
 
     public static final Creator<Manga> CREATOR = new Creator<Manga>() {
@@ -47,6 +69,10 @@ public class Manga implements Parcelable {
     public String getLatestChapter() {
         return mLatestChapter;
     }
+
+    public String getDescription(){ return this.mDescription;}
+
+    public void setDescription(String desc){this.mDescription = desc;}
 
     public String getPicUrl() {
         return mPicUrl;
@@ -80,6 +106,10 @@ public class Manga implements Parcelable {
         this.mLastUpdated = lastUpdate;
     }
 
+    public void setLastUpdate() {
+        this.mLastUpdated = new Date();
+    }
+
     public void setMangaUrl(String url) {
         this.mMangaUrl = url;
     }
@@ -90,20 +120,6 @@ public class Manga implements Parcelable {
 
     public String toString() {
         return mTitle;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mTitle);
-        dest.writeString(mLatestChapter);
-        dest.writeString(mPicUrl);
-        dest.writeString(mMangaUrl);
-        dest.writeString(mMangaId);
     }
 
     public boolean getFollowing() {
@@ -121,5 +137,17 @@ public class Manga implements Parcelable {
 
     public void setDBID(int val) {
         this.mDBID = val;
+    }
+
+    @Override
+    public boolean equals(Object object)
+    {
+        boolean sameSame = false;
+        if (object != null && object instanceof Manga)
+        {
+            if(this.getTitle().equals(((Manga)object).getTitle()))
+                sameSame = true;
+        }
+        return sameSame;
     }
 }

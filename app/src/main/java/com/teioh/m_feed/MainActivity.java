@@ -1,34 +1,31 @@
 package com.teioh.m_feed;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.parse.ParseAnonymousUtils;
 import com.parse.ParseUser;
-import com.teioh.m_feed.Adapter.ViewPagerAdapter;
+import com.teioh.m_feed.Adapter.ViewPagerAdapterMain;
 import com.teioh.m_feed.Fragment.LoginFragment;
+import com.teioh.m_feed.Pojo.Manga;
 import com.teioh.m_feed.Utils.BusProvider;
+import com.teioh.m_feed.Utils.RemoveFromLibrary;
 import com.teioh.m_feed.Utils.SlidingTabLayout;
 
-
-/*
- *http://www.androidhive.info/2013/10/android-tab-layout-with-swipeable-views-1/
- *http://developer.android.com/training/implementing-navigation/lateral.html
- *http://www.androidbegin.com/tutorial/android-parse-com-listview-images-and-texts-tutorial/
- * optional read in app - Webview
- *
- * fix keyboard staying open
- * http://stackoverflow.com/questions/4841228/after-type-in-edittext-how-to-make-keyboard-disappear
- */
+//TODO
+//http://www.vogella.com/tutorials/AndroidServices/article.html
+//look into cupboard, rehaul local database
 
 public class MainActivity extends AppCompatActivity {
 
-    ViewPagerAdapter mViewPagerAdapter;
+    ViewPagerAdapterMain mViewPagerAdapterMain;
 
     //TODO loading circle for async tasks (tab 3)
     //TODO webview for reading
@@ -46,26 +43,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         //Determines whether user needs to login/signup
-        if (ParseAnonymousUtils.isLinked(ParseUser.getCurrentUser())) {
-            Fragment fragment = new LoginFragment();
-            getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack("MangaFragment").commit();
-
-        } else {
-            ParseUser currentUser = ParseUser.getCurrentUser();
-            if (currentUser == null) {
-                Intent intent = new Intent(MainActivity.this,
-                        LoginFragment.class);
-                Fragment fragment = new LoginFragment();
-                getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack("MangaFragment").commit();
-            }
-        }
-        setContentView(R.layout.activity_main);
+//        if (ParseAnonymousUtils.isLinked(ParseUser.getCurrentUser())) {
+//            Fragment fragment = new LoginFragment();
+//            getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack("MangaFragment").commit();
+//
+//        } else {
+//            ParseUser currentUser = ParseUser.getCurrentUser();
+//            if (currentUser == null) {
+//                Intent intent = new Intent(MainActivity.this,
+//                        LoginFragment.class);
+//                Fragment fragment = new LoginFragment();
+//                getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack("MangaFragment").commit();
+//            }
+//        }
+        setContentView(R.layout.activity_layout);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), Titles, Numbtabs);
+        mViewPagerAdapterMain = new ViewPagerAdapterMain(getSupportFragmentManager(), Titles, Numbtabs);
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(mViewPagerAdapter);
+        mViewPager.setAdapter(mViewPagerAdapterMain);
         mViewPager.setOffscreenPageLimit(3);
 
 
@@ -82,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Setting the ViewPager For the SlidingTabsLayout
         tabs.setViewPager(mViewPager);
-
     }
 
     @Override
@@ -119,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
         // Always unregister when an object no longer should be on the bus.
         BusProvider.getInstance().unregister(this);
     }

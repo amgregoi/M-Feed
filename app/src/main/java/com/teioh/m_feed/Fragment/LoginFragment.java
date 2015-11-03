@@ -32,7 +32,7 @@ public class LoginFragment extends Fragment {
      * Called when the activity is first created.
      */
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View v = inflater.inflate(R.layout.loginfragment, container, false);
+        final View v = inflater.inflate(R.layout.login_fragment, container, false);
 
         username = (EditText) v.findViewById(R.id.username);
         password = (EditText) v.findViewById(R.id.password);

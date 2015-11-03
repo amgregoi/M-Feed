@@ -1,6 +1,7 @@
 package com.teioh.m_feed.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.squareup.picasso.Picasso;
 import com.teioh.m_feed.Pojo.Manga;
 import com.teioh.m_feed.R;
@@ -63,9 +66,12 @@ public class SearchableAdapter extends BaseAdapter implements Filterable {
 
         Manga tManga = filteredData.get(position);
 
-
-        //TODO - change for screen size
-        Picasso.with(context).load(tManga.getPicUrl()).resize(139, 200).into(holder.img);
+        //Picasso.with(context).load(tManga.getPicUrl()).resize(139, 200).into(holder.img);
+        if(tManga == null)
+        {
+            return row;
+        }
+        Glide.with(context).load(tManga.getPicUrl()).into(holder.img);
         holder.txt.setText(tManga.toString());
         return row;
     }

@@ -1,38 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/itemText" />
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/grid_item_img_height"
+        android:id="@+id/imageView"/>
 
-    <LinearLayout
-        android:id="@+id/itemText"
+    <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:alpha="0.4"
+        android:id="@+id/maskImageView"/>
 
-        <TextView
-            android:id="@+id/itemTitleField"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:textScaleX="1"
-            android:gravity="center_vertical"
-            android:layout_gravity="center"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textStyle="bold|italic" />
-    </LinearLayout>
+</FrameLayout>
 
-    <ImageView
-        android:id="@+id/isFollowing"
-        android:layout_width="wrap_content"
+<LinearLayout
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/single_line_height"
+    android:paddingLeft="@dimen/baseline_margin_unit"
+    android:paddingRight="@dimen/baseline_margin_unit"
+    android:id="@+id/footerLinearLayout">
+
+    <TextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/itemText"
         android:layout_gravity="center_vertical"
-        android:src="@android:drawable/alert_dark_frame" />
+        android:gravity="center_horizontal"
+        android:ellipsize="middle"
+        android:maxLines="2"
+        android:textColor="@android:color/background_dark"
+        android:textSize="12dp"
+        android:textStyle="bold"
+        android:id="@+id/itemTitleField" />
+
+</LinearLayout>
+
 </LinearLayout>
