@@ -12,24 +12,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.parse.ParseInstallation;
-import com.teioh.m_feed.OttoBus.ChangeTitle;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.OttoBus.RemoveFromLibrary;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.OttoBus.BusProvider;
 import com.teioh.m_feed.Database.MangaFeedDbHelper;
-import com.teioh.m_feed.ReactiveQueryManager;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class MangaFragment extends Fragment {
+public class MangaInformationFragment extends Fragment {
 
     @Bind(R.id.manga_image) ImageView img;
     @Bind(R.id.mangaDescription) TextView description;
@@ -87,6 +81,5 @@ public class MangaFragment extends Fragment {
             MangaFeedDbHelper.getInstance().updateMangaUnfollow(item);
             BusProvider.getInstance().post(new RemoveFromLibrary(item));
         }
-
     }
 }

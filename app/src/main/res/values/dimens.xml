@@ -19,4 +19,10 @@
 
     <dimen name="manga_header_img_height">298dp</dimen>
 
+
+
+    <dimen name="baseline_content_unit">16dp</dimen>
+    <dimen name="baseline_content_left">56dp</dimen>
+
+
 </resources>

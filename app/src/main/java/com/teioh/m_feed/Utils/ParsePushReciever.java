@@ -14,7 +14,6 @@ public class ParsePushReciever extends ParsePushBroadcastReceiver {
         super.onPushReceive(context, intent);
         BusProvider.getInstance().register(this);
         //set to load tab1? or object fragment ( not implemented )
-        Log.e("PUSH", "recieved push");
         BusProvider.getInstance().post(new UpdateListEvent());
         BusProvider.getInstance().unregister(this);
     }

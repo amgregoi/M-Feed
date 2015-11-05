@@ -32,7 +32,7 @@ public class MangaJoy {
      * builds list of chapters for manga object
      */
 
-    public static Observable<List<Chapter>> getChapterListObservable(String url) {
+    public static Observable<List<Chapter>> getChapterListObservable(final String url) {
         return pullChaptersFromWebsite(url)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -68,7 +68,7 @@ public class MangaJoy {
         });
     }
 
-    private static List<Chapter> parseHtmlToChapters(String unparsedHtml) {
+    private static List<Chapter> parseHtmlToChapters(final String unparsedHtml) {
         int beginIndex = unparsedHtml.indexOf("<ul class=\"chp_lst\">");
         int endIndex = unparsedHtml.indexOf("</ul>", beginIndex);
         String chapterListHtml = unparsedHtml.substring(beginIndex, endIndex);
@@ -77,17 +77,18 @@ public class MangaJoy {
         return chapterList;
     }
 
-    private static List<Chapter> scrapeChaptersFromParsedDocument(Document parsedDocument) {
+    private static List<Chapter> scrapeChaptersFromParsedDocument(final Document parsedDocument) {
         List<Chapter> chapterList = new ArrayList<>();
         Elements chapterElements = parsedDocument.getElementsByTag("li");
         int numChapters = chapterElements.size();
 
         for (Element chapterElement : chapterElements) {
             String chapterUrl = chapterElement.select("a").attr("href");
-            String chapterTitle = chapterElement.select("span").first().text();
+            String[] titles = chapterElement.select("span").first().text().split(" : ");
+
             String chapterDate = chapterElement.select("span").get(1).text();
 
-            Chapter curChapter = new Chapter(chapterUrl, chapterTitle, chapterDate, numChapters);
+            Chapter curChapter = new Chapter(chapterUrl, titles[0], titles[1], chapterDate, numChapters);
             numChapters--;
 
             chapterList.add(curChapter);
@@ -97,16 +98,14 @@ public class MangaJoy {
 
 
     /*
-     * builds list of manga from recently updated page
+     * builds list of manga for recently updated page
      */
-    // pulls manga from lastest updates page
     public static Observable<List<Manga>> getRecentUpdatesObservable() {
         return pullUpdatedMangaFromWebsite()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .retry()
                 .onErrorReturn(throwable -> {
-                    Log.e("yup", "mangajoy");
                     Log.e("throwable", throwable.toString());
                     return null;
                 });
@@ -137,8 +136,7 @@ public class MangaJoy {
         });
     }
 
-    // takes out the section of html we want to look at
-    private static List<Manga> parseRecentUpdatesToManga(String unparsedHtml) {
+    private static List<Manga> parseRecentUpdatesToManga(final String unparsedHtml) {
         Document parsedDocument = Jsoup.parse(unparsedHtml);
         Elements updates = parsedDocument.select("div.wpm_pag.mng_lts_chp.grp");
         parsedDocument = Jsoup.parse(updates.toString());
@@ -146,8 +144,7 @@ public class MangaJoy {
         return chapterList;
     }
 
-    // scrapes the title, and querys the database for the object to return to view
-    private static List<Manga> scrapeUpdatestoManga(Document parsedDocument) {
+    private static List<Manga> scrapeUpdatestoManga(final Document parsedDocument) {
         List<Manga> mangaList = new ArrayList<>();
         Elements mangaElements = parsedDocument.select("div.row");
 
@@ -170,10 +167,10 @@ public class MangaJoy {
 
 
     /*
- * MangaReaderFragment - takes a chapter url, and returns list of urls to chapter images
- */
+    * ChapterReaderFragment - takes a chapter url, and returns list of urls to chapter images
+    */
     public static Observable<List<String>> getChapterImageListObservable(final String url) {
-        return temp2(url)
+        return parseListOfImageUrls(url)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .onErrorReturn(new Func1<Throwable, List<String>>() {
@@ -185,9 +182,7 @@ public class MangaJoy {
                 });
     }
 
-
-    //TODO rename below functions
-    private static Observable<List<String>> temp2(final String url) {
+    private static Observable<List<String>> parseListOfImageUrls(final String url) {
         return Observable.create(new Observable.OnSubscribe<List<String>>() {
             @Override
             public void call(Subscriber<? super List<String>> subscriber) {
@@ -200,7 +195,7 @@ public class MangaJoy {
                         unparsedHtml = connect.get().html();
                     }
 
-                    subscriber.onNext(buildImageUrlList2(unparsedHtml));
+                    subscriber.onNext(getBaseUrlDirectory(unparsedHtml));
                     subscriber.onCompleted();
                 } catch (Throwable e) {
                     subscriber.onError(e);
@@ -209,7 +204,7 @@ public class MangaJoy {
         });
     }
 
-    private static List<String> buildImageUrlList2(final String unparsedHtml) {
+    private static List<String> getBaseUrlDirectory(final String unparsedHtml) {
         //get base url for images
         Document parsedDocumentForImage = Jsoup.parse(unparsedHtml);
         Elements imageUpdate = parsedDocumentForImage.select("div.prw");
@@ -234,18 +229,17 @@ public class MangaJoy {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return buildImageUrlList3(directoryHtml);
+        return buildImageUrlList(directoryHtml);
     }
 
-    private static List<String> buildImageUrlList3(final String unparsedHtml) {
+    private static List<String> buildImageUrlList(final String unparsedHtml) {
         List<String> imageUrls = new ArrayList<>();
         String prefix = "http://manga-joy.com";
         Document parsedDocumentForImage = Jsoup.parse(unparsedHtml);
         Elements imageUpdate = parsedDocumentForImage.select("a");
         int i = 0;
-        for(Element e : imageUpdate)
-        {
-            if(i > 4) {
+        for (Element e : imageUpdate) {
+            if (i > 4) {
                 String postfix = e.select("a").attr("href");
                 if (postfix.contains("manga")) {
                     imageUrls.add(prefix + postfix);

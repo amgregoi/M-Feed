@@ -12,8 +12,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.squareup.otto.Subscribe;
 import com.teioh.m_feed.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.MangaPackage.MangaActivity;
+import com.teioh.m_feed.OttoBus.RemoveFromLibrary;
 import com.teioh.m_feed.WebSources.MangaJoy;
 import com.teioh.m_feed.OttoBus.BusProvider;
 import com.teioh.m_feed.OttoBus.ChangeTitle;
@@ -30,14 +32,13 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class Tab1 extends Fragment {
+public class RecentUpdatesFragment extends Fragment {
 
     @Bind(R.id.recent_list_view) GridView mListView;
     @Bind(R.id.swipe_container) SwipeRefreshLayout swipeContainer;
     private Observable<List<Manga>> observableMangaList;
-    private ArrayList<Manga> list;
+    private ArrayList<Manga> recentList;
     private SearchableAdapter mAdapter;
-    private int retry;
 
 
 
@@ -46,11 +47,10 @@ public class Tab1 extends Fragment {
         ButterKnife.bind(this, v);
         MangaFeedDbHelper.getInstance().createDatabase();
 
-        list = new ArrayList<>();
-        mAdapter = new SearchableAdapter(getContext(), list);
+        recentList = new ArrayList<>();
+        mAdapter = new SearchableAdapter(getContext(), recentList);
         mListView.setAdapter(mAdapter);
         mListView.setTextFilterEnabled(true);
-        retry = 0;
 
         swipeContainer.post(() -> swipeContainer.setRefreshing(true));  // starts activity with loading icon while retrieving list
         swipeContainer.setOnRefreshListener(() -> observableMangaList.subscribe(manga -> udpateChapterList(manga)));
@@ -62,20 +62,12 @@ public class Tab1 extends Fragment {
 
     private void udpateChapterList(List<Manga> manga) {
         if (manga != null) {
-            list.clear();
+            recentList.clear();
             for(Manga m : manga) {
-                list.add(m);
+                recentList.add(m);
             }
             swipeContainer.setRefreshing(false);
             mAdapter.notifyDataSetChanged();
-            retry = 0;
-        } else {
-            if (retry > 3) { //allow 3 attempts before we stop
-                retry = 0;
-                return;
-            }
-            observableMangaList.subscribe(manga2 -> udpateChapterList(manga2));
-            retry++;
         }
     }
 
@@ -90,4 +82,26 @@ public class Tab1 extends Fragment {
         super.onDestroyView();
         ButterKnife.unbind(this);
     }
+
+    @Subscribe public void onMangaAdded(Manga manga) {
+        for(Manga m : recentList)
+        {
+            if(m.equals(manga))
+            {
+                m.setFollowing(false);
+            }
+        }
+    }
+
+    @Subscribe public void onMangaRemoved(RemoveFromLibrary rm) {
+        Manga manga = rm.getManga();
+        for(Manga m : recentList)
+        {
+            if(m.equals(manga))
+            {
+                m.setFollowing(false);
+            }
+        }
+    }
+
 }

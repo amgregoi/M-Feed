@@ -10,15 +10,17 @@ public class Chapter implements Parcelable{
     String mUrl;
     String mDate;
     String mTitle;
+    String cTitle;
     int cNumber;
 
     public Chapter() {
     }
 
-    public Chapter(String url, String title, String date, int num) {
+    public Chapter(String url, String mTitle, String cTitle, String date, int num) {
         this.mUrl = url;
         this.mDate = date;
-        this.mTitle = title;
+        this.mTitle = mTitle;
+        this.cTitle = cTitle;
         this.cNumber = num;
     }
 
@@ -69,11 +71,11 @@ public class Chapter implements Parcelable{
     }
 
     public String getChapterTitle() {
-        return this.mTitle;
+        return this.cTitle;
     }
 
     public void setChapterTitle(String title) {
-        this.mTitle = title;
+        this.cTitle = title;
     }
 
     public int getChapterNumber(){return this.cNumber;}
@@ -85,4 +87,7 @@ public class Chapter implements Parcelable{
         return this.mTitle;
     }
 
+    public String getMangaTitle() {
+        return this.mTitle;
+    }
 }

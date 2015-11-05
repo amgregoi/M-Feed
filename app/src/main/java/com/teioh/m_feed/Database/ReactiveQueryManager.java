@@ -1,4 +1,4 @@
-package com.teioh.m_feed;
+package com.teioh.m_feed.Database;
 
 import android.util.Log;
 
@@ -31,7 +31,7 @@ import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 public class ReactiveQueryManager {
 
     /*
-     * Tab3 gets whole library
+     * LibraryFragment gets whole library
      */
     public static Observable<List<Manga>> getMangaLibraryObservable() {
         return pullMangaFromDatabase()
@@ -73,7 +73,7 @@ public class ReactiveQueryManager {
 
 
     /*
-     * Tab2 gets manga in users library
+     * FollowingFragment gets manga in users library
      */
     public static Observable<List<Manga>> getFollowedMangaObservable() {
         return pullFollowedMangaFromDatabase()

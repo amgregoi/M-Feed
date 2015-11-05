@@ -4,10 +4,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.teioh.m_feed.MainPackage.Tab1;
-import com.teioh.m_feed.MainPackage.Tab2;
-import com.teioh.m_feed.MainPackage.Tab3;
-
 public class ViewPagerAdapterMain extends FragmentStatePagerAdapter {
 
     CharSequence Titles[];
@@ -27,11 +23,11 @@ public class ViewPagerAdapterMain extends FragmentStatePagerAdapter {
 
         if (position == 0) // if the position is 0 we are returning the First tab
         {
-            return new Tab1();
+            return new RecentUpdatesFragment();
         } else if (position == 1) {
-            return new Tab2();
+            return new FollowingFragment();
         } else {
-            return new Tab3();
+            return new LibraryFragment();
         }
     }
 

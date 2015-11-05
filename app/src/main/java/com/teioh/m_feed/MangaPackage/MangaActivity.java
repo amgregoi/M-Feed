@@ -25,8 +25,7 @@ public class MangaActivity extends AppCompatActivity {
     private CharSequence Titles[] = {"Info", "Chapters"};
     private int Numbtabs = 2;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_layout);
         Manga item = getIntent().getParcelableExtra("Manga");
@@ -47,16 +46,14 @@ public class MangaActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         menu.add(Menu.NONE, 0, Menu.NONE, "Logout");
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
@@ -64,20 +61,18 @@ public class MangaActivity extends AppCompatActivity {
         } else if (id == 0) {
             ParseUser.getCurrentUser().logOut();
             Fragment fragment = new LoginFragment();
-            getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack("MangaFragment").commit();
+            getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack(null).commit();
 
         }
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onResume() {
+    @Override protected void onResume() {
         super.onResume();
         BusProvider.getInstance().register(this);
     }
 
-    @Override
-    protected void onPause() {
+    @Override protected void onPause() {
         super.onPause();
         BusProvider.getInstance().unregister(this);
     }

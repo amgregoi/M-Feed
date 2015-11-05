@@ -23,7 +23,7 @@ import com.teioh.m_feed.OttoBus.RemoveFromLibrary;
 import com.teioh.m_feed.OttoBus.UpdateListEvent;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.OttoBus.BusProvider;
-import com.teioh.m_feed.ReactiveQueryManager;
+import com.teioh.m_feed.Database.ReactiveQueryManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 import rx.Observable;
 
-public class Tab2 extends Fragment implements SearchView.OnQueryTextListener {
+public class FollowingFragment extends Fragment implements SearchView.OnQueryTextListener {
 
     @Bind(R.id.search_view_2) SearchView mSearchView;
     @Bind(R.id.library_list_view) GridView mListView;
@@ -48,16 +48,13 @@ public class Tab2 extends Fragment implements SearchView.OnQueryTextListener {
         ButterKnife.bind(this, v);
         MangaFeedDbHelper.getInstance().createDatabase();
 
-
         libraryList = new ArrayList<>();
         mAdapter = new SearchableAdapter(getContext(), libraryList);
         mListView.setAdapter(mAdapter);
         mListView.setTextFilterEnabled(true);
         registerForContextMenu(mListView);
-
         mSearchView.setOnQueryTextListener(this);
         mSearchView.setSubmitButtonEnabled(true);
-
 
         return v;
     }
@@ -90,9 +87,6 @@ public class Tab2 extends Fragment implements SearchView.OnQueryTextListener {
                 BusProvider.postOnMain(new RemoveFromLibrary(item)); // remove from list
                 // TODO - use parse to store a users follow
                 // reset database following values, and update with users list
-                break;
-            case 1:
-                Log.e("cancel", "oops");
                 break;
             default:
                 break;
@@ -152,7 +146,7 @@ public class Tab2 extends Fragment implements SearchView.OnQueryTextListener {
     // Otto Event Bus
     //Event method, update list when we recieve push for updated manga
     @Subscribe public void onPushRecieved(UpdateListEvent event) {
-        //TODO
+        //TODO - potentially get rid of
     }
 
     //finishes async task for updating followed library

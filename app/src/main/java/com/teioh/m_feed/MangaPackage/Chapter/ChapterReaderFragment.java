@@ -1,14 +1,13 @@
-package com.teioh.m_feed.MangaPackage;
+package com.teioh.m_feed.MangaPackage.Chapter;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.teioh.m_feed.MangaPackage.Chapter.ChapterPageAdapter;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.WebSources.MangaJoy;
@@ -20,7 +19,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.Observable;
 
-public class MangaReaderFragment extends Fragment{
+public class ChapterReaderFragment extends Fragment{
 
 
     @Bind(R.id.pager) ViewPager viewPager;

@@ -15,20 +15,9 @@ import com.teioh.m_feed.OttoBus.BusProvider;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.Utils.SlidingTabLayout;
 
-//TODO
-//http://www.vogella.com/tutorials/AndroidServices/article.html
-//look into cupboard, rehaul local database
-
 public class MainActivity extends AppCompatActivity {
 
     ViewPagerAdapterMain mViewPagerAdapterMain;
-
-    //TODO loading circle for async tasks (tab 3)
-    //TODO webview for reading
-    //TODO listen for push notifications to update recent and library
-    //TODO update all with current info
-    //just query latest updated, and update the manga object in listview
-
     private ViewPager mViewPager;
     private SlidingTabLayout tabs;
     private CharSequence Titles[] = {"Recent", "Library", "All"};
@@ -42,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         //Determines whether user needs to login/signup
 //        if (ParseAnonymousUtils.isLinked(ParseUser.getCurrentUser())) {
 //            Fragment fragment = new LoginFragment();
-//            getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack("MangaFragment").commit();
+//            getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack().commit();
 //
 //        } else {
 //            ParseUser currentUser = ParseUser.getCurrentUser();
@@ -50,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 //                Intent intent = new Intent(MainActivity.this,
 //                        LoginFragment.class);
 //                Fragment fragment = new LoginFragment();
-//                getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack("MangaFragment").commit();
+//                getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack().commit();
 //            }
 //        }
         setContentView(R.layout.activity_layout);
@@ -95,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == 0) {
             ParseUser.getCurrentUser().logOut();
             Fragment fragment = new LoginFragment();
-            getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack("MangaFragment").commit();
+            getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack(null).commit();
 
         }
         return super.onOptionsItemSelected(item);

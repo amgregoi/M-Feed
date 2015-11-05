@@ -13,14 +13,13 @@ import android.widget.SearchView;
 
 import com.squareup.otto.Subscribe;
 import com.teioh.m_feed.MangaPackage.MangaActivity;
-import com.teioh.m_feed.OttoBus.ChangeTitle;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.OttoBus.RemoveFromLibrary;
 import com.teioh.m_feed.OttoBus.UpdateListEvent;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.OttoBus.BusProvider;
 import com.teioh.m_feed.Database.MangaFeedDbHelper;
-import com.teioh.m_feed.ReactiveQueryManager;
+import com.teioh.m_feed.Database.ReactiveQueryManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +30,7 @@ import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 import rx.Observable;
 
-public class Tab3 extends Fragment implements SearchView.OnQueryTextListener {
+public class LibraryFragment extends Fragment implements SearchView.OnQueryTextListener {
     @Bind(R.id.search_view_3) SearchView mSearchView;
     @Bind(R.id.all_list_view) GridView mListView;
     private ArrayList<Manga> mangaList;
@@ -95,10 +94,6 @@ public class Tab3 extends Fragment implements SearchView.OnQueryTextListener {
 
     //Event method, update list when we recieve push for updated manga
     @Subscribe public void onPushRecieved(UpdateListEvent event) {
-        // TODO
-        // pull recently updated mangas from parse
-        // update local storage with latest chapter
-        // update objects currently in listview
     }
 
     //querychange for searchview

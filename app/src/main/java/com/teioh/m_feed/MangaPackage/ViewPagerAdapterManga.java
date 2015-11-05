@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.teioh.m_feed.MangaPackage.Chapter.ChapterListFragment;
 import com.teioh.m_feed.Models.Manga;
 
 public class ViewPagerAdapterManga extends FragmentStatePagerAdapter {
@@ -22,21 +23,17 @@ public class ViewPagerAdapterManga extends FragmentStatePagerAdapter {
 
     }
 
-    //This method return the fragment for the every position in the View Pager
     @Override
     public Fragment getItem(int position) {
+        Bundle b = new Bundle();
+        b.putParcelable("Manga", manga);
 
-        if (position == 0) // if the position is 0 we are returning the First tab
-        {
-            Bundle b = new Bundle();
-            b.putParcelable("Manga", manga);
-            Fragment mangaFragment = new MangaFragment();
+        if (position == 0){
+            Fragment mangaFragment = new MangaInformationFragment();
             mangaFragment.setArguments(b);
             return mangaFragment;
         } else{
-            Bundle b = new Bundle();
-            b.putParcelable("Manga", manga);
-            Fragment mangaChapterFragment = new MangaChapterListFragment();
+            Fragment mangaChapterFragment = new ChapterListFragment();
             mangaChapterFragment.setArguments(b);
             return mangaChapterFragment;
         }

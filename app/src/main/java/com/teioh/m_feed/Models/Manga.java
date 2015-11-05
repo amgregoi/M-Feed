@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 import java.util.Date;
 
-//TODO - subclassing parse object
 public class Manga implements Parcelable {
     private String mTitle;
     private String mLatestChapter;

@@ -1,7 +1,5 @@
 #write long running process
 #call mjScrapeUpdates every x interval to scrape updates and update parse
-#TODO - take care of push notification
-#TODO - build simple app for notifications
 import time
 import os
 

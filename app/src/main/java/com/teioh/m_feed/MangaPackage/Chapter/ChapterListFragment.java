@@ -1,4 +1,4 @@
-package com.teioh.m_feed.MangaPackage;
+package com.teioh.m_feed.MangaPackage.Chapter;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,17 +24,15 @@ import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 import rx.Observable;
 
-public class MangaChapterListFragment extends Fragment {
+public class ChapterListFragment extends Fragment {
 
     @Bind(R.id.mangaChapterList) ListView mChapterListView;
     private Observable<List<Chapter>> observableChapterList;
     private ArrayList<Chapter> chapterList;
-    private ArrayAdapter<Chapter> mAdapter;
+    private ChapterListAdapter mAdapter;
     private Manga manga;
 
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.manga_chapters_fragment, container, false);
         ButterKnife.bind(this, v);
         manga = getArguments().getParcelable("Manga");
@@ -48,29 +46,21 @@ public class MangaChapterListFragment extends Fragment {
         Bundle b = new Bundle();
         Chapter chapter = chapterList.get(pos);
         b.putParcelable("Chapter", chapter);
-        Fragment fragment = new MangaReaderFragment();
+        Fragment fragment = new ChapterReaderFragment();
         fragment.setArguments(b);
-        getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack("MangaFragment").commit();
+        getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack(null).commit();
     }
 
     private void udpateChapterList(List<Chapter> chapters) {
         try {
             if (chapters != null) {
                 chapterList = new ArrayList<>(chapters);
-                mAdapter = new ArrayAdapter<>(getContext(), R.layout.chapter_list, R.id.chapter_list_item, chapterList);
+                mAdapter = new ChapterListAdapter(getContext(), R.layout.chapter_list_item, chapterList);
                 mChapterListView.setAdapter(mAdapter);
                 mAdapter.notifyDataSetChanged();
-                //LinearLayout header = (LinearLayout)LayoutInflater.from(getContext()).inflate(R.layout.manga_info_fragment, null);
             }
-        }catch(NullPointerException e)
-        {
+        }catch(NullPointerException e){
             Log.e("ChapterList", e.toString() + "\twhile updating chapter list");
         }
     }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroy();
-    }
-
 }
