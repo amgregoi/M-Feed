@@ -6,6 +6,7 @@
     android:background="@android:color/white"
     android:clickable="true">
 
+
     <ListView
         android:id="@+id/mangaChapterList"
         android:layout_width="fill_parent"

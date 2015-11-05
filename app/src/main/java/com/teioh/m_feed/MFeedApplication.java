@@ -1,12 +1,13 @@
 package com.teioh.m_feed;
 import android.app.Application;
+import android.content.Context;
 
 import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
-import com.teioh.m_feed.Pojo.Chapter;
-import com.teioh.m_feed.Pojo.Manga;
+import com.teioh.m_feed.Models.Chapter;
+import com.teioh.m_feed.Models.Manga;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
@@ -28,6 +29,7 @@ public class MFeedApplication extends Application{
             aInstance = this;
         }
 
+
     @Override
     public void onCreate(){
         super.onCreate();
@@ -45,4 +47,5 @@ public class MFeedApplication extends Application{
         public static synchronized MFeedApplication getInstance() {
             return aInstance;
         }
+
 }

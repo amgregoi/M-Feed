@@ -1,12 +1,9 @@
-package com.teioh.m_feed.Fragment;
+package com.teioh.m_feed.MangaPackage;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +13,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.parse.ParseInstallation;
-import com.teioh.m_feed.Pojo.Manga;
-import com.teioh.m_feed.Utils.RemoveFromLibrary;
+import com.teioh.m_feed.OttoBus.ChangeTitle;
+import com.teioh.m_feed.Models.Manga;
+import com.teioh.m_feed.OttoBus.RemoveFromLibrary;
 import com.teioh.m_feed.R;
-import com.teioh.m_feed.Utils.BusProvider;
+import com.teioh.m_feed.OttoBus.BusProvider;
 import com.teioh.m_feed.Database.MangaFeedDbHelper;
+import com.teioh.m_feed.ReactiveQueryManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,8 +35,6 @@ public class MangaFragment extends Fragment {
     @Bind(R.id.mangaDescription) TextView description;
     @Bind(R.id.followButton) Button followButton;
     @Bind(R.id.readButton) Button readButton;
-
-    private MangaFeedDbHelper mDbHelper;
     private Manga item;
 
 
@@ -46,7 +43,6 @@ public class MangaFragment extends Fragment {
         View v = inflater.inflate(R.layout.manga_info_fragment, container, false);
         ButterKnife.bind(this, v);
 
-        mDbHelper = new MangaFeedDbHelper(getContext());
         item = getArguments().getParcelable("Manga");
         if (item.getFollowing()) {
             followButton.setText("Unfollow");
@@ -54,10 +50,8 @@ public class MangaFragment extends Fragment {
             followButton.setText("Follow");
         }
 
-        getActivity().setTitle(item.getTitle());
         //Picasso.with(getContext()).load(item.getPicUrl()).into(img);
         Glide.with(getContext()).load(item.getPicUrl()).into(img);
-
 
         //TODO need to scrape descriptions, this is just temporary text
         description.setText("In the decade since the world became aware of the existence of magic, the world has undergone massive upheaval. However, a boy named Touta lives in seclusion in a rural town far removed from these changes. His ordinary life is highlighted by his magic-using female teacher and his supportive friends. When his tranquil daily life is disrupted, he embarks on a unique adventure.");
@@ -66,35 +60,33 @@ public class MangaFragment extends Fragment {
         return v;
     }
 
-    @Override public void onDestroyView() {
-        super.onDestroyView();
-        getActivity().setTitle("Manga Feed");
+    @Override public void onResume() {
+        super.onResume();
+        BusProvider.getInstance().register(this);
     }
 
+    @Override public void onPause() {
+        super.onPause();
+        BusProvider.getInstance().unregister(this);
+    }
+
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
 
 
     @OnClick(R.id.followButton) void onClick(View v) {
         final boolean follow = item.setFollowing(!item.getFollowing());
-        ParseInstallation pi = ParseInstallation.getCurrentInstallation();
-        ArrayList<String> channel = new ArrayList<>(Arrays.asList("m_" + item.getMangaId()));
         if (follow) {
             followButton.setText("Unfollow");
-            ParseInstallation.getCurrentInstallation().addAllUnique("channels", channel);
+            MangaFeedDbHelper.getInstance().updateMangaFollow(item);
+            BusProvider.getInstance().post(item);
         } else {
             followButton.setText("Follow");
-            ParseInstallation.getCurrentInstallation().removeAll("channels", channel);
+            MangaFeedDbHelper.getInstance().updateMangaUnfollow(item);
+            BusProvider.getInstance().post(new RemoveFromLibrary(item));
         }
-        pi.saveEventually(
-                e -> {
-                    if (e == null) {
-                        if (follow) {
-                            mDbHelper.updateMangaFollow(item);
-                            BusProvider.getInstance().post(item);
-                        } else {
-                            mDbHelper.updateMangaUnfollow(item);
-                            BusProvider.getInstance().post(new RemoveFromLibrary(item));
-                        }
-                    }
-                });
+
     }
 }

@@ -1,9 +1,8 @@
-package com.teioh.m_feed.Pojo;
+package com.teioh.m_feed.Models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.Comparator;
 import java.util.Date;
 
 //TODO - subclassing parse object

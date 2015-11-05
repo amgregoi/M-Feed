@@ -1,6 +1,6 @@
-package com.teioh.m_feed.Utils;
+package com.teioh.m_feed.OttoBus;
 
-import com.teioh.m_feed.Pojo.Manga;
+import com.teioh.m_feed.Models.Manga;
 
 /**
  * Created by Asus1 on 10/21/2015.

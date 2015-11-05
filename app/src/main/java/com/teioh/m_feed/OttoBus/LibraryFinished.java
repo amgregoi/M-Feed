@@ -1,4 +1,4 @@
-package com.teioh.m_feed.Utils;
+package com.teioh.m_feed.OttoBus;
 
 /**
  * Created by Asus1 on 10/23/2015.

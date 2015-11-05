@@ -1,10 +1,7 @@
-package com.teioh.m_feed;
+package com.teioh.m_feed.MangaPackage;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,13 +9,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.parse.ParseUser;
-import com.teioh.m_feed.Adapter.ViewPagerAdapterManga;
-import com.teioh.m_feed.Fragment.LoginFragment;
-import com.teioh.m_feed.Pojo.Manga;
-import com.teioh.m_feed.Utils.BusProvider;
+import com.squareup.otto.Subscribe;
+import com.teioh.m_feed.MainPackage.LoginFragment;
+import com.teioh.m_feed.OttoBus.ChangeTitle;
+import com.teioh.m_feed.Models.Manga;
+import com.teioh.m_feed.OttoBus.BusProvider;
+import com.teioh.m_feed.R;
 import com.teioh.m_feed.Utils.SlidingTabLayout;
 
-public class MangaActivity extends FragmentActivity {
+public class MangaActivity extends AppCompatActivity {
 
     private ViewPagerAdapterManga mViewPagerAdapterManga;
     private ViewPager mViewPager;
@@ -30,8 +29,8 @@ public class MangaActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_layout);
-
         Manga item = getIntent().getParcelableExtra("Manga");
+        setTitle(item.getTitle());
 
         mViewPagerAdapterManga = new ViewPagerAdapterManga(getSupportFragmentManager(), Titles, Numbtabs, item);
         mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -75,17 +74,11 @@ public class MangaActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         BusProvider.getInstance().register(this);
-
-        // Register ourselves so that we can provide the initial value.
-        BusProvider.getInstance().register(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        BusProvider.getInstance().unregister(this);
-
-        // Always unregister when an object no longer should be on the bus.
         BusProvider.getInstance().unregister(this);
     }
 }

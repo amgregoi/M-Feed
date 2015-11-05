@@ -2,27 +2,25 @@ package com.teioh.m_feed.Database;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteCantOpenDatabaseException;
-import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.teioh.m_feed.MFeedApplication;
-import com.teioh.m_feed.Pojo.Manga;
+import com.teioh.m_feed.Models.Manga;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+
+import nl.qbusict.cupboard.QueryResultIterable;
+import rx.Observable;
+import rx.Subscriber;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
@@ -31,8 +29,6 @@ public class MangaFeedDbHelper extends SQLiteOpenHelper {
     private static final String DB_PATH = "/data/data/com.teioh.m_feed/databases/";
     private static final String DB_NAME = "MangaFeed.db";
     private static MangaFeedDbHelper aInstance;
-
-
     private Context myContext;
 
     public MangaFeedDbHelper(Context context) {
@@ -55,10 +51,6 @@ public class MangaFeedDbHelper extends SQLiteOpenHelper {
         cupboard().withDatabase(db).upgradeTables();
     }
 
-    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-    }
-
     public void createDatabase() {
         createDB();
     }
@@ -66,7 +58,6 @@ public class MangaFeedDbHelper extends SQLiteOpenHelper {
     private void createDB() {
         boolean dbExist = DBExists();
         if(!dbExist) {
-            Log.e("rawr", "i copied that bitch goooood");
             this.getReadableDatabase();
             copyDBFromResource();
         }
@@ -89,7 +80,7 @@ public class MangaFeedDbHelper extends SQLiteOpenHelper {
         if (db != null) {
             db.close();
         }
-        return db != null ? true : false;
+        return db != null;
     }
 
     private void copyDBFromResource() {
@@ -110,11 +101,6 @@ public class MangaFeedDbHelper extends SQLiteOpenHelper {
         } catch (IOException e) {
             throw new Error("Problem copying database from resource file.");
         }
-    }
-
-    //TODO
-    public void syncDatabase() {
-
     }
 
     public void updateMangaFollow(Manga item)

@@ -1,8 +1,6 @@
-package com.teioh.m_feed;
+package com.teioh.m_feed.MainPackage;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -10,13 +8,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.parse.ParseAnonymousUtils;
 import com.parse.ParseUser;
-import com.teioh.m_feed.Adapter.ViewPagerAdapterMain;
-import com.teioh.m_feed.Fragment.LoginFragment;
-import com.teioh.m_feed.Pojo.Manga;
-import com.teioh.m_feed.Utils.BusProvider;
-import com.teioh.m_feed.Utils.RemoveFromLibrary;
+import com.squareup.otto.Subscribe;
+import com.teioh.m_feed.OttoBus.ChangeTitle;
+import com.teioh.m_feed.OttoBus.BusProvider;
+import com.teioh.m_feed.R;
 import com.teioh.m_feed.Utils.SlidingTabLayout;
 
 //TODO
@@ -41,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle(getString(R.string.app_name));
 
         //Determines whether user needs to login/signup
 //        if (ParseAnonymousUtils.isLinked(ParseUser.getCurrentUser())) {

@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.parse.ParsePushBroadcastReceiver;
+import com.teioh.m_feed.OttoBus.BusProvider;
+import com.teioh.m_feed.OttoBus.UpdateListEvent;
 
 public class ParsePushReciever extends ParsePushBroadcastReceiver {
 

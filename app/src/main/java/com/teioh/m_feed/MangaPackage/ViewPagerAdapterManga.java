@@ -1,16 +1,11 @@
-package com.teioh.m_feed.Adapter;
+package com.teioh.m_feed.MangaPackage;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.teioh.m_feed.Fragment.MangaChapterFragment;
-import com.teioh.m_feed.Fragment.MangaFragment;
-import com.teioh.m_feed.Fragment.Tab1;
-import com.teioh.m_feed.Fragment.Tab2;
-import com.teioh.m_feed.Fragment.Tab3;
-import com.teioh.m_feed.Pojo.Manga;
+import com.teioh.m_feed.Models.Manga;
 
 public class ViewPagerAdapterManga extends FragmentStatePagerAdapter {
 
@@ -41,7 +36,7 @@ public class ViewPagerAdapterManga extends FragmentStatePagerAdapter {
         } else{
             Bundle b = new Bundle();
             b.putParcelable("Manga", manga);
-            Fragment mangaChapterFragment = new MangaChapterFragment();
+            Fragment mangaChapterFragment = new MangaChapterListFragment();
             mangaChapterFragment.setArguments(b);
             return mangaChapterFragment;
         }

@@ -1,12 +1,12 @@
-package com.teioh.m_feed.Adapter;
+package com.teioh.m_feed.MainPackage;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.teioh.m_feed.Fragment.Tab1;
-import com.teioh.m_feed.Fragment.Tab2;
-import com.teioh.m_feed.Fragment.Tab3;
+import com.teioh.m_feed.MainPackage.Tab1;
+import com.teioh.m_feed.MainPackage.Tab2;
+import com.teioh.m_feed.MainPackage.Tab3;
 
 public class ViewPagerAdapterMain extends FragmentStatePagerAdapter {
 

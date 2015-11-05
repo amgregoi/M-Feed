@@ -1,34 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
 
-    <GridView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_container"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:verticalSpacing="@dimen/baseline_grid_unit"
-        android:horizontalSpacing="@dimen/baseline_grid_unit"
-        android:columnWidth="@dimen/grid_item_width"
-        android:numColumns="auto_fit"
-        android:stretchMode="columnWidth"
-        android:drawSelectorOnTop="true"
-        android:fastScrollEnabled="true"
-        android:id="@+id/recent_list_view" />
+        android:layout_height="match_parent">
 
-
-    <!--
-        <ListView
+        <GridView
             android:id="@+id/recent_list_view"
-            android:layout_width="200dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="2dp"
-            android:layout_weight=".5" />
-        <ListView
-            android:id="@+id/recent_list_view2"
-            android:layout_width="200dp"
-            android:layout_height="match_parent"
-            android:layout_margin="2dp"
-            android:layout_weight=".5" />
-            -->
+            android:clipToPadding="false"
+            android:columnWidth="@dimen/grid_item_width"
+            android:drawSelectorOnTop="true"
+            android:fastScrollEnabled="true"
+            android:horizontalSpacing="@dimen/baseline_grid_unit"
+            android:numColumns="auto_fit"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="@dimen/baseline_grid_unit"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

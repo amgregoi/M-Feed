@@ -1,4 +1,4 @@
-package com.teioh.m_feed.Utils;
+package com.teioh.m_feed.OttoBus;
 
 import android.os.Handler;
 import android.os.Looper;
