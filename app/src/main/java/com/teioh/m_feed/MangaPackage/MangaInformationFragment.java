@@ -4,6 +4,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,18 +18,26 @@ import com.teioh.m_feed.OttoBus.RemoveFromLibrary;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.OttoBus.BusProvider;
 import com.teioh.m_feed.Database.MangaFeedDbHelper;
+import com.teioh.m_feed.WebSources.MangaJoy;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.Observable;
 
 
 public class MangaInformationFragment extends Fragment {
 
     @Bind(R.id.manga_image) ImageView img;
     @Bind(R.id.mangaDescription) TextView description;
+    @Bind(R.id.author) TextView author;
+    @Bind(R.id.artist) TextView artist;
+    @Bind(R.id.genre) TextView genres;
+    @Bind(R.id.status) TextView status;
+
     @Bind(R.id.followButton) Button followButton;
     @Bind(R.id.readButton) Button readButton;
+
     private Manga item;
 
 
@@ -48,10 +57,35 @@ public class MangaInformationFragment extends Fragment {
         Glide.with(getContext()).load(item.getPicUrl()).into(img);
 
         //TODO need to scrape descriptions, this is just temporary text
-        description.setText("In the decade since the world became aware of the existence of magic, the world has undergone massive upheaval. However, a boy named Touta lives in seclusion in a rural town far removed from these changes. His ordinary life is highlighted by his magic-using female teacher and his supportive friends. When his tranquil daily life is disrupted, he embarks on a unique adventure.");
-        description.setTypeface(Typeface.SERIF);
-
+        if(item.getDescription() != null) {
+            description.setText(item.getDescription());
+            description.setTypeface(Typeface.SERIF);
+            author.setText(item.getmAuthor());
+            artist.setText(item.getmArtist());
+            genres.setText(item.getmGenre());
+            status.setText(item.getmStatus());
+        }
+        else {
+            Observable<Manga> observableManga;
+            observableManga = MangaJoy.updateMangaObservable(item);
+            observableManga.subscribe(manga -> updateView(manga));
+        }
         return v;
+    }
+
+    private void updateView(Manga manga)
+    {
+        item = manga;
+        if(manga.getDescription() != null) {
+            description.setText(item.getDescription());
+            description.setTypeface(Typeface.SERIF);
+            author.setText(item.getmAuthor());
+            artist.setText(item.getmArtist());
+            genres.setText(item.getmGenre());
+            status.setText(item.getmStatus());
+            Glide.with(getContext()).load(manga.getPicUrl()).into(img);
+
+        }
     }
 
     @Override public void onResume() {

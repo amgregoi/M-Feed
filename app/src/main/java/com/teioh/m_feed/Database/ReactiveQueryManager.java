@@ -35,7 +35,7 @@ public class ReactiveQueryManager {
      */
     public static Observable<List<Manga>> getMangaLibraryObservable() {
         return pullMangaFromDatabase()
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .onErrorReturn(new Func1<Throwable, List<Manga>>() {
                     @Override
@@ -73,7 +73,7 @@ public class ReactiveQueryManager {
 
 
     /*
-     * FollowingFragment gets manga in users library
+     * FollowFragment gets manga in users library
      */
     public static Observable<List<Manga>> getFollowedMangaObservable() {
         return pullFollowedMangaFromDatabase()
@@ -112,4 +112,6 @@ public class ReactiveQueryManager {
         itr.close();
         return mangaList;
     }
+
+
 }

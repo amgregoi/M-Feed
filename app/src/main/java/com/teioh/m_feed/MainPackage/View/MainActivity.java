@@ -1,16 +1,15 @@
-package com.teioh.m_feed.MainPackage;
+package com.teioh.m_feed.MainPackage.View;
 
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.parse.ParseUser;
-import com.squareup.otto.Subscribe;
-import com.teioh.m_feed.OttoBus.ChangeTitle;
+import com.teioh.m_feed.MainPackage.View.Fragments.LoginFragment;
+import com.teioh.m_feed.MainPackage.Adapters.ViewPagerAdapterMain;
 import com.teioh.m_feed.OttoBus.BusProvider;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.Utils.SlidingTabLayout;

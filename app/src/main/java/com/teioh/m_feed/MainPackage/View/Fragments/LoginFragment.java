@@ -1,4 +1,4 @@
-package com.teioh.m_feed.MainPackage;
+package com.teioh.m_feed.MainPackage.View.Fragments;
 
 import android.app.Fragment;
 import android.content.Context;

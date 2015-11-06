@@ -3,6 +3,7 @@ package com.teioh.m_feed.MangaPackage.Chapter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,8 @@ import rx.Observable;
 public class ChapterListFragment extends Fragment {
 
     @Bind(R.id.mangaChapterList) ListView mChapterListView;
+    @Bind(R.id.swipe_container) SwipeRefreshLayout swipeRefresh;
+
     private Observable<List<Chapter>> observableChapterList;
     private ArrayList<Chapter> chapterList;
     private ChapterListAdapter mAdapter;
@@ -36,6 +39,8 @@ public class ChapterListFragment extends Fragment {
         View v = inflater.inflate(R.layout.manga_chapters_fragment, container, false);
         ButterKnife.bind(this, v);
         manga = getArguments().getParcelable("Manga");
+
+        swipeRefresh.post(() -> swipeRefresh.setRefreshing(true));  // starts activity with loading icon while retrieving list
         observableChapterList = MangaJoy.getChapterListObservable(manga.getMangaURL());
         observableChapterList.subscribe(chapters -> udpateChapterList(chapters));
 
@@ -62,5 +67,6 @@ public class ChapterListFragment extends Fragment {
         }catch(NullPointerException e){
             Log.e("ChapterList", e.toString() + "\twhile updating chapter list");
         }
+        swipeRefresh.setRefreshing(false);
     }
 }

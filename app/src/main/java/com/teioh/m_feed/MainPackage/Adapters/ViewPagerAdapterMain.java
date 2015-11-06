@@ -1,8 +1,12 @@
-package com.teioh.m_feed.MainPackage;
+package com.teioh.m_feed.MainPackage.Adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+
+import com.teioh.m_feed.MainPackage.View.Fragments.FollowFragment;
+import com.teioh.m_feed.MainPackage.View.Fragments.LibraryFragment;
+import com.teioh.m_feed.MainPackage.View.Fragments.RecentFragment;
 
 public class ViewPagerAdapterMain extends FragmentStatePagerAdapter {
 
@@ -23,9 +27,9 @@ public class ViewPagerAdapterMain extends FragmentStatePagerAdapter {
 
         if (position == 0) // if the position is 0 we are returning the First tab
         {
-            return new RecentUpdatesFragment();
+            return new RecentFragment();
         } else if (position == 1) {
-            return new FollowingFragment();
+            return new FollowFragment();
         } else {
             return new LibraryFragment();
         }

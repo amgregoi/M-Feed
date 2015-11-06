@@ -7,26 +7,30 @@ import java.util.Date;
 
 public class Manga implements Parcelable {
     private String mTitle;
-    private String mLatestChapter;
     private String mPicUrl;
     private String mMangaUrl;
-    private Date mLastUpdated;
-    private String mMangaId;
     private String mDescription;
     private boolean mFollowing;
-    private int mDBID;
+    private String mAuthor;
+    private String mArtist;
+    private String mGenre;
+    private String mStatus;
+    private String mSource;
 
     public Manga() {
     }
 
     protected Manga(Parcel in) {
         mTitle = in.readString();
-        mLatestChapter = in.readString();
         mPicUrl = in.readString();
         mMangaUrl = in.readString();
-        mMangaId = in.readString();
         mDescription = in.readString();
-        mDBID = in.readInt();
+
+        mAuthor = in.readString();
+        mArtist = in.readString();
+        mGenre = in.readString();
+        mStatus = in.readString();
+        mSource = in.readString();
         mFollowing = in.readByte() != 0;
     }
 
@@ -38,12 +42,14 @@ public class Manga implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(mTitle);
-        dest.writeString(mLatestChapter);
         dest.writeString(mPicUrl);
         dest.writeString(mMangaUrl);
-        dest.writeString(mMangaId);
         dest.writeString(mDescription);
-        dest.writeInt(mDBID);
+        dest.writeString(mAuthor);
+        dest.writeString(mArtist);
+        dest.writeString(mGenre);
+        dest.writeString(mStatus);
+        dest.writeString(mSource);
         dest.writeByte((byte) (mFollowing ? 1 : 0));
     }
 
@@ -64,8 +70,8 @@ public class Manga implements Parcelable {
         return mTitle;
     }
 
-    public String getLatestChapter() {
-        return mLatestChapter;
+    public void setTitle(String title) {
+        this.mTitle = title;
     }
 
     public String getDescription(){ return this.mDescription;}
@@ -76,44 +82,56 @@ public class Manga implements Parcelable {
         return mPicUrl;
     }
 
-    public Date getLastUpdated() {
-        return mLastUpdated;
+    public void setPicUrl(String picUrl) {
+        this.mPicUrl = picUrl;
     }
 
     public String getMangaURL() {
         return mMangaUrl;
     }
 
-    public String getMangaId() {
-        return mMangaId;
-    }
-
-    public void setTitle(String title) {
-        this.mTitle = title;
-    }
-
-    public void setLatestChapter(String latestChapter) {
-        this.mLatestChapter = latestChapter;
-    }
-
-    public void setPicUrl(String picUrl) {
-        this.mPicUrl = picUrl;
-    }
-
-    public void setLastUpdate(Date lastUpdate) {
-        this.mLastUpdated = lastUpdate;
-    }
-
-    public void setLastUpdate() {
-        this.mLastUpdated = new Date();
-    }
-
     public void setMangaUrl(String url) {
         this.mMangaUrl = url;
     }
 
-    public void setMangaId(String id) {
-        this.mMangaId = id;
+    public String getmAuthor() {
+        return mAuthor;
+    }
+
+    public void setmAuthor(String mAuthor) {
+        this.mAuthor = mAuthor;
+    }
+
+    public String getmArtist() {
+        return mArtist;
+    }
+
+    public void setmArtist(String mArtist) {
+        this.mArtist = mArtist;
+    }
+
+    public String getmGenre() {
+        return mGenre;
+    }
+
+    public void setmGenre(String mGenre) {
+        this.mGenre = mGenre;
+    }
+
+    public String getmStatus() {
+        return mStatus;
+    }
+
+    public void setmStatus(String mStatus) {
+        this.mStatus = mStatus;
+    }
+
+    public String getmSource() {
+        return mSource;
+    }
+
+    public void setmSource(String mSource) {
+        this.mSource = mSource;
     }
 
     public String toString() {
@@ -129,17 +147,8 @@ public class Manga implements Parcelable {
         return this.mFollowing;
     }
 
-    public int getDBID() {
-        return this.mDBID;
-    }
 
-    public void setDBID(int val) {
-        this.mDBID = val;
-    }
-
-    @Override
-    public boolean equals(Object object)
-    {
+    @Override public boolean equals(Object object) {
         boolean sameSame = false;
         if (object != null && object instanceof Manga)
         {

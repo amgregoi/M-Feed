@@ -1,4 +1,4 @@
-package com.teioh.m_feed.MainPackage;
+package com.teioh.m_feed.MainPackage.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
