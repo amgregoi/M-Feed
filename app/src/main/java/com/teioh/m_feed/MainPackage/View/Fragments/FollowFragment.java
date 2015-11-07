@@ -7,13 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.SearchView;
 
+import com.squareup.otto.Subscribe;
 import com.teioh.m_feed.MainPackage.Presenters.Mappers.BaseDirectoryMapper;
 import com.teioh.m_feed.MainPackage.Presenters.FollowPresenter;
 import com.teioh.m_feed.MainPackage.Adapters.SearchableAdapter;
 import com.teioh.m_feed.Models.Manga;
+import com.teioh.m_feed.OttoBus.QueryChange;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.MainPackage.Presenters.FollowPresenterImpl;
 
@@ -23,11 +26,10 @@ import butterknife.OnItemClick;
 
 public class FollowFragment extends Fragment implements BaseDirectoryMapper{
 
-    @Bind(R.id.search_view_2) SearchView mSearchView;
+//    @Bind(R.id.search_view_2) SearchView mSearchView;
     @Bind(R.id.library_list_view) GridView mListView;
 
     private FollowPresenter mFollowPresenter;
-
 
     @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab2, container, false);
@@ -72,7 +74,8 @@ public class FollowFragment extends Fragment implements BaseDirectoryMapper{
         return false;
     }
 
-    @Override public void registerAdapter(SearchableAdapter adapter) {
+    @Override
+    public void registerAdapter(BaseAdapter adapter) {
         if (adapter != null) {
             mListView.setTextFilterEnabled(true);
             mListView.setAdapter(adapter);
@@ -80,8 +83,8 @@ public class FollowFragment extends Fragment implements BaseDirectoryMapper{
         }
     }
 
-    @Override public void initializeSearch() {
-        mSearchView.setOnQueryTextListener(this);
-        mSearchView.setSubmitButtonEnabled(true);
+    @Subscribe
+    public void activityQueryChange(QueryChange q){
+        onQueryTextChange(q.getQuery());
     }
 }

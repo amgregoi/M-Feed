@@ -4,19 +4,28 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.parse.ParseUser;
 import com.teioh.m_feed.MainPackage.View.Fragments.LoginFragment;
 import com.teioh.m_feed.MainPackage.Adapters.ViewPagerAdapterMain;
 import com.teioh.m_feed.OttoBus.BusProvider;
+import com.teioh.m_feed.OttoBus.QueryChange;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.Utils.SlidingTabLayout;
 
-public class MainActivity extends AppCompatActivity {
+import org.w3c.dom.Text;
+
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener{
 
     ViewPagerAdapterMain mViewPagerAdapterMain;
+    SearchView mSearchView;
+    TextView mActivityTitle;
     private ViewPager mViewPager;
     private SlidingTabLayout tabs;
     private CharSequence Titles[] = {"Recent", "Library", "All"};
@@ -26,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle(getString(R.string.app_name));
+
+
 
         //Determines whether user needs to login/signup
 //        if (ParseAnonymousUtils.isLinked(ParseUser.getCurrentUser())) {
@@ -42,6 +53,19 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        }
         setContentView(R.layout.activity_layout);
+        mActivityTitle = (TextView) findViewById(R.id.activityTitle);
+        mSearchView = (SearchView) findViewById(R.id.search_view_1);
+        mSearchView.setOnQueryTextListener(this);
+        mSearchView.setSubmitButtonEnabled(true);
+        mSearchView.setOnQueryTextFocusChangeListener((view, queryTextFocused) -> {
+            if (!queryTextFocused) {
+                mActivityTitle.setVisibility(View.VISIBLE);
+                mSearchView.setIconified(true);
+                mSearchView.setQuery("", true);
+            }else{
+                mActivityTitle.setVisibility(View.GONE);
+            }
+        });
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -102,5 +126,17 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         // Always unregister when an object no longer should be on the bus.
         BusProvider.getInstance().unregister(this);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        Log.e("in main activity", "yup main");
+        BusProvider.getInstance().post(new QueryChange(newText));
+        return false;
     }
 }

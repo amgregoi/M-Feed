@@ -15,9 +15,6 @@ public interface RecentPresenter {
     void BusProviderRegister();
     void BusProviderUnregister();
     void setAdapter();
-    void initializeSearch();
-
     void onMangaAdd(Manga manga);
-
     void onMangaRemoved(RemoveFromLibrary rm);
 }

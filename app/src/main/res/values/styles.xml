@@ -1,8 +1,32 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <!--&lt;!&ndash; Base application theme. &ndash;&gt;-->
+    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
+        <!--&lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+    <!--</style>-->
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/ColorPrimary</item>
+        <item name="colorPrimaryDark">@color/ColorPrimaryDark</item>
+        <item name="colorAccent">@color/white</item>
+
+        <item name="searchViewStyle">@style/SearchViewStyle</item>
+
+        <item name="android:textColorHighlight">#99ff4081</item>
+        <!--<item name="android:textSelectHandleLeft">@drawable/text_select_handle_left</item>-->
+        <!--<item name="android:textSelectHandleRight">@drawable/text_select_handle_right</item>-->
+        <!--<item name="android:textSelectHandle">@drawable/text_select_handle_middle</item>-->
+
+        <!--<item name="android:fastScrollThumbDrawable">@drawable/fastscroll_thumb</item>-->
+    </style>
+
+
+    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <!-- Empty -->
+    </style>
+
+    <style name="ToolbarStyle" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <!-- Empty -->
     </style>
 
 </resources>

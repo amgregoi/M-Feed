@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 
+import com.squareup.otto.Subscribe;
 import com.teioh.m_feed.MainPackage.Presenters.Mappers.BaseDirectoryMapper;
 import com.teioh.m_feed.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.MainPackage.Adapters.SearchableAdapter;
@@ -26,9 +27,9 @@ public class RecentPresenterImpl implements RecentPresenter{
     private ArrayList<Manga> recentList;
     private SearchableAdapter mAdapter;
 
-    View mRecentFragmentView;
-    BaseDirectoryMapper mBaseMapper;
-    SwipeRefreshMapper mSwipeMapper;
+    private View mRecentFragmentView;
+    private BaseDirectoryMapper mBaseMapper;
+    private SwipeRefreshMapper mSwipeMapper;
 
     public RecentPresenterImpl(View v, BaseDirectoryMapper base)
     {
@@ -42,14 +43,17 @@ public class RecentPresenterImpl implements RecentPresenter{
         recentList = new ArrayList<>();
         mAdapter = new SearchableAdapter(mRecentFragmentView.getContext(), recentList);
         setAdapter();
-        initializeSearch();
         updateGridView();
         mSwipeMapper.startRefresh();
     }
 
     @Override public void updateGridView() {
-        observableMangaList = MangaJoy.getRecentUpdatesObservable();
-        observableMangaList.subscribe(manga -> udpateChapterList(manga));
+        if(recentList.size() == 0) {
+            observableMangaList = MangaJoy.getRecentUpdatesObservable();
+            observableMangaList.subscribe(manga -> udpateChapterList(manga));
+        }else{
+            //do some interval update
+        }
 
     }
 
@@ -71,28 +75,25 @@ public class RecentPresenterImpl implements RecentPresenter{
     }
 
     @Override public void onQueryTextChange(String newText) {
-
+        mAdapter.getFilter().filter(newText);
     }
 
     @Override public void ButterKnifeUnbind() {
-        ButterKnife.unbind(mRecentFragmentView);
+        ButterKnife.unbind(mBaseMapper);
     }
 
     @Override public void BusProviderRegister() {
-        BusProvider.getInstance().register(mRecentFragmentView);
+        BusProvider.getInstance().register(mBaseMapper);
     }
 
     @Override public void BusProviderUnregister() {
-        BusProvider.getInstance().unregister(mRecentFragmentView);
+        BusProvider.getInstance().unregister(mBaseMapper);
     }
 
     @Override public void setAdapter() {
         mBaseMapper.registerAdapter(mAdapter);
     }
 
-    @Override public void initializeSearch() {
-
-    }
 
     @Override public void onMangaAdd(Manga manga){
         for(Manga m : recentList)

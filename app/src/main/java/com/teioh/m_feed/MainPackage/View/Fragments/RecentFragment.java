@@ -1,19 +1,24 @@
 package com.teioh.m_feed.MainPackage.View.Fragments;
 
+import android.app.DownloadManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.SearchView;
 
 import com.squareup.otto.Subscribe;
 import com.teioh.m_feed.MainPackage.Presenters.Mappers.BaseDirectoryMapper;
 import com.teioh.m_feed.MainPackage.Adapters.SearchableAdapter;
 import com.teioh.m_feed.MainPackage.Presenters.Mappers.SwipeRefreshMapper;
+import com.teioh.m_feed.OttoBus.QueryChange;
 import com.teioh.m_feed.OttoBus.RemoveFromLibrary;
 import com.teioh.m_feed.MainPackage.Presenters.RecentPresenter;
 import com.teioh.m_feed.MainPackage.Presenters.RecentPresenterImpl;
@@ -29,68 +34,68 @@ public class RecentFragment extends Fragment implements BaseDirectoryMapper, Swi
     @Bind(R.id.recent_list_view) GridView mListView;
     @Bind(R.id.swipe_container) SwipeRefreshLayout swipeContainer;
 
-    private RecentPresenter mRecentPresenter;
+    private RecentPresenter mRecentPresenterManga;
 
     @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab1, container, false);
         ButterKnife.bind(this, v);
 
-        mRecentPresenter = new RecentPresenterImpl(v, this);
-        mRecentPresenter.initializeView();
         return v;
     }
 
     @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mRecentPresenterManga = new RecentPresenterImpl(this.getView(), this);
+        mRecentPresenterManga.initializeView();
     }
 
     @OnItemClick(R.id.recent_list_view) void onItemClick(AdapterView<?> adapter, View view, int pos) {
         final Manga item = (Manga) adapter.getItemAtPosition(pos);
-        mRecentPresenter.onItemClick(item);
+        mRecentPresenterManga.onItemClick(item);
     }
 
     @Override public void onDestroyView() {
         super.onDestroyView();
-        mRecentPresenter.ButterKnifeUnbind();
+        mRecentPresenterManga.ButterKnifeUnbind();
 
     }
 
     @Override public void onResume() {
         super.onResume();
-        mRecentPresenter.BusProviderRegister();
-        mRecentPresenter.updateGridView();
+        mRecentPresenterManga.BusProviderRegister();
+        mRecentPresenterManga.updateGridView();
     }
 
     @Override public void onPause() {
         super.onPause();
-        mRecentPresenter.BusProviderUnregister();
+        mRecentPresenterManga.BusProviderUnregister();
     }
 
     @Subscribe public void onMangaAdded(Manga manga) {
-        mRecentPresenter.onMangaAdd(manga);
+        mRecentPresenterManga.onMangaAdd(manga);
+    }
+
+    @Subscribe public void activityQueryChange(QueryChange q){
+        onQueryTextChange(q.getQuery());
     }
 
     @Subscribe public void onMangaRemoved(RemoveFromLibrary rm) {
-        mRecentPresenter.onMangaRemoved(rm);
+        mRecentPresenterManga.onMangaRemoved(rm);
     }
 
-    @Override public void registerAdapter(SearchableAdapter adapter) {
-        if(adapter != null)
-        {
+    @Override public void registerAdapter(BaseAdapter adapter) {
+        if (adapter != null) {
             mListView.setAdapter(adapter);
             mListView.setTextFilterEnabled(true);
         }
     }
 
-    @Override public void initializeSearch() {
-
-    }
-
-    @Override public boolean onQueryTextSubmit(String query) {
+    @Override public boolean onQueryTextSubmit(String newText) {
         return false;
     }
 
     @Override public boolean onQueryTextChange(String newText) {
+        mRecentPresenterManga.onQueryTextChange(newText);
         return false;
     }
 
@@ -104,7 +109,6 @@ public class RecentFragment extends Fragment implements BaseDirectoryMapper, Swi
     }
 
     @Override public void setupRefreshListener() {
-        swipeContainer.setOnRefreshListener(() -> mRecentPresenter.updateGridView());
-
+        swipeContainer.setOnRefreshListener(() -> mRecentPresenterManga.updateGridView());
     }
 }

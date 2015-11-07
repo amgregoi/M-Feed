@@ -28,11 +28,11 @@ public class FollowPresenterImpl implements FollowPresenter {
     private SearchableAdapter mAdapter;
 
     private View FollowFragmentView;
-    private BaseDirectoryMapper baseMapper;
+    private BaseDirectoryMapper mBaseMapper;
 
     public FollowPresenterImpl(View v, BaseDirectoryMapper map) {
         FollowFragmentView = v;
-        baseMapper = map;
+        mBaseMapper = map;
     }
 
     private void populateLibraryListView(List<Manga> mangaList) {
@@ -51,7 +51,6 @@ public class FollowPresenterImpl implements FollowPresenter {
         libraryList = new ArrayList<>();
         mAdapter = new SearchableAdapter(FollowFragmentView.getContext(), libraryList);
         setAdapter();
-        initializeSearch();
     }
 
     @Override public void updateGridView() {
@@ -97,19 +96,14 @@ public class FollowPresenterImpl implements FollowPresenter {
     }
 
     @Override  public void BusProviderRegister(){
-        BusProvider.getInstance().unregister(FollowFragmentView);
+        BusProvider.getInstance().register(mBaseMapper);
     }
 
     @Override  public void BusProviderUnregister(){
-        BusProvider.getInstance().register(FollowFragmentView);
+        BusProvider.getInstance().unregister(mBaseMapper);
     }
 
     @Override  public void setAdapter(){
-        baseMapper.registerAdapter(mAdapter);
-    }
-
-    @Override public void initializeSearch()
-    {
-        baseMapper.initializeSearch();
+        mBaseMapper.registerAdapter(mAdapter);
     }
 }

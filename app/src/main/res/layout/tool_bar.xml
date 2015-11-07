@@ -7,5 +7,36 @@
     android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:navigationIcon="@android:drawable/arrow_down_float"
-    />
+    >
+    <RelativeLayout
+        android:id="@+id/searchBar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/ColorPrimary"
+        android:paddingBottom="5dp">
+
+        <TextView
+            android:id="@+id/activityTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Manga Feed"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            />
+
+        <SearchView
+            android:id="@+id/search_view_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:gravity="end"
+            android:iconifiedByDefault="true"
+            android:queryHint="Search Here"
+            android:layout_alignParentEnd="true"
+
+            />
+    </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
 

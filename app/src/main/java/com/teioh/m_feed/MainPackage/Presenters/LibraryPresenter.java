@@ -12,7 +12,5 @@ public interface LibraryPresenter {
     void BusProviderRegister();
     void BusProviderUnregister();
     void setAdapter();
-    void initializeSearch();
-
     void onMangaRemoved(RemoveFromLibrary rm);
 }

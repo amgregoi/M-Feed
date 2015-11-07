@@ -11,5 +11,4 @@ public interface FollowPresenter {
     void BusProviderRegister();
     void BusProviderUnregister();
     void setAdapter();
-    void initializeSearch();
 }
