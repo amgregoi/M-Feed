@@ -83,6 +83,7 @@ public class FollowFragment extends Fragment implements BaseDirectoryMapper{
         }
     }
 
+
     @Subscribe
     public void activityQueryChange(QueryChange q){
         onQueryTextChange(q.getQuery());

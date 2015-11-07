@@ -1,14 +1,12 @@
 package com.teioh.m_feed.MainPackage.Presenters;
 
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 
-import com.squareup.otto.Subscribe;
 import com.teioh.m_feed.MainPackage.Presenters.Mappers.BaseDirectoryMapper;
 import com.teioh.m_feed.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.MainPackage.Adapters.SearchableAdapter;
-import com.teioh.m_feed.MangaPackage.MangaActivity;
+import com.teioh.m_feed.MangaPackage.View.MangaActivity;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.OttoBus.BusProvider;
 import com.teioh.m_feed.OttoBus.RemoveFromLibrary;

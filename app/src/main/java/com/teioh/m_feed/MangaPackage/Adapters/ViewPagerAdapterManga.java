@@ -1,11 +1,12 @@
-package com.teioh.m_feed.MangaPackage;
+package com.teioh.m_feed.MangaPackage.Adapters;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.teioh.m_feed.MangaPackage.Chapter.ChapterListFragment;
+import com.teioh.m_feed.MangaPackage.View.Fragments.ChapterListFragment;
+import com.teioh.m_feed.MangaPackage.View.Fragments.MangaInformationFragment;
 import com.teioh.m_feed.Models.Manga;
 
 public class ViewPagerAdapterManga extends FragmentStatePagerAdapter {

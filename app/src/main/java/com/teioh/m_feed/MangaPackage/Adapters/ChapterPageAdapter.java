@@ -1,4 +1,4 @@
-package com.teioh.m_feed.MangaPackage.Chapter;
+package com.teioh.m_feed.MangaPackage.Adapters;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;

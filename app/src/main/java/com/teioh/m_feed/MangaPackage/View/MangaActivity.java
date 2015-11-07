@@ -1,4 +1,4 @@
-package com.teioh.m_feed.MangaPackage;
+package com.teioh.m_feed.MangaPackage.View;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import com.parse.ParseUser;
 import com.teioh.m_feed.MainPackage.View.Fragments.LoginFragment;
+import com.teioh.m_feed.MangaPackage.Adapters.ViewPagerAdapterManga;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.OttoBus.BusProvider;
 import com.teioh.m_feed.R;

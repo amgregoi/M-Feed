@@ -1,4 +1,4 @@
-package com.teioh.m_feed.MangaPackage.Chapter;
+package com.teioh.m_feed.MangaPackage.View.Fragments;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.teioh.m_feed.MangaPackage.Chapter.ChapterPageAdapter;
+import com.teioh.m_feed.MangaPackage.Adapters.ChapterPageAdapter;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.WebSources.MangaJoy;

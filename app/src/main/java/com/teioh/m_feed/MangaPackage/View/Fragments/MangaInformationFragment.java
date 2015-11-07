@@ -1,4 +1,4 @@
-package com.teioh.m_feed.MangaPackage;
+package com.teioh.m_feed.MangaPackage.View.Fragments;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
