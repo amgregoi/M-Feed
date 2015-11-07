@@ -6,6 +6,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.parse.ParseUser;
 import com.teioh.m_feed.MainPackage.View.Fragments.LoginFragment;
@@ -23,11 +26,19 @@ public class MangaActivity extends AppCompatActivity {
     private CharSequence Titles[] = {"Info", "Chapters"};
     private int Numbtabs = 2;
 
+    TextView mActivityTitle;
+    SearchView mSearchView;
+
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_layout);
         Manga item = getIntent().getParcelableExtra("Manga");
-        setTitle(item.getTitle());
+
+        mActivityTitle = (TextView) findViewById(R.id.activityTitle);
+        mSearchView = (SearchView) findViewById(R.id.search_view_1);
+        mSearchView.setVisibility(View.GONE);
+        mActivityTitle.setText(item.getTitle());
+
 
         mViewPagerAdapterManga = new ViewPagerAdapterManga(getSupportFragmentManager(), Titles, Numbtabs, item);
         mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -73,5 +84,9 @@ public class MangaActivity extends AppCompatActivity {
     @Override protected void onPause() {
         super.onPause();
         BusProvider.getInstance().unregister(this);
+    }
+
+    @Override protected void onDestroy(){
+        super.onDestroy();
     }
 }

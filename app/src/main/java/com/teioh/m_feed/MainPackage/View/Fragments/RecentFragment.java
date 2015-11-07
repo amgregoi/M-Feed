@@ -1,22 +1,18 @@
 package com.teioh.m_feed.MainPackage.View.Fragments;
 
-import android.app.DownloadManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.SearchView;
 
 import com.squareup.otto.Subscribe;
 import com.teioh.m_feed.MainPackage.Presenters.Mappers.BaseDirectoryMapper;
-import com.teioh.m_feed.MainPackage.Adapters.SearchableAdapter;
 import com.teioh.m_feed.MainPackage.Presenters.Mappers.SwipeRefreshMapper;
 import com.teioh.m_feed.OttoBus.QueryChange;
 import com.teioh.m_feed.OttoBus.RemoveFromLibrary;
@@ -47,6 +43,8 @@ public class RecentFragment extends Fragment implements BaseDirectoryMapper, Swi
         super.onActivityCreated(savedInstanceState);
         mRecentPresenterManga = new RecentPresenterImpl(this.getView(), this);
         mRecentPresenterManga.initializeView();
+        mRecentPresenterManga.setAdapter();
+        mRecentPresenterManga.updateGridView();
     }
 
     @OnItemClick(R.id.recent_list_view) void onItemClick(AdapterView<?> adapter, View view, int pos) {

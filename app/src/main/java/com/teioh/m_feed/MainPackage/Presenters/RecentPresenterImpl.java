@@ -1,6 +1,7 @@
 package com.teioh.m_feed.MainPackage.Presenters;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 
 import com.teioh.m_feed.MainPackage.Presenters.Mappers.BaseDirectoryMapper;
@@ -19,7 +20,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import rx.Observable;
 
-public class RecentPresenterImpl implements RecentPresenter{
+public class RecentPresenterImpl implements RecentPresenter {
 
     private Observable<List<Manga>> observableMangaList;
     private ArrayList<Manga> recentList;
@@ -29,36 +30,31 @@ public class RecentPresenterImpl implements RecentPresenter{
     private BaseDirectoryMapper mBaseMapper;
     private SwipeRefreshMapper mSwipeMapper;
 
-    public RecentPresenterImpl(View v, BaseDirectoryMapper base)
-    {
+    public RecentPresenterImpl(View v, BaseDirectoryMapper base) {
         mRecentFragmentView = v;
         mBaseMapper = base;
         mSwipeMapper = (SwipeRefreshMapper) base;
     }
 
-    @Override public void initializeView() {
+    @Override
+    public void initializeView() {
         MangaFeedDbHelper.getInstance().createDatabase();
         recentList = new ArrayList<>();
         mAdapter = new SearchableAdapter(mRecentFragmentView.getContext(), recentList);
-        setAdapter();
-        updateGridView();
         mSwipeMapper.startRefresh();
+        mSwipeMapper.setupRefreshListener();
     }
 
-    @Override public void updateGridView() {
-        if(recentList.size() == 0) {
-            observableMangaList = MangaJoy.getRecentUpdatesObservable();
-            observableMangaList.subscribe(manga -> udpateChapterList(manga));
-        }else{
-            //do some interval update
-        }
-
+    @Override
+    public void updateGridView() {
+        observableMangaList = MangaJoy.getRecentUpdatesObservable();
+        observableMangaList.subscribe(manga -> udpateChapterList(manga));
     }
 
     private void udpateChapterList(List<Manga> manga) {
         if (manga != null) {
             recentList.clear();
-            for(Manga m : manga) {
+            for (Manga m : manga) {
                 recentList.add(m);
             }
             mAdapter.notifyDataSetChanged();
@@ -66,38 +62,43 @@ public class RecentPresenterImpl implements RecentPresenter{
         mSwipeMapper.stopRefresh();
     }
 
-    @Override public void onItemClick(Manga item) {
+    @Override
+    public void onItemClick(Manga item) {
         Intent intent = new Intent(mRecentFragmentView.getContext(), MangaActivity.class);
         intent.putExtra("Manga", item);
         mRecentFragmentView.getContext().startActivity(intent);
     }
 
-    @Override public void onQueryTextChange(String newText) {
+    @Override
+    public void onQueryTextChange(String newText) {
         mAdapter.getFilter().filter(newText);
     }
 
-    @Override public void ButterKnifeUnbind() {
+    @Override
+    public void ButterKnifeUnbind() {
         ButterKnife.unbind(mBaseMapper);
     }
 
-    @Override public void BusProviderRegister() {
+    @Override
+    public void BusProviderRegister() {
         BusProvider.getInstance().register(mBaseMapper);
     }
 
-    @Override public void BusProviderUnregister() {
+    @Override
+    public void BusProviderUnregister() {
         BusProvider.getInstance().unregister(mBaseMapper);
     }
 
-    @Override public void setAdapter() {
+    @Override
+    public void setAdapter() {
         mBaseMapper.registerAdapter(mAdapter);
     }
 
 
-    @Override public void onMangaAdd(Manga manga){
-        for(Manga m : recentList)
-        {
-            if(m.equals(manga))
-            {
+    @Override
+    public void onMangaAdd(Manga manga) {
+        for (Manga m : recentList) {
+            if (m.equals(manga)) {
                 m = manga;
                 m.setFollowing(false);
                 break;
@@ -105,12 +106,11 @@ public class RecentPresenterImpl implements RecentPresenter{
         }
     }
 
-    @Override public void onMangaRemoved(RemoveFromLibrary rm){
+    @Override
+    public void onMangaRemoved(RemoveFromLibrary rm) {
         Manga manga = rm.getManga();
-        for(Manga m : recentList)
-        {
-            if(m.equals(manga))
-            {
+        for (Manga m : recentList) {
+            if (m.equals(manga)) {
                 m = manga;
                 m.setFollowing(false);
                 break;

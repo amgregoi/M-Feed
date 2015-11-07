@@ -22,7 +22,7 @@
             android:text="Manga Feed"
             android:textSize="30sp"
             android:textStyle="bold"
-            android:ellipsize="marquee"
+            android:ellipsize="end"
             android:singleLine="true"
             />
 
