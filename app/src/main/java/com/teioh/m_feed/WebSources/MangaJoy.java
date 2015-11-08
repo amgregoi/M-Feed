@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.teioh.m_feed.Database.MangaFeedDbHelper;
+import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 
