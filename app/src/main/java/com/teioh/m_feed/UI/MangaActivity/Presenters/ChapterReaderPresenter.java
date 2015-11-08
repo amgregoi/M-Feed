@@ -11,4 +11,5 @@ public interface ChapterReaderPresenter {
 
     void updateView(List<String> urlList);
 
+    void butterKnifeUnbind();
 }

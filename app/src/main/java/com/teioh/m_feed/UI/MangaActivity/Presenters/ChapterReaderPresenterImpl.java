@@ -10,6 +10,7 @@ import com.teioh.m_feed.WebSources.MangaJoy;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.ButterKnife;
 import rx.Observable;
 
 public class ChapterReaderPresenterImpl implements  ChapterReaderPresenter{
@@ -33,5 +34,10 @@ public class ChapterReaderPresenterImpl implements  ChapterReaderPresenter{
         ArrayList<String> urls = new ArrayList<>(urlList);
         ChapterPageAdapter chapterAdapter = new ChapterPageAdapter(mChapterReaderMapper.getContext(), urls);
         mChapterReaderMapper.registerAdapter(chapterAdapter);
+    }
+
+    @Override
+    public void butterKnifeUnbind() {
+        ButterKnife.unbind(mChapterReaderMapper);
     }
 }

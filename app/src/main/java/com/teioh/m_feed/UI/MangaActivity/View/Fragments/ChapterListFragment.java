@@ -39,6 +39,11 @@ public class ChapterListFragment extends Fragment implements ChapterListMapper {
         return v;
     }
 
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        mChapterListPresenter.butterKnifeUnbind();
+    }
+
     @OnItemClick(R.id.mangaChapterList)
     void onItemClick(AdapterView<?> adapter, View view, int pos) {
         mChapterListPresenter.onChapterClicked(pos);

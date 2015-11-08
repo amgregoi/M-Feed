@@ -15,4 +15,6 @@ public interface  ChapterListPresenter{
 
     void updateChapterList(List<Chapter> chapters);
 
+    void butterKnifeUnbind();
+
 }

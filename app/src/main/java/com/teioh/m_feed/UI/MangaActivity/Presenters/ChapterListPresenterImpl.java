@@ -15,6 +15,7 @@ import com.teioh.m_feed.WebSources.MangaJoy;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.ButterKnife;
 import rx.Observable;
 
 public class ChapterListPresenterImpl implements  ChapterListPresenter{
@@ -24,17 +25,17 @@ public class ChapterListPresenterImpl implements  ChapterListPresenter{
     private ChapterListAdapter mAdapter;
     private Manga manga;
 
-    private ChapterListMapper mChapterList;
+    private ChapterListMapper mChapterListMapper;
 
     public ChapterListPresenterImpl(ChapterListMapper map, Bundle b)
     {
         manga = b.getParcelable("Manga");
-        mChapterList = map;
+        mChapterListMapper = map;
     }
 
     @Override
     public void getChapterList() {
-        mChapterList.setupSwipeRefresh();
+        mChapterListMapper.setupSwipeRefresh();
         observableChapterList = MangaJoy.getChapterListObservable(manga.getMangaURL());
         observableChapterList.subscribe(chapters -> updateChapterList(chapters));
     }
@@ -45,7 +46,7 @@ public class ChapterListPresenterImpl implements  ChapterListPresenter{
         b.putParcelable("Chapter", chapterList.get(position));
         Fragment fragment = new ChapterReaderFragment();
         fragment.setArguments(b);
-        ((Fragment)mChapterList).getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack(null).commit();
+        ((Fragment)mChapterListMapper).getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack(null).commit();
     }
 
     @Override
@@ -53,12 +54,17 @@ public class ChapterListPresenterImpl implements  ChapterListPresenter{
         try {
             if (chapters != null) {
                 chapterList = new ArrayList<>(chapters);
-                mAdapter = new ChapterListAdapter(mChapterList.getContext(), R.layout.chapter_list_item, chapterList);;
-                mChapterList.registerAdapter(mAdapter);
+                mAdapter = new ChapterListAdapter(mChapterListMapper.getContext(), R.layout.chapter_list_item, chapterList);;
+                mChapterListMapper.registerAdapter(mAdapter);
             }
         }catch(NullPointerException e){
             Log.e("ChapterListFrag", "Moved views to fast \n\t\t\t" + e.toString());
         }
-        mChapterList.stopRefresh();
+        mChapterListMapper.stopRefresh();
+    }
+
+    @Override
+    public void butterKnifeUnbind() {
+        ButterKnife.unbind(mChapterListMapper);
     }
 }
