@@ -44,7 +44,7 @@ public class MangaJoy {
                         Log.e("throwable", throwable.toString());
                         return null;
                     }
-                });
+                }).doOnError(throwable -> throwable.printStackTrace());
     }
 
     private static Observable<List<Chapter>> pullChaptersFromWebsite(final String url) {
@@ -109,7 +109,7 @@ public class MangaJoy {
                 .onErrorReturn(throwable -> {
                     Log.e("throwable", throwable.toString());
                     return null;
-                });
+                }).doOnError(Throwable::printStackTrace);
     }
 
     final static String MangaJoyUrl = "http://manga-joy.com/latest-chapters/";
@@ -180,7 +180,8 @@ public class MangaJoy {
                         Log.e("throwable", throwable.toString());
                         return null;
                     }
-                });
+                })
+                .doOnError(throwable -> throwable.printStackTrace());
     }
 
     private static Observable<List<String>> parseListOfImageUrls(final String url) {
@@ -273,7 +274,8 @@ public class MangaJoy {
                         Log.e("throwable", throwable.toString());
                         return null;
                     }
-                });
+                })
+                .doOnError(throwable -> throwable.printStackTrace());
     }
 
     private static Observable<String> pullMangaDescriptionFromWebsite(final List<Manga> url) {
@@ -367,7 +369,8 @@ public class MangaJoy {
                         Log.e("throwable", throwable.toString());
                         return null;
                     }
-                });
+                })
+                .doOnError(throwable -> throwable.printStackTrace());
     }
 
     private static Observable<Manga> getUnparsedHtml(final Manga m) {

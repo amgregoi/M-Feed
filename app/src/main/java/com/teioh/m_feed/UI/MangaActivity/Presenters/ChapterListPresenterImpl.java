@@ -27,8 +27,7 @@ public class ChapterListPresenterImpl implements  ChapterListPresenter{
 
     private ChapterListMapper mChapterListMapper;
 
-    public ChapterListPresenterImpl(ChapterListMapper map, Bundle b)
-    {
+    public ChapterListPresenterImpl(ChapterListMapper map, Bundle b) {
         manga = b.getParcelable("Manga");
         mChapterListMapper = map;
     }
@@ -56,11 +55,11 @@ public class ChapterListPresenterImpl implements  ChapterListPresenter{
                 chapterList = new ArrayList<>(chapters);
                 mAdapter = new ChapterListAdapter(mChapterListMapper.getContext(), R.layout.chapter_list_item, chapterList);;
                 mChapterListMapper.registerAdapter(mAdapter);
+                mChapterListMapper.stopRefresh();
             }
         }catch(NullPointerException e){
             Log.e("ChapterListFrag", "Moved views to fast \n\t\t\t" + e.toString());
         }
-        mChapterListMapper.stopRefresh();
     }
 
     @Override

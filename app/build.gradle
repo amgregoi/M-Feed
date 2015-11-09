@@ -46,6 +46,10 @@ dependencies {
     //cupboard
     compile 'nl.qbusict:cupboard:2.1.4'
 
+    //float button
+    compile 'com.getbase:floatingactionbutton:1.10.1'
+
+
 }
 buildscript {
     repositories {
@@ -66,6 +70,5 @@ apply plugin: 'com.android.application' //or apply plugin: 'java'
 apply plugin: 'me.tatarka.retrolambda'
 
 repositories {
-    // ...
     maven { url "https://jitpack.io" }
 }

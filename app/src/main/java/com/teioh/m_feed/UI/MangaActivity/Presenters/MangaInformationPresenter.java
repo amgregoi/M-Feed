@@ -19,4 +19,7 @@ public interface MangaInformationPresenter {
 
     void butterKnifeUnbind();
 
-}
+    void onReadButtonClick();
+
+
+    }

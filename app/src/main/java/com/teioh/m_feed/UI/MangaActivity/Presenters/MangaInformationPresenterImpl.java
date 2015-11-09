@@ -1,33 +1,51 @@
 package com.teioh.m_feed.UI.MangaActivity.Presenters;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 
-import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
-import com.teioh.m_feed.UI.MangaActivity.Presenters.Mappers.MangaViewMapper;
+import com.teioh.m_feed.R;
+import com.teioh.m_feed.UI.MangaActivity.Presenters.Mappers.MangaInformationMapper;
 import com.teioh.m_feed.Models.Manga;
+import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.Utils.OttoBus.RemoveFromLibrary;
 import com.teioh.m_feed.WebSources.MangaJoy;
 
 import butterknife.ButterKnife;
 import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
 
-public class MangaInformationPresenterImpl implements  MangaInformationPresenter{
+public class MangaInformationPresenterImpl implements MangaInformationPresenter {
 
     private Manga item;
-    private MangaViewMapper mMangaViewMapper;
+    private MangaInformationMapper mMangaInformationMapper;
 
-    public MangaInformationPresenterImpl(MangaViewMapper base, Bundle b){
+
+    public MangaInformationPresenterImpl(MangaInformationMapper base, Bundle b) {
         this.item = b.getParcelable("Manga");
-        mMangaViewMapper = base;
+        mMangaInformationMapper = base;
     }
 
     @Override
     public void initialize() {
-        if(item.getDescription() != null) {
-            mMangaViewMapper.setMangaViews(item);
-        }else{
-            this.getMangaViewInfo();
+        try {
+            this.setFollowButtonText(item.getFollowing());
+            if (item.getDescription() != null) {
+                mMangaInformationMapper.setupFollowButton();
+                mMangaInformationMapper.setMangaViews(item);
+                mMangaInformationMapper.showLayout();
+            } else {
+                Log.e("rawr", " why you no refresh");
+                mMangaInformationMapper.hideLayout();
+                mMangaInformationMapper.setupFollowButton();
+                mMangaInformationMapper.setupSwipeRefresh();
+                this.getMangaViewInfo();
+            }
+        } catch (NullPointerException e) {
+            Log.e("MangaInformationFrag", "Changed views to fast \n\t\t\t" + e.toString());
         }
     }
 
@@ -35,11 +53,15 @@ public class MangaInformationPresenterImpl implements  MangaInformationPresenter
     public void getMangaViewInfo() {
         Observable<Manga> observableManga;
         observableManga = MangaJoy.updateMangaObservable(item);
-        observableManga.subscribe(manga -> mMangaViewMapper.setMangaViews(manga));
+        observableManga.subscribe(manga -> {
+            mMangaInformationMapper.setMangaViews(manga);
+            mMangaInformationMapper.stopRefresh();
+            mMangaInformationMapper.showLayout();
+        });
     }
 
     @Override
-    public void onFollwButtonClick(){
+    public void onFollwButtonClick() {
         boolean follow = item.setFollowing(!item.getFollowing());
         this.setFollowButtonText(follow);
         if (follow) {
@@ -52,11 +74,18 @@ public class MangaInformationPresenterImpl implements  MangaInformationPresenter
     }
 
     @Override
+    public void onReadButtonClick() {
+        ViewPager viewPager = (ViewPager) ((Fragment) mMangaInformationMapper).getActivity().findViewById(R.id.pager);
+        viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+
+    }
+
+    @Override
     public void setFollowButtonText(boolean follow) {
         if (follow) {
-            mMangaViewMapper.setFollowButtonText("Unfollow");
+            mMangaInformationMapper.setFollowButtonText(R.drawable.ic_done);
         } else {
-            mMangaViewMapper.setFollowButtonText("Follow");
+            mMangaInformationMapper.setFollowButtonText(R.drawable.fab_bg_normal);
         }
     }
 
@@ -72,6 +101,7 @@ public class MangaInformationPresenterImpl implements  MangaInformationPresenter
 
     @Override
     public void butterKnifeUnbind() {
+
         ButterKnife.unbind(this);
     }
 

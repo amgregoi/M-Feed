@@ -53,7 +53,9 @@ public class RecentPresenterImpl implements RecentPresenter {
             }
             mAdapter.notifyDataSetChanged();
         }
-        mRecentFragmentMapper.stopRefresh();
+        try {
+            mRecentFragmentMapper.stopRefresh();
+        }catch(NullPointerException e){e.printStackTrace();}
     }
 
     @Override

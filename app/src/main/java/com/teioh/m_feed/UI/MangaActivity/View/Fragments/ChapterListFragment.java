@@ -58,6 +58,7 @@ public class ChapterListFragment extends Fragment implements ChapterListMapper {
     @Override
     public void stopRefresh() {
         swipeRefresh.setRefreshing(false);
+        swipeRefresh.setEnabled(false);
     }
 
     @Override
