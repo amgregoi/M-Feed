@@ -37,7 +37,6 @@ public class MainPresenterImpl implements MainPresenter {
         mMainMapper.registerAdapter(mViewPagerAdapterMain);
         mMainMapper.setupSearchview();
         ((FragmentActivity) mBaseContext.getContext()).setTitle(mBaseContext.getContext().getString(R.string.app_name));
-
     }
 
     @Override
@@ -49,7 +48,7 @@ public class MainPresenterImpl implements MainPresenter {
             ParseUser currentUser = ParseUser.getCurrentUser();
             if (currentUser == null) {
                 Fragment fragment = new LoginFragment();
-                ((FragmentActivity) mBaseContext.getContext()).getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack(null).commit();
+                ((FragmentActivity) mBaseContext).getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack(null).commit();
             }
         }
     }

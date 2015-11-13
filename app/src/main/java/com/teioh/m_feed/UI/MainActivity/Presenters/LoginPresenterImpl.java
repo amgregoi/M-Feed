@@ -1,6 +1,6 @@
 package com.teioh.m_feed.UI.MainActivity.Presenters;
 
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.widget.Toast;
 
 import com.parse.LogInCallback;
@@ -11,9 +11,7 @@ import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.LoginFragmentMap;
 
 import butterknife.ButterKnife;
 
-/**
- * Created by Asus1 on 11/8/2015.
- */
+
 public class LoginPresenterImpl implements LoginPresenter{
 
     private LoginFragmentMap mLoginFragmentMapper;

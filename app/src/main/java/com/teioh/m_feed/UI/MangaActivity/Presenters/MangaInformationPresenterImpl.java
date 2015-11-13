@@ -38,7 +38,6 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
                 mMangaInformationMapper.setMangaViews(item);
                 mMangaInformationMapper.showLayout();
             } else {
-                Log.e("rawr", " why you no refresh");
                 mMangaInformationMapper.hideLayout();
                 mMangaInformationMapper.setupFollowButton();
                 mMangaInformationMapper.setupSwipeRefresh();

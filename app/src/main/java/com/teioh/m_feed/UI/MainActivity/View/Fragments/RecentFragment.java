@@ -71,8 +71,8 @@ public class RecentFragment extends Fragment implements RecentFragmentMap {
         mRecentPresenterManga.onMangaAdd(manga);
     }
 
-    @Subscribe public void activityQueryChange(QueryChange q){
-        onQueryTextChange(q.getQuery());
+    @Subscribe public void activityQueryChange(QueryChange query){
+        onQueryTextChange(query.getQuery());
     }
 
     @Subscribe public void onMangaRemoved(RemoveFromLibrary rm) {

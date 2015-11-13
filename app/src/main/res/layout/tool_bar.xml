@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.Toolbar
-    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/ColorPrimary"
     android:elevation="2dp"
-    android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:navigationIcon="@android:drawable/arrow_down_float"
-    >
+    android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
+    android:id="@+id/mainToolBar">
+
     <RelativeLayout
         android:id="@+id/searchBar"
         android:layout_width="fill_parent"
@@ -19,24 +20,24 @@
             android:id="@+id/activityTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
             android:text="Manga Feed"
             android:textSize="30sp"
             android:textStyle="bold"
-            android:ellipsize="end"
-            android:singleLine="true"
             />
+
 
         <SearchView
             android:id="@+id/search_view_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:focusable="false"
             android:gravity="end"
             android:iconifiedByDefault="true"
             android:queryHint="Search Here"
-            android:layout_alignParentEnd="true"
-
             />
     </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
+</android.support.v7.widget.Toolbar>
 

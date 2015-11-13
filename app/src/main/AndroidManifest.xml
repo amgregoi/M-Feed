@@ -63,6 +63,9 @@
                 <category android:name="com.teioh.m_feed" />
             </intent-filter>
         </receiver>
+
+        <service android:name=".RecentUpdateService" ></service>
+
     </application>
 
 </manifest>

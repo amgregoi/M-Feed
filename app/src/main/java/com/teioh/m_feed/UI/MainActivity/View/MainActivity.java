@@ -1,15 +1,18 @@
 package com.teioh.m_feed.UI.MainActivity.View;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.teioh.m_feed.RecentUpdateService;
 import com.teioh.m_feed.UI.MainActivity.Presenters.MainPresenter;
 import com.teioh.m_feed.UI.Maps.BaseContextMap;
 import com.teioh.m_feed.UI.Maps.MainActivityMap;
@@ -27,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityMap, 
     @Bind(R.id.activityTitle) TextView mActivityTitle;
     @Bind(R.id.pager) ViewPager mViewPager;
     @Bind(R.id.tabs) SlidingTabLayout tabs;
+    @Bind(R.id.mainToolBar) Toolbar mToolBar;
 
     private MainPresenter mMainPresenter;
 
@@ -36,6 +40,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityMap, 
         setContentView(R.layout.activity_layout);
         ButterKnife.bind(this);
 
+
+        startService(new Intent(this, RecentUpdateService.class));
+
+        setSupportActionBar(mToolBar);
         mMainPresenter = new MainPresenterImpl(this, this);
         mMainPresenter.parseLogin();
         mMainPresenter.initialize();

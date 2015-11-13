@@ -15,7 +15,7 @@ import com.teioh.m_feed.R;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnItemClick;
+import butterknife.OnClick;
 
 public class LoginFragment extends Fragment implements LoginFragmentMap {
     @Bind(R.id.password) EditText password;
@@ -36,11 +36,11 @@ public class LoginFragment extends Fragment implements LoginFragmentMap {
         mLoginPresenter.butterKnifeUnbind();
     }
 
-    @OnItemClick(R.id.signup) void onSignupButton(){
+    @OnClick(R.id.signup) void onSignupButton(){
         mLoginPresenter.onSignupButton(username.getText().toString(), password.getText().toString());
     }
 
-    @OnItemClick(R.id.login) void onLoginButton(){
+    @OnClick(R.id.login) void onLoginButton(){
         mLoginPresenter.onLoginbutton(username.getText().toString(), password.getText().toString());
     }
 
