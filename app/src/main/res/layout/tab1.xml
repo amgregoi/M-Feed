@@ -13,6 +13,7 @@
         android:layout_height="match_parent" >
 
         <GridView
+            android:background="@color/white"
             android:id="@+id/recent_list_view"
             android:paddingTop="5dp"
             android:layout_width="match_parent"

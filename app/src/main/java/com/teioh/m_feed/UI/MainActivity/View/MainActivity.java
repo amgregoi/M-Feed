@@ -40,13 +40,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityMap, 
         setContentView(R.layout.activity_layout);
         ButterKnife.bind(this);
 
-
-        startService(new Intent(this, RecentUpdateService.class));
-
         setSupportActionBar(mToolBar);
         mMainPresenter = new MainPresenterImpl(this, this);
         mMainPresenter.parseLogin();
         mMainPresenter.initialize();
+
+        //start service in new thread, substantial slow down on main thread
+        //startService(new Intent(this, RecentUpdateService.class));
+
     }
 
     @Override

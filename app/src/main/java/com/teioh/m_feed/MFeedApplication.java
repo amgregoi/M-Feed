@@ -25,8 +25,8 @@ public class MFeedApplication extends Application{
         private static MFeedApplication aInstance;
 
         public MFeedApplication() {
-            // Add your initialization code her
             aInstance = this;
+
         }
 
 

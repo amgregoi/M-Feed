@@ -1,6 +1,7 @@
 package com.teioh.m_feed.UI.MangaActivity.Adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,23 +10,27 @@ import android.widget.TextView;
 
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.R;
+import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Asus1 on 11/5/2015.
- */
+import nl.qbusict.cupboard.QueryResultIterable;
+
+import static nl.qbusict.cupboard.CupboardFactory.cupboard;
+
 public class ChapterListAdapter extends ArrayAdapter {
 
     private ArrayList<Chapter> chapters;
     private LayoutInflater mInflater;
+    private Context context;
 
     public ChapterListAdapter(Context context, int resource, List<Chapter> objects) {
         super(context, resource, objects);
-        chapters = new ArrayList<>(objects);
-        mInflater = LayoutInflater.from(context);
+        this.context = context;
+        this.chapters = new ArrayList<>(objects);
+        this.mInflater = LayoutInflater.from(context);
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -48,6 +53,18 @@ public class ChapterListAdapter extends ArrayAdapter {
         //Picasso.with(context).load(tManga.getPicUrl()).resize(139, 200).into(holder.img);
         if(ch == null){
             return row;
+        }
+
+        Chapter viewedChapter = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase())
+                .query(Chapter.class)
+                .withSelection("mTitle = ? AND cNumber = ?", ch.getMangaTitle(), Integer.toString(ch.getChapterNumber()))
+                .get();
+
+
+        if(viewedChapter == null){
+            row.setBackgroundColor(context.getResources().getColor(R.color.white));
+        }else{
+            row.setBackgroundColor(context.getResources().getColor(R.color.grey));
         }
 
         holder.mTitle.setText(ch.getMangaTitle());

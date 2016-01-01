@@ -2,9 +2,9 @@ package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 import android.content.Intent;
 
+import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapterAlternate;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.Database.ReactiveQueryManager;
-import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapter;
 import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.LibraryFragmentMap;
 import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
 import com.teioh.m_feed.Models.Manga;
@@ -22,7 +22,7 @@ import rx.Observable;
 public class LibraryPresenterImpl implements LibraryPresenter {
 
     private ArrayList<Manga> mangaList;
-    private SearchableAdapter mAdapter;
+    private SearchableAdapterAlternate mAdapter;
 
     private LibraryFragmentMap mLibraryFragmentMapper;
 
@@ -35,7 +35,7 @@ public class LibraryPresenterImpl implements LibraryPresenter {
         mLibraryFragmentMapper.hideView();
         MangaFeedDbHelper.getInstance().createDatabase();
         mangaList = new ArrayList<>();
-        mAdapter = new SearchableAdapter(mLibraryFragmentMapper.getContext(), mangaList);
+        mAdapter = new SearchableAdapterAlternate(mLibraryFragmentMapper.getContext(), mangaList);
         setAdapter();
     }
 

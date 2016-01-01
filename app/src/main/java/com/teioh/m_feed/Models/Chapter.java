@@ -7,14 +7,13 @@ import android.os.Parcelable;
  * Created by Asus1 on 11/1/2015.
  */
 public class Chapter implements Parcelable{
-    String mUrl;
-    String mDate;
-    String mTitle;
-    String cTitle;
-    int cNumber;
+    private String mUrl;
+    private String mDate;
+    private String mTitle;
+    private String cTitle;
+    private int cNumber;
 
-    public Chapter() {
-    }
+    public Chapter() { }
 
     public Chapter(String url, String mTitle, String cTitle, String date, int num) {
         this.mUrl = url;

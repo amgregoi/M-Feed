@@ -29,6 +29,84 @@ import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 public class MangaJoy {
 
+    final static String MangaJoyUrl = "http://manga-joy.com/latest-chapters/";
+
+    /*
+     * builds list of manga for recently updated page
+     */
+    public static Observable<List<Manga>> getRecentUpdatesObservable() {
+        return pullUpdatedMangaFromWebsite()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .retry()
+                .onErrorReturn(throwable -> {
+                    Log.e("throwable", throwable.toString());
+                    return null;
+                }).doOnError(Throwable::printStackTrace);
+    }
+
+    private static Observable<List<Manga>> pullUpdatedMangaFromWebsite() {
+        return Observable.create(new Observable.OnSubscribe<List<Manga>>() {
+            @Override
+            public void call(Subscriber<? super List<Manga>> subscriber) {
+                try {
+                    Connection connect = Jsoup.connect(MangaJoyUrl)
+                           // .userAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.21")
+                            .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
+                            .ignoreHttpErrors(true)
+                            .timeout(10000);
+                    String unparsedHtml = null;
+                    int code = connect.execute().statusCode();
+                    if (code == 200) {
+                        unparsedHtml = connect.get().html().toString();
+                    }
+
+                    subscriber.onNext(parseRecentUpdatesToManga(unparsedHtml));
+                    subscriber.onCompleted();
+                } catch (Throwable e) {
+                    subscriber.onError(e);
+                }
+            }
+        });
+    }
+
+    private static List<Manga> parseRecentUpdatesToManga(final String unparsedHtml) {
+        Document parsedDocument = Jsoup.parse(unparsedHtml);
+        Elements updates = parsedDocument.select("div.wpm_pag.mng_lts_chp.grp");
+        parsedDocument = Jsoup.parse(updates.toString());
+        List<Manga> chapterList = scrapeUpdatestoManga(parsedDocument);
+        return chapterList;
+    }
+
+    private static List<Manga> scrapeUpdatestoManga(final Document parsedDocument) {
+        List<Manga> mangaList = new ArrayList<>();
+        Elements mangaElements = parsedDocument.select("div.row");
+
+        SQLiteDatabase db = MangaFeedDbHelper.getInstance().getReadableDatabase();
+        for (Element wholeElement : mangaElements) {
+            Document parseSections = Jsoup.parse(wholeElement.toString());
+            Elements usefulElements = parseSections.select("div.det.sts_1");
+            for (Element usefulElement : usefulElements) {
+                String mangaTitle = usefulElement.select("a").attr("Title");
+                String mangaUrl = usefulElement.select("a").attr("src");
+                String today = usefulElement.select("b.dte").first().text();
+                Manga manga = cupboard().withDatabase(db).query(Manga.class).withSelection("mTitle = ?", mangaTitle).get();
+                if (manga != null) {
+                    mangaList.add(manga);
+                }else{
+                    //TODO add new manga
+                    //Still need to test
+                    manga = new Manga(mangaTitle, mangaUrl);
+                    cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).put(manga);
+                    Observable<Manga> observableManga = MangaJoy.updateMangaObservable(manga);
+                    observableManga.subscribe();
+                }
+            }
+        }
+        Log.i("Pull Recent Updates", "Finished pulling updates");
+        return mangaList;
+    }
+
     /*
      * builds list of chapters for manga object
      */
@@ -95,75 +173,6 @@ public class MangaJoy {
             chapterList.add(curChapter);
         }
         return chapterList;
-    }
-
-
-    /*
-     * builds list of manga for recently updated page
-     */
-    public static Observable<List<Manga>> getRecentUpdatesObservable() {
-        return pullUpdatedMangaFromWebsite()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .retry()
-                .onErrorReturn(throwable -> {
-                    Log.e("throwable", throwable.toString());
-                    return null;
-                }).doOnError(Throwable::printStackTrace);
-    }
-
-    final static String MangaJoyUrl = "http://manga-joy.com/latest-chapters/";
-
-    private static Observable<List<Manga>> pullUpdatedMangaFromWebsite() {
-        return Observable.create(new Observable.OnSubscribe<List<Manga>>() {
-            @Override
-            public void call(Subscriber<? super List<Manga>> subscriber) {
-                try {
-                    Connection connect = Jsoup.connect(MangaJoyUrl)
-                            .userAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.21")
-                            .timeout(10000);
-
-                    String unparsedHtml = null;
-                    if (connect.execute().statusCode() == 200) {
-                        unparsedHtml = connect.get().html().toString();
-                    }
-
-                    subscriber.onNext(parseRecentUpdatesToManga(unparsedHtml));
-                    subscriber.onCompleted();
-                } catch (Throwable e) {
-                    subscriber.onError(e);
-                }
-            }
-        });
-    }
-
-    private static List<Manga> parseRecentUpdatesToManga(final String unparsedHtml) {
-        Document parsedDocument = Jsoup.parse(unparsedHtml);
-        Elements updates = parsedDocument.select("div.wpm_pag.mng_lts_chp.grp");
-        parsedDocument = Jsoup.parse(updates.toString());
-        List<Manga> chapterList = scrapeUpdatestoManga(parsedDocument);
-        return chapterList;
-    }
-
-    private static List<Manga> scrapeUpdatestoManga(final Document parsedDocument) {
-        List<Manga> mangaList = new ArrayList<>();
-        Elements mangaElements = parsedDocument.select("div.row");
-
-        SQLiteDatabase db = MangaFeedDbHelper.getInstance().getReadableDatabase();
-        for (Element wholeElement : mangaElements) {
-            Document parseSections = Jsoup.parse(wholeElement.toString());
-            Elements usefulElements = parseSections.select("div.det.sts_1");
-            for (Element usefulElement : usefulElements) {
-                String mangaTitle = usefulElement.select("a").attr("Title");
-                String today = usefulElement.select("b.dte").first().text();
-                Manga manga = cupboard().withDatabase(db).query(Manga.class).withSelection("mTitle = ?", mangaTitle).get();
-                if (manga != null) {
-                    mangaList.add(manga);
-                }
-            }
-        }
-        Log.i("Pull Recent Updates", "Finished pulling updates");
-        return mangaList;
     }
 
 
@@ -254,15 +263,10 @@ public class MangaJoy {
 
 
     /*
-     * next
-     */
-
-    //TODO pull other information, artist, genre, description etc..
-    //TODO add new manga
-
-    /*
-    * get missing manga information and updates database
+    * Adds new Manga and
+    * gets missing manga information and updates database
     */
+
     public static Observable<Manga> updateMangaObservable(final Manga m) {
         return getUnparsedHtml(m)
                 .subscribeOn(Schedulers.newThread())
@@ -327,7 +331,7 @@ public class MangaJoy {
             } else if (i == 3) {
                 genres = e.get(i).text();
             } else if (i == 4) {
-                source = e.get(i).text();
+                //source = e.get(i).text();
             } else if (i == 5) {
                 status = e.get(i).text();
             }
@@ -335,6 +339,7 @@ public class MangaJoy {
 
 
         ContentValues values = new ContentValues(1);
+        values.put("mAlternate", alternate);
         values.put("mPicUrl", img);
         values.put("mDescription", summary);
         values.put("mArtist", artist);
@@ -344,6 +349,7 @@ public class MangaJoy {
         values.put("mSource", source);
 
         cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).update(Manga.class, values, "mMangaUrl = ?", url);
-        return cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase()).query(Manga.class).withSelection("mMangaUrl = ?", url).get();
+        Manga manga = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase()).query(Manga.class).withSelection("mMangaUrl = ?", url).get();
+        return manga;
     }
 }

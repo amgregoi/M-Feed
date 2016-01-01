@@ -10,13 +10,17 @@ import com.teioh.m_feed.UI.MangaActivity.View.Fragments.ChapterReaderFragment;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
+import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.WebSources.MangaJoy;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
+import nl.qbusict.cupboard.QueryResultIterable;
 import rx.Observable;
+
+import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 public class ChapterListPresenterImpl implements  ChapterListPresenter{
 
@@ -42,9 +46,12 @@ public class ChapterListPresenterImpl implements  ChapterListPresenter{
     @Override
     public void onChapterClicked(int position) {
         Bundle b = new Bundle();
-        b.putParcelable("Chapter", chapterList.get(position));
+        Chapter chapter = chapterList.get(position);
+        b.putParcelable("Chapter", chapter);
         Fragment fragment = new ChapterReaderFragment();
         fragment.setArguments(b);
+
+        cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).put(chapter);
         ((Fragment)mChapterListMapper).getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack(null).commit();
     }
 

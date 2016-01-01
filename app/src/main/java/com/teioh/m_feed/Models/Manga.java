@@ -10,14 +10,21 @@ public class Manga implements Parcelable {
     private String mPicUrl;
     private String mMangaUrl;
     private String mDescription;
-    private boolean mFollowing;
+
     private String mAuthor;
     private String mArtist;
-    private String mGenre;
+    private String mGenres;
     private String mStatus;
     private String mSource;
+    private String mAlternate;
+    private boolean mFollowing;
 
     public Manga() {
+    }
+
+    public Manga(String title, String url){
+        this.mTitle = title;
+        this.mMangaUrl = url;
     }
 
     protected Manga(Parcel in) {
@@ -28,9 +35,10 @@ public class Manga implements Parcelable {
 
         mAuthor = in.readString();
         mArtist = in.readString();
-        mGenre = in.readString();
+        mGenres = in.readString();
         mStatus = in.readString();
         mSource = in.readString();
+        mAlternate = in.readString();
         mFollowing = in.readByte() != 0;
     }
 
@@ -45,11 +53,13 @@ public class Manga implements Parcelable {
         dest.writeString(mPicUrl);
         dest.writeString(mMangaUrl);
         dest.writeString(mDescription);
+
         dest.writeString(mAuthor);
         dest.writeString(mArtist);
-        dest.writeString(mGenre);
+        dest.writeString(mGenres);
         dest.writeString(mStatus);
         dest.writeString(mSource);
+        dest.writeString(mAlternate);
         dest.writeByte((byte) (mFollowing ? 1 : 0));
     }
 
@@ -65,6 +75,9 @@ public class Manga implements Parcelable {
         }
     };
 
+    public String toString() {
+        return mTitle;
+    }
 
     public String getTitle() {
         return mTitle;
@@ -111,11 +124,11 @@ public class Manga implements Parcelable {
     }
 
     public String getmGenre() {
-        return mGenre;
+        return mGenres;
     }
 
     public void setmGenre(String mGenre) {
-        this.mGenre = mGenre;
+        this.mGenres = mGenre;
     }
 
     public String getmStatus() {
@@ -134,9 +147,9 @@ public class Manga implements Parcelable {
         this.mSource = mSource;
     }
 
-    public String toString() {
-        return mTitle;
-    }
+    public String getmAlternate() { return mAlternate; }
+
+    public void setmAlternate(String alt) { this.mAlternate = alt; }
 
     public boolean getFollowing() {
         return this.mFollowing;
@@ -146,7 +159,6 @@ public class Manga implements Parcelable {
         this.mFollowing = val;
         return this.mFollowing;
     }
-
 
     @Override public boolean equals(Object object) {
         boolean sameSame = false;

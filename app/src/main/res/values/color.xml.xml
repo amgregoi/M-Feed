@@ -5,4 +5,5 @@
     <color name="tabsScrollColor">#8a140e</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="grey">#E0E0E0</color>
 </resources>

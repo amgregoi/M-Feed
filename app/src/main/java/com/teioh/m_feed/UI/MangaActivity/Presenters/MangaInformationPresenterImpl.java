@@ -33,7 +33,7 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
     public void initialize() {
         try {
             this.setFollowButtonText(item.getFollowing());
-            if (item.getDescription() != null) {
+            if (item.getmGenre() != null && item.getmAlternate() != null) {
                 mMangaInformationMapper.setupFollowButton();
                 mMangaInformationMapper.setMangaViews(item);
                 mMangaInformationMapper.showLayout();

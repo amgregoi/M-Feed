@@ -2,6 +2,7 @@ package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 import android.content.Intent;
 
+import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapterAlternate;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapter;
 import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.RecentFragmentMap;
@@ -20,7 +21,7 @@ import rx.Observable;
 public class RecentPresenterImpl implements RecentPresenter {
 
     private ArrayList<Manga> recentList;
-    private SearchableAdapter mAdapter;
+    private SearchableAdapterAlternate mAdapter;
 
     private RecentFragmentMap mRecentFragmentMapper;
 
@@ -32,7 +33,7 @@ public class RecentPresenterImpl implements RecentPresenter {
     public void initialize() {
         MangaFeedDbHelper.getInstance().createDatabase();
         recentList = new ArrayList<>();
-        mAdapter = new SearchableAdapter(mRecentFragmentMapper.getContext(), recentList);
+        mAdapter = new SearchableAdapterAlternate(mRecentFragmentMapper.getContext(), recentList);
         mRecentFragmentMapper.startRefresh();
         mRecentFragmentMapper.setupSwipeRefresh();
         this.setAdapter();
