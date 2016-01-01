@@ -266,7 +266,6 @@ public class MangaJoy {
     * Adds new Manga and
     * gets missing manga information and updates database
     */
-
     public static Observable<Manga> updateMangaObservable(final Manga m) {
         return getUnparsedHtml(m)
                 .subscribeOn(Schedulers.newThread())

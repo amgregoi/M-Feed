@@ -12,4 +12,9 @@ public interface ChapterReaderPresenter {
     void updateView(List<String> urlList);
 
     void butterKnifeUnbind();
+
+    void updateOffset(int offset, int position);
+
+    void updateState(int state);
+
 }

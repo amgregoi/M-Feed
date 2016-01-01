@@ -46,12 +46,10 @@ public class ChapterListPresenterImpl implements  ChapterListPresenter{
     @Override
     public void onChapterClicked(int position) {
         Bundle b = new Bundle();
-        Chapter chapter = chapterList.get(position);
-        b.putParcelable("Chapter", chapter);
+        b.putParcelableArrayList("Chapters", chapterList);
+        b.putInt("Position", position);
         Fragment fragment = new ChapterReaderFragment();
         fragment.setArguments(b);
-
-        cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).put(chapter);
         ((Fragment)mChapterListMapper).getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack(null).commit();
     }
 
