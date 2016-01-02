@@ -34,7 +34,7 @@ public class LibraryFragment extends Fragment implements LibraryFragmentMap {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.tab3, container, false);
+        View v = inflater.inflate(R.layout.tab3_all_fragment, container, false);
         ButterKnife.bind(this, v);
 
 

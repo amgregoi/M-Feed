@@ -3,11 +3,10 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-
     <dimen name="baseline_grid_unit">4dp</dimen>
     <dimen name="baseline_margin_unit">16dp</dimen>
 
-
+    <dimen name="half_line_height">32dp</dimen>\
     <dimen name="single_line_height">48dp</dimen>
     <dimen name="double_line_height">72dp</dimen>
     <dimen name="triple_line_height">88dp</dimen>
@@ -18,8 +17,6 @@
 
 
     <dimen name="manga_header_img_height">298dp</dimen>
-
-
 
     <dimen name="baseline_content_unit">16dp</dimen>
     <dimen name="baseline_content_left">56dp</dimen>

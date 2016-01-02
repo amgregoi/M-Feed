@@ -33,7 +33,7 @@ public class ChapterPageAdapter extends PagerAdapter {
 
     @Override public Object instantiateItem(ViewGroup container, int position) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View viewLayout = inflater.inflate(R.layout.chapter_page_image, container, false);
+        View viewLayout = inflater.inflate(R.layout.chapter_reader_item, container, false);
 
 //        Picasso.with(context).load(imageUrls.get(position)).into(imgDisplay);
 

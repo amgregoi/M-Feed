@@ -29,7 +29,7 @@ public class FollowFragment extends Fragment implements FollowFragmentMap {
     private FollowPresenter mFollowPresenter;
 
     @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.tab2, container, false);
+        View v = inflater.inflate(R.layout.tab2_library_fragment, container, false);
         ButterKnife.bind(this, v);
 
         mFollowPresenter = new FollowPresenterImpl(this);

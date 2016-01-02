@@ -9,7 +9,7 @@ public interface MangaInformationMapper extends BaseContextMap, SwipeRefreshMap,
 
     void setMangaViews(Manga manga);
 
-    void setFollowButtonText(int resourceId);
+    void setFollowButtonText(int resourceId, boolean notInit);
 
     void setupFollowButton();
 }

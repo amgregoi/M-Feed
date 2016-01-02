@@ -1,7 +1,6 @@
 package com.teioh.m_feed.UI.MainActivity.Adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +13,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
-import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
-import com.teioh.m_feed.WebSources.MangaJoy;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import nl.qbusict.cupboard.QueryResultIterable;
-
-import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 // The standard text view adapter only seems to search from the beginning of whole words
 // so we've had to write this whole class to make it possible to search
@@ -60,7 +52,7 @@ public class SearchableAdapterAlternate extends BaseAdapter implements Filterabl
         MangaHolder holder;
 
         if (row == null) {
-            row = mInflater.inflate(R.layout.list_item, null);
+            row = mInflater.inflate(R.layout.gridview_manga_item, null);
 
             holder = new MangaHolder();
             holder.txt = (TextView) row.findViewById(R.id.itemTitleField);

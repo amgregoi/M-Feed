@@ -51,7 +51,7 @@ public class SearchableAdapter extends BaseAdapter implements Filterable {
         MangaHolder holder;
 
         if (row == null) {
-            row = mInflater.inflate(R.layout.list_item, null);
+            row = mInflater.inflate(R.layout.gridview_manga_item, null);
 
             holder = new MangaHolder();
             holder.txt = (TextView) row.findViewById(R.id.itemTitleField);

@@ -34,6 +34,7 @@ public class ChapterReaderPresenterImpl implements  ChapterReaderPresenter{
         mChapterReaderMapper = map;
         mChapterList = b.getParcelableArrayList("Chapters");
         mPosition = b.getInt("Position");
+        this.getImageUrls();
     }
 
     @Override
@@ -79,14 +80,14 @@ public class ChapterReaderPresenterImpl implements  ChapterReaderPresenter{
     public void  updateState(int state){
         if(pageOffsetCount > 50 && state == 0)
         {
-            if(pageDirection == 0) {  //backward (previous)
+            if(pageDirection == 0 && mPosition < mChapterList.size()-1) {  //backward (previous)
                 mPosition++;
                 nextUrlList = new ArrayList<>(curUrlList);
                 updateView(prevUrlList);
                 getPrevList();
 
             }
-            else if(pageDirection == 1) { //forward (next)
+            else if(pageDirection == 1 && mPosition > 0) { //forward (next)
                 mPosition--;
                 prevUrlList = new ArrayList<>(curUrlList);
                 updateView(nextUrlList);
@@ -97,11 +98,13 @@ public class ChapterReaderPresenterImpl implements  ChapterReaderPresenter{
 
 
     private void getNextList(){
-        if(nextObservable != null){
-            nextObservable.unsubscribeOn(Schedulers.io());
+        if(mPosition > 0) {
+            if (nextObservable != null) {
+                nextObservable.unsubscribeOn(Schedulers.io());
+            }
+            nextObservable = MangaJoy.getChapterImageListObservable(mChapterList.get(mPosition - 1).getChapterUrl());
+            nextObservable.subscribe(urlList -> setNextList(urlList));
         }
-        nextObservable = MangaJoy.getChapterImageListObservable(mChapterList.get(mPosition - 1).getChapterUrl());
-        nextObservable.subscribe(urlList -> setNextList(urlList));
     }
 
     private void setNextList(List<String> urlList){
@@ -110,7 +113,7 @@ public class ChapterReaderPresenterImpl implements  ChapterReaderPresenter{
     }
 
     private void getPrevList(){
-        if(mPosition > 0) {
+        if(mPosition < mChapterList.size()-1) {
             if(prevObservable != null){
                 prevObservable.unsubscribeOn(Schedulers.io());
             }

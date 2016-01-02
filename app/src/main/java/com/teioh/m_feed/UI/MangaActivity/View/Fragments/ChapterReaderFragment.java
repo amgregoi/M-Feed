@@ -4,7 +4,6 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,16 +20,13 @@ public class ChapterReaderFragment extends Fragment implements ChapterReaderMapp
 
 
     @Bind(R.id.pager) ViewPager viewPager;
-
     private ChapterReaderPresenter mChapterReaderPresenter;
-    private boolean notChangedChapter = true;
-    private int pageCount;
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.manga_reader_fragment, container, false);
+        View v = inflater.inflate(R.layout.chapter_reader_fragment, container, false);
         ButterKnife.bind(this, v);
+
         mChapterReaderPresenter = new ChapterReaderPresenterImpl(this, getArguments());
-        mChapterReaderPresenter.getImageUrls();
         viewPager.addOnPageChangeListener(this);
         return v;
     }
@@ -48,8 +44,6 @@ public class ChapterReaderFragment extends Fragment implements ChapterReaderMapp
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        Log.e("RAWR", Float.toString(positionOffset));
-        //send positionoffset count to 3-5 make sure they're all 0 (for left) ... (for right)
         mChapterReaderPresenter.updateOffset(positionOffsetPixels, position);
     }
 
@@ -60,8 +54,6 @@ public class ChapterReaderFragment extends Fragment implements ChapterReaderMapp
 
     @Override
     public void onPageScrollStateChanged(int state) {
-        Log.e("RAWR", "Scroll State: " + state);
-        //send state when settles (0) and we have positionoffset count of 3-5
         mChapterReaderPresenter.updateState(state);
     }
 }

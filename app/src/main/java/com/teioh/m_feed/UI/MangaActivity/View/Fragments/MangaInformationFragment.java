@@ -89,8 +89,8 @@ public class MangaInformationFragment extends Fragment implements MangaInformati
     }
 
     @Override
-    public void setFollowButtonText(int resourceId) {
-        if(resourceId == R.drawable.ic_done) {
+    public void setFollowButtonText(int resourceId, boolean isInit) {
+        if(resourceId == R.drawable.ic_done && !isInit) {
             Toast.makeText(getContext(), "Now following", LENGTH_SHORT).show();
         }
         floatButton.setImageResource(resourceId);

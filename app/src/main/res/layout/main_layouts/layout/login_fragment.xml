@@ -1,0 +1,63 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                tools:context="com.teioh.m_feed.Login"
+                android:clickable="true"
+                android:background="@drawable/background">
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/half_line_height"
+        android:inputType="text"
+        android:layout_marginTop="102dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:gravity="center"
+        android:background="@drawable/test"
+        android:textCursorDrawable="@drawable/caret"
+        android:alpha=".95"
+        android:hint="@string/Username"
+        />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/half_line_height"
+        android:layout_marginTop="@dimen/baseline_margin_unit"
+        android:layout_marginBottom="@dimen/baseline_margin_unit"
+        android:inputType="textPassword"
+        android:layout_below="@+id/username"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:background="@drawable/test"
+        android:textCursorDrawable="@drawable/caret"
+        android:alpha=".95"
+        android:hint="@string/Password"
+        />
+
+    <Button
+        android:id="@+id/login"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/LoginBtn"
+        android:layout_below="@+id/password"
+        android:layout_alignParentRight="true"
+	    android:alpha=".95"/>
+
+    <Button
+        android:id="@+id/signup"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/SignupBtn"
+        android:layout_below="@+id/login"
+        android:layout_alignParentRight="true"
+	    android:alpha=".95"/>
+
+</RelativeLayout>

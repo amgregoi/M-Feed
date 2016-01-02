@@ -88,10 +88,10 @@ public class MangaJoy {
             Elements usefulElements = parseSections.select("div.det.sts_1");
             for (Element usefulElement : usefulElements) {
                 String mangaTitle = usefulElement.select("a").attr("Title");
-                String mangaUrl = usefulElement.select("a").attr("src");
+                String mangaUrl = usefulElement.select("a").attr("href");
                 String today = usefulElement.select("b.dte").first().text();
                 Manga manga = cupboard().withDatabase(db).query(Manga.class).withSelection("mTitle = ?", mangaTitle).get();
-                if (manga != null) {
+                if (manga != null && !manga.getMangaURL().equals("")) {
                     mangaList.add(manga);
                 }else{
                     //TODO add new manga
@@ -297,6 +297,7 @@ public class MangaJoy {
                     subscriber.onNext(scrapeAndUpdateManga(unparsedHtml, m.getMangaURL()));
                     subscriber.onCompleted();
                 } catch (Throwable e) {
+                    Log.e("RAWR", e.getMessage());
                     subscriber.onError(e);
                 }
             }

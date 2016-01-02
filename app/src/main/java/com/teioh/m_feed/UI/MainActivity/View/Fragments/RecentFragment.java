@@ -32,7 +32,7 @@ public class RecentFragment extends Fragment implements RecentFragmentMap {
     private RecentPresenter mRecentPresenterManga;
 
     @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.tab1, container, false);
+        View v = inflater.inflate(R.layout.tab1_recent_fragment, container, false);
         ButterKnife.bind(this, v);
 
         mRecentPresenterManga = new RecentPresenterImpl(this);

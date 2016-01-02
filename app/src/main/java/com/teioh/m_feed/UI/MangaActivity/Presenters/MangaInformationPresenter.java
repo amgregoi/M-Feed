@@ -11,7 +11,7 @@ public interface MangaInformationPresenter {
 
     void onFollwButtonClick();
 
-    void setFollowButtonText(boolean follow);
+    void setFollowButtonText(boolean follow, boolean notInit);
 
     void busProviderRegister();
 

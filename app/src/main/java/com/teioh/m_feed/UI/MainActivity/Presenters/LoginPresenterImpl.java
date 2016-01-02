@@ -1,6 +1,7 @@
 package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.widget.Toast;
 
 import com.parse.LogInCallback;
@@ -53,16 +54,12 @@ public class LoginPresenterImpl implements LoginPresenter{
                 new LogInCallback() {
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
-//                            if (mLoginFragmentMapper != null) {
-//                                InputMethodManager imm = (InputMethodManager) mLoginFragmentMapper.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-//                                imm.hideSoftInputFromWindow(mLoginFragmentMapper.getWindowToken(), 0);
-//                            }
                             ((Fragment) mLoginFragmentMapper).getFragmentManager().popBackStackImmediate();
                         } else {
-                            Toast.makeText(
-                                    mLoginFragmentMapper.getContext(),
-                                    "No such user exist, please signup",
-                                    Toast.LENGTH_LONG).show();
+//                            Toast.makeText(
+//                                    mLoginFragmentMapper.getContext(),
+//                                    "No such user exist, please signup",
+//                                    Toast.LENGTH_LONG).show();
                         }
                     }
                 });

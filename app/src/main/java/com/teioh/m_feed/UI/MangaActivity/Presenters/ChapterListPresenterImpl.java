@@ -55,15 +55,11 @@ public class ChapterListPresenterImpl implements  ChapterListPresenter{
 
     @Override
     public void updateChapterList(List<Chapter> chapters) {
-        try {
-            if (chapters != null) {
-                chapterList = new ArrayList<>(chapters);
-                mAdapter = new ChapterListAdapter(mChapterListMapper.getContext(), R.layout.chapter_list_item, chapterList);;
-                mChapterListMapper.registerAdapter(mAdapter);
-                mChapterListMapper.stopRefresh();
-            }
-        }catch(NullPointerException e){
-            Log.e("ChapterListFrag", "Moved views to fast \n\t\t\t" + e.toString());
+        if (chapters != null && mChapterListMapper.getContext() != null) {
+            chapterList = new ArrayList<>(chapters);
+            mAdapter = new ChapterListAdapter(mChapterListMapper.getContext(), R.layout.chapter_list_item, chapterList);;
+            mChapterListMapper.registerAdapter(mAdapter);
+            mChapterListMapper.stopRefresh();
         }
     }
 

@@ -30,7 +30,7 @@ public class ChapterListFragment extends Fragment implements ChapterListMapper {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.manga_chapters_fragment, container, false);
+        View v = inflater.inflate(R.layout.chapter_list_fragment, container, false);
         ButterKnife.bind(this, v);
 
         mChapterListPresenter = new ChapterListPresenterImpl(this, getArguments());

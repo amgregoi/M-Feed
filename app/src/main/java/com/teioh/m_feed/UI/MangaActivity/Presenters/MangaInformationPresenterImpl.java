@@ -32,7 +32,7 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
     @Override
     public void initialize() {
         try {
-            this.setFollowButtonText(item.getFollowing());
+            this.setFollowButtonText(item.getFollowing(), true); //second parameter signifies if the button is being initialized
             if (item.getmGenre() != null && item.getmAlternate() != null) {
                 mMangaInformationMapper.setupFollowButton();
                 mMangaInformationMapper.setMangaViews(item);
@@ -62,7 +62,7 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
     @Override
     public void onFollwButtonClick() {
         boolean follow = item.setFollowing(!item.getFollowing());
-        this.setFollowButtonText(follow);
+        this.setFollowButtonText(follow, false);        //second parameter signifies if the button is being initialized
         if (follow) {
             MangaFeedDbHelper.getInstance().updateMangaFollow(item);
             BusProvider.getInstance().post(item);
@@ -80,11 +80,11 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
     }
 
     @Override
-    public void setFollowButtonText(boolean follow) {
+    public void setFollowButtonText(boolean follow, boolean notInit) {
         if (follow) {
-            mMangaInformationMapper.setFollowButtonText(R.drawable.ic_done);
+            mMangaInformationMapper.setFollowButtonText(R.drawable.ic_done, notInit);
         } else {
-            mMangaInformationMapper.setFollowButtonText(R.drawable.fab_bg_normal);
+            mMangaInformationMapper.setFollowButtonText(R.drawable.fab_bg_normal, notInit);
         }
     }
 
