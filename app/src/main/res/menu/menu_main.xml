@@ -4,7 +4,8 @@
     tools:context="com.teioh.m_feed.UI.MainActivity.View.MainActivity">
     <item
         android:id="@+id/action_settings"
-        android:title="@string/action_settings"
+        android:title="@string/Settings"
         android:orderInCategory="100"
         app:showAsAction="never" />
+
 </menu>

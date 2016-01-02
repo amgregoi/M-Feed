@@ -1,14 +1,21 @@
 package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.res.Configuration;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+import android.view.View;
 
 import com.parse.ParseAnonymousUtils;
 import com.parse.ParseUser;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
 import com.teioh.m_feed.UI.Maps.BaseContextMap;
-import com.teioh.m_feed.UI.Maps.MainActivityMap;
+import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.MainActivityMap;
 import com.teioh.m_feed.UI.MainActivity.View.Fragments.LoginFragment;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.Utils.OttoBus.QueryChange;
@@ -21,53 +28,76 @@ public class MainPresenterImpl implements MainPresenter {
     private ViewPagerAdapterMain mViewPagerAdapterMain;
     private CharSequence Titles[] = {"Recent", "Library", "All"};
     private int Numbtabs = 3;
+    private ActionBarDrawerToggle mDrawerToggle;
 
-    private BaseContextMap mBaseContext;
     private MainActivityMap mMainMapper;
 
-    public MainPresenterImpl(MainActivityMap main, BaseContextMap base) {
-        mBaseContext =  base;
+    public MainPresenterImpl(MainActivityMap main) {
         mMainMapper = main;
     }
 
     @Override
     public void initialize() {
-        mViewPagerAdapterMain = new ViewPagerAdapterMain(((FragmentActivity) mBaseContext.getContext()).getSupportFragmentManager(), Titles, Numbtabs);
+        this.parseLogin();
+        mViewPagerAdapterMain = new ViewPagerAdapterMain(((FragmentActivity) mMainMapper.getContext()).getSupportFragmentManager(), Titles, Numbtabs);
         mMainMapper.setupTabLayout();
         mMainMapper.registerAdapter(mViewPagerAdapterMain);
         mMainMapper.setupSearchview();
-        ((FragmentActivity) mBaseContext.getContext()).setTitle(mBaseContext.getContext().getString(R.string.app_name));
+        ((FragmentActivity) mMainMapper.getContext()).setTitle(mMainMapper.getContext().getString(R.string.app_name));
     }
 
     @Override
     public void parseLogin() {
         if (ParseAnonymousUtils.isLinked(ParseUser.getCurrentUser())) {
             Fragment fragment = new LoginFragment();
-            ((FragmentActivity) mBaseContext.getContext()).getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack(null).commit();
+            ((FragmentActivity) mMainMapper.getContext()).getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack(null).commit();
         } else {
             ParseUser currentUser = ParseUser.getCurrentUser();
             if (currentUser == null) {
                 Fragment fragment = new LoginFragment();
-                ((FragmentActivity) mBaseContext).getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack(null).commit();
+                ((FragmentActivity) mMainMapper).getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack(null).commit();
             }
         }
     }
+
+    @Override public void setupDrawerLayoutListener(Toolbar mToolBar, DrawerLayout mDrawerLayout){
+        mDrawerToggle = new ActionBarDrawerToggle(((Activity) mMainMapper.getContext()), mDrawerLayout,
+                mToolBar, R.string.app_name, R.string.Login) {
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                //getActionBar().setTitle(R.string.app_name);
+                mMainMapper.onDrawerClose();
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                // getActionBar().setTitle(R.string.LoginBtn);
+                mMainMapper.onDrawerOpen();
+            }
+        };
+
+        mMainMapper.setDrawerLayoutListener(mDrawerToggle);
+    }
+
+
 
     @Override
     public void onLogout() {
         ParseUser.getCurrentUser().logOut();
         Fragment fragment = new LoginFragment();
-        ((FragmentActivity) mBaseContext.getContext()).getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack(null).commit();
+        ((FragmentActivity) mMainMapper.getContext()).getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack(null).commit();
 
     }
 
     @Override
-    public void busProviderRegister() {
+    public void onResume() {
         BusProvider.getInstance().register(mMainMapper);
     }
 
     @Override
-    public void busProviderUnregister() {
+    public void onPause() {
         BusProvider.getInstance().unregister(mMainMapper);
 
     }
@@ -79,8 +109,20 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Override
-    public void ButterKnifeUnbind() {
+    public void onDestroy() {
         ButterKnife.unbind(mMainMapper);
 
+    }
+
+    @Override public void onPostCreate() {
+        mDrawerToggle.syncState();
+    }
+
+    @Override public void onConfigurationChanged(Configuration newConfig) {
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override public boolean onOptionsSelected(MenuItem item) {
+        return mDrawerToggle.onOptionsItemSelected(item);
     }
 }

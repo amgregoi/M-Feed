@@ -1,9 +1,11 @@
 package com.teioh.m_feed.UI.MainActivity.View;
 
 import android.content.Context;
-import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -12,10 +14,8 @@ import android.view.View;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import com.teioh.m_feed.RecentUpdateService;
 import com.teioh.m_feed.UI.MainActivity.Presenters.MainPresenter;
-import com.teioh.m_feed.UI.Maps.BaseContextMap;
-import com.teioh.m_feed.UI.Maps.MainActivityMap;
+import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.MainActivityMap;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
 import com.teioh.m_feed.UI.MainActivity.Presenters.MainPresenterImpl;
 import com.teioh.m_feed.R;
@@ -24,13 +24,14 @@ import com.teioh.m_feed.Utils.SlidingTabLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements MainActivityMap, BaseContextMap, SearchView.OnQueryTextListener{
+public class MainActivity extends AppCompatActivity implements MainActivityMap {
 
     @Bind(R.id.search_view_1)SearchView mSearchView;
     @Bind(R.id.activityTitle) TextView mActivityTitle;
     @Bind(R.id.pager) ViewPager mViewPager;
     @Bind(R.id.tabs) SlidingTabLayout tabs;
     @Bind(R.id.mainToolBar) Toolbar mToolBar;
+    @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
 
     private MainPresenter mMainPresenter;
 
@@ -40,14 +41,24 @@ public class MainActivity extends AppCompatActivity implements MainActivityMap, 
         setContentView(R.layout.activity_layout);
         ButterKnife.bind(this);
 
-        setSupportActionBar(mToolBar);
-        mMainPresenter = new MainPresenterImpl(this, this);
-        mMainPresenter.parseLogin();
+        mMainPresenter = new MainPresenterImpl(this);
         mMainPresenter.initialize();
+        mMainPresenter.setupDrawerLayoutListener(mToolBar, mDrawerLayout);
 
         //start service in new thread, substantial slow down on main thread
         //startService(new Intent(this, RecentUpdateService.class));
+    }
 
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mMainPresenter.onPostCreate();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mMainPresenter.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -64,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityMap, 
             return true;
         } else if (id == 0) {
             mMainPresenter.onLogout();
+        }else if (mMainPresenter.onOptionsSelected(item)) {
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -71,18 +84,18 @@ public class MainActivity extends AppCompatActivity implements MainActivityMap, 
     @Override
     protected void onResume() {
         super.onResume();
-        mMainPresenter.busProviderRegister();
+        mMainPresenter.onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mMainPresenter.busProviderUnregister();
+        mMainPresenter.onPause();
     }
 
     @Override public void onDestroy() {
         super.onDestroy();
-        mMainPresenter.ButterKnifeUnbind();
+        mMainPresenter.onDestroy();
     }
 
     @Override
@@ -120,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityMap, 
                 mActivityTitle.setVisibility(View.VISIBLE);
                 mSearchView.setIconified(true);
                 mSearchView.setQuery("", true);
-            }else{
+            } else {
                 mActivityTitle.setVisibility(View.GONE);
             }
         });
@@ -136,4 +149,20 @@ public class MainActivity extends AppCompatActivity implements MainActivityMap, 
             }
         });
     }
+
+    @Override
+    public void setDrawerLayoutListener(ActionBarDrawerToggle mDrawerToggle) {
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+    }
+
+    @Override
+    public void onDrawerOpen() {
+        invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+    }
+
+    @Override
+    public void onDrawerClose() {
+        invalidateOptionsMenu();  // creates call to onPrepareOptionsMenu()
+    }
+
 }

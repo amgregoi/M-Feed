@@ -46,7 +46,7 @@
         android:id="@+id/login"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/LoginBtn"
+        android:text="@string/Login"
         android:layout_below="@+id/password"
         android:layout_alignParentRight="true"
 	    android:alpha=".95"/>
@@ -55,7 +55,7 @@
         android:id="@+id/signup"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/SignupBtn"
+        android:text="@string/SignUp"
         android:layout_below="@+id/login"
         android:layout_alignParentRight="true"
 	    android:alpha=".95"/>

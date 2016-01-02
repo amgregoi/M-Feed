@@ -23,7 +23,9 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:text="Manga Feed"
-            android:textSize="30sp"
+            android:layout_centerVertical="true"
+            android:textAlignment="center"
+            android:textSize="20sp"
             android:textStyle="bold"
             />
 

@@ -1,9 +1,14 @@
 package com.teioh.m_feed.UI.MangaActivity.View;
 
 import android.app.Fragment;
+import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,51 +18,40 @@ import android.widget.TextView;
 import com.parse.ParseUser;
 import com.teioh.m_feed.UI.MainActivity.View.Fragments.LoginFragment;
 import com.teioh.m_feed.UI.MangaActivity.Adapters.ViewPagerAdapterManga;
-import com.teioh.m_feed.Models.Manga;
-import com.teioh.m_feed.Utils.OttoBus.BusProvider;
+import com.teioh.m_feed.UI.MangaActivity.Presenters.MangaPresenter;
+import com.teioh.m_feed.UI.MangaActivity.Presenters.MangaPresenterImpl;
+import com.teioh.m_feed.UI.MangaActivity.Presenters.Mappers.MangaActivityMap;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.Utils.SlidingTabLayout;
 
-public class MangaActivity extends AppCompatActivity{
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
-    private ViewPagerAdapterManga mViewPagerAdapterManga;
-    private ViewPager mViewPager;
-    private SlidingTabLayout tabs;
-    private CharSequence Titles[] = {"Info", "Chapters"};
-    private int Numbtabs = 2;
+public class MangaActivity extends AppCompatActivity implements MangaActivityMap {
 
-    TextView mActivityTitle;
-    SearchView mSearchView;
+
+    @Bind(R.id.activityTitle) TextView mActivityTitle;
+    @Bind(R.id.pager) ViewPager mViewPager;
+    @Bind(R.id.tabs) SlidingTabLayout tabs;
+    @Bind(R.id.mainToolBar) Toolbar mToolBar;
+    @Bind(R.id.search_view_1) SearchView mSearchView;
+
+//    SearchView mSearchView;
+
+    private MangaPresenter mMangaPresenter;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_layout);
-        Manga item = getIntent().getParcelableExtra("Manga");
+        ButterKnife.bind(this);
 
-        mActivityTitle = (TextView) findViewById(R.id.activityTitle);
-        mSearchView = (SearchView) findViewById(R.id.search_view_1);
+        mMangaPresenter = new MangaPresenterImpl(this);
+        mMangaPresenter.initialize(getIntent().getParcelableExtra("Manga"));
         mSearchView.setVisibility(View.GONE);
-        mActivityTitle.setText(item.getTitle());
-
-
-        mViewPagerAdapterManga = new ViewPagerAdapterManga(getSupportFragmentManager(), Titles, Numbtabs, item);
-        mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(mViewPagerAdapterManga);
-        mViewPager.setOffscreenPageLimit(2);
-
-
-        tabs = (SlidingTabLayout) findViewById(R.id.tabs);
-        tabs.setDistributeEvenly(true);
-        tabs.setCustomTabColorizer(position -> getResources().getColor(R.color.tabsScrollColor));
-
-        // Setting the ViewPager For the SlidingTabsLayout
-        tabs.setViewPager(mViewPager);
-
     }
 
     @Override public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menu.add(Menu.NONE, 0, Menu.NONE, "Logout");
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -67,26 +61,51 @@ public class MangaActivity extends AppCompatActivity{
 
         if (id == R.id.action_settings) {
             return true;
-        } else if (id == 0) {
-            ParseUser.getCurrentUser().logOut();
-            Fragment fragment = new LoginFragment();
-            getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack(null).commit();
-
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override protected void onResume() {
         super.onResume();
-        BusProvider.getInstance().register(this);
+        mMangaPresenter.onResume();
     }
 
     @Override protected void onPause() {
         super.onPause();
-        BusProvider.getInstance().unregister(this);
+        mMangaPresenter.onPause();
     }
 
     @Override protected void onDestroy(){
         super.onDestroy();
+        mMangaPresenter.onDestroy();
+    }
+
+    @Override public void registerAdapter(ViewPagerAdapterManga adapter) {
+        if(adapter != null) {
+            mViewPager.setAdapter(adapter);
+            mViewPager.setOffscreenPageLimit(2);
+        }
+    }
+
+    @Override public void setActivityTitle(String title) {
+        mActivityTitle.setText(title);
+    }
+
+    @Override public void setupSlidingTabLayout() {
+        tabs.setDistributeEvenly(true);
+        tabs.setCustomTabColorizer(position -> getResources().getColor(R.color.tabsScrollColor));
+        tabs.setViewPager(mViewPager);
+    }
+
+    @Override public void setupToolBar() {
+        setSupportActionBar(mToolBar);
+        mToolBar.setNavigationIcon(R.drawable.ic_back);
+        //TODO
+        //replace overflow icon with double arrows to switch order of chapters (ascending/descending)
+        mToolBar.setNavigationOnClickListener(v -> onBackPressed());
+    }
+
+    @Override public Context getContext() {
+        return this;
     }
 }
