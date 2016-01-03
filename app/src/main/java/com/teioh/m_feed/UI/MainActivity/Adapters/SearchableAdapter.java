@@ -63,7 +63,7 @@ public class SearchableAdapter extends BaseAdapter implements Filterable {
 
         Manga tManga = filteredData.get(position);
 
-        if(tManga == null){
+        if (tManga == null) {
             return row;
         }
         //Picasso.with(context).load(tManga.getPicUrl()).resize(139, 200).into(holder.img);

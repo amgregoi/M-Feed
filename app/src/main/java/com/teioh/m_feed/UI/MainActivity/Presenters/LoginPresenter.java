@@ -7,5 +7,5 @@ public interface LoginPresenter {
 
     void onLoginbutton(String mUserName, String mPassword);
 
-    void butterKnifeUnbind();
+    void onDestroyView();
 }

@@ -1,4 +1,5 @@
 package com.teioh.m_feed;
+
 import android.app.Application;
 import android.content.Context;
 
@@ -14,24 +15,24 @@ import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 /**
  * Created by Asus1 on 11/3/2015.
  */
-public class MFeedApplication extends Application{
+public class MFeedApplication extends Application {
 
 
-        static {
-            cupboard().register(Manga.class);
-            cupboard().register(Chapter.class);
-        }
+    static {
+        cupboard().register(Manga.class);
+        cupboard().register(Chapter.class);
+    }
 
-        private static MFeedApplication aInstance;
+    private static MFeedApplication aInstance;
 
-        public MFeedApplication() {
-            aInstance = this;
+    public MFeedApplication() {
+        aInstance = this;
 
-        }
+    }
 
 
     @Override
-    public void onCreate(){
+    public void onCreate() {
         super.onCreate();
 
         Parse.initialize(this, "gr2JB7mjsp4PhtSP0fiiS02XMhQBzO6g3siQJ5nS", "9gtF6Yrz0XWpqvpXT8p7okWCto2e7szOS1oiShCC");
@@ -44,8 +45,8 @@ public class MFeedApplication extends Application{
         ParseACL.setDefaultACL(defaultACL, true);
     }
 
-        public static synchronized MFeedApplication getInstance() {
-            return aInstance;
-        }
+    public static synchronized MFeedApplication getInstance() {
+        return aInstance;
+    }
 
 }

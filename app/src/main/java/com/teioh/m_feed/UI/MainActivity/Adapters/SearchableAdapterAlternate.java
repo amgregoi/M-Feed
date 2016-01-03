@@ -64,15 +64,14 @@ public class SearchableAdapterAlternate extends BaseAdapter implements Filterabl
 
         Manga tManga = filteredData.get(position);
 
-        if(tManga == null){
+        if (tManga == null) {
             return row;
         }
 
-        if(tManga.getFollowing())
-        {
+        if (tManga.getFollowing()) {
             //row.setBackgroundColor(context.getColor(R.color.ColorPrimary));
             row.setBackgroundColor(context.getResources().getColor(R.color.ColorPrimary));
-        }else{
+        } else {
             //row.setBackgroundColor(context.getColor(R.color.white));
             row.setBackgroundColor(context.getResources().getColor(R.color.white));
         }
@@ -110,7 +109,7 @@ public class SearchableAdapterAlternate extends BaseAdapter implements Filterabl
 
                 //filter by title & alternate titles
                 filterableString = manga.toString();
-                if(manga.getmAlternate() != null)
+                if (manga.getmAlternate() != null)
                     filterableString += ", " + list.get(i).getmAlternate();
 
                 if (filterableString.toLowerCase().contains(filterString)) {

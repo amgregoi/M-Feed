@@ -21,7 +21,7 @@ public class MangaPresenterImpl implements MangaPresenter {
 
     private MangaActivityMap mMangaMapper;
 
-    public MangaPresenterImpl(MangaActivityMap map){
+    public MangaPresenterImpl(MangaActivityMap map) {
         mMangaMapper = map;
     }
 

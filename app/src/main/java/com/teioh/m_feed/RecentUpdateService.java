@@ -27,8 +27,8 @@ public class RecentUpdateService extends Service {
         super.onDestroy();
     }
 
-    private void updateRecent(){
-        while(isMyServiceRunning(RecentUpdateService.class)){
+    private void updateRecent() {
+        while (isMyServiceRunning(RecentUpdateService.class)) {
             try {
                 //TODO
                 //do updates
@@ -38,7 +38,7 @@ public class RecentUpdateService extends Service {
                 //Thread.sleep(1000 * 60 * 10);       //sleep for ~ 10 mins
                 Thread.sleep(5000);
                 this.stopSelf();
-            }catch(InterruptedException e){
+            } catch (InterruptedException e) {
                 Log.e("RecentUpdateService", "Thread interrupted");
             }
         }

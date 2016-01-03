@@ -8,7 +8,7 @@ import android.view.MenuItem;
 /**
  * Created by Asus1 on 11/7/2015.
  */
-public interface MainPresenter{
+public interface MainPresenter {
 
     void initialize();
 

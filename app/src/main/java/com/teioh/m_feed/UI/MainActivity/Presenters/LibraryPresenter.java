@@ -7,13 +7,22 @@ import java.util.List;
 
 public interface LibraryPresenter {
     void initializeView();
+
     void updateGridView();
+
     void onItemClick(Manga item);
+
     void onQueryTextChange(String newText);
-    void ButterKnifeUnbind();
-    void BusProviderRegister();
-    void BusProviderUnregister();
+
+    void onDestroyView();
+
+    void onResume();
+
+    void onPause();
+
     void setAdapter();
+
     void onMangaRemoved(RemoveFromLibrary rm);
+
     void udpateChapterList(List<Manga> mList);
 }

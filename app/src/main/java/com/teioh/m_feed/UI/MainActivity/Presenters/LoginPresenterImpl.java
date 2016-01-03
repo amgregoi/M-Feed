@@ -13,11 +13,11 @@ import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.LoginFragmentMap;
 import butterknife.ButterKnife;
 
 
-public class LoginPresenterImpl implements LoginPresenter{
+public class LoginPresenterImpl implements LoginPresenter {
 
     private LoginFragmentMap mLoginFragmentMapper;
 
-    public LoginPresenterImpl(LoginFragmentMap map){
+    public LoginPresenterImpl(LoginFragmentMap map) {
         mLoginFragmentMapper = map;
     }
 
@@ -66,7 +66,7 @@ public class LoginPresenterImpl implements LoginPresenter{
     }
 
     @Override
-    public void butterKnifeUnbind() {
+    public void onDestroyView() {
         ButterKnife.unbind(mLoginFragmentMapper);
 
     }

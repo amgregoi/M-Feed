@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements MainActivityMap {
 
-    @Bind(R.id.search_view)SearchView mSearchView;
+    @Bind(R.id.search_view) SearchView mSearchView;
     @Bind(R.id.activityTitle) TextView mActivityTitle;
     @Bind(R.id.pager) ViewPager mViewPager;
     @Bind(R.id.tabs) SlidingTabLayout tabs;
@@ -96,8 +96,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityMap {
 
     @Override
     public void registerAdapter(ViewPagerAdapterMain adapter) {
-        if(adapter != null)
-        {
+        if (adapter != null) {
             mViewPager.setAdapter(adapter);
             mViewPager.setOffscreenPageLimit(3);
             tabs.setViewPager(mViewPager);
@@ -146,11 +145,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityMap {
     }
 
     @Override
-    public void setupToolbar(){
+    public void setupToolbar() {
         setSupportActionBar(mToolBar);
         setTitle(getString(R.string.app_name));
         orderButton.setVisibility(View.GONE);
 
     }
-
 }

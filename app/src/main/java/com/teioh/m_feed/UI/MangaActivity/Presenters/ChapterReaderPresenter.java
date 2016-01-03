@@ -11,9 +11,9 @@ public interface ChapterReaderPresenter {
 
     void updateView(List<String> urlList);
 
-    void butterKnifeUnbind();
+    void onDestroyView();
 
-    void updateOffset(int offset, int position);
+    void updateOffsetCounter(int offset, int position);
 
     void updateState(int state);
 

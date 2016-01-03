@@ -51,8 +51,7 @@ public class MangaJoy {
             public void call(Subscriber<? super List<Manga>> subscriber) {
                 try {
                     Connection connect = Jsoup.connect(MangaJoyUrl)
-                           // .userAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.21")
-                            .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
+                            .userAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.21")
                             .ignoreHttpErrors(true)
                             .timeout(10000);
                     String unparsedHtml = null;
@@ -93,7 +92,7 @@ public class MangaJoy {
                 Manga manga = cupboard().withDatabase(db).query(Manga.class).withSelection("mTitle = ?", mangaTitle).get();
                 if (manga != null && !manga.getMangaURL().equals("")) {
                     mangaList.add(manga);
-                }else{
+                } else {
                     manga = new Manga(mangaTitle, mangaUrl);
                     cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).put(manga);
                     Observable<Manga> observableManga = MangaJoy.updateMangaObservable(manga);

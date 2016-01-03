@@ -51,7 +51,7 @@ public class ChapterListAdapter extends ArrayAdapter {
         Chapter ch = chapters.get(position);
 
         //Picasso.with(context).load(tManga.getPicUrl()).resize(139, 200).into(holder.img);
-        if(ch == null){
+        if (ch == null) {
             return row;
         }
 
@@ -61,9 +61,9 @@ public class ChapterListAdapter extends ArrayAdapter {
                 .get();
 
 
-        if(viewedChapter == null){
+        if (viewedChapter == null) {
             row.setBackgroundColor(context.getResources().getColor(R.color.white));
-        }else{
+        } else {
             row.setBackgroundColor(context.getResources().getColor(R.color.grey));
         }
 

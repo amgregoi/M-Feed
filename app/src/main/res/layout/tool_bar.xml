@@ -1,62 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.Toolbar
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/ColorPrimary"
-    android:elevation="2dp"
-    android:navigationIcon="@android:drawable/arrow_down_float"
-    android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
-    android:id="@+id/mainToolBar">
+	android:id="@+id/mainToolBar"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:background="@color/ColorPrimary"
+	android:elevation="2dp"
+	android:navigationIcon="@android:drawable/arrow_down_float"
+	android:theme="@style/Base.ThemeOverlay.AppCompat.Dark">
 
-    <RelativeLayout
-        android:id="@+id/searchBar"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/ColorPrimary"
-        android:paddingBottom="5dp">
+	<RelativeLayout
+		android:id="@+id/searchBar"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:background="@color/ColorPrimary"
+		android:paddingBottom="5dp">
 
-        <SearchView
-            android:id="@+id/search_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:focusable="false"
-            android:iconifiedByDefault="true"
-            android:queryHint="Search Here"
-            android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true"
-            android:layout_marginRight="@dimen/baseline_grid_unit"
-	        />
+		<SearchView
+			android:id="@+id/search_view"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentEnd="true"
+			android:layout_centerInParent="true"
+			android:layout_marginRight="@dimen/baseline_grid_unit"
+			android:focusable="false"
+			android:iconifiedByDefault="true"
+			android:queryHint="Search Here"
+			/>
 
-        <ImageButton
-            android:id="@+id/orderButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ic_order"
-            android:gravity="end"
-            android:alpha=".7"
-            android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true"
+		<ImageButton
+			android:id="@+id/orderButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentEnd="true"
+			android:layout_centerInParent="true"
+			android:layout_marginEnd="@dimen/baseline_grid_unit"
+			android:alpha=".7"
+			android:background="@drawable/ic_order"
+			android:gravity="end"
 			android:padding="@dimen/baseline_margin_unit"
-            android:layout_marginRight="@dimen/baseline_grid_unit"
-            />
+			/>
 
-	    <TextView
-		    android:id="@+id/activityTitle"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:ellipsize="end"
-		    android:singleLine="true"
-		    android:text="Manga Feed"
-		    android:layout_marginBottom="@dimen/baseline_grid_unit"
-		    android:layout_centerVertical="true"
-		    android:textAlignment="center"
-		    android:textSize="20sp"
-		    android:textStyle="bold"
-		    android:layout_toStartOf="@id/orderButton"
-	        android:layout_alignParentStart="true"
-		    />
+		<TextView
+			android:id="@+id/activityTitle"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentStart="true"
+			android:layout_centerVertical="true"
+			android:layout_marginBottom="@dimen/baseline_grid_unit"
+			android:layout_toStartOf="@id/orderButton"
+			android:ellipsize="end"
+			android:singleLine="true"
+			android:text="Manga Feed"
+			android:textAlignment="center"
+			android:textSize="20sp"
+			android:textStyle="bold"
+			/>
 
-    </RelativeLayout>
+	</RelativeLayout>
 </android.support.v7.widget.Toolbar>
 

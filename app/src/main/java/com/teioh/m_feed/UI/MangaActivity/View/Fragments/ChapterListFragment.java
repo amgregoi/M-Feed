@@ -4,12 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -18,7 +15,6 @@ import com.teioh.m_feed.UI.MangaActivity.Presenters.ChapterListPresenter;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.ChapterListPresenterImpl;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.Mappers.ChapterListMapper;
 import com.teioh.m_feed.R;
-import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 
 
 import butterknife.Bind;
@@ -55,11 +51,10 @@ public class ChapterListFragment extends Fragment implements ChapterListMapper {
 
     @Override public void onDestroyView() {
         super.onDestroyView();
-        mChapterListPresenter.butterKnifeUnbind();
+        mChapterListPresenter.onDestroyView();
     }
 
-    @OnItemClick(R.id.mangaChapterList)
-    void onItemClick(AdapterView<?> adapter, View view, int pos) {
+    @OnItemClick(R.id.mangaChapterList) void onItemClick(AdapterView<?> adapter, View view, int pos) {
         mChapterListPresenter.onChapterClicked(pos);
     }
 

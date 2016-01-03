@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
+
 import com.teioh.m_feed.R;
 
 import java.util.List;
@@ -43,7 +44,7 @@ public class ChapterPageAdapter extends PagerAdapter {
         webView.getSettings().setUseWideViewPort(true);
         webView.getSettings().setBuiltInZoomControls(true);
         webView.getSettings().setDisplayZoomControls(false);
-        String page = "<html><body> <img src =\""+imageUrls.get(position)+"\" width=\"100%\"> </body></html>";
+        String page = "<html><body> <img src =\"" + imageUrls.get(position) + "\" width=\"100%\"> </body></html>";
         webView.loadData(page, "text/html", null);
 
         (container).addView(viewLayout);
@@ -53,7 +54,6 @@ public class ChapterPageAdapter extends PagerAdapter {
     @Override public void destroyItem(ViewGroup container, int position, Object object) {
         (container).removeView((RelativeLayout) object);
     }
-
 
 
 }

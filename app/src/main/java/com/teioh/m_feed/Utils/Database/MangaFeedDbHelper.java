@@ -51,7 +51,7 @@ public class MangaFeedDbHelper extends SQLiteOpenHelper {
 
     private void createDB() {
         boolean dbExist = DBExists();
-        if(!dbExist) {
+        if (!dbExist) {
             this.getReadableDatabase();
             copyDBFromResource();
         }
@@ -62,7 +62,7 @@ public class MangaFeedDbHelper extends SQLiteOpenHelper {
 
         try {
             File database = myContext.getDatabasePath(DB_NAME);
-            if(database.exists()) {
+            if (database.exists()) {
                 db = SQLiteDatabase.openDatabase(database.getPath(), null, SQLiteDatabase.OPEN_READWRITE);
                 db.setLocale(Locale.getDefault());
                 db.setVersion(1);
@@ -97,15 +97,13 @@ public class MangaFeedDbHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void updateMangaFollow(String title)
-    {
+    public void updateMangaFollow(String title) {
         ContentValues values = new ContentValues(1);
         values.put("mFollowing", 1);
         cupboard().withDatabase(getWritableDatabase()).update(Manga.class, values, "mTitle = ?", title);
     }
 
-    public void updateMangaUnfollow(String title)
-    {
+    public void updateMangaUnfollow(String title) {
         ContentValues values = new ContentValues(1);
         values.put("mFollowing", 0);
         cupboard().withDatabase(getWritableDatabase()).update(Manga.class, values, "mTitle = ?", title);

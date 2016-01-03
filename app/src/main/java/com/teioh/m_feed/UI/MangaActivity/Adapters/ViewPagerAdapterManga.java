@@ -29,11 +29,11 @@ public class ViewPagerAdapterManga extends FragmentStatePagerAdapter {
         Bundle b = new Bundle();
         b.putParcelable("Manga", manga);
 
-        if (position == 0){
+        if (position == 0) {
             Fragment mangaFragment = new MangaInformationFragment();
             mangaFragment.setArguments(b);
             return mangaFragment;
-        } else{
+        } else {
             Fragment mangaChapterFragment = new ChapterListFragment();
             mangaChapterFragment.setArguments(b);
             return mangaChapterFragment;

@@ -13,10 +13,10 @@ public interface MangaInformationPresenter {
 
     void setFollowButtonText(boolean follow, boolean notInit);
 
-    void busProviderRegister();
+    void onResume();
 
-    void busProviderUnregister();
+    void onPause();
 
-    void butterKnifeUnbind();
+    void onDestroyView();
 
-    }
+}

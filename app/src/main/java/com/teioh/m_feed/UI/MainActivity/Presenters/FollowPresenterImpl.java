@@ -90,19 +90,21 @@ public class FollowPresenterImpl implements FollowPresenter {
         mAdapter.getFilter().filter(newText);
     }
 
-    @Override  public void ButterKnifeUnbind(){
+    @Override public void onDestroyView() {
         ButterKnife.unbind(mFollowFragmentMapper);
     }
 
-    @Override  public void BusProviderRegister(){
+    @Override public void onResume() {
         BusProvider.getInstance().register(mFollowFragmentMapper);
+        this.updateGridView();
+
     }
 
-    @Override  public void BusProviderUnregister(){
+    @Override public void onPause() {
         BusProvider.getInstance().unregister(mFollowFragmentMapper);
     }
 
-    @Override  public void setAdapter(){
+    @Override public void setAdapter() {
         mFollowFragmentMapper.registerAdapter(mAdapter);
     }
 }

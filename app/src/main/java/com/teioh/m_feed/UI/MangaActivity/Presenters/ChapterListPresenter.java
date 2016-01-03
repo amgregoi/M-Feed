@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by Asus1 on 11/7/2015.
  */
-public interface  ChapterListPresenter{
+public interface ChapterListPresenter {
 
     void getChapterList();
 
@@ -19,6 +19,6 @@ public interface  ChapterListPresenter{
 
     void onResume();
 
-    void butterKnifeUnbind();
+    void onDestroyView();
 
 }

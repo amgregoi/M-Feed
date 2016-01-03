@@ -26,7 +26,7 @@ import butterknife.OnItemClick;
 
 public class RecentFragment extends Fragment implements RecentFragmentMap {
 
-    @Bind(R.id.recent_list_view) GridView mListView;
+    @Bind(R.id.recent_list_view) GridView mGridView;
     @Bind(R.id.swipe_container) SwipeRefreshLayout swipeContainer;
 
     private RecentPresenter mRecentPresenterManga;
@@ -52,26 +52,25 @@ public class RecentFragment extends Fragment implements RecentFragmentMap {
 
     @Override public void onDestroyView() {
         super.onDestroyView();
-        mRecentPresenterManga.ButterKnifeUnbind();
+        mRecentPresenterManga.onDestroyView();
 
     }
 
     @Override public void onResume() {
         super.onResume();
-        mRecentPresenterManga.BusProviderRegister();
-        mRecentPresenterManga.updateGridView();
+        mRecentPresenterManga.onResume();
     }
 
     @Override public void onPause() {
         super.onPause();
-        mRecentPresenterManga.BusProviderUnregister();
+        mRecentPresenterManga.onPause();
     }
 
     @Subscribe public void onMangaAdded(Manga manga) {
         mRecentPresenterManga.onMangaAdd(manga);
     }
 
-    @Subscribe public void activityQueryChange(QueryChange query){
+    @Subscribe public void activityQueryChange(QueryChange query) {
         onQueryTextChange(query.getQuery());
     }
 
@@ -81,8 +80,8 @@ public class RecentFragment extends Fragment implements RecentFragmentMap {
 
     @Override public void registerAdapter(BaseAdapter adapter) {
         if (adapter != null) {
-            mListView.setAdapter(adapter);
-            mListView.setTextFilterEnabled(true);
+            mGridView.setAdapter(adapter);
+            mGridView.setTextFilterEnabled(true);
         }
     }
 
@@ -101,11 +100,9 @@ public class RecentFragment extends Fragment implements RecentFragmentMap {
 
     @Override public void stopRefresh() {
         swipeContainer.setRefreshing(false);
-
     }
 
-    @Override
-    public void setupSwipeRefresh() {
+    @Override public void setupSwipeRefresh() {
         swipeContainer.setOnRefreshListener(() -> mRecentPresenterManga.updateGridView());
 
     }

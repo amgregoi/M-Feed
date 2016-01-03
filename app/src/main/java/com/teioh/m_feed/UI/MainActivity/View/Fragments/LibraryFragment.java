@@ -28,7 +28,7 @@ public class LibraryFragment extends Fragment implements LibraryFragmentMap {
 
     //    @Bind(R.id.search_view_3) SearchView mSearchView;
     @Bind(R.id.all_list_view)
-    GridView mListView;
+    GridView mGridView;
 
     private LibraryPresenter mLibraryPresenter;
 
@@ -48,8 +48,7 @@ public class LibraryFragment extends Fragment implements LibraryFragmentMap {
         super.onActivityCreated(savedInstanceState);
     }
 
-    @OnItemClick(R.id.all_list_view)
-    void onItemClick(AdapterView<?> adapter, View view, int pos) {
+    @OnItemClick(R.id.all_list_view) void onItemClick(AdapterView<?> adapter, View view, int pos) {
         final Manga item = (Manga) adapter.getItemAtPosition(pos);
         mLibraryPresenter.onItemClick(item);
     }
@@ -57,41 +56,40 @@ public class LibraryFragment extends Fragment implements LibraryFragmentMap {
     @Override
     public void onResume() {
         super.onResume();
-        mLibraryPresenter.BusProviderRegister();
-        mLibraryPresenter.updateGridView();
+        mLibraryPresenter.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mLibraryPresenter.BusProviderUnregister();
+        mLibraryPresenter.onPause();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mLibraryPresenter.ButterKnifeUnbind();
+        mLibraryPresenter.onDestroyView();
     }
 
     @Override
     public void registerAdapter(BaseAdapter adapter) {
         if (adapter != null) {
-            mListView.setFastScrollEnabled(true);
-            mListView.setVisibility(View.GONE);
-            mListView.setAdapter(adapter);
-            mListView.setTextFilterEnabled(true);
+            mGridView.setFastScrollEnabled(true);
+            mGridView.setVisibility(View.GONE);
+            mGridView.setAdapter(adapter);
+            mGridView.setTextFilterEnabled(true);
         }
     }
 
     @Override
-    public void hideView() {
-        mListView.setVisibility(View.GONE);
+    public void hideGridView() {
+        mGridView.setVisibility(View.GONE);
 
     }
 
     @Override
-    public void showView() {
-        mListView.setVisibility(View.VISIBLE);
+    public void showGridView() {
+        mGridView.setVisibility(View.VISIBLE);
     }
 
     @Subscribe

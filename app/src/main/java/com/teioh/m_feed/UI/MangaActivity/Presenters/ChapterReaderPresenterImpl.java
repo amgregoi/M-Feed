@@ -19,19 +19,19 @@ import rx.schedulers.Schedulers;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
-public class ChapterReaderPresenterImpl implements  ChapterReaderPresenter{
+public class ChapterReaderPresenterImpl implements ChapterReaderPresenter {
 
     private ChapterReaderMapper mChapterReaderMapper;
     private ChapterPageAdapter chapterAdapter;
 
-    private ArrayList<String> nextUrlList,  curUrlList, prevUrlList;
+    private ArrayList<String> nextUrlList, curUrlList, prevUrlList;
     private ArrayList<Chapter> mChapterList;
     private int mPosition, curChapterPageCount, pageOffsetCount, pageDirection;
     private boolean mChapterOrderDescending;
 
     private Observable<List<String>> nextObservable, prevObservable;
 
-    public ChapterReaderPresenterImpl(ChapterReaderMapper map, Bundle b){
+    public ChapterReaderPresenterImpl(ChapterReaderMapper map, Bundle b) {
         mChapterReaderMapper = map;
         mChapterList = b.getParcelableArrayList("Chapters");
         mPosition = b.getInt("Position");
@@ -68,21 +68,20 @@ public class ChapterReaderPresenterImpl implements  ChapterReaderPresenter{
     }
 
     @Override
-    public void updateOffset(int offset, int position){
-        if(position == 0 || position == curChapterPageCount-1) {
+    public void updateOffsetCounter(int offset, int position) {
+        if (position == 0 || position == curChapterPageCount - 1) {
             if (offset == 0) pageOffsetCount++;
             else pageOffsetCount = 0;
 
-            if(position == 0) pageDirection = 0;
+            if (position == 0) pageDirection = 0;
             else pageDirection = 1;
         }
     }
 
     @Override
-    public void  updateState(int state){
-        if(pageOffsetCount > 50 && state == 0)
-        {
-            if(mChapterOrderDescending) {
+    public void updateState(int state) {
+        if (pageOffsetCount > 50 && state == 0) {
+            if (mChapterOrderDescending) {
                 if (pageDirection == 0 && mPosition < mChapterList.size() - 1) {  //backward (previous)
                     mPosition++;
                     nextUrlList = new ArrayList<>(curUrlList);
@@ -95,7 +94,7 @@ public class ChapterReaderPresenterImpl implements  ChapterReaderPresenter{
                     updateView(nextUrlList);
                     getNextList();
                 }
-            }else{
+            } else {
                 if (pageDirection == 0 && mPosition > 0) {  //backward (previous)
                     mPosition--;
                     nextUrlList = new ArrayList<>(curUrlList);
@@ -113,12 +112,12 @@ public class ChapterReaderPresenterImpl implements  ChapterReaderPresenter{
     }
 
     @Override
-    public void butterKnifeUnbind() {
+    public void onDestroyView() {
         ButterKnife.unbind(mChapterReaderMapper);
     }
 
-    private void getNextList(){
-        if(mChapterOrderDescending) {
+    private void getNextList() {
+        if (mChapterOrderDescending) {
             if (mPosition > 0) {
                 if (nextObservable != null) {
                     nextObservable.unsubscribeOn(Schedulers.io());
@@ -126,8 +125,8 @@ public class ChapterReaderPresenterImpl implements  ChapterReaderPresenter{
                 nextObservable = MangaJoy.getChapterImageListObservable(mChapterList.get(mPosition - 1).getChapterUrl());
                 nextObservable.subscribe(urlList -> setNextList(urlList));
             }
-        }else{
-            if (mPosition < mChapterList.size()-1) {
+        } else {
+            if (mPosition < mChapterList.size() - 1) {
                 if (nextObservable != null) {
                     nextObservable.unsubscribeOn(Schedulers.io());
                 }
@@ -137,13 +136,13 @@ public class ChapterReaderPresenterImpl implements  ChapterReaderPresenter{
         }
     }
 
-    private void setNextList(List<String> urlList){
+    private void setNextList(List<String> urlList) {
         nextUrlList = new ArrayList<>(urlList);
         nextObservable = null;
     }
 
-    private void getPrevList(){
-        if(mChapterOrderDescending) {
+    private void getPrevList() {
+        if (mChapterOrderDescending) {
             if (mPosition < mChapterList.size() - 1) {
                 if (prevObservable != null) {
                     prevObservable.unsubscribeOn(Schedulers.io());
@@ -151,7 +150,7 @@ public class ChapterReaderPresenterImpl implements  ChapterReaderPresenter{
                 prevObservable = MangaJoy.getChapterImageListObservable(mChapterList.get(mPosition + 1).getChapterUrl());
                 prevObservable.subscribe(urlList -> setPrevList(urlList));
             }
-        }else{
+        } else {
             if (mPosition > 0) {
                 if (prevObservable != null) {
                     prevObservable.unsubscribeOn(Schedulers.io());
@@ -162,7 +161,7 @@ public class ChapterReaderPresenterImpl implements  ChapterReaderPresenter{
         }
     }
 
-    private void setPrevList(List<String> urlList){
+    private void setPrevList(List<String> urlList) {
         prevUrlList = new ArrayList<>(urlList);
         prevObservable = null;
     }

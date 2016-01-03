@@ -24,7 +24,7 @@ import butterknife.OnItemClick;
 
 public class FollowFragment extends Fragment implements FollowFragmentMap {
 
-    @Bind(R.id.library_list_view) GridView mListView;
+    @Bind(R.id.library_list_view) GridView mGridView;
 
     private FollowPresenter mFollowPresenter;
 
@@ -48,18 +48,17 @@ public class FollowFragment extends Fragment implements FollowFragmentMap {
 
     @Override public void onResume() {
         super.onResume();
-        mFollowPresenter.BusProviderRegister();
-        mFollowPresenter.updateGridView();
+        mFollowPresenter.onResume();
     }
 
     @Override public void onPause() {
         super.onPause();
-        mFollowPresenter.BusProviderUnregister();
+        mFollowPresenter.onPause();
     }
 
     @Override public void onDestroyView() {
         super.onDestroyView();
-        mFollowPresenter.ButterKnifeUnbind();
+        mFollowPresenter.onDestroyView();
     }
 
     @Override public boolean onQueryTextChange(String newText) {
@@ -74,14 +73,14 @@ public class FollowFragment extends Fragment implements FollowFragmentMap {
     @Override
     public void registerAdapter(BaseAdapter adapter) {
         if (adapter != null) {
-            mListView.setTextFilterEnabled(true);
-            mListView.setAdapter(adapter);
-            registerForContextMenu(mListView);
+            mGridView.setTextFilterEnabled(true);
+            mGridView.setAdapter(adapter);
+            registerForContextMenu(mGridView);
         }
     }
 
     @Subscribe
-    public void activityQueryChange(QueryChange q){
+    public void activityQueryChange(QueryChange q) {
         onQueryTextChange(q.getQuery());
     }
 }

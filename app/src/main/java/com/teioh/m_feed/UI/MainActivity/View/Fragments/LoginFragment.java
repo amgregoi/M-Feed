@@ -1,7 +1,6 @@
 package com.teioh.m_feed.UI.MainActivity.View.Fragments;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -34,14 +33,14 @@ public class LoginFragment extends Fragment implements LoginFragmentMap {
 
     @Override public void onDestroyView() {
         super.onDestroyView();
-        mLoginPresenter.butterKnifeUnbind();
+        mLoginPresenter.onDestroyView();
     }
 
-    @OnClick(R.id.signup) void onSignupButton(){
+    @OnClick(R.id.signup) void onSignupButton() {
         mLoginPresenter.onSignupButton(username.getText().toString(), password.getText().toString());
     }
 
-    @OnClick(R.id.login) void onLoginButton(){
+    @OnClick(R.id.login) void onLoginButton() {
         mLoginPresenter.onLoginbutton(username.getText().toString(), password.getText().toString());
     }
 

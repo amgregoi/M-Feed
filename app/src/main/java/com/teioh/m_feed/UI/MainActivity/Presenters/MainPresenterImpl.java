@@ -60,7 +60,7 @@ public class MainPresenterImpl implements MainPresenter {
         }
     }
 
-    @Override public void setupDrawerLayoutListener(Toolbar mToolBar, DrawerLayout mDrawerLayout){
+    @Override public void setupDrawerLayoutListener(Toolbar mToolBar, DrawerLayout mDrawerLayout) {
         mDrawerToggle = new ActionBarDrawerToggle(((Activity) mMainMapper.getContext()), mDrawerLayout,
                 mToolBar, R.string.app_name, R.string.Login) {
             /** Called when a drawer has settled in a completely closed state. */
@@ -80,7 +80,6 @@ public class MainPresenterImpl implements MainPresenter {
 
         mMainMapper.setDrawerLayoutListener(mDrawerToggle);
     }
-
 
 
     @Override

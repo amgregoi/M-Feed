@@ -56,7 +56,9 @@ public class RecentPresenterImpl implements RecentPresenter {
         }
         try {
             mRecentFragmentMapper.stopRefresh();
-        }catch(NullPointerException e){e.printStackTrace();}
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -72,17 +74,19 @@ public class RecentPresenterImpl implements RecentPresenter {
     }
 
     @Override
-    public void ButterKnifeUnbind() {
+    public void onDestroyView() {
         ButterKnife.unbind(mRecentFragmentMapper);
     }
 
     @Override
-    public void BusProviderRegister() {
+    public void onResume() {
         BusProvider.getInstance().register(mRecentFragmentMapper);
+        this.updateGridView();
+
     }
 
     @Override
-    public void BusProviderUnregister() {
+    public void onPause() {
         BusProvider.getInstance().unregister(mRecentFragmentMapper);
     }
 

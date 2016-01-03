@@ -16,7 +16,7 @@ import com.teioh.m_feed.R;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class ChapterReaderFragment extends Fragment implements ChapterReaderMapper{
+public class ChapterReaderFragment extends Fragment implements ChapterReaderMapper {
 
 
     @Bind(R.id.pager) ViewPager viewPager;
@@ -27,24 +27,23 @@ public class ChapterReaderFragment extends Fragment implements ChapterReaderMapp
         ButterKnife.bind(this, v);
 
         mChapterReaderPresenter = new ChapterReaderPresenterImpl(this, getArguments());
-        viewPager.addOnPageChangeListener(this);
         return v;
     }
 
     @Override public void onDestroyView() {
         super.onDestroyView();
-        mChapterReaderPresenter.butterKnifeUnbind();
+        mChapterReaderPresenter.onDestroyView();
     }
 
     @Override
     public void registerAdapter(PagerAdapter adapter) {
-        if(viewPager == null)System.exit(-1);
         viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(this);
     }
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        mChapterReaderPresenter.updateOffset(positionOffsetPixels, position);
+        mChapterReaderPresenter.updateOffsetCounter(positionOffsetPixels, position);
     }
 
     @Override

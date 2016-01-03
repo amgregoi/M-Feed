@@ -1,26 +1,18 @@
 package com.teioh.m_feed.UI.MangaActivity.Presenters;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 
-import com.squareup.otto.Subscribe;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.Mappers.MangaInformationMapper;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
-import com.teioh.m_feed.Utils.OttoBus.ChapterOrderEvent;
 import com.teioh.m_feed.Utils.OttoBus.RemoveFromLibrary;
 import com.teioh.m_feed.WebSources.MangaJoy;
 
-import java.util.Collections;
-
 import butterknife.ButterKnife;
 import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
 import rx.schedulers.Schedulers;
 
 public class MangaInformationPresenterImpl implements MangaInformationPresenter {
@@ -42,9 +34,9 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
             if (item.getmGenre() != null && item.getmAlternate() != null) {
                 mMangaInformationMapper.setupFollowButton();
                 mMangaInformationMapper.setMangaViews(item);
-                mMangaInformationMapper.showLayout();
+                mMangaInformationMapper.showCoverLayout();
             } else {
-                mMangaInformationMapper.hideLayout();
+                mMangaInformationMapper.hideCoverLayout();
                 mMangaInformationMapper.setupFollowButton();
                 mMangaInformationMapper.setupSwipeRefresh();
                 this.getMangaViewInfo();
@@ -60,7 +52,7 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
         observableManga.subscribe(manga -> {
             mMangaInformationMapper.setMangaViews(manga);
             mMangaInformationMapper.stopRefresh();
-            mMangaInformationMapper.showLayout();
+            mMangaInformationMapper.showCoverLayout();
         });
     }
 
@@ -87,19 +79,19 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
     }
 
     @Override
-    public void busProviderRegister() {
+    public void onResume() {
         BusProvider.getInstance().register(this);
     }
 
     @Override
-    public void busProviderUnregister() {
+    public void onPause() {
         BusProvider.getInstance().unregister(this);
     }
 
     @Override
-    public void butterKnifeUnbind() {
+    public void onDestroyView() {
         ButterKnife.unbind(this);
-        if(observableManga != null) {
+        if (observableManga != null) {
             observableManga.unsubscribeOn(Schedulers.io());
             observableManga = null;
         }

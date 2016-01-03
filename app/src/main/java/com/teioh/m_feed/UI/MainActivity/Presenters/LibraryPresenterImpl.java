@@ -1,8 +1,6 @@
 package com.teioh.m_feed.UI.MainActivity.Presenters;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.util.Log;
 
 import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapterAlternate;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
@@ -20,8 +18,6 @@ import java.util.List;
 import butterknife.ButterKnife;
 import rx.Observable;
 
-import static nl.qbusict.cupboard.CupboardFactory.cupboard;
-
 
 public class LibraryPresenterImpl implements LibraryPresenter {
 
@@ -31,12 +27,12 @@ public class LibraryPresenterImpl implements LibraryPresenter {
     private LibraryFragmentMap mLibraryFragmentMapper;
 
 
-    public LibraryPresenterImpl(LibraryFragmentMap map){
+    public LibraryPresenterImpl(LibraryFragmentMap map) {
         mLibraryFragmentMapper = map;
     }
 
     @Override public void initializeView() {
-        mLibraryFragmentMapper.hideView();
+        mLibraryFragmentMapper.hideGridView();
         MangaFeedDbHelper.getInstance().createDatabase();
         mangaList = new ArrayList<>();
         mAdapter = new SearchableAdapterAlternate(mLibraryFragmentMapper.getContext(), mangaList);
@@ -56,7 +52,7 @@ public class LibraryPresenterImpl implements LibraryPresenter {
         }
         Collections.sort(mangaList, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
         mAdapter.notifyDataSetChanged();
-        mLibraryFragmentMapper.showView();
+        mLibraryFragmentMapper.showGridView();
 
     }
 
@@ -70,15 +66,16 @@ public class LibraryPresenterImpl implements LibraryPresenter {
         mAdapter.getFilter().filter(newText);
     }
 
-    @Override public void ButterKnifeUnbind() {
+    @Override public void onDestroyView() {
         ButterKnife.unbind(mLibraryFragmentMapper);
     }
 
-    @Override public void BusProviderRegister() {
+    @Override public void onResume() {
         BusProvider.getInstance().register(mLibraryFragmentMapper);
+        this.updateGridView();
     }
 
-    @Override public void BusProviderUnregister() {
+    @Override public void onPause() {
         BusProvider.getInstance().unregister(mLibraryFragmentMapper);
     }
 
@@ -86,7 +83,7 @@ public class LibraryPresenterImpl implements LibraryPresenter {
         mLibraryFragmentMapper.registerAdapter(mAdapter);
     }
 
-    @Override public void onMangaRemoved(RemoveFromLibrary rm){
+    @Override public void onMangaRemoved(RemoveFromLibrary rm) {
         Manga manga = rm.getManga();
         for (Manga m : mangaList) {
             if (m.getTitle().equals(manga.getTitle())) {

@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,26 +31,17 @@ import static android.widget.Toast.LENGTH_SHORT;
 
 public class MangaInformationFragment extends Fragment implements MangaInformationMapper {
 
-    @Bind(R.id.manga_image)
-    ImageView img;
-    @Bind(R.id.mangaDescription)
-    TextView description;
-    @Bind(R.id.author)
-    TextView author;
-    @Bind(R.id.artist)
-    TextView artist;
-    @Bind(R.id.genre)
-    TextView genres;
-    @Bind(R.id.status)
-    TextView status;
+    @Bind(R.id.manga_image) ImageView img;
+    @Bind(R.id.mangaDescription) TextView description;
+    @Bind(R.id.author) TextView author;
+    @Bind(R.id.artist) TextView artist;
+    @Bind(R.id.genre) TextView genres;
+    @Bind(R.id.status) TextView status;
 
-    @Bind(R.id.pink_icon)
-    FloatingActionButton floatButton;
+    @Bind(R.id.pink_icon) FloatingActionButton floatButton;
 
-    @Bind(R.id.swipe_container)
-    SwipeRefreshLayout mSwipeRefresh;
-    @Bind(R.id.relativeLayout)
-    RelativeLayout mRelativeLayout;
+    @Bind(R.id.swipe_container) SwipeRefreshLayout mSwipeRefresh;
+    @Bind(R.id.relativeLayout) RelativeLayout mRelativeLayout;
 
     private MangaInformationPresenter mMangaInformationPresenter;
 
@@ -69,19 +59,19 @@ public class MangaInformationFragment extends Fragment implements MangaInformati
     @Override
     public void onResume() {
         super.onResume();
-        mMangaInformationPresenter.busProviderRegister();
+        mMangaInformationPresenter.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mMangaInformationPresenter.busProviderUnregister();
+        mMangaInformationPresenter.onPause();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mMangaInformationPresenter.butterKnifeUnbind();
+        mMangaInformationPresenter.onDestroyView();
     }
 
     @OnClick(R.id.pink_icon) void onClick(View v) {
@@ -90,7 +80,7 @@ public class MangaInformationFragment extends Fragment implements MangaInformati
 
     @Override
     public void setFollowButtonText(int resourceId, boolean isInit) {
-        if(resourceId == R.drawable.ic_done && !isInit) {
+        if (resourceId == R.drawable.ic_done && !isInit) {
             Toast.makeText(getContext(), "Now following", LENGTH_SHORT).show();
         }
         floatButton.setImageResource(resourceId);
@@ -103,21 +93,15 @@ public class MangaInformationFragment extends Fragment implements MangaInformati
 
     @Override
     public void setMangaViews(Manga manga) {
-        if (manga != null) {
-            try {
-//          followButton.setText((manga.getFollowing() ? "Unfollow" : "Follow"));
-                description.setText(manga.getDescription());
-                description.setTypeface(Typeface.SERIF);
-                author.setText(manga.getmAuthor());
-                artist.setText(manga.getmArtist());
-                genres.setText(manga.getmGenre());
-                status.setText(manga.getmStatus());
-                //Picasso.with(getContext()).load(item.getPicUrl()).into(img);
-                Glide.with(getContext()).load(manga.getPicUrl()).into(img);
-            }catch(Exception e){
-                Log.e("MangaInfoFragment", "trying to update non current view");
-                e.printStackTrace();
-            }
+        if (manga != null && getContext() != null) {
+            description.setText(manga.getDescription());
+            description.setTypeface(Typeface.SERIF);
+            author.setText(manga.getmAuthor());
+            artist.setText(manga.getmArtist());
+            genres.setText(manga.getmGenre());
+            status.setText(manga.getmStatus());
+            //Picasso.with(getContext()).load(item.getPicUrl()).into(img);
+            Glide.with(getContext()).load(manga.getPicUrl()).into(img);
         }
     }
 
@@ -140,12 +124,12 @@ public class MangaInformationFragment extends Fragment implements MangaInformati
     }
 
     @Override
-    public void hideLayout() {
+    public void hideCoverLayout() {
         mRelativeLayout.setVisibility(View.INVISIBLE);
     }
 
     @Override
-    public void showLayout() {
+    public void showCoverLayout() {
         mRelativeLayout.setVisibility(View.VISIBLE);
     }
 }

@@ -33,9 +33,6 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
     @Bind(R.id.tabs) SlidingTabLayout tabs;
     @Bind(R.id.mainToolBar) Toolbar mToolBar;
     @Bind(R.id.search_view) SearchView mSearchView;
-    @Bind(R.id.orderButton) ImageButton mOrderButton;
-
-//    SearchView mSearchView;
 
     private MangaPresenter mMangaPresenter;
 
@@ -59,13 +56,13 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
         mMangaPresenter.onPause();
     }
 
-    @Override protected void onDestroy(){
+    @Override protected void onDestroy() {
         super.onDestroy();
         mMangaPresenter.onDestroy();
     }
 
     @Override public void registerAdapter(ViewPagerAdapterManga adapter) {
-        if(adapter != null) {
+        if (adapter != null) {
             mViewPager.setAdapter(adapter);
             mViewPager.setOffscreenPageLimit(2);
         }
