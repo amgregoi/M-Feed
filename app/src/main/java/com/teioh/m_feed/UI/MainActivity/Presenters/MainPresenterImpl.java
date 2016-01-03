@@ -43,7 +43,7 @@ public class MainPresenterImpl implements MainPresenter {
         mMainMapper.setupTabLayout();
         mMainMapper.registerAdapter(mViewPagerAdapterMain);
         mMainMapper.setupSearchview();
-        ((FragmentActivity) mMainMapper.getContext()).setTitle(mMainMapper.getContext().getString(R.string.app_name));
+        mMainMapper.setupToolbar();
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.teioh.m_feed.UI.MainActivity.Presenters;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.util.Log;
 
 import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapterAlternate;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
@@ -17,6 +19,8 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import rx.Observable;
+
+import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 
 public class LibraryPresenterImpl implements LibraryPresenter {

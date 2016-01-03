@@ -97,17 +97,17 @@ public class MangaFeedDbHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void updateMangaFollow(Manga item)
+    public void updateMangaFollow(String title)
     {
         ContentValues values = new ContentValues(1);
         values.put("mFollowing", 1);
-        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, values, "mTitle = ?", item.getTitle());
+        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, values, "mTitle = ?", title);
     }
 
-    public void updateMangaUnfollow(Manga item)
+    public void updateMangaUnfollow(String title)
     {
         ContentValues values = new ContentValues(1);
         values.put("mFollowing", 0);
-        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, values, "mTitle = ?", item.getTitle());
+        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, values, "mTitle = ?", title);
     }
 }

@@ -5,23 +5,29 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 
+import com.squareup.otto.Subscribe;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.Mappers.MangaInformationMapper;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
+import com.teioh.m_feed.Utils.OttoBus.ChapterOrderEvent;
 import com.teioh.m_feed.Utils.OttoBus.RemoveFromLibrary;
 import com.teioh.m_feed.WebSources.MangaJoy;
+
+import java.util.Collections;
 
 import butterknife.ButterKnife;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
+import rx.schedulers.Schedulers;
 
 public class MangaInformationPresenterImpl implements MangaInformationPresenter {
 
     private Manga item;
     private MangaInformationMapper mMangaInformationMapper;
+    private Observable<Manga> observableManga;
 
 
     public MangaInformationPresenterImpl(MangaInformationMapper base, Bundle b) {
@@ -50,7 +56,6 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
 
     @Override
     public void getMangaViewInfo() {
-        Observable<Manga> observableManga;
         observableManga = MangaJoy.updateMangaObservable(item);
         observableManga.subscribe(manga -> {
             mMangaInformationMapper.setMangaViews(manga);
@@ -64,19 +69,12 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
         boolean follow = item.setFollowing(!item.getFollowing());
         this.setFollowButtonText(follow, false);        //second parameter signifies if the button is being initialized
         if (follow) {
-            MangaFeedDbHelper.getInstance().updateMangaFollow(item);
+            MangaFeedDbHelper.getInstance().updateMangaFollow(item.getTitle());
             BusProvider.getInstance().post(item);
         } else {
-            MangaFeedDbHelper.getInstance().updateMangaUnfollow(item);
+            MangaFeedDbHelper.getInstance().updateMangaUnfollow(item.getTitle());
             BusProvider.getInstance().post(new RemoveFromLibrary(item));
         }
-    }
-
-    @Override
-    public void onReadButtonClick() {
-        ViewPager viewPager = (ViewPager) ((Fragment) mMangaInformationMapper).getActivity().findViewById(R.id.pager);
-        viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
-
     }
 
     @Override
@@ -100,9 +98,10 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
 
     @Override
     public void butterKnifeUnbind() {
-
         ButterKnife.unbind(this);
+        if(observableManga != null) {
+            observableManga.unsubscribeOn(Schedulers.io());
+            observableManga = null;
+        }
     }
-
-
 }

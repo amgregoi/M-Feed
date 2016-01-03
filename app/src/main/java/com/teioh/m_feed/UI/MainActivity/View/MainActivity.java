@@ -8,9 +8,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -26,12 +25,13 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements MainActivityMap {
 
-    @Bind(R.id.search_view_1)SearchView mSearchView;
+    @Bind(R.id.search_view)SearchView mSearchView;
     @Bind(R.id.activityTitle) TextView mActivityTitle;
     @Bind(R.id.pager) ViewPager mViewPager;
     @Bind(R.id.tabs) SlidingTabLayout tabs;
     @Bind(R.id.mainToolBar) Toolbar mToolBar;
     @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+    @Bind(R.id.orderButton) ImageButton orderButton;
 
     private MainPresenter mMainPresenter;
 
@@ -59,26 +59,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityMap {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mMainPresenter.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(Menu.NONE, 0, Menu.NONE, "Logout");
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        } else if (id == 0) {
-            mMainPresenter.onLogout();
-        }else if (mMainPresenter.onOptionsSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -163,6 +143,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityMap {
     @Override
     public void onDrawerClose() {
         invalidateOptionsMenu();  // creates call to onPrepareOptionsMenu()
+    }
+
+    @Override
+    public void setupToolbar(){
+        setSupportActionBar(mToolBar);
+        setTitle(getString(R.string.app_name));
+        orderButton.setVisibility(View.GONE);
+
     }
 
 }

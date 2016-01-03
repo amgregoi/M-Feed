@@ -21,10 +21,12 @@ import java.util.List;
 import butterknife.ButterKnife;
 import rx.Observable;
 
+
 public class FollowPresenterImpl implements FollowPresenter {
 
     private ArrayList<Manga> libraryList;
     private SearchableAdapter mAdapter;
+    private Observable<List<Manga>> observableMangaList;
 
     private FollowFragmentMap mFollowFragmentMapper;
 
@@ -51,7 +53,7 @@ public class FollowPresenterImpl implements FollowPresenter {
     }
 
     @Override public void updateGridView() {
-        Observable<List<Manga>> observableMangaList = ReactiveQueryManager.getFollowedMangaObservable();
+        observableMangaList = ReactiveQueryManager.getFollowedMangaObservable();
         observableMangaList.subscribe(manga -> populateLibraryListView(manga));
     }
 

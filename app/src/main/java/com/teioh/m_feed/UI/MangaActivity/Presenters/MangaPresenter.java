@@ -11,4 +11,6 @@ public interface MangaPresenter {
     void onPause();
 
     void onDestroy();
+
+    void chapterOrderButtonClick();
 }

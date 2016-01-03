@@ -1,22 +1,19 @@
 package com.teioh.m_feed.UI.MangaActivity.View;
 
-import android.app.Fragment;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import com.parse.ParseUser;
-import com.teioh.m_feed.UI.MainActivity.View.Fragments.LoginFragment;
 import com.teioh.m_feed.UI.MangaActivity.Adapters.ViewPagerAdapterManga;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.MangaPresenter;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.MangaPresenterImpl;
@@ -26,6 +23,7 @@ import com.teioh.m_feed.Utils.SlidingTabLayout;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MangaActivity extends AppCompatActivity implements MangaActivityMap {
 
@@ -34,7 +32,8 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
     @Bind(R.id.pager) ViewPager mViewPager;
     @Bind(R.id.tabs) SlidingTabLayout tabs;
     @Bind(R.id.mainToolBar) Toolbar mToolBar;
-    @Bind(R.id.search_view_1) SearchView mSearchView;
+    @Bind(R.id.search_view) SearchView mSearchView;
+    @Bind(R.id.orderButton) ImageButton mOrderButton;
 
 //    SearchView mSearchView;
 
@@ -47,22 +46,7 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
 
         mMangaPresenter = new MangaPresenterImpl(this);
         mMangaPresenter.initialize(getIntent().getParcelableExtra("Manga"));
-        mSearchView.setVisibility(View.GONE);
-    }
 
-    @Override public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override protected void onResume() {
@@ -100,12 +84,16 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
     @Override public void setupToolBar() {
         setSupportActionBar(mToolBar);
         mToolBar.setNavigationIcon(R.drawable.ic_back);
-        //TODO
-        //replace overflow icon with double arrows to switch order of chapters (ascending/descending)
         mToolBar.setNavigationOnClickListener(v -> onBackPressed());
+        mSearchView.setVisibility(View.GONE);
     }
 
     @Override public Context getContext() {
         return this;
+    }
+
+    @OnClick(R.id.orderButton)
+    public void orderButton(View view) {
+        mMangaPresenter.chapterOrderButtonClick();
     }
 }

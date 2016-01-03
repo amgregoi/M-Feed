@@ -49,7 +49,6 @@ public class ChapterReaderFragment extends Fragment implements ChapterReaderMapp
 
     @Override
     public void onPageSelected(int position) {
-
     }
 
     @Override

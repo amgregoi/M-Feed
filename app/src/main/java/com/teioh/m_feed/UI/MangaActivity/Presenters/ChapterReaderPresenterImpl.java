@@ -27,13 +27,15 @@ public class ChapterReaderPresenterImpl implements  ChapterReaderPresenter{
     private ArrayList<String> nextUrlList,  curUrlList, prevUrlList;
     private ArrayList<Chapter> mChapterList;
     private int mPosition, curChapterPageCount, pageOffsetCount, pageDirection;
+    private boolean mChapterOrderDescending;
 
-    Observable<List<String>> nextObservable, prevObservable;
+    private Observable<List<String>> nextObservable, prevObservable;
 
     public ChapterReaderPresenterImpl(ChapterReaderMapper map, Bundle b){
         mChapterReaderMapper = map;
         mChapterList = b.getParcelableArrayList("Chapters");
         mPosition = b.getInt("Position");
+        mChapterOrderDescending = b.getBoolean("Order");
         this.getImageUrls();
     }
 
@@ -80,30 +82,58 @@ public class ChapterReaderPresenterImpl implements  ChapterReaderPresenter{
     public void  updateState(int state){
         if(pageOffsetCount > 50 && state == 0)
         {
-            if(pageDirection == 0 && mPosition < mChapterList.size()-1) {  //backward (previous)
-                mPosition++;
-                nextUrlList = new ArrayList<>(curUrlList);
-                updateView(prevUrlList);
-                getPrevList();
+            if(mChapterOrderDescending) {
+                if (pageDirection == 0 && mPosition < mChapterList.size() - 1) {  //backward (previous)
+                    mPosition++;
+                    nextUrlList = new ArrayList<>(curUrlList);
+                    updateView(prevUrlList);
+                    getPrevList();
 
-            }
-            else if(pageDirection == 1 && mPosition > 0) { //forward (next)
-                mPosition--;
-                prevUrlList = new ArrayList<>(curUrlList);
-                updateView(nextUrlList);
-                getNextList();
+                } else if (pageDirection == 1 && mPosition > 0) { //forward (next)
+                    mPosition--;
+                    prevUrlList = new ArrayList<>(curUrlList);
+                    updateView(nextUrlList);
+                    getNextList();
+                }
+            }else{
+                if (pageDirection == 0 && mPosition > 0) {  //backward (previous)
+                    mPosition--;
+                    nextUrlList = new ArrayList<>(curUrlList);
+                    updateView(prevUrlList);
+                    getPrevList();
+
+                } else if (pageDirection == 1 && mPosition < mChapterList.size() - 1) { //forward (next)
+                    mPosition++;
+                    prevUrlList = new ArrayList<>(curUrlList);
+                    updateView(nextUrlList);
+                    getNextList();
+                }
             }
         }
     }
 
+    @Override
+    public void butterKnifeUnbind() {
+        ButterKnife.unbind(mChapterReaderMapper);
+    }
 
     private void getNextList(){
-        if(mPosition > 0) {
-            if (nextObservable != null) {
-                nextObservable.unsubscribeOn(Schedulers.io());
+        if(mChapterOrderDescending) {
+            if (mPosition > 0) {
+                if (nextObservable != null) {
+                    nextObservable.unsubscribeOn(Schedulers.io());
+                }
+                nextObservable = MangaJoy.getChapterImageListObservable(mChapterList.get(mPosition - 1).getChapterUrl());
+                nextObservable.subscribe(urlList -> setNextList(urlList));
             }
-            nextObservable = MangaJoy.getChapterImageListObservable(mChapterList.get(mPosition - 1).getChapterUrl());
-            nextObservable.subscribe(urlList -> setNextList(urlList));
+        }else{
+            if (mPosition < mChapterList.size()-1) {
+                if (nextObservable != null) {
+                    nextObservable.unsubscribeOn(Schedulers.io());
+                }
+                nextObservable = MangaJoy.getChapterImageListObservable(mChapterList.get(mPosition + 1).getChapterUrl());
+                nextObservable.subscribe(urlList -> setNextList(urlList));
+            }
         }
     }
 
@@ -113,12 +143,22 @@ public class ChapterReaderPresenterImpl implements  ChapterReaderPresenter{
     }
 
     private void getPrevList(){
-        if(mPosition < mChapterList.size()-1) {
-            if(prevObservable != null){
-                prevObservable.unsubscribeOn(Schedulers.io());
+        if(mChapterOrderDescending) {
+            if (mPosition < mChapterList.size() - 1) {
+                if (prevObservable != null) {
+                    prevObservable.unsubscribeOn(Schedulers.io());
+                }
+                prevObservable = MangaJoy.getChapterImageListObservable(mChapterList.get(mPosition + 1).getChapterUrl());
+                prevObservable.subscribe(urlList -> setPrevList(urlList));
             }
-            prevObservable = MangaJoy.getChapterImageListObservable(mChapterList.get(mPosition + 1).getChapterUrl());
-            prevObservable.subscribe(urlList -> setPrevList(urlList));
+        }else{
+            if (mPosition > 0) {
+                if (prevObservable != null) {
+                    prevObservable.unsubscribeOn(Schedulers.io());
+                }
+                prevObservable = MangaJoy.getChapterImageListObservable(mChapterList.get(mPosition - 1).getChapterUrl());
+                prevObservable.subscribe(urlList -> setPrevList(urlList));
+            }
         }
     }
 
@@ -127,8 +167,4 @@ public class ChapterReaderPresenterImpl implements  ChapterReaderPresenter{
         prevObservable = null;
     }
 
-    @Override
-    public void butterKnifeUnbind() {
-        ButterKnife.unbind(mChapterReaderMapper);
-    }
 }

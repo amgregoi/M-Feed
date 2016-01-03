@@ -38,7 +38,7 @@ public class MangaJoy {
         return pullUpdatedMangaFromWebsite()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .retry()
+                .retry(10)
                 .onErrorReturn(throwable -> {
                     Log.e("throwable", throwable.toString());
                     return null;
@@ -94,8 +94,6 @@ public class MangaJoy {
                 if (manga != null && !manga.getMangaURL().equals("")) {
                     mangaList.add(manga);
                 }else{
-                    //TODO add new manga
-                    //Still need to test
                     manga = new Manga(mangaTitle, mangaUrl);
                     cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).put(manga);
                     Observable<Manga> observableManga = MangaJoy.updateMangaObservable(manga);
@@ -115,7 +113,7 @@ public class MangaJoy {
         return pullChaptersFromWebsite(url)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .retry()
+                .retry(10)
                 .onErrorReturn(new Func1<Throwable, List<Chapter>>() {
                     @Override
                     public List<Chapter> call(Throwable throwable) {
@@ -270,7 +268,7 @@ public class MangaJoy {
         return getUnparsedHtml(m)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .retry()
+                .retry(10)
                 .onErrorReturn(new Func1<Throwable, Manga>() {
                     @Override
                     public Manga call(Throwable throwable) {
@@ -297,7 +295,6 @@ public class MangaJoy {
                     subscriber.onNext(scrapeAndUpdateManga(unparsedHtml, m.getMangaURL()));
                     subscriber.onCompleted();
                 } catch (Throwable e) {
-                    Log.e("RAWR", e.getMessage());
                     subscriber.onError(e);
                 }
             }

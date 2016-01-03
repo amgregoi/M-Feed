@@ -16,30 +16,47 @@
         android:background="@color/ColorPrimary"
         android:paddingBottom="5dp">
 
-        <TextView
-            android:id="@+id/activityTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:text="Manga Feed"
-            android:layout_centerVertical="true"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            />
-
-
         <SearchView
-            android:id="@+id/search_view_1"
+            android:id="@+id/search_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
             android:focusable="false"
-            android:gravity="end"
             android:iconifiedByDefault="true"
             android:queryHint="Search Here"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="@dimen/baseline_grid_unit"
+	        />
+
+        <ImageButton
+            android:id="@+id/orderButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_order"
+            android:gravity="end"
+            android:alpha=".7"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+			android:padding="@dimen/baseline_margin_unit"
+            android:layout_marginRight="@dimen/baseline_grid_unit"
             />
+
+	    <TextView
+		    android:id="@+id/activityTitle"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:ellipsize="end"
+		    android:singleLine="true"
+		    android:text="Manga Feed"
+		    android:layout_marginBottom="@dimen/baseline_grid_unit"
+		    android:layout_centerVertical="true"
+		    android:textAlignment="center"
+		    android:textSize="20sp"
+		    android:textStyle="bold"
+		    android:layout_toStartOf="@id/orderButton"
+	        android:layout_alignParentStart="true"
+		    />
+
     </RelativeLayout>
 </android.support.v7.widget.Toolbar>
 
