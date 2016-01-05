@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
 import rx.Observable;
 
 
-public class LibraryPresenterImpl implements LibraryPresenter {
+public class AllLibraryPresenterImpl implements AllLibraryPresenter {
 
     private ArrayList<Manga> mangaList;
     private SearchableAdapterAlternate mAdapter;
@@ -27,7 +27,7 @@ public class LibraryPresenterImpl implements LibraryPresenter {
     private LibraryFragmentMap mLibraryFragmentMapper;
 
 
-    public LibraryPresenterImpl(LibraryFragmentMap map) {
+    public AllLibraryPresenterImpl(LibraryFragmentMap map) {
         mLibraryFragmentMapper = map;
     }
 

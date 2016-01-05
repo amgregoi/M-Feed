@@ -3,6 +3,7 @@ package com.teioh.m_feed.Utils.Database;
 import android.util.Log;
 
 import com.teioh.m_feed.Models.Manga;
+import com.teioh.m_feed.WebSources.WebSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 public class ReactiveQueryManager {
 
     /*
-     * LibraryFragment gets whole library
+     * AllLibraryFragment gets whole library
      */
     public static Observable<List<Manga>> getMangaLibraryObservable() {
         return pullMangaFromDatabase()
@@ -51,7 +52,11 @@ public class ReactiveQueryManager {
 
     private static List<Manga> getLibraryFromDatabase() {
         ArrayList<Manga> mangaList = new ArrayList<>();
-        QueryResultIterable<Manga> itr = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase()).query(Manga.class).query();
+        QueryResultIterable<Manga> itr = cupboard().withDatabase(MangaFeedDbHelper.getInstance()
+                .getReadableDatabase()).query(Manga.class)
+                .withSelection("mSource = ?", WebSource.getSourceKey())
+                .query();
+
         for (Manga manga : itr) {
             mangaList.add(manga);
         }
@@ -62,7 +67,7 @@ public class ReactiveQueryManager {
 
 
     /*
-     * FollowFragment gets manga in users library
+     * FollowLibraryFragment gets manga in users library
      */
     public static Observable<List<Manga>> getFollowedMangaObservable() {
         return pullFollowedMangaFromDatabase()
@@ -94,7 +99,7 @@ public class ReactiveQueryManager {
     private static List<Manga> getFollowedManga() {
         ArrayList<Manga> mangaList = new ArrayList<>();
         QueryResultIterable<Manga> itr = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase())
-                .query(Manga.class).withSelection("mFollowing = ?", "1").query();
+                .query(Manga.class).withSelection("mFollowing = ? AND mSource = ?", "1", WebSource.getSourceKey()).query();
         for (Manga manga : itr) {
             mangaList.add(manga);
         }

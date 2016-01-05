@@ -9,7 +9,7 @@ import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.Utils.OttoBus.RemoveFromLibrary;
-import com.teioh.m_feed.WebSources.MangaJoy;
+import com.teioh.m_feed.WebSources.WebSource;
 
 import butterknife.ButterKnife;
 import rx.Observable;
@@ -31,7 +31,7 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
     public void initialize() {
         try {
             this.setFollowButtonText(item.getFollowing(), true); //second parameter signifies if the button is being initialized
-            if (item.getmGenre() != null && item.getmAlternate() != null) {
+            if (item.getmGenre() != null && item.getmAlternate() != null && !item.getPicUrl().equals("")) {
                 mMangaInformationMapper.setupFollowButton();
                 mMangaInformationMapper.setMangaViews(item);
                 mMangaInformationMapper.showCoverLayout();
@@ -48,7 +48,7 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
 
     @Override
     public void getMangaViewInfo() {
-        observableManga = MangaJoy.updateMangaObservable(item);
+        observableManga = WebSource.updateMangaObservable(item);
         observableManga.subscribe(manga -> {
             mMangaInformationMapper.setMangaViews(manga);
             mMangaInformationMapper.stopRefresh();

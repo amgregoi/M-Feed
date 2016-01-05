@@ -22,7 +22,8 @@ public class ChapterReaderFragment extends Fragment implements ChapterReaderMapp
     @Bind(R.id.pager) ViewPager viewPager;
     private ChapterReaderPresenter mChapterReaderPresenter;
 
-    @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.chapter_reader_fragment, container, false);
         ButterKnife.bind(this, v);
 
@@ -30,7 +31,8 @@ public class ChapterReaderFragment extends Fragment implements ChapterReaderMapp
         return v;
     }
 
-    @Override public void onDestroyView() {
+    @Override
+    public void onDestroyView() {
         super.onDestroyView();
         mChapterReaderPresenter.onDestroyView();
     }
@@ -39,6 +41,7 @@ public class ChapterReaderFragment extends Fragment implements ChapterReaderMapp
     public void registerAdapter(PagerAdapter adapter) {
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(this);
+        viewPager.setOffscreenPageLimit(10);
     }
 
     @Override

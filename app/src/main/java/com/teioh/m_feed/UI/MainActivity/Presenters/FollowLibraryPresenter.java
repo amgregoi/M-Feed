@@ -1,11 +1,8 @@
 package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 import com.teioh.m_feed.Models.Manga;
-import com.teioh.m_feed.Utils.OttoBus.RemoveFromLibrary;
 
-import java.util.List;
-
-public interface LibraryPresenter {
+public interface FollowLibraryPresenter {
     void initializeView();
 
     void updateGridView();
@@ -21,8 +18,4 @@ public interface LibraryPresenter {
     void onPause();
 
     void setAdapter();
-
-    void onMangaRemoved(RemoveFromLibrary rm);
-
-    void udpateChapterList(List<Manga> mList);
 }

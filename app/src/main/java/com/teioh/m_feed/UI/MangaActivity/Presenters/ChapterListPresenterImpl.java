@@ -13,6 +13,7 @@ import com.teioh.m_feed.R;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.Utils.OttoBus.ChapterOrderEvent;
 import com.teioh.m_feed.WebSources.MangaJoy;
+import com.teioh.m_feed.WebSources.WebSource;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,7 +41,7 @@ public class ChapterListPresenterImpl implements ChapterListPresenter {
     @Override
     public void getChapterList() {
         mChapterListMapper.setupSwipeRefresh();
-        observableChapterList = MangaJoy.getChapterListObservable(mManga.getMangaURL());
+        observableChapterList = WebSource.getChapterListObservable(mManga.getMangaURL());
         observableChapterList.subscribe(chapters -> updateChapterList(chapters));
     }
 

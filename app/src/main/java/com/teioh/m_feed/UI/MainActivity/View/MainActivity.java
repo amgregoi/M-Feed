@@ -19,6 +19,9 @@ import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
 import com.teioh.m_feed.UI.MainActivity.Presenters.MainPresenterImpl;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.Utils.SlidingTabLayout;
+import com.teioh.m_feed.WebSources.MangaJoy;
+import com.teioh.m_feed.WebSources.MangaPark;
+import com.teioh.m_feed.WebSources.WebSource;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityMap {
     @Bind(R.id.activityTitle) TextView mActivityTitle;
     @Bind(R.id.pager) ViewPager mViewPager;
     @Bind(R.id.tabs) SlidingTabLayout tabs;
-    @Bind(R.id.mainToolBar) Toolbar mToolBar;
+    @Bind(R.id.tool_bar) Toolbar mToolBar;
     @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @Bind(R.id.orderButton) ImageButton orderButton;
 
@@ -44,6 +47,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityMap {
         mMainPresenter = new MainPresenterImpl(this);
         mMainPresenter.initialize();
         mMainPresenter.setupDrawerLayoutListener(mToolBar, mDrawerLayout);
+
+        //testing sources
+        WebSource.setwCurrentSource(MangaJoy.SourceKey);
+       // WebSource.setwCurrentSource(MangaPark.SourceKey);
 
         //start service in new thread, substantial slow down on main thread
         //startService(new Intent(this, RecentUpdateService.class));
@@ -73,7 +80,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityMap {
         mMainPresenter.onPause();
     }
 
-    @Override public void onDestroy() {
+    @Override
+    public void onDestroy() {
         super.onDestroy();
         mMainPresenter.onDestroy();
     }

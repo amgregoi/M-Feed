@@ -22,9 +22,10 @@ public class Manga implements Parcelable {
     public Manga() {
     }
 
-    public Manga(String title, String url){
+    public Manga(String title, String url, String source){
         this.mTitle = title;
         this.mMangaUrl = url;
+        this.mSource = source;
     }
 
     protected Manga(Parcel in) {

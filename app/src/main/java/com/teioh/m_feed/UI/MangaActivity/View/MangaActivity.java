@@ -5,12 +5,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -31,7 +26,7 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
     @Bind(R.id.activityTitle) TextView mActivityTitle;
     @Bind(R.id.pager) ViewPager mViewPager;
     @Bind(R.id.tabs) SlidingTabLayout tabs;
-    @Bind(R.id.mainToolBar) Toolbar mToolBar;
+    @Bind(R.id.tool_bar) Toolbar mToolBar;
     @Bind(R.id.search_view) SearchView mSearchView;
 
     private MangaPresenter mMangaPresenter;

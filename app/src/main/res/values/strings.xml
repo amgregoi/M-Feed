@@ -12,6 +12,11 @@
     <string name="SignUp">Sign Up</string>
     <string name="Logout">Log out</string>
     <string name="Welcome">Welcome!</string>
+    <string name="drawerlayout_general_heading">General</string>
+    <string name="drawerlayout_sources_heading">Sources</string>
+    <string name="drawerlayout_general_search">Advanced Search</string>
+    <string name="drawerlayout_general_logout">Logout</string>
+    <string name="drawerlayout_general_home">Home</string>
 
     <string-array name="library_item_menu">
         <item>Remove</item>

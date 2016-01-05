@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 import rx.Observable;
 
 
-public class FollowPresenterImpl implements FollowPresenter {
+public class FollowLibraryPresenterImpl implements FollowLibraryPresenter {
 
     private ArrayList<Manga> libraryList;
     private SearchableAdapter mAdapter;
@@ -30,7 +30,7 @@ public class FollowPresenterImpl implements FollowPresenter {
 
     private FollowFragmentMap mFollowFragmentMapper;
 
-    public FollowPresenterImpl(FollowFragmentMap map) {
+    public FollowLibraryPresenterImpl(FollowFragmentMap map) {
         mFollowFragmentMapper = map;
     }
 

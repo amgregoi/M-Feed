@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.xml.transform.Source;
-
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -29,52 +27,12 @@ import rx.schedulers.Schedulers;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
-public class MangaJoy {
+public class MangaPark {
 
-    final public static String SourceKey = "MangaJoy";
+    final public static String SourceKey = "MangaPark";
 
-    final static String MangaJoyUrl = "http://manga-joy.com/latest-chapters/";
-
-    final String genres[] = {
-            "Action",
-            "Adult",
-            "Adventure",
-            "Comedy",
-            "Doujinshi",
-            "Drama",
-            "Ecchi",
-            "Fantasy",
-            "Gender Bender",
-            "Harem",
-            "Historical",
-            "Horror",
-            "Josei",
-            "Lolicon",
-            "Manga",
-            "Manhua",
-            "Manhwa",
-            "Martial Arts",
-            "Mature",
-            "Mecha",
-            "Mystery",
-            "One shot",
-            "Psychological",
-            "Romance",
-            "School Life",
-            "Sci fi",
-            "Seinen",
-            "Shotacon",
-            "Shoujo",
-            "Shoujo Ai",
-            "Shounen",
-            "Shounen Ai",
-            "Slice of Life",
-            "Smut",
-            "Sports",
-            "Supernatural",
-            "Tragedy",
-            "Yaoi",
-            "Yuri"};
+    final static String MangaParkUrl = "http://mangapark.me/latest/";
+    final static String MangaParkBaseUrl = "http://mangapark.me";
 
     /*
      * builds list of manga for recently updated page
@@ -95,14 +53,17 @@ public class MangaJoy {
             @Override
             public void call(Subscriber<? super List<Manga>> subscriber) {
                 try {
-                    Connection connect = Jsoup.connect(MangaJoyUrl)
+                    Connection connect = Jsoup.connect(MangaParkUrl)
                             .userAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.21")
                             .ignoreHttpErrors(true)
                             .timeout(10000);
+
                     String unparsedHtml = null;
                     int code = connect.execute().statusCode();
                     if (code == 200) {
                         unparsedHtml = connect.get().html();
+                    }else{
+                        Log.e("RAWR", Integer.toString(code));
                     }
 
                     subscriber.onNext(parseRecentUpdatesToManga(unparsedHtml));
@@ -116,7 +77,7 @@ public class MangaJoy {
 
     private static List<Manga> parseRecentUpdatesToManga(final String unparsedHtml) {
         Document parsedDocument = Jsoup.parse(unparsedHtml);
-        Elements updates = parsedDocument.select("div.wpm_pag.mng_lts_chp.grp");
+        Elements updates = parsedDocument.select("div.item");
         parsedDocument = Jsoup.parse(updates.toString());
         List<Manga> chapterList = scrapeUpdatestoManga(parsedDocument);
         return chapterList;
@@ -124,30 +85,38 @@ public class MangaJoy {
 
     private static List<Manga> scrapeUpdatestoManga(final Document parsedDocument) {
         List<Manga> mangaList = new ArrayList<>();
-        Elements mangaElements = parsedDocument.select("div.row");
+        //Log.e("RAWR", parsedDocument.toString());
+        Elements mangaElements = parsedDocument.select("div.item");
 
         SQLiteDatabase db = MangaFeedDbHelper.getInstance().getReadableDatabase();
         for (Element wholeElement : mangaElements) {
             Document parseSections = Jsoup.parse(wholeElement.toString());
-            Elements usefulElements = parseSections.select("div.det.sts_1");
+            Elements usefulElements = parseSections.select("ul").select("h3");
             for (Element usefulElement : usefulElements) {
-                String mangaTitle = usefulElement.select("a").attr("Title");
-                String mangaUrl = usefulElement.select("a").attr("href");
+                String mangaTitle = usefulElement.select("a").text();
+                String mangaUrl = MangaParkBaseUrl + usefulElement.select("a").attr("href");
                 Manga manga = cupboard().withDatabase(db).query(Manga.class).withSelection("mTitle = ? AND mSource = ?", mangaTitle, SourceKey).get();
                 if (manga != null) {
                     mangaList.add(manga);
-                } else {
+                }
+                else{
                     manga = new Manga(mangaTitle, mangaUrl, SourceKey);
                     cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).put(manga);
-                    Observable<Manga> observableManga = MangaJoy.updateMangaObservable(manga);
-                    observableManga.subscribe();
+                    mangaList.add(manga);
                 }
+//                else {
+//                    manga = new Manga(mangaTitle, mangaUrl, SourceKey);
+//                    cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).put(manga);
+//                    Observable<Manga> observableManga = MangaPark.updateMangaObservable(manga);
+//                    observableManga.subscribe();
+//                }
             }
         }
         Log.i("Pull Recent Updates", "Finished pulling updates");
         return mangaList;
     }
 
+    //TODO UPDATE FOR MANGAPARK
     /*
      * builds list of chapters for manga object
      */
@@ -177,7 +146,7 @@ public class MangaJoy {
 
                     String unparsedHtml = null;
                     if (connect.execute().statusCode() == 200)
-                        unparsedHtml = connect.get().html().toString();
+                        unparsedHtml = connect.get().html();
 
                     subscriber.onNext(parseHtmlToChapters(unparsedHtml));
                     subscriber.onCompleted();
@@ -189,34 +158,52 @@ public class MangaJoy {
     }
 
     private static List<Chapter> parseHtmlToChapters(final String unparsedHtml) {
-        int beginIndex = unparsedHtml.indexOf("<ul class=\"chp_lst\">");
-        int endIndex = unparsedHtml.indexOf("</ul>", beginIndex);
-        String chapterListHtml = unparsedHtml.substring(beginIndex, endIndex);
-        Document parsedDocument = Jsoup.parse(chapterListHtml);
+        Document parsedDocument = Jsoup.parse(unparsedHtml);
+        Elements updates = parsedDocument.select("div#list.book-list").select("div#stream_1.stream");
+        parsedDocument = Jsoup.parse(updates.toString());
         List<Chapter> chapterList = scrapeChaptersFromParsedDocument(parsedDocument);
         return chapterList;
+
+
     }
 
     private static List<Chapter> scrapeChaptersFromParsedDocument(final Document parsedDocument) {
         List<Chapter> chapterList = new ArrayList<>();
-        Elements chapterElements = parsedDocument.getElementsByTag("li");
-        int numChapters = chapterElements.size();
+        Elements volumeElements = parsedDocument.select("div.volume");
+        Elements temp;
+        int ch = 0;
+        int vol = 0;
+        for (Element volumeElement : volumeElements) {
+            Elements chapterElements = volumeElements.select("ul.chapter").select("li");
+            vol++;
+            for(Element chapterElement : chapterElements){
+                temp = chapterElement.select("span");
+                String chapterUrl = temp.select("a").attr("href");
+                String[] titles = temp.text().split(" : ");
+                String chapterDate = chapterElement.select("i").text();
+                Chapter curChapter;
+                if(titles.length == 2) {
+                    curChapter = new Chapter(chapterUrl, titles[0], titles[1], chapterDate);
+                }else{
+                    curChapter = new Chapter(chapterUrl, titles[0], titles[0], chapterDate);
+                }
+                chapterList.add(curChapter);
+                ch++;
+            }
+        }
 
-        for (Element chapterElement : chapterElements) {
-            String chapterUrl = chapterElement.select("a").attr("href");
-            String[] titles = chapterElement.select("span").first().text().split(" : ");
-
-            String chapterDate = chapterElement.select("span").get(1).text();
-
-            Chapter curChapter = new Chapter(chapterUrl, titles[0], titles[1], chapterDate, numChapters);
-            numChapters--;
-
-            chapterList.add(curChapter);
+        //set chapter numbers
+        int numChapters = chapterList.size() - 1;
+        for(int i=0; i <= numChapters; i++)
+        {
+            chapterList.get(i).setChapterNumber(numChapters);
+            i--;
         }
         return chapterList;
     }
 
 
+    //TODO UPDATE FOR MANGAPARK
     /*
     * ChapterReaderFragment - takes a chapter url, and returns list of urls to chapter images
     */
@@ -307,8 +294,8 @@ public class MangaJoy {
     * Adds new Manga and
     * gets missing manga information and updates database
     */
-    public static Observable<Manga> updateMangaObservable(final Manga m) {
-        return getUnparsedHtml(m)
+    public static Observable<Manga> updateMangaObservable(final Manga manga) {
+        return getUnparsedHtml(manga)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .retry(10)
@@ -322,12 +309,12 @@ public class MangaJoy {
                 .doOnError(throwable -> throwable.printStackTrace());
     }
 
-    private static Observable<Manga> getUnparsedHtml(final Manga m) {
+    private static Observable<Manga> getUnparsedHtml(final Manga manga) {
         return Observable.create(new Observable.OnSubscribe<Manga>() {
             @Override
             public void call(Subscriber<? super Manga> subscriber) {
                 try {
-                    Connection connect = Jsoup.connect(m.getMangaURL().toLowerCase())
+                    Connection connect = Jsoup.connect(manga.getMangaURL().toLowerCase())
                             .userAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.21")
                             .timeout(10000);
 
@@ -335,7 +322,7 @@ public class MangaJoy {
                     if (connect.execute().statusCode() == 200)
                         unparsedHtml = connect.get().html().toString();
 
-                    subscriber.onNext(scrapeAndUpdateManga(unparsedHtml, m.getMangaURL()));
+                    subscriber.onNext(scrapeAndUpdateManga(unparsedHtml, manga.getMangaURL()));
                     subscriber.onCompleted();
                 } catch (Throwable e) {
                     subscriber.onError(e);
@@ -347,30 +334,62 @@ public class MangaJoy {
     private static Manga scrapeAndUpdateManga(final String unparsedHtml, String url) {
         Document html = Jsoup.parse(unparsedHtml);
 
-        //image url
-        Element imageElement = html.body().select("img.cvr").first();
         //summary
-        Element summaryElement = html.body().select("p.summary").first();
+        String summary = html.body().select("p.summary").text();
 
-        Elements e = html.body().select("div.det").select("span");
-        String img = imageElement.attr("src");
-        String summary = summaryElement.text().substring(7);
+        Elements e = html.body().select("table.outer");
+        String img = e.select("div.cover").select("img").attr("href");
+        if(img.equals(""))
+        {
+            img = e.select("div.cover").select("img").attr("src");
+        }
+        e = e.select("table.attr").select("tbody").select("tr");
         String alternate = null;
         String author = null;
         String artist = null;
         String genres = null;
         String status = null;
+        Elements tList;
         for (int i = 0; i < e.size(); i++) {
-            if (i == 0) {
-                alternate = e.get(i).text();
-            } else if (i == 1) {
-                author = e.get(i).text();
-            } else if (i == 2) {
-                artist = e.get(i).text();
-            } else if (i == 3) {
-                genres = e.get(i).text();
+            if (i == 3) {
+                //alternative
+                alternate = e.get(i).select("td").text();
+            } else if (i == 4) {
+                //author
+                tList = e.get(i).select("td").select("a");
+                if(tList.size() > 0) {
+                    alternate = "";
+                    for (Element auth : tList) {
+                        alternate += auth.text() + ",";
+                    }
+                }else{
+                    alternate = "~";
+                }
             } else if (i == 5) {
-                status = e.get(i).text();
+                //artist
+                tList = e.get(i).select("td").select("a");
+                if(tList.size() > 0) {
+                    artist = "";
+                    for (Element art : tList) {
+                        artist += art.text() + ",";
+                    }
+                }else{
+                    artist = "~";
+                }
+            } else if (i == 6) {
+                //genres
+                tList = e.get(i).select("td").select("a");
+                if(tList.size() > 0) {
+                    genres = "";
+                    for (Element gen : tList) {
+                        genres += gen.text() + ",";
+                    }
+                }else{
+                    genres = "~";
+                }
+            } else if (i == 9) {
+                //status
+                status = e.get(i).select("td").text();
             }
         }
 
@@ -385,14 +404,8 @@ public class MangaJoy {
         values.put("mStatus", status);
         values.put("mSource", SourceKey);
 
-        cupboard().withDatabase(MangaFeedDbHelper.getInstance()
-                .getWritableDatabase())
-                .update(Manga.class, values, "mMangaUrl = ?", url);
-
-        Manga manga = cupboard().withDatabase(MangaFeedDbHelper.getInstance()
-                .getReadableDatabase()).query(Manga.class)
-                .withSelection("mMangaUrl = ? AND mSource = ?", url, SourceKey).get();
-
+        cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).update(Manga.class, values, "mMangaUrl = ?", url);
+        Manga manga = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase()).query(Manga.class).withSelection("mMangaUrl = ?", url).get();
         return manga;
     }
 }

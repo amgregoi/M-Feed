@@ -2,6 +2,7 @@ package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.parse.LogInCallback;
@@ -55,6 +56,10 @@ public class LoginPresenterImpl implements LoginPresenter {
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
                             ((Fragment) mLoginFragmentMapper).getFragmentManager().popBackStackImmediate();
+                            //close keyboard via activity
+//                            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+//                            imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+
                         } else {
 //                            Toast.makeText(
 //                                    mLoginFragmentMapper.getContext(),

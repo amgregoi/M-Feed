@@ -23,6 +23,13 @@ public class Chapter implements Parcelable{
         this.cNumber = num;
     }
 
+    public Chapter(String url, String mTitle, String cTitle, String date) {
+        this.mUrl = url;
+        this.mDate = date;
+        this.mTitle = mTitle;
+        this.cTitle = cTitle;
+    }
+
     @Override public int describeContents() {
         return 0;
     }

@@ -11,8 +11,8 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 
 import com.squareup.otto.Subscribe;
-import com.teioh.m_feed.UI.MainActivity.Presenters.LibraryPresenter;
-import com.teioh.m_feed.UI.MainActivity.Presenters.LibraryPresenterImpl;
+import com.teioh.m_feed.UI.MainActivity.Presenters.AllLibraryPresenter;
+import com.teioh.m_feed.UI.MainActivity.Presenters.AllLibraryPresenterImpl;
 import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.LibraryFragmentMap;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.Utils.OttoBus.QueryChange;
@@ -24,13 +24,13 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 
-public class LibraryFragment extends Fragment implements LibraryFragmentMap {
+public class AllLibraryFragment extends Fragment implements LibraryFragmentMap {
 
     //    @Bind(R.id.search_view_3) SearchView mSearchView;
     @Bind(R.id.all_list_view)
     GridView mGridView;
 
-    private LibraryPresenter mLibraryPresenter;
+    private AllLibraryPresenter mAllLibraryPresenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -38,8 +38,8 @@ public class LibraryFragment extends Fragment implements LibraryFragmentMap {
         ButterKnife.bind(this, v);
 
 
-        mLibraryPresenter = new LibraryPresenterImpl(this);
-        mLibraryPresenter.initializeView();
+        mAllLibraryPresenter = new AllLibraryPresenterImpl(this);
+        mAllLibraryPresenter.initializeView();
         return v;
     }
 
@@ -50,25 +50,25 @@ public class LibraryFragment extends Fragment implements LibraryFragmentMap {
 
     @OnItemClick(R.id.all_list_view) void onItemClick(AdapterView<?> adapter, View view, int pos) {
         final Manga item = (Manga) adapter.getItemAtPosition(pos);
-        mLibraryPresenter.onItemClick(item);
+        mAllLibraryPresenter.onItemClick(item);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mLibraryPresenter.onResume();
+        mAllLibraryPresenter.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mLibraryPresenter.onPause();
+        mAllLibraryPresenter.onPause();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mLibraryPresenter.onDestroyView();
+        mAllLibraryPresenter.onDestroyView();
     }
 
     @Override
@@ -94,7 +94,7 @@ public class LibraryFragment extends Fragment implements LibraryFragmentMap {
 
     @Subscribe
     public void onMangaRemoved(RemoveFromLibrary rm) {
-        mLibraryPresenter.onMangaRemoved(rm);
+        mAllLibraryPresenter.onMangaRemoved(rm);
     }
 
     @Subscribe
@@ -108,7 +108,7 @@ public class LibraryFragment extends Fragment implements LibraryFragmentMap {
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        mLibraryPresenter.onQueryTextChange(newText);
+        mAllLibraryPresenter.onQueryTextChange(newText);
         return true;
     }
 

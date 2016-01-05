@@ -1,15 +1,13 @@
 package com.teioh.m_feed.UI.MangaActivity.Presenters;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.teioh.m_feed.UI.MangaActivity.Adapters.ChapterPageAdapter;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.Mappers.ChapterReaderMapper;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
-import com.teioh.m_feed.WebSources.MangaJoy;
+import com.teioh.m_feed.WebSources.WebSource;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +20,7 @@ import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 public class ChapterReaderPresenterImpl implements ChapterReaderPresenter {
 
     private ChapterReaderMapper mChapterReaderMapper;
-    private ChapterPageAdapter chapterAdapter;
+    private ChapterPageAdapter mChapterAdapter;
 
     private ArrayList<String> nextUrlList, curUrlList, prevUrlList;
     private ArrayList<Chapter> mChapterList;
@@ -41,7 +39,7 @@ public class ChapterReaderPresenterImpl implements ChapterReaderPresenter {
 
     @Override
     public void getImageUrls() {
-        Observable<List<String>> observableImageUrlList = MangaJoy.getChapterImageListObservable(mChapterList.get(mPosition).getChapterUrl());
+        Observable<List<String>> observableImageUrlList = WebSource.getChapterImageListObservable(mChapterList.get(mPosition).getChapterUrl());
         observableImageUrlList.subscribe(urlList -> updateView(urlList));
         getPrevList();
         getNextList();
@@ -62,8 +60,8 @@ public class ChapterReaderPresenterImpl implements ChapterReaderPresenter {
 
             curUrlList = new ArrayList<>(urlList);
             curChapterPageCount = curUrlList.size();
-            chapterAdapter = new ChapterPageAdapter(mChapterReaderMapper.getContext(), curUrlList);
-            mChapterReaderMapper.registerAdapter(chapterAdapter);
+            mChapterAdapter = new ChapterPageAdapter(mChapterReaderMapper.getContext(), curUrlList);
+            mChapterReaderMapper.registerAdapter(mChapterAdapter);
         }
     }
 
@@ -122,7 +120,7 @@ public class ChapterReaderPresenterImpl implements ChapterReaderPresenter {
                 if (nextObservable != null) {
                     nextObservable.unsubscribeOn(Schedulers.io());
                 }
-                nextObservable = MangaJoy.getChapterImageListObservable(mChapterList.get(mPosition - 1).getChapterUrl());
+                nextObservable = WebSource.getChapterImageListObservable(mChapterList.get(mPosition - 1).getChapterUrl());
                 nextObservable.subscribe(urlList -> setNextList(urlList));
             }
         } else {
@@ -130,7 +128,7 @@ public class ChapterReaderPresenterImpl implements ChapterReaderPresenter {
                 if (nextObservable != null) {
                     nextObservable.unsubscribeOn(Schedulers.io());
                 }
-                nextObservable = MangaJoy.getChapterImageListObservable(mChapterList.get(mPosition + 1).getChapterUrl());
+                nextObservable = WebSource.getChapterImageListObservable(mChapterList.get(mPosition + 1).getChapterUrl());
                 nextObservable.subscribe(urlList -> setNextList(urlList));
             }
         }
@@ -147,7 +145,7 @@ public class ChapterReaderPresenterImpl implements ChapterReaderPresenter {
                 if (prevObservable != null) {
                     prevObservable.unsubscribeOn(Schedulers.io());
                 }
-                prevObservable = MangaJoy.getChapterImageListObservable(mChapterList.get(mPosition + 1).getChapterUrl());
+                prevObservable = WebSource.getChapterImageListObservable(mChapterList.get(mPosition + 1).getChapterUrl());
                 prevObservable.subscribe(urlList -> setPrevList(urlList));
             }
         } else {
@@ -155,7 +153,7 @@ public class ChapterReaderPresenterImpl implements ChapterReaderPresenter {
                 if (prevObservable != null) {
                     prevObservable.unsubscribeOn(Schedulers.io());
                 }
-                prevObservable = MangaJoy.getChapterImageListObservable(mChapterList.get(mPosition - 1).getChapterUrl());
+                prevObservable = WebSource.getChapterImageListObservable(mChapterList.get(mPosition - 1).getChapterUrl());
                 prevObservable.subscribe(urlList -> setPrevList(urlList));
             }
         }

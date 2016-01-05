@@ -4,13 +4,13 @@ import android.content.Intent;
 
 import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapterAlternate;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
-import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapter;
 import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.RecentFragmentMap;
 import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.Utils.OttoBus.RemoveFromLibrary;
 import com.teioh.m_feed.WebSources.MangaJoy;
+import com.teioh.m_feed.WebSources.WebSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,6 @@ public class RecentPresenterImpl implements RecentPresenter {
 
     private ArrayList<Manga> recentList;
     private SearchableAdapterAlternate mAdapter;
-
     private RecentFragmentMap mRecentFragmentMapper;
 
     public RecentPresenterImpl(RecentFragmentMap map) {
@@ -42,24 +41,23 @@ public class RecentPresenterImpl implements RecentPresenter {
 
     @Override
     public void updateGridView() {
-        Observable<List<Manga>> observableMangaList = MangaJoy.getRecentUpdatesObservable();
-        observableMangaList.subscribe(manga -> udpateChapterList(manga));
+        Observable<List<Manga>> observableMangaList = WebSource.getRecentUpdatesObservable();
+        observableMangaList.subscribe(manga -> updateRecentList(manga));
     }
 
-    private void udpateChapterList(List<Manga> manga) {
-        if (manga != null) {
-            recentList.clear();
-            for (Manga m : manga) {
-                recentList.add(m);
+    private void updateRecentList(List<Manga> manga) {
+        if (mRecentFragmentMapper.getContext() != null) {
+            if (manga != null) {
+                recentList.clear();
+                for (Manga m : manga) {
+                    recentList.add(m);
+                }
+                mAdapter.notifyDataSetChanged();
             }
-            mAdapter.notifyDataSetChanged();
-        }
-        try {
             mRecentFragmentMapper.stopRefresh();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
         }
     }
+
 
     @Override
     public void onItemClick(Manga item) {
