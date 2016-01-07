@@ -11,11 +11,10 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.ChapterListPresenter;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.ChapterListPresenterImpl;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.Mappers.ChapterListMapper;
-import com.teioh.m_feed.R;
-
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

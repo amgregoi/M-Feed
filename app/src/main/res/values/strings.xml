@@ -4,6 +4,7 @@
 
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_manga">MangaActivity</string>
+    <string name="title_activity_login">LoginActivity</string>
 
 
     <string name="Username">Username</string>
@@ -17,6 +18,7 @@
     <string name="drawerlayout_general_search">Advanced Search</string>
     <string name="drawerlayout_general_logout">Logout</string>
     <string name="drawerlayout_general_home">Home</string>
+    <string name="drawer_item_icon">DrawerLayout Item Icon</string>
 
     <string-array name="library_item_menu">
         <item>Remove</item>

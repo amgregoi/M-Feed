@@ -24,17 +24,24 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".UI.MainActivity.View.MainActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:label="@string/title_activity_main">
+            android:label="@string/title_activity_main"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".UI.MangaActivity.View.MangaActivity"
-            android:label="@string/title_activity_manga">
+            android:label="@string/title_activity_manga"
+            android:theme="@style/AppTheme">
+        </activity>
+        <activity
+            android:name=".UI.LoginActivity.Presenters.View.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme">
+
         </activity>
 
         <service android:name="com.parse.PushService" />

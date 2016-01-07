@@ -12,13 +12,13 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 
 import com.squareup.otto.Subscribe;
-import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.RecentFragmentMap;
-import com.teioh.m_feed.Utils.OttoBus.QueryChange;
-import com.teioh.m_feed.Utils.OttoBus.RemoveFromLibrary;
-import com.teioh.m_feed.UI.MainActivity.Presenters.RecentPresenter;
-import com.teioh.m_feed.UI.MainActivity.Presenters.RecentPresenterImpl;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
+import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.RecentFragmentMap;
+import com.teioh.m_feed.UI.MainActivity.Presenters.RecentPresenter;
+import com.teioh.m_feed.UI.MainActivity.Presenters.RecentPresenterImpl;
+import com.teioh.m_feed.Utils.OttoBus.QueryChange;
+import com.teioh.m_feed.Utils.OttoBus.RemoveFromLibrary;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -64,18 +64,6 @@ public class RecentFragment extends Fragment implements RecentFragmentMap {
     @Override public void onPause() {
         super.onPause();
         mRecentPresenterManga.onPause();
-    }
-
-    @Subscribe public void onMangaAdded(Manga manga) {
-        mRecentPresenterManga.onMangaAdd(manga);
-    }
-
-    @Subscribe public void activityQueryChange(QueryChange query) {
-        onQueryTextChange(query.getQuery());
-    }
-
-    @Subscribe public void onMangaRemoved(RemoveFromLibrary rm) {
-        mRecentPresenterManga.onMangaRemoved(rm);
     }
 
     @Override public void registerAdapter(BaseAdapter adapter) {

@@ -9,11 +9,11 @@ import android.view.View;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MangaActivity.Adapters.ViewPagerAdapterManga;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.MangaPresenter;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.MangaPresenterImpl;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.Mappers.MangaActivityMap;
-import com.teioh.m_feed.R;
 import com.teioh.m_feed.Utils.SlidingTabLayout;
 
 import butterknife.Bind;

@@ -22,7 +22,5 @@ public interface AllLibraryPresenter {
 
     void setAdapter();
 
-    void onMangaRemoved(RemoveFromLibrary rm);
-
     void udpateChapterList(List<Manga> mList);
 }

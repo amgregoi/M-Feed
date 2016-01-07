@@ -1,7 +1,6 @@
 package com.teioh.m_feed.UI.MangaActivity.Presenters;
 
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.UI.MangaActivity.Adapters.ViewPagerAdapterManga;
@@ -11,9 +10,6 @@ import com.teioh.m_feed.Utils.OttoBus.ChapterOrderEvent;
 
 import butterknife.ButterKnife;
 
-/**
- * Created by amgregoi on 1/2/16.
- */
 public class MangaPresenterImpl implements MangaPresenter {
     private ViewPagerAdapterManga mViewPagerAdapterManga;
     private CharSequence Titles[] = {"Info", "Chapters"};

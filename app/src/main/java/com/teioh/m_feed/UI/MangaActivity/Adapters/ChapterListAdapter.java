@@ -1,7 +1,6 @@
 package com.teioh.m_feed.UI.MangaActivity.Adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +11,8 @@ import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 
-
 import java.util.ArrayList;
 import java.util.List;
-
-import nl.qbusict.cupboard.QueryResultIterable;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
@@ -25,12 +21,14 @@ public class ChapterListAdapter extends ArrayAdapter {
     private ArrayList<Chapter> chapters;
     private LayoutInflater mInflater;
     private Context context;
+    private int layoutResource;
 
     public ChapterListAdapter(Context context, int resource, List<Chapter> objects) {
         super(context, resource, objects);
         this.context = context;
         this.chapters = new ArrayList<>(objects);
         this.mInflater = LayoutInflater.from(context);
+        this.layoutResource = resource;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -38,7 +36,7 @@ public class ChapterListAdapter extends ArrayAdapter {
         ChapterHolder holder;
 
         if (row == null) {
-            row = mInflater.inflate(R.layout.chapter_list_item, null);
+            row = mInflater.inflate(layoutResource, null);
 
             holder = new ChapterHolder();
             holder.mTitle = (TextView) row.findViewById(R.id.mangaTitle);

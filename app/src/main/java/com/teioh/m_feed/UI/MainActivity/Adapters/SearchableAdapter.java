@@ -16,9 +16,6 @@ import com.teioh.m_feed.R;
 
 import java.util.ArrayList;
 
-// The standard text view adapter only seems to search from the beginning of whole words
-// so we've had to write this whole class to make it possible to search
-// for parts of the arbitrary string we want
 public class SearchableAdapter extends BaseAdapter implements Filterable {
 
     private ArrayList<Manga> originalData = null;

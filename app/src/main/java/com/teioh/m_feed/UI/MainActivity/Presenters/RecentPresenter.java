@@ -19,8 +19,4 @@ public interface RecentPresenter {
     void onPause();
 
     void setAdapter();
-
-    void onMangaAdd(Manga manga);
-
-    void onMangaRemoved(RemoveFromLibrary rm);
 }

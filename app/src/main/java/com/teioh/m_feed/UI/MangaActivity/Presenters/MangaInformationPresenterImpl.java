@@ -3,9 +3,9 @@ package com.teioh.m_feed.UI.MangaActivity.Presenters;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.Mappers.MangaInformationMapper;
-import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.Utils.OttoBus.RemoveFromLibrary;
@@ -25,6 +25,7 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
     public MangaInformationPresenterImpl(MangaInformationMapper base, Bundle b) {
         this.item = b.getParcelable("Manga");
         mMangaInformationMapper = base;
+        Log.e("RAWR", "printing sourece: " +item.getmSource());
     }
 
     @Override
@@ -48,6 +49,10 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
 
     @Override
     public void getMangaViewInfo() {
+        if(observableManga != null){
+            observableManga.unsubscribeOn(Schedulers.io());
+            observableManga = null;
+        }
         observableManga = WebSource.updateMangaObservable(item);
         observableManga.subscribe(manga -> {
             mMangaInformationMapper.setMangaViews(manga);

@@ -2,9 +2,9 @@ package com.teioh.m_feed.UI.MangaActivity.Presenters;
 
 import android.os.Bundle;
 
+import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.UI.MangaActivity.Adapters.ChapterPageAdapter;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.Mappers.ChapterReaderMapper;
-import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.WebSources.WebSource;
 

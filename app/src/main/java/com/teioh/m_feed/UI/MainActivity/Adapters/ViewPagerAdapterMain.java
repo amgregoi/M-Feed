@@ -4,8 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.teioh.m_feed.UI.MainActivity.View.Fragments.FollowLibraryFragment;
 import com.teioh.m_feed.UI.MainActivity.View.Fragments.AllLibraryFragment;
+import com.teioh.m_feed.UI.MainActivity.View.Fragments.FollowLibraryFragment;
 import com.teioh.m_feed.UI.MainActivity.View.Fragments.RecentFragment;
 
 public class ViewPagerAdapterMain extends FragmentStatePagerAdapter {

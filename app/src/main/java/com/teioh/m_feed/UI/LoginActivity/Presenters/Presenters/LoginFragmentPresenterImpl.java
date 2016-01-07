@@ -1,34 +1,34 @@
-package com.teioh.m_feed.UI.MainActivity.Presenters;
+package com.teioh.m_feed.UI.LoginActivity.Presenters.Presenters;
 
-import android.app.Fragment;
-import android.content.Context;
-import android.view.inputmethod.InputMethodManager;
+import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
-import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.LoginFragmentMap;
+import com.teioh.m_feed.UI.LoginActivity.Presenters.Presenters.Mappers.LoginFragmentMap;
+import com.teioh.m_feed.UI.MainActivity.View.MainActivity;
+import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 
 import butterknife.ButterKnife;
 
 
-public class LoginPresenterImpl implements LoginPresenter {
+public class LoginFragmentPresenterImpl implements LoginFragmentPresenter {
 
     private LoginFragmentMap mLoginFragmentMapper;
 
-    public LoginPresenterImpl(LoginFragmentMap map) {
+    public LoginFragmentPresenterImpl(LoginFragmentMap map) {
         mLoginFragmentMapper = map;
     }
 
     @Override
     public void onSignupButton(String mUserName, String mPassword) {
-        if (mUserName.equals("") && mPassword.equals("")) {
+        if (mUserName.equals("") || mPassword.equals("")) {
             Toast.makeText(mLoginFragmentMapper.getContext(),
                     "Please complete the sign up form",
                     Toast.LENGTH_LONG).show();
-
         } else {
             ParseUser user = new ParseUser();
             user.setUsername(mUserName);
@@ -55,16 +55,19 @@ public class LoginPresenterImpl implements LoginPresenter {
                 new LogInCallback() {
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
-                            ((Fragment) mLoginFragmentMapper).getFragmentManager().popBackStackImmediate();
-                            //close keyboard via activity
-//                            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-//                            imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+                            if(mLoginFragmentMapper.getContext() != null) {
+                                Intent intent = new Intent(mLoginFragmentMapper.getContext(), MainActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                mLoginFragmentMapper.getContext().startActivity(intent);
+                                ((Fragment) mLoginFragmentMapper).getFragmentManager().popBackStackImmediate();
+                            }
 
                         } else {
-//                            Toast.makeText(
-//                                    mLoginFragmentMapper.getContext(),
-//                                    "No such user exist, please signup",
-//                                    Toast.LENGTH_LONG).show();
+                            Toast.makeText(
+                                    mLoginFragmentMapper.getContext(),
+                                    "No such user exist, please signup",
+                                    Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -73,6 +76,15 @@ public class LoginPresenterImpl implements LoginPresenter {
     @Override
     public void onDestroyView() {
         ButterKnife.unbind(mLoginFragmentMapper);
+    }
 
+    @Override
+    public void onPause() {
+        BusProvider.getInstance().unregister(mLoginFragmentMapper);
+    }
+
+    @Override
+    public void onResume() {
+        BusProvider.getInstance().register(mLoginFragmentMapper);
     }
 }

@@ -5,14 +5,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-/**
- * Created by Asus1 on 11/7/2015.
- */
 public interface MainPresenter {
 
     void initialize();
-
-    void parseLogin();
 
     void setupDrawerLayoutListener(Toolbar mToolBar, DrawerLayout mDrawerLayout);
 
@@ -32,5 +27,8 @@ public interface MainPresenter {
 
     boolean onOptionsSelected(MenuItem item);
 
+    void parseLogin();
+
+    void onSourceChosen(String source);
 
 }

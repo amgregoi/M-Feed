@@ -8,23 +8,28 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import com.teioh.m_feed.UI.MainActivity.Presenters.MainPresenter;
-import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.MainActivityMap;
-import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
-import com.teioh.m_feed.UI.MainActivity.Presenters.MainPresenterImpl;
 import com.teioh.m_feed.R;
+import com.teioh.m_feed.UI.MainActivity.Adapters.SourceListAdapter;
+import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
+import com.teioh.m_feed.UI.MainActivity.Presenters.MainPresenter;
+import com.teioh.m_feed.UI.MainActivity.Presenters.MainPresenterImpl;
+import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.MainActivityMap;
 import com.teioh.m_feed.Utils.SlidingTabLayout;
 import com.teioh.m_feed.WebSources.MangaJoy;
-import com.teioh.m_feed.WebSources.MangaPark;
 import com.teioh.m_feed.WebSources.WebSource;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnItemClick;
 
 public class MainActivity extends AppCompatActivity implements MainActivityMap {
 
@@ -36,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityMap {
     @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @Bind(R.id.orderButton) ImageButton orderButton;
 
+    @Bind(R.id.sourceListView) ListView mSourceListView;
+
     private MainPresenter mMainPresenter;
 
     @Override
@@ -45,15 +52,20 @@ public class MainActivity extends AppCompatActivity implements MainActivityMap {
         ButterKnife.bind(this);
 
         mMainPresenter = new MainPresenterImpl(this);
-        mMainPresenter.initialize();
+        mMainPresenter.parseLogin();
         mMainPresenter.setupDrawerLayoutListener(mToolBar, mDrawerLayout);
 
         //testing sources
         WebSource.setwCurrentSource(MangaJoy.SourceKey);
-       // WebSource.setwCurrentSource(MangaPark.SourceKey);
+//        WebSource.setwCurrentSource(MangaPark.SourceKey);
 
         //start service in new thread, substantial slow down on main thread
         //startService(new Intent(this, RecentUpdateService.class));
+    }
+
+    @OnClick(R.id.logoutLayout)
+    public void onlogoutclick(){
+        mMainPresenter.onLogout();
     }
 
     @Override
@@ -103,11 +115,15 @@ public class MainActivity extends AppCompatActivity implements MainActivityMap {
     }
 
     @Override
-    public void registerAdapter(ViewPagerAdapterMain adapter) {
+    public void registerAdapter(ViewPagerAdapterMain adapter, SourceListAdapter sourceAdapter) {
         if (adapter != null) {
             mViewPager.setAdapter(adapter);
             mViewPager.setOffscreenPageLimit(3);
             tabs.setViewPager(mViewPager);
+        }
+        if(sourceAdapter != null){
+            mSourceListView.setAdapter(sourceAdapter);
+            sourceAdapter.notifyDataSetChanged();
         }
     }
 
@@ -157,6 +173,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityMap {
         setSupportActionBar(mToolBar);
         setTitle(getString(R.string.app_name));
         orderButton.setVisibility(View.GONE);
+    }
 
+    @OnItemClick(R.id.sourceListView)
+    public void onSourceChosen(AdapterView<?> adapter, View view, int pos){
+        mMainPresenter.onSourceChosen(adapter.getItemAtPosition(pos).toString());
     }
 }

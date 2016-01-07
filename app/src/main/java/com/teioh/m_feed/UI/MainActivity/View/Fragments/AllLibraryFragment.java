@@ -11,14 +11,14 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 
 import com.squareup.otto.Subscribe;
+import com.teioh.m_feed.Models.Manga;
+import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.Presenters.AllLibraryPresenter;
 import com.teioh.m_feed.UI.MainActivity.Presenters.AllLibraryPresenterImpl;
 import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.LibraryFragmentMap;
-import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.Utils.OttoBus.QueryChange;
 import com.teioh.m_feed.Utils.OttoBus.RemoveFromLibrary;
 import com.teioh.m_feed.Utils.OttoBus.UpdateListEvent;
-import com.teioh.m_feed.R;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -27,8 +27,7 @@ import butterknife.OnItemClick;
 public class AllLibraryFragment extends Fragment implements LibraryFragmentMap {
 
     //    @Bind(R.id.search_view_3) SearchView mSearchView;
-    @Bind(R.id.all_list_view)
-    GridView mGridView;
+    @Bind(R.id.all_list_view) GridView mGridView;
 
     private AllLibraryPresenter mAllLibraryPresenter;
 
@@ -48,7 +47,8 @@ public class AllLibraryFragment extends Fragment implements LibraryFragmentMap {
         super.onActivityCreated(savedInstanceState);
     }
 
-    @OnItemClick(R.id.all_list_view) void onItemClick(AdapterView<?> adapter, View view, int pos) {
+    @OnItemClick(R.id.all_list_view)
+    void onItemClick(AdapterView<?> adapter, View view, int pos) {
         final Manga item = (Manga) adapter.getItemAtPosition(pos);
         mAllLibraryPresenter.onItemClick(item);
     }
@@ -90,20 +90,6 @@ public class AllLibraryFragment extends Fragment implements LibraryFragmentMap {
     @Override
     public void showGridView() {
         mGridView.setVisibility(View.VISIBLE);
-    }
-
-    @Subscribe
-    public void onMangaRemoved(RemoveFromLibrary rm) {
-        mAllLibraryPresenter.onMangaRemoved(rm);
-    }
-
-    @Subscribe
-    public void activityQueryChange(QueryChange q) {
-        onQueryTextChange(q.getQuery());
-    }
-
-    @Subscribe
-    public void onPushRecieved(UpdateListEvent event) {
     }
 
     @Override

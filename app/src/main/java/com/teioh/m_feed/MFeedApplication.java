@@ -1,7 +1,6 @@
 package com.teioh.m_feed;
 
 import android.app.Application;
-import android.content.Context;
 
 import com.parse.Parse;
 import com.parse.ParseACL;

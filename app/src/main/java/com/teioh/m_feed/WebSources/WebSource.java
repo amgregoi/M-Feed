@@ -3,6 +3,7 @@ package com.teioh.m_feed.WebSources;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 
+import java.util.Arrays;
 import java.util.List;
 
 import rx.Observable;
@@ -10,6 +11,7 @@ import rx.Observable;
 public class WebSource {
 
     private static String wCurrentSource;
+    private static String[] wSources = {MangaJoy.SourceKey, MangaPark.SourceKey};
 
     public static String getwCurrentSource() {
         return wCurrentSource;
@@ -17,6 +19,10 @@ public class WebSource {
 
     public static void setwCurrentSource(String CurrentSource) {
         wCurrentSource = CurrentSource;
+    }
+
+    public static List<String> getSourceList(){
+        return Arrays.asList(wSources);
     }
 
     public static String getSourceKey(){
@@ -62,7 +68,6 @@ public class WebSource {
                 return MangaJoy.getChapterImageListObservable(url);
         }
     }
-
 
     public static Observable<Manga> updateMangaObservable(final Manga m) {
         switch (wCurrentSource) {

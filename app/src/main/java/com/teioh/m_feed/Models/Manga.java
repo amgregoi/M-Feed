@@ -3,8 +3,6 @@ package com.teioh.m_feed.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.Date;
-
 public class Manga implements Parcelable {
     private String mTitle;
     private String mPicUrl;

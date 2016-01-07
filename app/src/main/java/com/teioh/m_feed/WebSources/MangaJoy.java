@@ -4,9 +4,9 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
+import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.xml.transform.Source;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -138,6 +136,7 @@ public class MangaJoy {
                     mangaList.add(manga);
                 } else {
                     manga = new Manga(mangaTitle, mangaUrl, SourceKey);
+                    mangaList.add(manga);
                     cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).put(manga);
                     Observable<Manga> observableManga = MangaJoy.updateMangaObservable(manga);
                     observableManga.subscribe();

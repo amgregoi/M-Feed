@@ -4,15 +4,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.squareup.otto.Subscribe;
-import com.teioh.m_feed.UI.MangaActivity.Adapters.ChapterListAdapter;
-import com.teioh.m_feed.UI.MangaActivity.Presenters.Mappers.ChapterListMapper;
-import com.teioh.m_feed.UI.MangaActivity.View.Fragments.ChapterReaderFragment;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
+import com.teioh.m_feed.UI.MangaActivity.Adapters.ChapterListAdapter;
+import com.teioh.m_feed.UI.MangaActivity.Presenters.Mappers.ChapterListMapper;
+import com.teioh.m_feed.UI.MangaActivity.View.Fragments.ChapterReaderFragment;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.Utils.OttoBus.ChapterOrderEvent;
-import com.teioh.m_feed.WebSources.MangaJoy;
 import com.teioh.m_feed.WebSources.WebSource;
 
 import java.util.ArrayList;
@@ -58,6 +57,9 @@ public class ChapterListPresenterImpl implements ChapterListPresenter {
 
     @Override
     public void updateChapterList(List<Chapter> chapters) {
+        //TODO
+        //http://www.androidhive.info/2013/07/android-expandable-list-view-tutorial/
+        //expandable listview for sites with multiple release versions
         if (chapters != null && mChapterListMapper.getContext() != null) {
             chapterList = new ArrayList<>(chapters);
             mAdapter = new ChapterListAdapter(mChapterListMapper.getContext(), R.layout.chapter_list_item, chapterList);

@@ -9,10 +9,9 @@
         <item name="colorPrimary">@color/ColorPrimary</item>
         <item name="colorPrimaryDark">@color/ColorPrimaryDark</item>
         <item name="colorAccent">@color/white</item>
-
         <item name="searchViewStyle">@style/SearchViewStyle</item>
-
         <item name="android:textColorHighlight">#99ff4081</item>
+        <item name="android:windowAnimationStyle">@null</item>
         <!--<item name="android:textSelectHandleLeft">@drawable/text_select_handle_left</item>-->
         <!--<item name="android:textSelectHandleRight">@drawable/text_select_handle_right</item>-->
         <!--<item name="android:textSelectHandle">@drawable/text_select_handle_middle</item>-->
@@ -27,6 +26,10 @@
 
     <style name="ToolbarStyle" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <!-- Empty -->
+    </style>
+
+    <style name="noAnimTheme" parent="android:Theme">
+        <item name="android:windowAnimationStyle">@null</item>
     </style>
 
 </resources>
