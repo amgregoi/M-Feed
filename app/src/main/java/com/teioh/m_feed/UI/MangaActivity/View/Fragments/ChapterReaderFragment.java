@@ -1,9 +1,11 @@
 package com.teioh.m_feed.UI.MangaActivity.View.Fragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +34,22 @@ public class ChapterReaderFragment extends Fragment implements ChapterReaderMapp
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mChapterReaderPresenter.onSaveState(outState);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(savedInstanceState != null){
+            mChapterReaderPresenter.onRestoreState(savedInstanceState);
+        }
+
+        mChapterReaderPresenter.initialize();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         mChapterReaderPresenter.onDestroyView();
@@ -40,6 +58,7 @@ public class ChapterReaderFragment extends Fragment implements ChapterReaderMapp
     @Override
     public void registerAdapter(PagerAdapter adapter) {
         viewPager.setAdapter(adapter);
+        viewPager.clearOnPageChangeListeners();
         viewPager.addOnPageChangeListener(this);
         viewPager.setOffscreenPageLimit(10);
     }

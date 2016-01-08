@@ -8,13 +8,15 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.commonsware.cwac.merge.MergeAdapter;
 import com.parse.ParseAnonymousUtils;
 import com.parse.ParseUser;
 import com.teioh.m_feed.R;
-import com.teioh.m_feed.UI.LoginActivity.Presenters.View.LoginActivity;
+import com.teioh.m_feed.UI.LoginActivity.View.LoginActivity;
 import com.teioh.m_feed.UI.MainActivity.Adapters.SourceListAdapter;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
 import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.MainActivityMap;
@@ -24,18 +26,20 @@ import com.teioh.m_feed.Utils.OttoBus.UpdateSource;
 import com.teioh.m_feed.WebSources.WebSource;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import butterknife.ButterKnife;
 
 public class MainPresenterImpl implements MainPresenter {
 
     private ViewPagerAdapterMain mViewPagerAdapterMain;
-    private SourceListAdapter mSourceListAdapater;
-    private CharSequence Titles[] = {"Recent", "Library", "All"};
-    private ArrayList<String> mSourceList;
-    private int Numbtabs = 3;
-    private ActionBarDrawerToggle mDrawerToggle;
+    private SourceListAdapter mSourceListAdapater, mGeneralListAdapter;
+    private MergeAdapter mDrawerAdapter;
 
+    private final CharSequence Titles[] = {"Recent", "Library", "All"};
+    private final String mGeneralListContent[] = {"Logout", "Advanced Search"};
+    private ArrayList<String> mSourceList, mGeneralList;
+    private ActionBarDrawerToggle mDrawerToggle;
     private MainActivityMap mMainMapper;
 
     public MainPresenterImpl(MainActivityMap main) {
@@ -44,11 +48,31 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void initialize() {
-        mViewPagerAdapterMain = new ViewPagerAdapterMain(((FragmentActivity) mMainMapper.getContext()).getSupportFragmentManager(), Titles, Numbtabs);
-        mSourceListAdapater = new SourceListAdapter(mMainMapper.getContext(), R.layout.source_list_item);
+        //initialize arrays
         mSourceList = new ArrayList<>(WebSource.getSourceList());
+        mGeneralList = new ArrayList<>(Arrays.asList(mGeneralListContent));
+
+        //initialize adapters
+        mViewPagerAdapterMain = new ViewPagerAdapterMain(((FragmentActivity) mMainMapper.getContext()).getSupportFragmentManager(), Titles, 3);
+        mSourceListAdapater = new SourceListAdapter(mMainMapper.getContext(), R.layout.source_list_item, mSourceList);
+        mGeneralListAdapter = new SourceListAdapter(mMainMapper.getContext(), R.layout.source_list_item, mGeneralList);
+
+        //initialize views
+        View header = ((FragmentActivity) mMainMapper.getContext()).getLayoutInflater().inflate(R.layout.drawer_header, null);
+        View general = ((FragmentActivity) mMainMapper.getContext()).getLayoutInflater().inflate(R.layout.drawer_general_header, null);
+        View source = ((FragmentActivity) mMainMapper.getContext()).getLayoutInflater().inflate(R.layout.drawer_source_header, null);
+
+        //setup drawer adapter
+        mDrawerAdapter = new MergeAdapter();
+        mDrawerAdapter.addView(header);
+        mDrawerAdapter.addView(general);
+        mDrawerAdapter.addAdapter(mGeneralListAdapter);
+        mDrawerAdapter.addView(source);
+        mDrawerAdapter.addAdapter(mSourceListAdapater);
+
+        //initialize layout
         mMainMapper.setupTabLayout();
-        mMainMapper.registerAdapter(mViewPagerAdapterMain, mSourceListAdapater);
+        mMainMapper.registerAdapter(mViewPagerAdapterMain, mDrawerAdapter);
         mMainMapper.setupSearchview();
         mMainMapper.setupToolbar();
     }
@@ -142,13 +166,21 @@ public class MainPresenterImpl implements MainPresenter {
         }
     }
 
+    @Override
     public void onSourceChosen(String source){
-        WebSource.setwCurrentSource(source);
-        mSourceListAdapater.notifyDataSetChanged();
-        BusProvider.getInstance().post(new UpdateSource());
-
-//        Log.e("RAWR", adapter.getItemAtPosition(pos).toString());
-        //update icons
-        //event bus update the three fragments
+        switch(source){
+            case("Logout"):
+                onLogout();
+                return;
+            case("Advanced Search"):
+                return;
+            default:
+                if(!source.equals(WebSource.getSourceKey())) {
+                    WebSource.setwCurrentSource(source);
+                    mSourceListAdapater.notifyDataSetChanged();
+                    BusProvider.getInstance().post(new UpdateSource());
+                }
+                return;
+        }
     }
 }

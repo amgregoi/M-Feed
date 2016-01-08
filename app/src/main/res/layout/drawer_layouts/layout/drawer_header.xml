@@ -1,0 +1,50 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="@dimen/baseline_content_unit"
+              android:orientation="vertical">
+
+	<LinearLayout
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:orientation="horizontal">
+
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical"
+			android:layout_marginStart="@dimen/baseline_content_unit"
+			android:background="@drawable/ic_user"
+			android:scaleType="fitXY"/>
+
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/half_line_height"
+			android:orientation="vertical">
+
+			<TextView
+				android:id="@+id/username"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="RAWR"
+				android:textColor="@color/white"
+				android:textSize="@dimen/text_heading_18sp"
+				android:textStyle="bold"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="rawr@gmail.com"
+				android:textColor="@color/white"
+				android:textSize="@dimen/text_options_14sp"
+				android:textStyle="italic"/>
+		</LinearLayout>
+	</LinearLayout>
+
+	<View
+		android:layout_width="fill_parent"
+		android:layout_height="@dimen/fab_stroke_width"
+		android:layout_marginTop="@dimen/fab_labels_margin"
+		android:background="@color/white"/>
+</LinearLayout>

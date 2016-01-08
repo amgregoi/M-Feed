@@ -20,12 +20,12 @@ public class SourceListAdapter extends ArrayAdapter {
     private Context context;
     private int layoutResource;
 
-    public SourceListAdapter(Context context, int resource) {
-        super(context, resource, WebSource.getSourceList());
+    public SourceListAdapter(Context context, int resource, ArrayList<String> contents) {
+        super(context, resource, contents);
         this.layoutResource =  resource;
         this.context = context;
         this.mInflater = LayoutInflater.from(context);
-        this.wSourceList = new ArrayList<>(WebSource.getSourceList());
+        this.wSourceList = new ArrayList<>(contents);
 
     }
 
@@ -43,9 +43,17 @@ public class SourceListAdapter extends ArrayAdapter {
         } else {
             holder = (SourceHolder) row.getTag();
         }
+        String text = wSourceList.get(position);
+        holder.wSourceTitle.setText(text);
 
-        holder.wSourceTitle.setText(wSourceList.get(position));
-        holder.wIcon.setImageDrawable(context.getDrawable(R.drawable.ic_box_uncheck));
+        //TODO - find a better way / update when I get icons
+        if(text.equals("Logout")){
+            holder.wIcon.setImageDrawable(context.getDrawable(R.drawable.ic_box_uncheck));
+        }else if(text.equals("Advanced Search")){
+            holder.wIcon.setImageDrawable(context.getDrawable(R.drawable.ic_user));
+        }else {
+            holder.wIcon.setImageDrawable(context.getDrawable(R.drawable.ic_box_uncheck));
+        }
         return row;
     }
 

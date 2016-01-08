@@ -1,10 +1,10 @@
-package com.teioh.m_feed.UI.LoginActivity.Presenters.Presenters;
+package com.teioh.m_feed.UI.LoginActivity.Presenters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 
-import com.teioh.m_feed.UI.LoginActivity.Presenters.Presenters.Mappers.LoginActivityMap;
-import com.teioh.m_feed.UI.LoginActivity.Presenters.View.LoginFragment;
+import com.teioh.m_feed.UI.LoginActivity.Presenters.Mappers.LoginActivityMap;
+import com.teioh.m_feed.UI.LoginActivity.View.LoginFragment;
 
 
 public class LoginActivityPresenterImpl implements LoginActivityPresenter {

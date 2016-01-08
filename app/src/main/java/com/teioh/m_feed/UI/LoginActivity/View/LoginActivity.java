@@ -1,4 +1,4 @@
-package com.teioh.m_feed.UI.LoginActivity.Presenters.View;
+package com.teioh.m_feed.UI.LoginActivity.View;
 
 
 import android.content.Context;
@@ -7,9 +7,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 
 import com.teioh.m_feed.R;
-import com.teioh.m_feed.UI.LoginActivity.Presenters.Presenters.LoginActivityPresenter;
-import com.teioh.m_feed.UI.LoginActivity.Presenters.Presenters.LoginActivityPresenterImpl;
-import com.teioh.m_feed.UI.LoginActivity.Presenters.Presenters.Mappers.LoginActivityMap;
+import com.teioh.m_feed.UI.LoginActivity.Presenters.LoginActivityPresenter;
+import com.teioh.m_feed.UI.LoginActivity.Presenters.LoginActivityPresenterImpl;
+import com.teioh.m_feed.UI.LoginActivity.Presenters.Mappers.LoginActivityMap;
 
 public class LoginActivity extends AppCompatActivity implements LoginActivityMap{
 

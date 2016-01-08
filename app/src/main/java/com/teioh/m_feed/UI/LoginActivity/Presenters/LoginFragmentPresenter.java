@@ -1,4 +1,4 @@
-package com.teioh.m_feed.UI.LoginActivity.Presenters.Presenters;
+package com.teioh.m_feed.UI.LoginActivity.Presenters;
 
 
 public interface LoginFragmentPresenter {

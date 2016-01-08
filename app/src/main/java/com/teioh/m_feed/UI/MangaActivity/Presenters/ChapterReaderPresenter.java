@@ -1,11 +1,12 @@
 package com.teioh.m_feed.UI.MangaActivity.Presenters;
 
+import android.os.Bundle;
+
 import java.util.List;
 
-/**
- * Created by Asus1 on 11/7/2015.
- */
 public interface ChapterReaderPresenter {
+
+    void initialize();
 
     void getImageUrls();
 
@@ -16,5 +17,9 @@ public interface ChapterReaderPresenter {
     void updateOffsetCounter(int offset, int position);
 
     void updateState(int state);
+
+    void onSaveState(Bundle bundle);
+
+    void onRestoreState(Bundle bundle);
 
 }

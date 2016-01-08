@@ -1,4 +1,4 @@
-package com.teioh.m_feed.UI.LoginActivity.Presenters.Presenters;
+package com.teioh.m_feed.UI.LoginActivity.Presenters;
 
 import android.content.Intent;
 import android.support.v4.app.Fragment;
@@ -8,7 +8,7 @@ import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
-import com.teioh.m_feed.UI.LoginActivity.Presenters.Presenters.Mappers.LoginFragmentMap;
+import com.teioh.m_feed.UI.LoginActivity.Presenters.Mappers.LoginFragmentMap;
 import com.teioh.m_feed.UI.MainActivity.View.MainActivity;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 

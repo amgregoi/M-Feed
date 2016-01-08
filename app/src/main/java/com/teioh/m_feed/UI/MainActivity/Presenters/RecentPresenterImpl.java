@@ -56,15 +56,17 @@ public class RecentPresenterImpl implements RecentPresenter {
 
     private void updateRecentList(List<Manga> manga) {
         if (mRecentFragmentMapper.getContext() != null) {
-            if (manga != null) {
-                recentList.clear();
-                for (Manga m : manga) {
-                    recentList.add(m);
+            if (manga.get(0).getmSource().equals(WebSource.getSourceKey())) {
+                if (manga != null) {
+                    recentList.clear();
+                    for (Manga m : manga) {
+                        recentList.add(m);
+                    }
                 }
-                mAdapter.notifyDataSetChanged();
             }
-            mRecentFragmentMapper.stopRefresh();
         }
+        mAdapter.notifyDataSetChanged();
+        mRecentFragmentMapper.stopRefresh();
         observableMangaList = null;
     }
 

@@ -37,7 +37,7 @@
             android:theme="@style/AppTheme">
         </activity>
         <activity
-            android:name=".UI.LoginActivity.Presenters.View.LoginActivity"
+            android:name=".UI.LoginActivity.View.LoginActivity"
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme">

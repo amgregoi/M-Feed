@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.commonsware.cwac.merge.MergeAdapter;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.Adapters.SourceListAdapter;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
@@ -63,10 +64,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityMap {
         //startService(new Intent(this, RecentUpdateService.class));
     }
 
-    @OnClick(R.id.logoutLayout)
-    public void onlogoutclick(){
-        mMainPresenter.onLogout();
-    }
+//    @OnClick(R.id.logoutLayout)
+//    public void onlogoutclick(){
+//        mMainPresenter.onLogout();
+//    }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -115,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityMap {
     }
 
     @Override
-    public void registerAdapter(ViewPagerAdapterMain adapter, SourceListAdapter sourceAdapter) {
+    public void registerAdapter(ViewPagerAdapterMain adapter, MergeAdapter sourceAdapter) {
         if (adapter != null) {
             mViewPager.setAdapter(adapter);
             mViewPager.setOffscreenPageLimit(3);

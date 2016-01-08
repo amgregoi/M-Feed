@@ -1,6 +1,7 @@
 package com.teioh.m_feed.UI.MangaActivity.Presenters;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.UI.MangaActivity.Adapters.ChapterPageAdapter;
@@ -19,6 +20,16 @@ import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 public class ChapterReaderPresenterImpl implements ChapterReaderPresenter {
 
+    public static final String TAG = ChapterReaderPresenter.class.getSimpleName();
+
+    private static final String NEXT_URL_LIST_PARCELABLE_KEY = TAG + ":" + "NEXT";
+    private static final String PREV_URL_LIST_PARCELABLE_KEY = TAG + ":" + "PREV";
+    private static final String CURRENT_URL_LIST_PARCELABLE_KEY = TAG + ":" + "CURRENT";
+    private static final String CHAPTER_LIST_PARCELABLE_KEY = TAG + ":" + "CHAPTER";
+    private static final String CHAPTER_POSITION_LIST_PARCELABLE_KEY = TAG + ":" + "POSITION";
+    private static final String DESCENDING_PARCELABLE_KEY = TAG + ":" + "DESCENDING";
+
+
     private ChapterReaderMapper mChapterReaderMapper;
     private ChapterPageAdapter mChapterAdapter;
 
@@ -34,15 +45,58 @@ public class ChapterReaderPresenterImpl implements ChapterReaderPresenter {
         mChapterList = b.getParcelableArrayList("Chapters");
         mPosition = b.getInt("Position");
         mChapterOrderDescending = b.getBoolean("Order");
-        this.getImageUrls();
+    }
+
+    @Override
+    public void initialize() {
+        if (curUrlList == null) this.getImageUrls();
+        else updateView(curUrlList);
+
+        if (prevUrlList == null) this.getPrevList();
+        if (nextUrlList == null) this.getNextList();
+    }
+
+    @Override
+    public void onSaveState(Bundle bundle) {
+        if (nextUrlList != null) {
+            bundle.putStringArrayList(NEXT_URL_LIST_PARCELABLE_KEY, nextUrlList);
+        }
+        if (prevUrlList != null) {
+            bundle.putStringArrayList(PREV_URL_LIST_PARCELABLE_KEY, prevUrlList);
+        }
+        if (curUrlList != null) {
+            bundle.putStringArrayList(CURRENT_URL_LIST_PARCELABLE_KEY, curUrlList);
+        }
+        if (mChapterList != null) {
+            bundle.putParcelableArrayList(CHAPTER_LIST_PARCELABLE_KEY, mChapterList);
+        }
+
+        bundle.putInt(CHAPTER_POSITION_LIST_PARCELABLE_KEY, mPosition);
+        bundle.putBoolean(DESCENDING_PARCELABLE_KEY, mChapterOrderDescending);
+    }
+
+    @Override
+    public void onRestoreState(Bundle bundle) {
+        if (bundle.containsKey(NEXT_URL_LIST_PARCELABLE_KEY)) {
+            nextUrlList = bundle.getStringArrayList(NEXT_URL_LIST_PARCELABLE_KEY);
+        }
+        if (bundle.containsKey(PREV_URL_LIST_PARCELABLE_KEY)) {
+            prevUrlList = bundle.getStringArrayList(PREV_URL_LIST_PARCELABLE_KEY);
+        }
+        if (bundle.containsKey(CURRENT_URL_LIST_PARCELABLE_KEY)) {
+            curUrlList = bundle.getStringArrayList(CURRENT_URL_LIST_PARCELABLE_KEY);
+        }
+        if (bundle.containsKey(CHAPTER_LIST_PARCELABLE_KEY)) {
+            mChapterList = bundle.getParcelableArrayList(CHAPTER_LIST_PARCELABLE_KEY);
+        }
+        mPosition = bundle.getInt(CHAPTER_POSITION_LIST_PARCELABLE_KEY);
+        mChapterOrderDescending = bundle.getBoolean(DESCENDING_PARCELABLE_KEY);
     }
 
     @Override
     public void getImageUrls() {
         Observable<List<String>> observableImageUrlList = WebSource.getChapterImageListObservable(mChapterList.get(mPosition).getChapterUrl());
         observableImageUrlList.subscribe(urlList -> updateView(urlList));
-        getPrevList();
-        getNextList();
     }
 
     @Override
@@ -68,38 +122,41 @@ public class ChapterReaderPresenterImpl implements ChapterReaderPresenter {
     @Override
     public void updateOffsetCounter(int offset, int position) {
         if (position == 0 || position == curChapterPageCount - 1) {
-            if (offset == 0) pageOffsetCount++;
-            else pageOffsetCount = 0;
+            if (offset == 0) {
+                pageOffsetCount++;
+                Log.e("RAWR", "~ " + pageOffsetCount);
+            } else pageOffsetCount = 0;
 
             if (position == 0) pageDirection = 0;
             else pageDirection = 1;
-        }
+        } else pageOffsetCount = 0;
     }
 
     @Override
     public void updateState(int state) {
         if (pageOffsetCount > 50 && state == 0) {
+            Log.e("RAWR", "OffsetCount at transition " + pageOffsetCount);
             if (mChapterOrderDescending) {
-                if (pageDirection == 0 && mPosition < mChapterList.size() - 1) {  //backward (previous)
+                if (pageDirection == 0 && mPosition < mChapterList.size() - 1 && prevUrlList != null) {  //backward (previous)
                     mPosition++;
                     nextUrlList = new ArrayList<>(curUrlList);
                     updateView(prevUrlList);
                     getPrevList();
 
-                } else if (pageDirection == 1 && mPosition > 0) { //forward (next)
+                } else if (pageDirection == 1 && mPosition > 0 && nextUrlList != null) { //forward (next)
                     mPosition--;
                     prevUrlList = new ArrayList<>(curUrlList);
                     updateView(nextUrlList);
                     getNextList();
                 }
             } else {
-                if (pageDirection == 0 && mPosition > 0) {  //backward (previous)
+                if (pageDirection == 0 && mPosition > 0 && prevUrlList != null) {  //backward (previous)
                     mPosition--;
                     nextUrlList = new ArrayList<>(curUrlList);
                     updateView(prevUrlList);
                     getPrevList();
 
-                } else if (pageDirection == 1 && mPosition < mChapterList.size() - 1) { //forward (next)
+                } else if (pageDirection == 1 && mPosition < mChapterList.size() - 1 && nextUrlList != null) { //forward (next)
                     mPosition++;
                     prevUrlList = new ArrayList<>(curUrlList);
                     updateView(nextUrlList);
@@ -107,6 +164,7 @@ public class ChapterReaderPresenterImpl implements ChapterReaderPresenter {
                 }
             }
         }
+        pageOffsetCount = 0;
     }
 
     @Override
@@ -115,6 +173,7 @@ public class ChapterReaderPresenterImpl implements ChapterReaderPresenter {
     }
 
     private void getNextList() {
+        nextUrlList = null;
         if (mChapterOrderDescending) {
             if (mPosition > 0) {
                 if (nextObservable != null) {
@@ -140,6 +199,7 @@ public class ChapterReaderPresenterImpl implements ChapterReaderPresenter {
     }
 
     private void getPrevList() {
+        prevUrlList = null;
         if (mChapterOrderDescending) {
             if (mPosition < mChapterList.size() - 1) {
                 if (prevObservable != null) {

@@ -10,40 +10,51 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
-    }//end config
+    }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-    }//end build types
+    }
 
 
+    //sub directory layout files
     sourceSets {
         main {
             res.srcDirs =
                     [
                             'src/main/res',
+                            'src/main/res/layout/drawer_layouts',
+                            'src/main/res/layout/login_layouts',
                             'src/main/res/layout/manga_layouts',
                             'src/main/res/layout/main_layouts'
                     ]
         }
     }//end sourcesets
-
 }//end of android
 
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    //support libraries
     compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.android.support:appcompat-v7:23.0.1'
+
+    //parse
     compile 'com.parse.bolts:bolts-android:1.2.1'
     compile 'com.parse:parse-android:1.10.3'
-    compile 'com.android.support:appcompat-v7:23.0.1'
+
+
+    //Event bus
     compile 'com.squareup:otto:1.3.8'
+
+    //picasso and glide
+    compile 'com.github.bumptech.glide:glide:3.5.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.github.deano2390:FlowTextView:2.0.4'
-    compile 'com.google.code.gson:gson:2.3'
+
+    //butterknife
     compile 'com.jakewharton:butterknife:7.0.1'
 
     //rx java
@@ -55,26 +66,23 @@ dependencies {
     //jsoup
     compile 'org.jsoup:jsoup:1.8.1'
 
-    //glide
-    compile 'com.github.bumptech.glide:glide:3.5.2'
-
     //cupboard
     compile 'nl.qbusict:cupboard:2.1.4'
 
-    //float button
+    //float action button
     compile 'com.getbase:floatingactionbutton:1.10.1'
 
 
 }
 
-
+//retrolambda
 buildscript {
     repositories {
         mavenCentral()
     }
 
     dependencies {
-        classpath 'me.tatarka:gradle-retrolambda:3.2.3'
+        classpath 'me.tatarka:gradle-retrolambda:3.2.4'
     }
 }
 
@@ -85,7 +93,16 @@ repositories {
 
 apply plugin: 'com.android.application' //or apply plugin: 'java'
 apply plugin: 'me.tatarka.retrolambda'
+//end retrolambda
 
+
+//merge adapter - test
 repositories {
-    maven { url "https://jitpack.io" }
+    maven {
+        url "https://s3.amazonaws.com/repo.commonsware.com"
+    }
+}
+
+dependencies {
+    compile 'com.commonsware.cwac:merge:1.1.+'
 }

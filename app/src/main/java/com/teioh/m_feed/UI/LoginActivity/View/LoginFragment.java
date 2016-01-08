@@ -1,4 +1,4 @@
-package com.teioh.m_feed.UI.LoginActivity.Presenters.View;
+package com.teioh.m_feed.UI.LoginActivity.View;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.teioh.m_feed.R;
-import com.teioh.m_feed.UI.LoginActivity.Presenters.Presenters.LoginFragmentPresenter;
-import com.teioh.m_feed.UI.LoginActivity.Presenters.Presenters.LoginFragmentPresenterImpl;
-import com.teioh.m_feed.UI.LoginActivity.Presenters.Presenters.Mappers.LoginFragmentMap;
+import com.teioh.m_feed.UI.LoginActivity.Presenters.LoginFragmentPresenter;
+import com.teioh.m_feed.UI.LoginActivity.Presenters.LoginFragmentPresenterImpl;
+import com.teioh.m_feed.UI.LoginActivity.Presenters.Mappers.LoginFragmentMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
