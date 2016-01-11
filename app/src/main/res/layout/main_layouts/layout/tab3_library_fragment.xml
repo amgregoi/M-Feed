@@ -4,7 +4,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-
 	<GridView
 		android:id="@+id/all_list_view"
 		android:layout_width="match_parent"
@@ -18,5 +17,9 @@
 		android:numColumns="auto_fit"
 		android:paddingTop="5dp"
 		android:stretchMode="columnWidth"
-		android:verticalSpacing="@dimen/baseline_grid_unit"/>
+		android:verticalSpacing="@dimen/baseline_grid_unit"
+		android:layout_marginStart="@dimen/baseline_grid_unit"
+		android:layout_marginEnd="@dimen/baseline_grid_unit"
+		/>
+
 </RelativeLayout>

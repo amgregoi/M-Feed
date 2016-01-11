@@ -11,7 +11,9 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.R;
+import com.teioh.m_feed.UI.MangaActivity.Adapters.ChapterListAdapter;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.ChapterListPresenter;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.ChapterListPresenterImpl;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.Mappers.ChapterListMapper;
@@ -21,6 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 
 public class ChapterListFragment extends Fragment implements ChapterListMapper {
+    public final static String TAG = ChapterListFragment.class.getSimpleName();
 
     @Bind(R.id.mangaChapterList) ListView mChapterListView;
     @Bind(R.id.swipe_container) SwipeRefreshLayout swipeRefresh;
@@ -33,11 +36,24 @@ public class ChapterListFragment extends Fragment implements ChapterListMapper {
         ButterKnife.bind(this, v);
 
         mChapterListPresenter = new ChapterListPresenterImpl(this, getArguments());
-        mChapterListPresenter.getChapterList();
-
         return v;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mChapterListPresenter.onSaveState(outState);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(savedInstanceState != null){
+            mChapterListPresenter.onRestoreState(savedInstanceState);
+        }
+
+        mChapterListPresenter.init();
+    }
     @Override public void onResume() {
         super.onResume();
         mChapterListPresenter.onResume();
@@ -54,7 +70,8 @@ public class ChapterListFragment extends Fragment implements ChapterListMapper {
     }
 
     @OnItemClick(R.id.mangaChapterList) void onItemClick(AdapterView<?> adapter, View view, int pos) {
-        mChapterListPresenter.onChapterClicked(pos);
+        mChapterListPresenter.onChapterClicked((Chapter) adapter.getItemAtPosition(pos));
+        view.setBackgroundColor(getResources().getColor(R.color.grey));
     }
 
     @Override

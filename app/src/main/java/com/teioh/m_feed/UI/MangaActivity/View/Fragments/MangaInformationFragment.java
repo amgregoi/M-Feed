@@ -29,6 +29,7 @@ import static android.widget.Toast.LENGTH_SHORT;
 
 
 public class MangaInformationFragment extends Fragment implements MangaInformationMapper {
+    public final static String TAG = MangaInformationFragment.class.getSimpleName();
 
     @Bind(R.id.manga_image) ImageView img;
     @Bind(R.id.mangaDescription) TextView description;
@@ -36,9 +37,7 @@ public class MangaInformationFragment extends Fragment implements MangaInformati
     @Bind(R.id.artist) TextView artist;
     @Bind(R.id.genre) TextView genres;
     @Bind(R.id.status) TextView status;
-
-    @Bind(R.id.pink_icon) FloatingActionButton floatButton;
-
+    @Bind(R.id.follow_button) FloatingActionButton followButton;
     @Bind(R.id.swipe_container) SwipeRefreshLayout mSwipeRefresh;
     @Bind(R.id.relativeLayout) RelativeLayout mRelativeLayout;
 
@@ -48,11 +47,26 @@ public class MangaInformationFragment extends Fragment implements MangaInformati
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.manga_info_fragment, container, false);
         ButterKnife.bind(this, v);
-        mMangaInformationPresenter = new MangaInformationPresenterImpl(this, getArguments());
-        mMangaInformationPresenter.initialize();
+
+        mMangaInformationPresenter = new MangaInformationPresenterImpl(this);
         return v;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mMangaInformationPresenter.onSaveState(outState);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(savedInstanceState != null){
+            mMangaInformationPresenter.onRestoreState(savedInstanceState);
+        }
+
+        mMangaInformationPresenter.init(getArguments());
+    }
 
     @Override
     public void onResume() {
@@ -72,7 +86,7 @@ public class MangaInformationFragment extends Fragment implements MangaInformati
         mMangaInformationPresenter.onDestroyView();
     }
 
-    @OnClick(R.id.pink_icon) void onClick(View v) {
+    @OnClick(R.id.follow_button) void onClick(View v) {
         mMangaInformationPresenter.onFollwButtonClick();
     }
 
@@ -81,12 +95,12 @@ public class MangaInformationFragment extends Fragment implements MangaInformati
         if (resourceId == R.drawable.ic_done && !isInit) {
             Toast.makeText(getContext(), "Now following", LENGTH_SHORT).show();
         }
-        floatButton.setImageResource(resourceId);
+        followButton.setImageResource(resourceId);
     }
 
     @Override
     public void setupFollowButton() {
-        floatButton.setColorNormal(getResources().getColor(R.color.ColorPrimary));
+        followButton.setColorNormal(getResources().getColor(R.color.ColorPrimary));
     }
 
     @Override
@@ -98,7 +112,6 @@ public class MangaInformationFragment extends Fragment implements MangaInformati
             artist.setText(manga.getmArtist());
             genres.setText(manga.getmGenre());
             status.setText(manga.getmStatus());
-            //Picasso.with(getContext()).load(item.getPicUrl()).into(img);
             Glide.with(getContext()).load(manga.getPicUrl()).into(img);
         }
     }

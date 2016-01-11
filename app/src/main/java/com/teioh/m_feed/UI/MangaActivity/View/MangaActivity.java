@@ -22,7 +22,6 @@ import butterknife.OnClick;
 
 public class MangaActivity extends AppCompatActivity implements MangaActivityMap {
 
-
     @Bind(R.id.activityTitle) TextView mActivityTitle;
     @Bind(R.id.pager) ViewPager mViewPager;
     @Bind(R.id.tabs) SlidingTabLayout tabs;
@@ -35,10 +34,19 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_layout);
         ButterKnife.bind(this);
-
         mMangaPresenter = new MangaPresenterImpl(this);
-        mMangaPresenter.initialize(getIntent().getParcelableExtra("Manga"));
 
+        if(savedInstanceState != null){
+            mMangaPresenter.onRestoreState(savedInstanceState);
+        }
+
+        mMangaPresenter.init(getIntent());
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mMangaPresenter.onSaveState(outState);
     }
 
     @Override protected void onResume() {

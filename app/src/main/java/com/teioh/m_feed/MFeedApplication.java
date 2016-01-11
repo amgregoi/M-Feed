@@ -11,9 +11,6 @@ import com.teioh.m_feed.Models.Manga;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
-/**
- * Created by Asus1 on 11/3/2015.
- */
 public class MFeedApplication extends Application {
 
 

@@ -1,13 +1,13 @@
 package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 import android.content.Intent;
+import android.os.Bundle;
 
 import com.squareup.otto.Subscribe;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapterAlternate;
 import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.LibraryFragmentMap;
 import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
-import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.Database.ReactiveQueryManager;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.Utils.OttoBus.QueryChange;
@@ -24,56 +24,58 @@ import rx.Observable;
 import rx.schedulers.Schedulers;
 
 
-public class AllLibraryPresenterImpl implements AllLibraryPresenter {
+public class LibraryPresenterImpl implements LibraryPresenter {
+    public final static String TAG = LibraryPresenterImpl.class.getSimpleName();
+    public final static String LIBRARY_LIST_KEY = TAG + ":LIBRARY_LIST";
 
-    private ArrayList<Manga> mangaList;
+    private ArrayList<Manga> mLibraryMangaList;
     private SearchableAdapterAlternate mAdapter;
-    private Observable<List<Manga>> observableMangaList;
+    private Observable<List<Manga>> mObservableMangaList;
 
     private LibraryFragmentMap mLibraryFragmentMapper;
 
 
-    public AllLibraryPresenterImpl(LibraryFragmentMap map) {
+    public LibraryPresenterImpl(LibraryFragmentMap map) {
         mLibraryFragmentMapper = map;
     }
 
     @Override
-    public void initializeView() {
-        mLibraryFragmentMapper.hideGridView();
-        MangaFeedDbHelper.getInstance().createDatabase();
-        mangaList = new ArrayList<>();
-        mAdapter = new SearchableAdapterAlternate(mLibraryFragmentMapper.getContext(), mangaList);
-        setAdapter();
-        this.updateGridView();
-    }
-
-    @Override
-    public void updateGridView() {
-        if (observableMangaList != null) {
-            observableMangaList.unsubscribeOn(Schedulers.io());
-            observableMangaList = null;
-        }
-        observableMangaList = ReactiveQueryManager.getMangaLibraryObservable();
-        observableMangaList.subscribe(manga -> udpateChapterList(manga));
-    }
-
-    @Override
-    public void udpateChapterList(List<Manga> mList) {
-        if (mLibraryFragmentMapper.getContext() != null) {
-            for (Manga m : mList) {
-                mangaList.add(m);
-            }
-            Collections.sort(mangaList, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
-            mAdapter.notifyDataSetChanged();
-            mLibraryFragmentMapper.showGridView();
-            observableMangaList = null;
+    public void onSaveState(Bundle bundle) {
+        if (mLibraryMangaList != null) {
+            bundle.putParcelableArrayList(LIBRARY_LIST_KEY, mLibraryMangaList);
         }
     }
 
     @Override
-    public void onItemClick(Manga item) {
+    public void onRestoreState(Bundle bundle) {
+        if (bundle.containsKey(LIBRARY_LIST_KEY)) {
+            mLibraryMangaList = new ArrayList<>(bundle.getParcelableArrayList(LIBRARY_LIST_KEY));
+        }
+    }
+
+    @Override
+    public void init() {
+        if (mLibraryMangaList == null) {
+            this.updateLibraryMangaList();
+        } else {
+            this.updateLibraryGridView(mLibraryMangaList);
+        }
+    }
+
+    @Override
+    public void updateLibraryMangaList() {
+        if (mObservableMangaList != null) {
+            mObservableMangaList.unsubscribeOn(Schedulers.io());
+            mObservableMangaList = null;
+        }
+        mObservableMangaList = ReactiveQueryManager.getMangaLibraryObservable();
+        mObservableMangaList.subscribe(manga -> updateLibraryGridView(manga));
+    }
+
+    @Override
+    public void onItemClick(String mTitle) {
         Intent intent = new Intent(mLibraryFragmentMapper.getContext(), MangaActivity.class);
-        intent.putExtra("Manga", item);
+        intent.putExtra(Manga.TAG, mTitle);
         mLibraryFragmentMapper.getContext().startActivity(intent);
     }
 
@@ -95,6 +97,11 @@ public class AllLibraryPresenterImpl implements AllLibraryPresenter {
     @Override
     public void onPause() {
         BusProvider.getInstance().unregister(this);
+
+        if(mObservableMangaList != null) {
+            mObservableMangaList.unsubscribeOn(Schedulers.io());
+            mObservableMangaList = null;
+        }
     }
 
     @Override
@@ -102,11 +109,10 @@ public class AllLibraryPresenterImpl implements AllLibraryPresenter {
         mLibraryFragmentMapper.registerAdapter(mAdapter);
     }
 
-
     @Subscribe
     public void onMangaRemoved(RemoveFromLibrary rm) {
         Manga manga = rm.getManga();
-        for (Manga m : mangaList) {
+        for (Manga m : mLibraryMangaList) {
             if (m.getTitle().equals(manga.getTitle())) {
                 m.setFollowing(manga.getFollowing());
             }
@@ -125,8 +131,20 @@ public class AllLibraryPresenterImpl implements AllLibraryPresenter {
 
     @Subscribe
     public void onUpdateSource(UpdateSource event) {
-        mangaList.clear();
+        mLibraryMangaList.clear();
         mAdapter.notifyDataSetChanged();
-        updateGridView();
+        updateLibraryMangaList();
+    }
+
+
+    private void updateLibraryGridView(List<Manga> mList) {
+        if (mLibraryFragmentMapper.getContext() != null && mList != null) {
+            mLibraryMangaList = new ArrayList<>(mList);
+            Collections.sort(mLibraryMangaList, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
+
+            mAdapter = new SearchableAdapterAlternate(mLibraryFragmentMapper.getContext(), mLibraryMangaList);
+            mLibraryFragmentMapper.registerAdapter(mAdapter);
+            mObservableMangaList = null;
+        }
     }
 }

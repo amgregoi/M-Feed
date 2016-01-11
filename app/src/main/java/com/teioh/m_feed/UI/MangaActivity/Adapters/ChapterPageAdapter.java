@@ -5,16 +5,22 @@ import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.teioh.m_feed.UI.MangaActivity.View.Widgets.GestureImageView;
 import com.teioh.m_feed.R;
 
 import java.util.List;
 
 
 public class ChapterPageAdapter extends PagerAdapter {
+    final public static String TAG = ChapterPageAdapter.class.getSimpleName();
+
     private Context context;
     private List<String> imageUrls;
     private LayoutInflater inflater;
@@ -36,17 +42,19 @@ public class ChapterPageAdapter extends PagerAdapter {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View viewLayout = inflater.inflate(R.layout.chapter_reader_item, container, false);
 
-//        Picasso.with(context).load(imageUrls.get(position)).into(imgDisplay);
-
-        WebView webView = (WebView) viewLayout.findViewById(R.id.web);
-        webView.setWebChromeClient(new WebChromeClient());
-        webView.getSettings().setLoadWithOverviewMode(true);
-        webView.getSettings().setUseWideViewPort(true);
-        webView.getSettings().setBuiltInZoomControls(true);
-        webView.getSettings().setDisplayZoomControls(false);
-        String page = "<html><body> <img src =\"" + imageUrls.get(position) + "\" width=\"100%\"> </body></html>";
-        webView.loadData(page, "text/html", null);
-
+        GestureImageView mImage = (GestureImageView) viewLayout.findViewById(R.id.chapterPageImageView);
+        Glide.with(context)
+                .load(imageUrls.get(position))
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .animate(android.R.anim.fade_in)
+                .into(new GlideDrawableImageViewTarget(mImage) {
+                    @Override
+                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+                        super.onResourceReady(resource, animation);
+                        mImage.initializeView();
+                        mImage.setTag(TAG + ":" + position);
+                    }
+                });
         (container).addView(viewLayout);
         return viewLayout;
     }
@@ -54,6 +62,7 @@ public class ChapterPageAdapter extends PagerAdapter {
     @Override public void destroyItem(ViewGroup container, int position, Object object) {
         (container).removeView((RelativeLayout) object);
     }
+
 
 
 }

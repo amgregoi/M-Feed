@@ -1,6 +1,7 @@
 package com.teioh.m_feed.UI.LoginActivity.Presenters;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
@@ -16,11 +17,42 @@ import butterknife.ButterKnife;
 
 
 public class LoginFragmentPresenterImpl implements LoginFragmentPresenter {
+    public final static String TAG = LoginFragmentPresenterImpl.class.getSimpleName();
+    public final static String USERNAME_KEY = TAG + ":USERNAME";
 
     private LoginFragmentMap mLoginFragmentMapper;
 
     public LoginFragmentPresenterImpl(LoginFragmentMap map) {
         mLoginFragmentMapper = map;
+    }
+
+    @Override
+    public void onSaveState(Bundle bundle, String username) {
+        if(username != null || !username.equals("")){
+            bundle.putString(USERNAME_KEY, username);
+        }
+    }
+
+    @Override
+    public void onRestoreState(Bundle bundle) {
+        if(bundle.containsKey(USERNAME_KEY)){
+            mLoginFragmentMapper.updateUsername(bundle.getString(USERNAME_KEY));
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        ButterKnife.unbind(mLoginFragmentMapper);
+    }
+
+    @Override
+    public void onPause() {
+        BusProvider.getInstance().unregister(mLoginFragmentMapper);
+    }
+
+    @Override
+    public void onResume() {
+        BusProvider.getInstance().register(mLoginFragmentMapper);
     }
 
     @Override
@@ -55,7 +87,7 @@ public class LoginFragmentPresenterImpl implements LoginFragmentPresenter {
                 new LogInCallback() {
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
-                            if(mLoginFragmentMapper.getContext() != null) {
+                            if (mLoginFragmentMapper.getContext() != null) {
                                 Intent intent = new Intent(mLoginFragmentMapper.getContext(), MainActivity.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NO_ANIMATION);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -73,18 +105,4 @@ public class LoginFragmentPresenterImpl implements LoginFragmentPresenter {
                 });
     }
 
-    @Override
-    public void onDestroyView() {
-        ButterKnife.unbind(mLoginFragmentMapper);
-    }
-
-    @Override
-    public void onPause() {
-        BusProvider.getInstance().unregister(mLoginFragmentMapper);
-    }
-
-    @Override
-    public void onResume() {
-        BusProvider.getInstance().register(mLoginFragmentMapper);
-    }
 }

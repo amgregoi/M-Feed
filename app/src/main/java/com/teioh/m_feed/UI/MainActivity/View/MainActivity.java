@@ -8,7 +8,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
@@ -18,7 +17,6 @@ import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.teioh.m_feed.R;
-import com.teioh.m_feed.UI.MainActivity.Adapters.SourceListAdapter;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
 import com.teioh.m_feed.UI.MainActivity.Presenters.MainPresenter;
 import com.teioh.m_feed.UI.MainActivity.Presenters.MainPresenterImpl;
@@ -29,10 +27,10 @@ import com.teioh.m_feed.WebSources.WebSource;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.OnItemClick;
 
 public class MainActivity extends AppCompatActivity implements MainActivityMap {
+    public final static String TAG = MainActivity.class.getSimpleName();
 
     @Bind(R.id.search_view) SearchView mSearchView;
     @Bind(R.id.activityTitle) TextView mActivityTitle;
@@ -42,32 +40,35 @@ public class MainActivity extends AppCompatActivity implements MainActivityMap {
     @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @Bind(R.id.orderButton) ImageButton orderButton;
 
-    @Bind(R.id.sourceListView) ListView mSourceListView;
+    @Bind(R.id.drawerLayoutListView) ListView mSourceListView;
 
     private MainPresenter mMainPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_layout);
+        setContentView(R.layout.main_activity_layout);
         ButterKnife.bind(this);
-
         mMainPresenter = new MainPresenterImpl(this);
+
+        if (savedInstanceState != null) {
+            mMainPresenter.onRestoreState(savedInstanceState);
+        }else{
+            //default source for the moment
+            WebSource.setwCurrentSource(MangaJoy.SourceKey);
+        }
         mMainPresenter.parseLogin();
         mMainPresenter.setupDrawerLayoutListener(mToolBar, mDrawerLayout);
-
-        //testing sources
-        WebSource.setwCurrentSource(MangaJoy.SourceKey);
-//        WebSource.setwCurrentSource(MangaPark.SourceKey);
 
         //start service in new thread, substantial slow down on main thread
         //startService(new Intent(this, RecentUpdateService.class));
     }
 
-//    @OnClick(R.id.logoutLayout)
-//    public void onlogoutclick(){
-//        mMainPresenter.onLogout();
-//    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mMainPresenter.onSavedState(outState);
+    }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -122,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityMap {
             mViewPager.setOffscreenPageLimit(3);
             tabs.setViewPager(mViewPager);
         }
-        if(sourceAdapter != null){
+        if (sourceAdapter != null) {
             mSourceListView.setAdapter(sourceAdapter);
             sourceAdapter.notifyDataSetChanged();
         }
@@ -170,14 +171,19 @@ public class MainActivity extends AppCompatActivity implements MainActivityMap {
     }
 
     @Override
+    public void closeDrawer(){
+        mDrawerLayout.closeDrawers();
+    }
+
+    @Override
     public void setupToolbar() {
         setSupportActionBar(mToolBar);
         setTitle(getString(R.string.app_name));
         orderButton.setVisibility(View.GONE);
     }
 
-    @OnItemClick(R.id.sourceListView)
-    public void onSourceChosen(AdapterView<?> adapter, View view, int pos){
+    @OnItemClick(R.id.drawerLayoutListView)
+    public void onSourceChosen(AdapterView<?> adapter, View view, int pos) {
         mMainPresenter.onSourceChosen(adapter.getItemAtPosition(pos).toString());
     }
 }

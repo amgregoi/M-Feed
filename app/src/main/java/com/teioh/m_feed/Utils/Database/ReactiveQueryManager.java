@@ -21,7 +21,7 @@ import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 public class ReactiveQueryManager {
 
     /*
-     * AllLibraryFragment gets whole library
+     * LibraryFragment gets whole library
      */
     public static Observable<List<Manga>> getMangaLibraryObservable() {
         return pullMangaFromDatabase()
@@ -67,7 +67,7 @@ public class ReactiveQueryManager {
 
 
     /*
-     * FollowLibraryFragment gets manga in users library
+     * FollowedFragment gets manga in users library
      */
     public static Observable<List<Manga>> getFollowedMangaObservable() {
         return pullFollowedMangaFromDatabase()

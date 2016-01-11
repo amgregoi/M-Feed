@@ -24,4 +24,8 @@
         <item>Remove</item>
         <item>Cancel</item>
     </string-array>
+
+    <!-- TAG Resources-->
+    <string name="ChapterListAdapterHolder">1</string>
+    <string name="ChapterListAdapterTAG">2</string>
 </resources>

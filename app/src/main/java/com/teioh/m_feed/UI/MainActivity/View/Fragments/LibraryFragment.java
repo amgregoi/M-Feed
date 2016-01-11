@@ -10,72 +10,77 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 
-import com.squareup.otto.Subscribe;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
-import com.teioh.m_feed.UI.MainActivity.Presenters.AllLibraryPresenter;
-import com.teioh.m_feed.UI.MainActivity.Presenters.AllLibraryPresenterImpl;
+import com.teioh.m_feed.UI.MainActivity.Presenters.LibraryPresenter;
+import com.teioh.m_feed.UI.MainActivity.Presenters.LibraryPresenterImpl;
 import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.LibraryFragmentMap;
-import com.teioh.m_feed.Utils.OttoBus.QueryChange;
-import com.teioh.m_feed.Utils.OttoBus.RemoveFromLibrary;
-import com.teioh.m_feed.Utils.OttoBus.UpdateListEvent;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 
-public class AllLibraryFragment extends Fragment implements LibraryFragmentMap {
+public class LibraryFragment extends Fragment implements LibraryFragmentMap {
+    public final static String TAG = LibraryFragment.class.getSimpleName();
 
-    //    @Bind(R.id.search_view_3) SearchView mSearchView;
     @Bind(R.id.all_list_view) GridView mGridView;
 
-    private AllLibraryPresenter mAllLibraryPresenter;
+    private LibraryPresenter mLibraryPresenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.tab3_all_fragment, container, false);
+        View v = inflater.inflate(R.layout.tab3_library_fragment, container, false);
         ButterKnife.bind(this, v);
 
 
-        mAllLibraryPresenter = new AllLibraryPresenterImpl(this);
-        mAllLibraryPresenter.initializeView();
+        mLibraryPresenter = new LibraryPresenterImpl(this);
         return v;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if(savedInstanceState != null){
+            mLibraryPresenter.onRestoreState(savedInstanceState);
+        }
+
+        mLibraryPresenter.init();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mLibraryPresenter.onSaveState(outState);
     }
 
     @OnItemClick(R.id.all_list_view)
     void onItemClick(AdapterView<?> adapter, View view, int pos) {
         final Manga item = (Manga) adapter.getItemAtPosition(pos);
-        mAllLibraryPresenter.onItemClick(item);
+        mLibraryPresenter.onItemClick(item.toString());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mAllLibraryPresenter.onResume();
+        mLibraryPresenter.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mAllLibraryPresenter.onPause();
+        mLibraryPresenter.onPause();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mAllLibraryPresenter.onDestroyView();
+        mLibraryPresenter.onDestroyView();
     }
 
     @Override
     public void registerAdapter(BaseAdapter adapter) {
         if (adapter != null) {
             mGridView.setFastScrollEnabled(true);
-            mGridView.setVisibility(View.GONE);
             mGridView.setAdapter(adapter);
             mGridView.setTextFilterEnabled(true);
         }
@@ -83,18 +88,17 @@ public class AllLibraryFragment extends Fragment implements LibraryFragmentMap {
 
     @Override
     public void hideGridView() {
-        mGridView.setVisibility(View.GONE);
-
+        //TODO REMOVE
     }
 
     @Override
     public void showGridView() {
-        mGridView.setVisibility(View.VISIBLE);
+        //TODO REMOVE
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        mAllLibraryPresenter.onQueryTextChange(newText);
+        mLibraryPresenter.onQueryTextChange(newText);
         return true;
     }
 

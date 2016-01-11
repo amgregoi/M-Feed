@@ -18,6 +18,8 @@ import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 public class ChapterListAdapter extends ArrayAdapter {
 
+    public final static String TAG = ChapterListAdapter.class.getSimpleName();
+
     private ArrayList<Chapter> chapters;
     private LayoutInflater mInflater;
     private Context context;
@@ -41,18 +43,19 @@ public class ChapterListAdapter extends ArrayAdapter {
             holder = new ChapterHolder();
             holder.mTitle = (TextView) row.findViewById(R.id.mangaTitle);
             holder.cDate = (TextView) row.findViewById(R.id.chapterDate);
-            row.setTag(holder);
+            row.setTag(R.string.ChapterListAdapterHolder, holder);
+            row.setTag(R.string.ChapterListAdapterTAG, TAG + ":" + position);
         } else {
-            holder = (ChapterHolder) row.getTag();
+            holder = (ChapterHolder) row.getTag(R.string.ChapterListAdapterHolder);
         }
 
         Chapter ch = chapters.get(position);
 
-        //Picasso.with(context).load(tManga.getPicUrl()).resize(139, 200).into(holder.img);
         if (ch == null) {
             return row;
         }
 
+        //TODO UPDATE SELECTION TO INCLUDE CURRENT SOURCE, UPDATED THE DATABASE BUT DONT WANT TO WIPE IT YET
         Chapter viewedChapter = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase())
                 .query(Chapter.class)
                 .withSelection("mTitle = ? AND cNumber = ?", ch.getMangaTitle(), Integer.toString(ch.getChapterNumber()))

@@ -23,6 +23,8 @@ public interface MainActivityMap extends BaseContextMap, SearchViewListenerMap {
 
     void onDrawerClose();
 
+    void closeDrawer();
+
     void setupToolbar();
 
 }

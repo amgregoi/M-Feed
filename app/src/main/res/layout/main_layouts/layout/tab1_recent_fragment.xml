@@ -24,7 +24,10 @@
 			android:numColumns="auto_fit"
 			android:paddingTop="5dp"
 			android:stretchMode="columnWidth"
-			android:verticalSpacing="@dimen/baseline_grid_unit"/>
+			android:verticalSpacing="@dimen/baseline_grid_unit"
+			android:layout_marginStart="@dimen/baseline_grid_unit"
+			android:layout_marginEnd="@dimen/baseline_grid_unit"
+			/>
 
 	</android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

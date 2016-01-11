@@ -11,14 +11,16 @@ import com.teioh.m_feed.UI.LoginActivity.Presenters.LoginActivityPresenter;
 import com.teioh.m_feed.UI.LoginActivity.Presenters.LoginActivityPresenterImpl;
 import com.teioh.m_feed.UI.LoginActivity.Presenters.Mappers.LoginActivityMap;
 
-public class LoginActivity extends AppCompatActivity implements LoginActivityMap{
+public class LoginActivity extends AppCompatActivity implements LoginActivityMap {
+    public final static String TAG = LoginActivity.class.getSimpleName();
 
     private LoginActivityPresenter mLoginPresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_layout);
-        mLoginPresenter =  new LoginActivityPresenterImpl(this);
+        mLoginPresenter = new LoginActivityPresenterImpl(this);
     }
 
     @Override
@@ -46,10 +48,10 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityMap
 
     @Override
     public void onBackPressed() {
-        Fragment myFragment = getSupportFragmentManager().findFragmentByTag("LoginFragment");
-        if (myFragment != null && myFragment.isVisible()) {
+        Fragment loginFragment = getSupportFragmentManager().findFragmentByTag(LoginFragment.TAG);
+        if (loginFragment != null && loginFragment.isVisible()) {
             finish();
-        }else {
+        } else {
             super.onBackPressed();
         }
     }

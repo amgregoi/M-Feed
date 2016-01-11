@@ -1,16 +1,22 @@
 package com.teioh.m_feed.UI.MainActivity.Presenters;
 
+import android.os.Bundle;
+
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.Utils.OttoBus.RemoveFromLibrary;
 
 import java.util.List;
 
-public interface AllLibraryPresenter {
-    void initializeView();
+public interface LibraryPresenter {
+    void onSaveState(Bundle bundle);
 
-    void updateGridView();
+    void onRestoreState(Bundle bundle);
 
-    void onItemClick(Manga item);
+    void init();
+
+    void updateLibraryMangaList();
+
+    void onItemClick(String mTitle);
 
     void onQueryTextChange(String newText);
 
@@ -21,6 +27,4 @@ public interface AllLibraryPresenter {
     void onPause();
 
     void setAdapter();
-
-    void udpateChapterList(List<Manga> mList);
 }

@@ -18,6 +18,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LoginFragment extends Fragment implements LoginFragmentMap {
+    public final static String TAG = LoginFragment.class.getSimpleName();
+
     @Bind(R.id.password) EditText password;
     @Bind(R.id.username) EditText username;
 
@@ -26,8 +28,25 @@ public class LoginFragment extends Fragment implements LoginFragmentMap {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.login_fragment, container, false);
         ButterKnife.bind(this, v);
+
         mLoginFragmentPresenter = new LoginFragmentPresenterImpl(this);
         return v;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(savedInstanceState != null){
+            mLoginFragmentPresenter.onRestoreState(savedInstanceState);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        username.clearFocus();
+        String user = username.getText().toString();
+        mLoginFragmentPresenter.onSaveState(outState, user);
     }
 
     @Override public void onDestroyView() {
@@ -41,5 +60,10 @@ public class LoginFragment extends Fragment implements LoginFragmentMap {
 
     @OnClick(R.id.login) void onLoginButton() {
         mLoginFragmentPresenter.onLoginbutton(username.getText().toString(), password.getText().toString());
+    }
+
+    @Override
+    public void updateUsername(String username) {
+        this.username.setText(username);
     }
 }

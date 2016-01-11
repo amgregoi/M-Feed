@@ -2,24 +2,30 @@ package com.teioh.m_feed.UI.MangaActivity.Presenters;
 
 import android.os.Bundle;
 
-import java.util.List;
-
 public interface ChapterReaderPresenter {
 
-    void initialize();
+    Bundle onSaveState(Bundle bundle);
+
+    void onRestoreState(Bundle bundle);
+
+    void init();
 
     void getImageUrls();
 
-    void updateView(List<String> urlList);
+    void onPause();
 
     void onDestroyView();
+
+    void toggleToolbar();
 
     void updateOffsetCounter(int offset, int position);
 
     void updateState(int state);
 
-    void onSaveState(Bundle bundle);
+    void setToNextChapter();
 
-    void onRestoreState(Bundle bundle);
+    void setToPreviousChapter();
+
+
 
 }

@@ -13,21 +13,21 @@ public class ViewPagerAdapterManga extends FragmentStatePagerAdapter {
 
     CharSequence Titles[];
     int NumbOfTabs;
-    Manga manga;
+    String mMangaTitle;
 
-    public ViewPagerAdapterManga(FragmentManager fm, CharSequence mTitles[], int mNumbOfTabsumb, Manga item) {
+    public ViewPagerAdapterManga(FragmentManager fm, CharSequence mTitles[], int mNumbOfTabsumb, String item) {
         super(fm);
 
         this.Titles = mTitles;
         this.NumbOfTabs = mNumbOfTabsumb;
-        this.manga = item;
+        this.mMangaTitle = item;
 
     }
 
     @Override
     public Fragment getItem(int position) {
         Bundle b = new Bundle();
-        b.putParcelable("Manga", manga);
+        b.putString(Manga.TAG, mMangaTitle);
 
         if (position == 0) {
             Fragment mangaFragment = new MangaInformationFragment();

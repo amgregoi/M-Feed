@@ -11,20 +11,18 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 
-import com.squareup.otto.Subscribe;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.RecentFragmentMap;
 import com.teioh.m_feed.UI.MainActivity.Presenters.RecentPresenter;
 import com.teioh.m_feed.UI.MainActivity.Presenters.RecentPresenterImpl;
-import com.teioh.m_feed.Utils.OttoBus.QueryChange;
-import com.teioh.m_feed.Utils.OttoBus.RemoveFromLibrary;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 
 public class RecentFragment extends Fragment implements RecentFragmentMap {
+    public final static String TAG =RecentFragment.class.getSimpleName();
 
     @Bind(R.id.recent_list_view) GridView mGridView;
     @Bind(R.id.swipe_container) SwipeRefreshLayout swipeContainer;
@@ -36,18 +34,26 @@ public class RecentFragment extends Fragment implements RecentFragmentMap {
         ButterKnife.bind(this, v);
 
         mRecentPresenterManga = new RecentPresenterImpl(this);
-        mRecentPresenterManga.initialize();
         return v;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mRecentPresenterManga.onSaveState(outState);
     }
 
     @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        if(savedInstanceState != null){
+            mRecentPresenterManga.onRestoreState(savedInstanceState);
+        }
+        mRecentPresenterManga.init();
     }
 
     @OnItemClick(R.id.recent_list_view) void onItemClick(AdapterView<?> adapter, View view, int pos) {
-        final Manga item = (Manga) adapter.getItemAtPosition(pos);
-        mRecentPresenterManga.onItemClick(item);
+        Manga item = (Manga) adapter.getItemAtPosition(pos);
+        mRecentPresenterManga.onItemClick(item.getTitle());
     }
 
     @Override public void onDestroyView() {
@@ -91,7 +97,7 @@ public class RecentFragment extends Fragment implements RecentFragmentMap {
     }
 
     @Override public void setupSwipeRefresh() {
-        swipeContainer.setOnRefreshListener(() -> mRecentPresenterManga.updateGridView());
+        swipeContainer.setOnRefreshListener(() -> mRecentPresenterManga.updateRecentMangaList());
 
     }
 }

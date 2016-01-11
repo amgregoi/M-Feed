@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Manga implements Parcelable {
+    public final static String TAG = "MANGA";
+
     private String mTitle;
     private String mPicUrl;
     private String mMangaUrl;

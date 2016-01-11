@@ -1,14 +1,13 @@
 package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 import android.content.Intent;
-import android.util.Log;
+import android.os.Bundle;
 
 import com.squareup.otto.Subscribe;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapterAlternate;
 import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.RecentFragmentMap;
 import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
-import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.Utils.OttoBus.QueryChange;
 import com.teioh.m_feed.Utils.OttoBus.RemoveFromLibrary;
@@ -23,10 +22,12 @@ import rx.Observable;
 import rx.schedulers.Schedulers;
 
 public class RecentPresenterImpl implements RecentPresenter {
+    public final static String TAG = RecentPresenterImpl.class.getSimpleName();
+    public final static String RECENT_MANGA_LIST_KEY = TAG + ":RECENT_MANGA_LIST";
 
-    private ArrayList<Manga> recentList;
+    private ArrayList<Manga> mRecentMangaList;
     private SearchableAdapterAlternate mAdapter;
-    private Observable<List<Manga>> observableMangaList;
+    private Observable<List<Manga>> mObservableMangaList;
     private RecentFragmentMap mRecentFragmentMapper;
 
     public RecentPresenterImpl(RecentFragmentMap map) {
@@ -34,46 +35,44 @@ public class RecentPresenterImpl implements RecentPresenter {
     }
 
     @Override
-    public void initialize() {
-        MangaFeedDbHelper.getInstance().createDatabase();
-        recentList = new ArrayList<>();
-        mAdapter = new SearchableAdapterAlternate(mRecentFragmentMapper.getContext(), recentList);
-        mRecentFragmentMapper.startRefresh();
-        mRecentFragmentMapper.setupSwipeRefresh();
-        this.setAdapter();
-        this.updateGridView();
+    public void onSaveState(Bundle bundle) {
+        if (mRecentMangaList != null) {
+            bundle.putParcelableArrayList(RECENT_MANGA_LIST_KEY, mRecentMangaList);
+        }
     }
 
     @Override
-    public void updateGridView() {
-        if (observableMangaList != null) {
-            observableMangaList.unsubscribeOn(Schedulers.io());
-            observableMangaList = null;
+    public void onRestoreState(Bundle bundle) {
+        if (bundle.containsKey(RECENT_MANGA_LIST_KEY)) {
+            mRecentMangaList = new ArrayList<>(bundle.getParcelableArrayList(RECENT_MANGA_LIST_KEY));
         }
-        observableMangaList = WebSource.getRecentUpdatesObservable();
-        observableMangaList.subscribe(manga -> updateRecentList(manga));
-    }
-
-    private void updateRecentList(List<Manga> manga) {
-        if (mRecentFragmentMapper.getContext() != null) {
-            if (manga.get(0).getmSource().equals(WebSource.getSourceKey())) {
-                if (manga != null) {
-                    recentList.clear();
-                    for (Manga m : manga) {
-                        recentList.add(m);
-                    }
-                }
-            }
-        }
-        mAdapter.notifyDataSetChanged();
-        mRecentFragmentMapper.stopRefresh();
-        observableMangaList = null;
     }
 
     @Override
-    public void onItemClick(Manga item) {
+    public void init() {
+        if(mRecentMangaList == null) {
+            mRecentFragmentMapper.startRefresh();
+            mRecentFragmentMapper.setupSwipeRefresh();
+            this.updateRecentMangaList();
+        }else{
+            this.updateRecentGridView(mRecentMangaList);
+        }
+    }
+
+    @Override
+    public void updateRecentMangaList() {
+        if (mObservableMangaList != null) {
+            mObservableMangaList.unsubscribeOn(Schedulers.io());
+            mObservableMangaList = null;
+        }
+        mObservableMangaList = WebSource.getRecentUpdatesObservable();
+        mObservableMangaList.subscribe(manga -> updateRecentGridView(manga));
+    }
+
+    @Override
+    public void onItemClick(String mTitle) {
         Intent intent = new Intent(mRecentFragmentMapper.getContext(), MangaActivity.class);
-        intent.putExtra("Manga", item);
+        intent.putExtra(Manga.TAG, mTitle);
         mRecentFragmentMapper.getContext().startActivity(intent);
     }
 
@@ -97,6 +96,11 @@ public class RecentPresenterImpl implements RecentPresenter {
     @Override
     public void onPause() {
         BusProvider.getInstance().unregister(this);
+
+        if(mObservableMangaList != null) {
+            mObservableMangaList.unsubscribeOn(Schedulers.io());
+            mObservableMangaList = null;
+        }
     }
 
     @Override
@@ -106,7 +110,7 @@ public class RecentPresenterImpl implements RecentPresenter {
 
     @Subscribe
     public void onMangaAdded(Manga manga) {
-        for (Manga m : recentList) {
+        for (Manga m : mRecentMangaList) {
             if (m.equals(manga)) {
                 m = manga;
                 m.setFollowing(false);
@@ -118,7 +122,7 @@ public class RecentPresenterImpl implements RecentPresenter {
     @Subscribe
     public void onMangaRemoved(RemoveFromLibrary rm) {
         Manga manga = rm.getManga();
-        for (Manga m : recentList) {
+        for (Manga m : mRecentMangaList) {
             if (m.equals(manga)) {
                 m = manga;
                 m.setFollowing(false);
@@ -134,9 +138,23 @@ public class RecentPresenterImpl implements RecentPresenter {
 
     @Subscribe
     public void onUpdateSource(UpdateSource event) {
-        recentList.clear();
+        mRecentMangaList.clear();
         mAdapter.notifyDataSetChanged();
         mRecentFragmentMapper.startRefresh();
-        updateGridView();
+        updateRecentMangaList();
     }
+
+    private void updateRecentGridView(List<Manga> manga) {
+        if (mRecentFragmentMapper.getContext() != null && manga != null) {
+            if (manga.get(0).getmSource().equals(WebSource.getSourceKey())) {
+                mRecentMangaList = new ArrayList<>(manga);
+                mAdapter = new SearchableAdapterAlternate(mRecentFragmentMapper.getContext(), mRecentMangaList);
+                mRecentFragmentMapper.registerAdapter(mAdapter);
+            }
+            mRecentFragmentMapper.stopRefresh();
+            mObservableMangaList = null;
+        }
+    }
+
+
 }

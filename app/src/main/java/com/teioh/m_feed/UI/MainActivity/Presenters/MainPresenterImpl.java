@@ -4,11 +4,11 @@ package com.teioh.m_feed.UI.MainActivity.Presenters;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -20,6 +20,7 @@ import com.teioh.m_feed.UI.LoginActivity.View.LoginActivity;
 import com.teioh.m_feed.UI.MainActivity.Adapters.SourceListAdapter;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
 import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.MainActivityMap;
+import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.Utils.OttoBus.QueryChange;
 import com.teioh.m_feed.Utils.OttoBus.UpdateSource;
@@ -31,12 +32,14 @@ import java.util.Arrays;
 import butterknife.ButterKnife;
 
 public class MainPresenterImpl implements MainPresenter {
+    public final static String TAG = MainPresenterImpl.class.getSimpleName();
+
 
     private ViewPagerAdapterMain mViewPagerAdapterMain;
     private SourceListAdapter mSourceListAdapater, mGeneralListAdapter;
     private MergeAdapter mDrawerAdapter;
 
-    private final CharSequence Titles[] = {"Recent", "Library", "All"};
+    private final CharSequence mTabTitles[] = {"Recent", "Followed", "Library"};
     private final String mGeneralListContent[] = {"Logout", "Advanced Search"};
     private ArrayList<String> mSourceList, mGeneralList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -47,17 +50,30 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Override
-    public void initialize() {
-        //initialize arrays
+    public void onSavedState(Bundle bundle) {
+
+    }
+
+    @Override
+    public void onRestoreState(Bundle bundle) {
+
+    }
+
+    @Override
+    public void init() {
+        //creates database if fresh install
+        MangaFeedDbHelper.getInstance().createDatabase();
+
+        //init arrays
         mSourceList = new ArrayList<>(WebSource.getSourceList());
         mGeneralList = new ArrayList<>(Arrays.asList(mGeneralListContent));
 
-        //initialize adapters
-        mViewPagerAdapterMain = new ViewPagerAdapterMain(((FragmentActivity) mMainMapper.getContext()).getSupportFragmentManager(), Titles, 3);
+        //init adapters
+        mViewPagerAdapterMain = new ViewPagerAdapterMain(((FragmentActivity) mMainMapper.getContext()).getSupportFragmentManager(), mTabTitles, 3);
         mSourceListAdapater = new SourceListAdapter(mMainMapper.getContext(), R.layout.source_list_item, mSourceList);
         mGeneralListAdapter = new SourceListAdapter(mMainMapper.getContext(), R.layout.source_list_item, mGeneralList);
 
-        //initialize views
+        //init views
         View header = ((FragmentActivity) mMainMapper.getContext()).getLayoutInflater().inflate(R.layout.drawer_header, null);
         View general = ((FragmentActivity) mMainMapper.getContext()).getLayoutInflater().inflate(R.layout.drawer_general_header, null);
         View source = ((FragmentActivity) mMainMapper.getContext()).getLayoutInflater().inflate(R.layout.drawer_source_header, null);
@@ -70,7 +86,7 @@ public class MainPresenterImpl implements MainPresenter {
         mDrawerAdapter.addView(source);
         mDrawerAdapter.addAdapter(mSourceListAdapater);
 
-        //initialize layout
+        //init layout
         mMainMapper.setupTabLayout();
         mMainMapper.registerAdapter(mViewPagerAdapterMain, mDrawerAdapter);
         mMainMapper.setupSearchview();
@@ -112,6 +128,7 @@ public class MainPresenterImpl implements MainPresenter {
     @Override
     public void onResume() {
         BusProvider.getInstance().register(mMainMapper);
+        mMainMapper.closeDrawer();
     }
 
     @Override
@@ -161,7 +178,7 @@ public class MainPresenterImpl implements MainPresenter {
                 mMainMapper.getContext().startActivity(intent);
 
             } else {
-                initialize();
+                init();
             }
         }
     }
@@ -177,7 +194,6 @@ public class MainPresenterImpl implements MainPresenter {
             default:
                 if(!source.equals(WebSource.getSourceKey())) {
                     WebSource.setwCurrentSource(source);
-                    mSourceListAdapater.notifyDataSetChanged();
                     BusProvider.getInstance().post(new UpdateSource());
                 }
                 return;

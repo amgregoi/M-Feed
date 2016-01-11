@@ -1,7 +1,6 @@
 package com.teioh.m_feed.UI.MangaActivity.Presenters;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
@@ -15,26 +14,48 @@ import butterknife.ButterKnife;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
+import static nl.qbusict.cupboard.CupboardFactory.cupboard;
+
 public class MangaInformationPresenterImpl implements MangaInformationPresenter {
+    private static final String TAG = MangaInformationPresenterImpl.class.getSimpleName();
+    private static final String MANGA_KEY = TAG + ":MANGA";
 
-    private Manga item;
+    private Manga mManga;
     private MangaInformationMapper mMangaInformationMapper;
-    private Observable<Manga> observableManga;
+    private Observable<Manga> mObservableManga;
 
 
-    public MangaInformationPresenterImpl(MangaInformationMapper base, Bundle b) {
-        this.item = b.getParcelable("Manga");
+    public MangaInformationPresenterImpl(MangaInformationMapper base) {
         mMangaInformationMapper = base;
-        Log.e("RAWR", "printing sourece: " +item.getmSource());
     }
 
     @Override
-    public void initialize() {
-        try {
-            this.setFollowButtonText(item.getFollowing(), true); //second parameter signifies if the button is being initialized
-            if (item.getmGenre() != null && item.getmAlternate() != null && !item.getPicUrl().equals("")) {
+    public void onSaveState(Bundle bundle) {
+        if (mManga != null) {
+            bundle.putParcelable(MANGA_KEY, mManga);
+        }
+    }
+
+    @Override
+    public void onRestoreState(Bundle bundle) {
+        if (bundle.containsKey(MANGA_KEY)) {
+            mManga = bundle.getParcelable(MANGA_KEY);
+        }
+    }
+
+    @Override
+    public void init(Bundle bundle) {
+        if (mMangaInformationMapper.getContext() != null) {
+            if (mManga == null) {
+                String title = bundle.getString(Manga.TAG);
+                mManga = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase())
+                        .query(Manga.class).withSelection("mTitle = ? AND mSource = ?", title, WebSource.getwCurrentSource()).get();
+
+            }
+            this.setFollowButtonText(mManga.getFollowing(), true); //second parameter signifies if the button is being initialized
+            if (mManga.getmGenre() != null && mManga.getmAlternate() != null && !mManga.getPicUrl().equals("")) {
                 mMangaInformationMapper.setupFollowButton();
-                mMangaInformationMapper.setMangaViews(item);
+                mMangaInformationMapper.setMangaViews(mManga);
                 mMangaInformationMapper.showCoverLayout();
             } else {
                 mMangaInformationMapper.hideCoverLayout();
@@ -42,35 +63,19 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
                 mMangaInformationMapper.setupSwipeRefresh();
                 this.getMangaViewInfo();
             }
-        } catch (NullPointerException e) {
-            Log.e("MangaInformationFrag", "Changed views to fast \n\t\t\t" + e.toString());
         }
-    }
-
-    @Override
-    public void getMangaViewInfo() {
-        if(observableManga != null){
-            observableManga.unsubscribeOn(Schedulers.io());
-            observableManga = null;
-        }
-        observableManga = WebSource.updateMangaObservable(item);
-        observableManga.subscribe(manga -> {
-            mMangaInformationMapper.setMangaViews(manga);
-            mMangaInformationMapper.stopRefresh();
-            mMangaInformationMapper.showCoverLayout();
-        });
     }
 
     @Override
     public void onFollwButtonClick() {
-        boolean follow = item.setFollowing(!item.getFollowing());
+        boolean follow = mManga.setFollowing(!mManga.getFollowing());
         this.setFollowButtonText(follow, false);        //second parameter signifies if the button is being initialized
         if (follow) {
-            MangaFeedDbHelper.getInstance().updateMangaFollow(item.getTitle());
-            BusProvider.getInstance().post(item);
+            MangaFeedDbHelper.getInstance().updateMangaFollow(mManga.getTitle());
+            BusProvider.getInstance().post(mManga);
         } else {
-            MangaFeedDbHelper.getInstance().updateMangaUnfollow(item.getTitle());
-            BusProvider.getInstance().post(new RemoveFromLibrary(item));
+            MangaFeedDbHelper.getInstance().updateMangaUnfollow(mManga.getTitle());
+            BusProvider.getInstance().post(new RemoveFromLibrary(mManga));
         }
     }
 
@@ -91,14 +96,28 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
     @Override
     public void onPause() {
         BusProvider.getInstance().unregister(this);
+        if (mObservableManga != null) {
+            mObservableManga.unsubscribeOn(Schedulers.io());
+            mObservableManga = null;
+        }
     }
 
     @Override
     public void onDestroyView() {
         ButterKnife.unbind(this);
-        if (observableManga != null) {
-            observableManga.unsubscribeOn(Schedulers.io());
-            observableManga = null;
-        }
     }
+
+    private void getMangaViewInfo() {
+        if (mObservableManga != null) {
+            mObservableManga.unsubscribeOn(Schedulers.io());
+            mObservableManga = null;
+        }
+        mObservableManga = WebSource.updateMangaObservable(mManga);
+        mObservableManga.subscribe(manga -> {
+            mMangaInformationMapper.setMangaViews(manga);
+            mMangaInformationMapper.stopRefresh();
+            mMangaInformationMapper.showCoverLayout();
+        });
+    }
+
 }

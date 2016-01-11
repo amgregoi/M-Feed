@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@android:color/white"
-              android:clickable="true">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/reader_fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                android:clickable="true">
 
-	<android.support.v4.view.ViewPager
-		android:id="@+id/pager"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_weight="1"/>
+	<include
+		android:id="@+id/chapter_header"
+		layout="@layout/chapter_reader_header"
+		/>
 
-</LinearLayout>
+	<com.teioh.m_feed.UI.MangaActivity.View.Widgets.GestureViewPager
+		android:id="@id/pager"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:background="#cc000000"
+		/>
+
+	<include
+		android:id="@+id/chapter_footer"
+		layout="@layout/chapter_reader_footer"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		/>
+</RelativeLayout>

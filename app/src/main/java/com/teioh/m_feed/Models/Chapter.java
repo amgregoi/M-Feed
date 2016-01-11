@@ -7,6 +7,8 @@ import android.os.Parcelable;
  * Created by Asus1 on 11/1/2015.
  */
 public class Chapter implements Parcelable{
+    public final static String TAG = "CHAPTER";
+
     private String mUrl;
     private String mDate;
     private String mTitle;

@@ -1,6 +1,7 @@
 package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.squareup.otto.Subscribe;
@@ -8,7 +9,6 @@ import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapter;
 import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.FollowFragmentMap;
 import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
-import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.Database.ReactiveQueryManager;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.Utils.OttoBus.QueryChange;
@@ -25,52 +25,57 @@ import rx.Observable;
 import rx.schedulers.Schedulers;
 
 
-public class FollowLibraryPresenterImpl implements FollowLibraryPresenter {
+public class FollowedPresenterImpl implements FollowedPresenter {
+    public final static String TAG = FollowedPresenterImpl.class.getSimpleName();
+    public final static String FOLLOWED_MANGA_LIST_KEY = TAG + ":FOLLOWED_LIST";
 
-    private ArrayList<Manga> libraryList;
+    private ArrayList<Manga> mFollowedMangaList;
     private SearchableAdapter mAdapter;
-    private Observable<List<Manga>> observableMangaList;
+    private Observable<List<Manga>> mObservableMangaList;
 
     private FollowFragmentMap mFollowFragmentMapper;
 
-    public FollowLibraryPresenterImpl(FollowFragmentMap map) {
+    public FollowedPresenterImpl(FollowFragmentMap map) {
         mFollowFragmentMapper = map;
     }
 
-    private void populateLibraryListView(List<Manga> mangaList) {
-        libraryList.clear();
-        for (Manga m : mangaList) {
-            if (!libraryList.contains(m)) {
-                libraryList.add(m);
-            }
+    @Override
+    public void onSaveState(Bundle bundle) {
+        if(mFollowedMangaList != null){
+            bundle.putParcelableArrayList(FOLLOWED_MANGA_LIST_KEY, mFollowedMangaList);
         }
-        Collections.sort(libraryList, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
-        mAdapter.notifyDataSetChanged();
-        observableMangaList = null;
     }
 
     @Override
-    public void initializeView() {
-        MangaFeedDbHelper.getInstance().createDatabase();
-        libraryList = new ArrayList<>();
-        mAdapter = new SearchableAdapter(mFollowFragmentMapper.getContext(), libraryList);
-        setAdapter();
-    }
-
-    @Override
-    public void updateGridView() {
-        if (observableMangaList != null) {
-            observableMangaList.unsubscribeOn(Schedulers.io());
-            observableMangaList = null;
+    public void onRestoreState(Bundle bundle) {
+        if(bundle.containsKey(FOLLOWED_MANGA_LIST_KEY)){
+            mFollowedMangaList = new ArrayList<>(bundle.getParcelableArrayList(FOLLOWED_MANGA_LIST_KEY));
         }
-        observableMangaList = ReactiveQueryManager.getFollowedMangaObservable();
-        observableMangaList.subscribe(manga -> populateLibraryListView(manga));
     }
 
     @Override
-    public void onItemClick(Manga item) {
+    public void init() {
+        if(mFollowedMangaList == null){
+            this.updateFollowedMangaList();
+        }else{
+            updateFollowedGridView(mFollowedMangaList);
+        }
+    }
+
+    @Override
+    public void updateFollowedMangaList() {
+        if (mObservableMangaList != null) {
+            mObservableMangaList.unsubscribeOn(Schedulers.io());
+            mObservableMangaList = null;
+        }
+        mObservableMangaList = ReactiveQueryManager.getFollowedMangaObservable();
+        mObservableMangaList.subscribe(manga -> updateFollowedGridView(manga));
+    }
+
+    @Override
+    public void onItemClick(String mTitle) {
         Intent intent = new Intent(mFollowFragmentMapper.getContext(), MangaActivity.class);
-        intent.putExtra("Manga", item);
+        intent.putExtra(Manga.TAG, mTitle);
         mFollowFragmentMapper.getContext().startActivity(intent);
     }
 
@@ -87,13 +92,16 @@ public class FollowLibraryPresenterImpl implements FollowLibraryPresenter {
     @Override
     public void onResume() {
         BusProvider.getInstance().register(this);
-        this.updateGridView();
-
     }
 
     @Override
     public void onPause() {
         BusProvider.getInstance().unregister(this);
+
+        if(mObservableMangaList != null) {
+            mObservableMangaList.unsubscribeOn(Schedulers.io());
+            mObservableMangaList = null;
+        }
     }
 
     @Override
@@ -103,9 +111,9 @@ public class FollowLibraryPresenterImpl implements FollowLibraryPresenter {
 
     @Subscribe
     public void onMangaAdded(Manga manga) {
-        if (!libraryList.contains(manga)) {
-            libraryList.add(manga);
-            Collections.sort(libraryList, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
+        if (!mFollowedMangaList.contains(manga)) {
+            mFollowedMangaList.add(manga);
+            Collections.sort(mFollowedMangaList, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
             mAdapter.notifyDataSetChanged();
             Log.i("FOLLOW MANGA success ", manga.getTitle());
         }
@@ -115,8 +123,8 @@ public class FollowLibraryPresenterImpl implements FollowLibraryPresenter {
     @Subscribe
     public void onMangaRemoved(RemoveFromLibrary rm) {
         Manga manga = rm.getManga();
-        if (libraryList.contains(manga)) {
-            libraryList.remove(manga);
+        if (mFollowedMangaList.contains(manga)) {
+            mFollowedMangaList.remove(manga);
             mAdapter.notifyDataSetChanged();
             Log.i("UNFOLLOW MANGA success", manga.getTitle());
         }
@@ -134,8 +142,19 @@ public class FollowLibraryPresenterImpl implements FollowLibraryPresenter {
 
     @Subscribe
     public void onUpdateSource(UpdateSource event) {
-        libraryList.clear();
+        mFollowedMangaList.clear();
         mAdapter.notifyDataSetChanged();
-        updateGridView();
+        updateFollowedMangaList();
     }
+
+    private void updateFollowedGridView(List<Manga> mangaList) {
+        if(mFollowFragmentMapper.getContext() != null && mangaList != null) {
+            mFollowedMangaList = new ArrayList<>(mangaList);
+            Collections.sort(mFollowedMangaList, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
+            mAdapter = new SearchableAdapter(mFollowFragmentMapper.getContext(), mFollowedMangaList);
+            mFollowFragmentMapper.registerAdapter(mAdapter);
+            mObservableMangaList = null;
+        }
+    }
+
 }

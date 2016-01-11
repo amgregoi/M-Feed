@@ -1,10 +1,15 @@
 package com.teioh.m_feed.UI.MangaActivity.Presenters;
 
-import com.teioh.m_feed.Models.Manga;
+import android.content.Intent;
+import android.os.Bundle;
 
 public interface MangaPresenter {
 
-    void initialize(Manga item);
+    void onSaveState(Bundle bundle);
+
+    void onRestoreState(Bundle bundle);
+
+    void init(Intent intent);
 
     void onResume();
 

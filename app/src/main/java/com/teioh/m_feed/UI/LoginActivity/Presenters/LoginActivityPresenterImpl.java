@@ -8,21 +8,23 @@ import com.teioh.m_feed.UI.LoginActivity.View.LoginFragment;
 
 
 public class LoginActivityPresenterImpl implements LoginActivityPresenter {
+    public final static String TAG = LoginActivityPresenterImpl.class.getSimpleName();
 
-    LoginActivityMap mLoginMap;
+    private LoginActivityMap mLoginMap;
 
-    public LoginActivityPresenterImpl(LoginActivityMap map){
+    public LoginActivityPresenterImpl(LoginActivityMap map) {
         mLoginMap = map;
     }
 
     @Override
-    public void initialize() {
+    public void init() {
     }
 
     @Override
     public void onResume() {
         Fragment fragment = new LoginFragment();
-        ((FragmentActivity) mLoginMap.getContext()).getSupportFragmentManager().beginTransaction().add(android.R.id.content, fragment, "LoginFragment").addToBackStack(null).commit();
+        ((FragmentActivity) mLoginMap.getContext()).getSupportFragmentManager().beginTransaction()
+                .add(android.R.id.content, fragment, LoginFragment.TAG).addToBackStack(null).commit();
     }
 
     @Override
@@ -34,11 +36,4 @@ public class LoginActivityPresenterImpl implements LoginActivityPresenter {
     public void onDestroy() {
 
     }
-
-    @Override
-    public void onBackPressed() {
-
-    }
-
-
 }

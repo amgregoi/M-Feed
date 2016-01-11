@@ -1,24 +1,24 @@
 package com.teioh.m_feed.UI.MangaActivity.Presenters;
 
+import android.os.Bundle;
+
 import com.teioh.m_feed.Models.Chapter;
 
-import java.util.List;
-
-/**
- * Created by Asus1 on 11/7/2015.
- */
 public interface ChapterListPresenter {
+
+    void onSaveState(Bundle bundle);
+
+    void onRestoreState(Bundle bundle);
+
+    void init();
 
     void getChapterList();
 
-    void onChapterClicked(int position);
-
-    void updateChapterList(List<Chapter> chapters);
+    void onChapterClicked(Chapter chapter);
 
     void onPause();
 
     void onResume();
 
     void onDestroyView();
-
 }

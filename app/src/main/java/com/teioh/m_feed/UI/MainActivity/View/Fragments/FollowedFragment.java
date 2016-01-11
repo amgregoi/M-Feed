@@ -10,66 +10,75 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 
-import com.squareup.otto.Subscribe;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
-import com.teioh.m_feed.UI.MainActivity.Presenters.FollowLibraryPresenter;
-import com.teioh.m_feed.UI.MainActivity.Presenters.FollowLibraryPresenterImpl;
+import com.teioh.m_feed.UI.MainActivity.Presenters.FollowedPresenter;
+import com.teioh.m_feed.UI.MainActivity.Presenters.FollowedPresenterImpl;
 import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.FollowFragmentMap;
-import com.teioh.m_feed.Utils.OttoBus.QueryChange;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 
-public class FollowLibraryFragment extends Fragment implements FollowFragmentMap {
+public class FollowedFragment extends Fragment implements FollowFragmentMap {
+    public final static String TAG = FollowedFragment.class.getSimpleName();
 
     @Bind(R.id.library_list_view) GridView mGridView;
 
-    private FollowLibraryPresenter mFollowLibraryPresenter;
+    private FollowedPresenter mFollowedPresenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.tab2_library_fragment, container, false);
+        View v = inflater.inflate(R.layout.tab2_followed_fragment, container, false);
         ButterKnife.bind(this, v);
 
-        mFollowLibraryPresenter = new FollowLibraryPresenterImpl(this);
-        mFollowLibraryPresenter.initializeView();
+        mFollowedPresenter = new FollowedPresenterImpl(this);
         return v;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if(savedInstanceState != null){
+            mFollowedPresenter.onRestoreState(savedInstanceState);
+        }
+
+        mFollowedPresenter.init();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mFollowedPresenter.onSaveState(outState);
     }
 
     @OnItemClick(R.id.library_list_view)
     void onItemClick(AdapterView<?> adapter, View view, int pos) {
         final Manga item = (Manga) adapter.getItemAtPosition(pos);
-        mFollowLibraryPresenter.onItemClick(item);
+        mFollowedPresenter.onItemClick(item.getTitle());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mFollowLibraryPresenter.onResume();
+        mFollowedPresenter.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mFollowLibraryPresenter.onPause();
+        mFollowedPresenter.onPause();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mFollowLibraryPresenter.onDestroyView();
+        mFollowedPresenter.onDestroyView();
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        mFollowLibraryPresenter.onQueryTextChange(newText);
+        mFollowedPresenter.onQueryTextChange(newText);
         return true;
     }
 
