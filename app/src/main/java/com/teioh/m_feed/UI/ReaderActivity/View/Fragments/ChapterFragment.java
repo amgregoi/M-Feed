@@ -1,4 +1,4 @@
-package com.teioh.m_feed.UI.MangaActivity.View.Fragments;
+package com.teioh.m_feed.UI.ReaderActivity.View.Fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,18 +12,18 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
-import com.teioh.m_feed.UI.MangaActivity.View.Widgets.GestureViewPager;
+import com.teioh.m_feed.UI.ReaderActivity.View.Widgets.GestureViewPager;
 import com.teioh.m_feed.R;
-import com.teioh.m_feed.UI.MangaActivity.Presenters.ChapterReaderPresenter;
-import com.teioh.m_feed.UI.MangaActivity.Presenters.ChapterReaderPresenterImpl;
-import com.teioh.m_feed.UI.MangaActivity.Presenters.Mappers.ChapterReaderMapper;
+import com.teioh.m_feed.UI.ReaderActivity.Presenters.ChapterPresenter;
+import com.teioh.m_feed.UI.ReaderActivity.Presenters.ChapterPresenterImpl;
+import com.teioh.m_feed.UI.ReaderActivity.Presenters.Mappers.ChapterReaderMapper;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ChapterReaderFragment extends Fragment implements ChapterReaderMapper {
-    public final static String TAG = ChapterReaderFragment.class.getSimpleName();
+public class ChapterFragment extends Fragment implements ChapterReaderMapper {
+    public final static String TAG = ChapterFragment.class.getSimpleName();
 
     @Bind(R.id.pager) GestureViewPager mViewPager;
     @Bind(R.id.chapterTitle) TextView mChapterTitle;
@@ -32,55 +32,57 @@ public class ChapterReaderFragment extends Fragment implements ChapterReaderMapp
     @Bind(R.id.chapter_header) Toolbar mToolbarHeader;
     @Bind(R.id.chapter_footer) Toolbar mToolbarFooter;
 
-    private ChapterReaderPresenter mChapterReaderPresenter;
+    private ChapterPresenter mChapterPresenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.chapter_reader_fragment, container, false);
         ButterKnife.bind(this, v);
-        mChapterReaderPresenter = new ChapterReaderPresenterImpl(this, getArguments());
+        mChapterPresenter = new ChapterPresenterImpl(this, getArguments());
         return v;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mChapterReaderPresenter.onSaveState(outState);
+        mChapterPresenter.onSaveState(outState);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if(savedInstanceState != null){
-            mChapterReaderPresenter.onRestoreState(savedInstanceState);
+            mChapterPresenter.onRestoreState(savedInstanceState);
         }
 
-        mChapterReaderPresenter.init();
+        mChapterPresenter.init();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mChapterReaderPresenter.onDestroyView();
+        mChapterPresenter.onDestroyView();
     }
 
     @Override
     public void registerAdapter(PagerAdapter adapter) {
-        mViewPager.setAdapter(adapter);
-        mViewPager.clearOnPageChangeListeners();
-        mViewPager.addOnPageChangeListener(this);
-        mViewPager.setOffscreenPageLimit(5);
+        if(adapter != null && getContext() != null) {
+            mViewPager.setAdapter(adapter);
+            mViewPager.clearOnPageChangeListeners();
+            mViewPager.addOnPageChangeListener(this);
+            mViewPager.setOffscreenPageLimit(5);
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mChapterReaderPresenter.onPause();
+        mChapterPresenter.onPause();
     }
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        mChapterReaderPresenter.updateOffsetCounter(positionOffsetPixels, position);
+//        mChapterPresenter.updateOffsetCounter(positionOffsetPixels, position);
     }
 
     @Override
@@ -90,12 +92,12 @@ public class ChapterReaderFragment extends Fragment implements ChapterReaderMapp
 
     @Override
     public void onPageScrollStateChanged(int state) {
-        mChapterReaderPresenter.updateState(state);
+//        mChapterPresenter.updateState(state);
     }
 
     @Override
     public void onSingleTap() {
-        mChapterReaderPresenter.toggleToolbar();
+        mChapterPresenter.toggleToolbar();
     }
 
     @Override
@@ -135,7 +137,7 @@ public class ChapterReaderFragment extends Fragment implements ChapterReaderMapp
 
     @OnClick(R.id.skipPreviousButton)
     public void onSkipPreviousClick(){
-        mChapterReaderPresenter.setToPreviousChapter();
+//        mChapterPresenter.setToPreviousChapter();
     }
 
     @OnClick(R.id.backPageButton)
@@ -145,7 +147,7 @@ public class ChapterReaderFragment extends Fragment implements ChapterReaderMapp
 
     @OnClick(R.id.skipForwardButton)
     public void onSkipForwardClick(){
-        mChapterReaderPresenter.setToNextChapter();
+//        mChapterPresenter.setToNextChapter();
     }
 
     @OnClick(R.id.forwardPageButton)

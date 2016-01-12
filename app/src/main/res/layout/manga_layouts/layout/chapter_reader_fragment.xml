@@ -11,7 +11,7 @@
 		layout="@layout/chapter_reader_header"
 		/>
 
-	<com.teioh.m_feed.UI.MangaActivity.View.Widgets.GestureViewPager
+	<com.teioh.m_feed.UI.ReaderActivity.View.Widgets.GestureViewPager
 		android:id="@id/pager"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"

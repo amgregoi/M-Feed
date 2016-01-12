@@ -1,4 +1,4 @@
-package com.teioh.m_feed.UI.MangaActivity.View.Widgets;
+package com.teioh.m_feed.UI.ReaderActivity.View.Widgets;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
-import com.teioh.m_feed.UI.MangaActivity.Adapters.ChapterPageAdapter;
+import com.teioh.m_feed.UI.ReaderActivity.Adapters.ImagePageAdapter;
 
 public class GestureViewPager extends ViewPager implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener{
 
@@ -38,7 +38,7 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
     }
 
     private void fetchGestureImageViewByTag() {
-        mGestureImageView = (GestureImageView) findViewWithTag(ChapterPageAdapter.TAG + ":" + getCurrentItem());
+        mGestureImageView = (GestureImageView) findViewWithTag(ImagePageAdapter.TAG + ":" + getCurrentItem());
     }
 
 
@@ -95,9 +95,9 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
         final float positionX = event.getX();
 
         if (positionX < getWidth() * 0.2f) {
-            incrementCurrentItem();
-        } else if (positionX > getWidth() * 0.8f) {
             decrememntCurrentItem();
+        } else if (positionX > getWidth() * 0.8f) {
+            incrementCurrentItem();
         } else {
             if (mSingleTapListener != null) {
                 mSingleTapListener.onSingleTap();

@@ -217,7 +217,7 @@ public class MangaJoy {
 
 
     /*
-    * ChapterReaderFragment - takes a chapter url, and returns list of urls to chapter images
+    * ChapterFragment - takes a chapter url, and returns list of urls to chapter images
     */
     public static Observable<List<String>> getChapterImageListObservable(final String url) {
         return parseListOfImageUrls(url)

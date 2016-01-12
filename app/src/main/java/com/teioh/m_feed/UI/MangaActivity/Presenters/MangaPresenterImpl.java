@@ -48,7 +48,6 @@ public class MangaPresenterImpl implements MangaPresenter {
     @Override public void init(Intent intent) {
         if(mManga == null) {
             String title = intent.getStringExtra(Manga.TAG);
-            Log.e("RAWR", title);
             mManga = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase())
                     .query(Manga.class).withSelection("mTitle = ?", title).get();
         }

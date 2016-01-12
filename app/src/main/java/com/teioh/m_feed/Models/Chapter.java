@@ -37,10 +37,10 @@ public class Chapter implements Parcelable{
     }
 
     @Override public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(cNumber);
         dest.writeString(mUrl);
         dest.writeString(mDate);
         dest.writeString(mTitle);
+        dest.writeInt(cNumber);
     }
 
     protected Chapter(Parcel in) {

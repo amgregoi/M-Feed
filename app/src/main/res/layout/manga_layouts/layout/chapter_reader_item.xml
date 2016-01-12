@@ -9,7 +9,7 @@
 		<!--android:layout_width="fill_parent"-->
 		<!--android:layout_height="fill_parent"/>-->
 
-	<com.teioh.m_feed.UI.MangaActivity.View.Widgets.GestureImageView
+	<com.teioh.m_feed.UI.ReaderActivity.View.Widgets.GestureImageView
 		android:id="@+id/chapterPageImageView"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"

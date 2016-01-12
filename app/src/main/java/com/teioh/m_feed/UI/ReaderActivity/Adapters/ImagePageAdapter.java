@@ -1,4 +1,4 @@
-package com.teioh.m_feed.UI.MangaActivity.Adapters;
+package com.teioh.m_feed.UI.ReaderActivity.Adapters;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
@@ -12,20 +12,20 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
-import com.teioh.m_feed.UI.MangaActivity.View.Widgets.GestureImageView;
+import com.teioh.m_feed.UI.ReaderActivity.View.Widgets.GestureImageView;
 import com.teioh.m_feed.R;
 
 import java.util.List;
 
 
-public class ChapterPageAdapter extends PagerAdapter {
-    final public static String TAG = ChapterPageAdapter.class.getSimpleName();
+public class ImagePageAdapter extends PagerAdapter {
+    final public static String TAG = ImagePageAdapter.class.getSimpleName();
 
     private Context context;
     private List<String> imageUrls;
     private LayoutInflater inflater;
 
-    public ChapterPageAdapter(Context c, List<String> imagePaths) {
+    public ImagePageAdapter(Context c, List<String> imagePaths) {
         this.context = c;
         this.imageUrls = imagePaths;
     }

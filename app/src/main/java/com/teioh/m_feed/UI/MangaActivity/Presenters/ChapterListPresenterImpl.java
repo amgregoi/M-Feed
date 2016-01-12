@@ -1,5 +1,6 @@
 package com.teioh.m_feed.UI.MangaActivity.Presenters;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
@@ -9,7 +10,9 @@ import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MangaActivity.Adapters.ChapterListAdapter;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.Mappers.ChapterListMapper;
-import com.teioh.m_feed.UI.MangaActivity.View.Fragments.ChapterReaderFragment;
+import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
+import com.teioh.m_feed.UI.ReaderActivity.View.Fragments.ChapterFragment;
+import com.teioh.m_feed.UI.ReaderActivity.View.ReaderActivity;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.Utils.OttoBus.ChapterOrderEvent;
@@ -51,20 +54,21 @@ public class ChapterListPresenterImpl implements ChapterListPresenter {
 
     @Override
     public void onSaveState(Bundle bundle) {
-        if (mChapterList != null)
-            bundle.putParcelableArrayList(CHAPTER_LIST_KEY, mChapterList);
-
-        bundle.putParcelable(MANGA_KEY, mManga);
+        if (mChapterList != null) bundle.putParcelableArrayList(CHAPTER_LIST_KEY, mChapterList);
+        if(mManga != null) bundle.putParcelable(MANGA_KEY, mManga);
         bundle.putBoolean(ORDER_DESCENDING_KEY, mChapterOrderDescending);
     }
 
     @Override
     public void onRestoreState(Bundle bundle) {
-        if (bundle.containsKey(CHAPTER_LIST_KEY)) {
+        if (bundle.containsKey(CHAPTER_LIST_KEY))
             mChapterList = new ArrayList<>(bundle.getParcelableArrayList(CHAPTER_LIST_KEY));
-        }
-        mManga = bundle.getParcelable(MANGA_KEY);
-        mChapterOrderDescending = bundle.getBoolean(ORDER_DESCENDING_KEY);
+
+        if(bundle.containsKey(MANGA_KEY))
+            mManga = bundle.getParcelable(MANGA_KEY);
+
+        if(bundle.containsKey(ORDER_DESCENDING_KEY))
+            mChapterOrderDescending = bundle.getBoolean(ORDER_DESCENDING_KEY);
     }
 
     @Override
@@ -85,18 +89,13 @@ public class ChapterListPresenterImpl implements ChapterListPresenter {
 
     @Override
     public void onChapterClicked(Chapter chapter) {
-        Bundle b = new Bundle();
-        if(!mChapterOrderDescending) Collections.reverse(mChapterList);
+        if(mChapterOrderDescending) Collections.reverse(mChapterList);
+
         int position = mChapterList.indexOf(chapter);
-        b.putParcelableArrayList(CHAPTER_LIST_KEY, mChapterList);
-        b.putInt(LIST_POSITION_KEY, position);
-        b.putBoolean(ORDER_DESCENDING_KEY, mChapterOrderDescending);
-
-        if(!mChapterOrderDescending){ Collections.reverse(mChapterList); mChapterOrderDescending = true;}
-
-        Fragment fragment = new ChapterReaderFragment();
-        fragment.setArguments(b);
-        ((Fragment) mChapterListMapper).getFragmentManager().beginTransaction().add(android.R.id.content, fragment).addToBackStack(null).commit();
+        Intent intent = new Intent(mChapterListMapper.getContext(), ReaderActivity.class);
+        intent.putParcelableArrayListExtra(CHAPTER_LIST_KEY, mChapterList);
+        intent.putExtra(LIST_POSITION_KEY, position);
+        mChapterListMapper.getContext().startActivity(intent);
     }
 
     @Override
@@ -130,14 +129,10 @@ public class ChapterListPresenterImpl implements ChapterListPresenter {
     }
 
     private void updateChapterList(List<Chapter> chapters) {
-        //TODO maybe?
-        //http://www.androidhive.info/2013/07/android-expandable-list-view-tutorial/
-        //expandable listview for sites with multiple release versions
         if (chapters != null && mChapterListMapper.getContext() != null) {
             mChapterList = new ArrayList<>(chapters);
             mAdapter = new ChapterListAdapter(mChapterListMapper.getContext(), R.layout.chapter_list_item, mChapterList);
             mChapterListMapper.registerAdapter(mAdapter);
-
             mChapterListMapper.stopRefresh();
         }
     }

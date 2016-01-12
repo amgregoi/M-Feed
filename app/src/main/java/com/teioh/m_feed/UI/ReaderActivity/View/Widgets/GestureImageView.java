@@ -3,7 +3,7 @@
  * http://developer.android.com/reference/android/graphics/Matrix.html
  * forgot to copy other useful links
  */
-package com.teioh.m_feed.UI.MangaActivity.View.Widgets;
+package com.teioh.m_feed.UI.ReaderActivity.View.Widgets;
 
 
 import android.content.Context;
