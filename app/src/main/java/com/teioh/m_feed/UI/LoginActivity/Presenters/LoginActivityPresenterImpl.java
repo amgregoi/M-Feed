@@ -3,16 +3,16 @@ package com.teioh.m_feed.UI.LoginActivity.Presenters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 
-import com.teioh.m_feed.UI.LoginActivity.Presenters.Mappers.LoginActivityMap;
-import com.teioh.m_feed.UI.LoginActivity.View.LoginFragment;
+import com.teioh.m_feed.UI.LoginActivity.View.Mappers.LoginActivityMapper;
+import com.teioh.m_feed.UI.LoginActivity.View.Fragments.LoginFragment;
 
 
 public class LoginActivityPresenterImpl implements LoginActivityPresenter {
     public final static String TAG = LoginActivityPresenterImpl.class.getSimpleName();
 
-    private LoginActivityMap mLoginMap;
+    private LoginActivityMapper mLoginMap;
 
-    public LoginActivityPresenterImpl(LoginActivityMap map) {
+    public LoginActivityPresenterImpl(LoginActivityMapper map) {
         mLoginMap = map;
     }
 

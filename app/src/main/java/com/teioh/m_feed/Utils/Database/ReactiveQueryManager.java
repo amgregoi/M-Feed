@@ -36,7 +36,7 @@ public class ReactiveQueryManager {
                 });
     }
 
-    public static Observable<List<Manga>> pullMangaFromDatabase() {
+    private static Observable<List<Manga>> pullMangaFromDatabase() {
         return Observable.create(new Observable.OnSubscribe<List<Manga>>() {
             @Override
             public void call(Subscriber<? super List<Manga>> subscriber) {

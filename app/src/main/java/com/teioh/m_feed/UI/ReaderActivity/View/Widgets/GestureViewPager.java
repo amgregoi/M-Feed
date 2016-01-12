@@ -53,8 +53,8 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
             if (mGestureImageView.isInitialized()) {
                 if (mGestureImageView.getScale() > mGestureImageView.MIN_SCALE) {
                     mGestureImageView.zoomToPoint(mGestureImageView.MIN_SCALE, getWidth() / 2, getHeight() / 2);
-                } else if (mGestureImageView.getScale() < mGestureImageView.MAX_SCALE) {
-                    mGestureImageView.zoomToPoint(mGestureImageView.MAX_SCALE, event.getX(), event.getY());
+                } else if (mGestureImageView.getScale() < mGestureImageView.MED_SCALE) {
+                    mGestureImageView.zoomToPoint(mGestureImageView.MED_SCALE, event.getX(), event.getY());
                 }
             }
         }

@@ -19,7 +19,7 @@ import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.LoginActivity.View.LoginActivity;
 import com.teioh.m_feed.UI.MainActivity.Adapters.SourceListAdapter;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
-import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.MainActivityMap;
+import com.teioh.m_feed.UI.MainActivity.View.Mappers.MainActivityMapper;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.Utils.OttoBus.QueryChange;
@@ -43,9 +43,9 @@ public class MainPresenterImpl implements MainPresenter {
     private final String mGeneralListContent[] = {"Logout", "Advanced Search"};
     private ArrayList<String> mSourceList, mGeneralList;
     private ActionBarDrawerToggle mDrawerToggle;
-    private MainActivityMap mMainMapper;
+    private MainActivityMapper mMainMapper;
 
-    public MainPresenterImpl(MainActivityMap main) {
+    public MainPresenterImpl(MainActivityMapper main) {
         mMainMapper = main;
     }
 
@@ -184,19 +184,19 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Override
-    public void onSourceChosen(String source){
-        switch(source){
-            case("Logout"):
+    public void onSourceChosen(String source) {
+
+        switch (source) {
+            case ("Logout"):
                 onLogout();
                 return;
-            case("Advanced Search"):
+            case ("Advanced Search"):
                 return;
             default:
-                if(!source.equals(WebSource.getSourceKey())) {
+                if (!source.equals(WebSource.getSourceKey())) {
                     WebSource.setwCurrentSource(source);
                     BusProvider.getInstance().post(new UpdateSource());
                 }
-                return;
         }
     }
 }

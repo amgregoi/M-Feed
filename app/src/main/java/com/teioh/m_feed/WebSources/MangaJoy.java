@@ -144,6 +144,7 @@ public class MangaJoy {
             }
         }
         Log.i("Pull Recent Updates", "Finished pulling updates");
+        if(mangaList.size() == 0) return null;
         return mangaList;
     }
 

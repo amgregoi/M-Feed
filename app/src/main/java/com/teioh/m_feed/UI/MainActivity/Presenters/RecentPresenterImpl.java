@@ -2,11 +2,12 @@ package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.squareup.otto.Subscribe;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapterAlternate;
-import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.RecentFragmentMap;
+import com.teioh.m_feed.UI.MainActivity.View.Mappers.RecentFragmentMapper;
 import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.Utils.OttoBus.QueryChange;
@@ -24,13 +25,15 @@ import rx.schedulers.Schedulers;
 public class RecentPresenterImpl implements RecentPresenter {
     public final static String TAG = RecentPresenterImpl.class.getSimpleName();
     public final static String RECENT_MANGA_LIST_KEY = TAG + ":RECENT_MANGA_LIST";
+    public final static String LATEST_SOURCE = TAG + ":SOURCE";
 
     private ArrayList<Manga> mRecentMangaList;
     private SearchableAdapterAlternate mAdapter;
     private Observable<List<Manga>> mObservableMangaList;
-    private RecentFragmentMap mRecentFragmentMapper;
+    private RecentFragmentMapper mRecentFragmentMapper;
+    private String mLastSourceQuery;
 
-    public RecentPresenterImpl(RecentFragmentMap map) {
+    public RecentPresenterImpl(RecentFragmentMapper map) {
         mRecentFragmentMapper = map;
     }
 
@@ -39,12 +42,18 @@ public class RecentPresenterImpl implements RecentPresenter {
         if (mRecentMangaList != null) {
             bundle.putParcelableArrayList(RECENT_MANGA_LIST_KEY, mRecentMangaList);
         }
+        if(mLastSourceQuery != null){
+            bundle.putString(LATEST_SOURCE, mLastSourceQuery);
+        }
     }
 
     @Override
     public void onRestoreState(Bundle bundle) {
         if (bundle.containsKey(RECENT_MANGA_LIST_KEY)) {
             mRecentMangaList = new ArrayList<>(bundle.getParcelableArrayList(RECENT_MANGA_LIST_KEY));
+        }
+        if(bundle.containsKey(LATEST_SOURCE)){
+            mLastSourceQuery = bundle.getString(LATEST_SOURCE);
         }
     }
 
@@ -65,6 +74,7 @@ public class RecentPresenterImpl implements RecentPresenter {
             mObservableMangaList.unsubscribeOn(Schedulers.io());
             mObservableMangaList = null;
         }
+        mLastSourceQuery = WebSource.getSourceKey();
         mObservableMangaList = WebSource.getRecentUpdatesObservable();
         mObservableMangaList.subscribe(manga -> updateRecentGridView(manga));
     }
@@ -138,13 +148,18 @@ public class RecentPresenterImpl implements RecentPresenter {
 
     @Subscribe
     public void onUpdateSource(UpdateSource event) {
-        mRecentMangaList.clear();
-        mAdapter.notifyDataSetChanged();
-        mRecentFragmentMapper.startRefresh();
-        updateRecentMangaList();
+        if(mRecentFragmentMapper.getContext() != null) {
+            if(mRecentMangaList != null && mAdapter != null) {
+                mRecentMangaList.clear();
+                mAdapter.notifyDataSetChanged();
+            }
+            mRecentFragmentMapper.startRefresh();
+            updateRecentMangaList();
+        }
     }
 
     private void updateRecentGridView(List<Manga> manga) {
+        Log.e("RAWR", mLastSourceQuery + "\t\t\t" + WebSource.getSourceKey());
         if (mRecentFragmentMapper.getContext() != null && manga != null) {
             if (manga.get(0).getmSource().equals(WebSource.getSourceKey())) {
                 mRecentMangaList = new ArrayList<>(manga);
@@ -153,6 +168,8 @@ public class RecentPresenterImpl implements RecentPresenter {
             }
             mRecentFragmentMapper.stopRefresh();
             mObservableMangaList = null;
+        }else{
+            // failed to update list, show refresh view,
         }
     }
 

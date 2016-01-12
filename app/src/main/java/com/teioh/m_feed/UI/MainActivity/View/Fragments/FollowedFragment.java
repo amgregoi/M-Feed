@@ -14,13 +14,13 @@ import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.Presenters.FollowedPresenter;
 import com.teioh.m_feed.UI.MainActivity.Presenters.FollowedPresenterImpl;
-import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.FollowFragmentMap;
+import com.teioh.m_feed.UI.MainActivity.View.Mappers.FollowFragmentMapper;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 
-public class FollowedFragment extends Fragment implements FollowFragmentMap {
+public class FollowedFragment extends Fragment implements FollowFragmentMapper {
     public final static String TAG = FollowedFragment.class.getSimpleName();
 
     @Bind(R.id.library_list_view) GridView mGridView;

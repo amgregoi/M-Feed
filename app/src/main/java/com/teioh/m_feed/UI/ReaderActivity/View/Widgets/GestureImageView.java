@@ -20,7 +20,8 @@ import android.widget.OverScroller;
 
 public class GestureImageView extends ImageView implements ScaleGestureDetector.OnScaleGestureListener{
     public static final float MIN_SCALE = 1.00f;
-    public static final float MAX_SCALE = 3.00f;    //2.5? causing problems tests
+    public static final float MED_SCALE = 2.00f;
+    public static final float MAX_SCALE = 3.00f;
 
     private static final float ZOOM_DURATION = 200f;
     private static final long RUNNABLE_DELAY_MS = 1000 / 60;

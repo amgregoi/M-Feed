@@ -8,8 +8,6 @@
 	android:orientation="vertical"
 	tools:context="com.teioh.m_feed.UI.MainActivity.View.MainActivity">
 
-	<include layout="@layout/tool_bar"/>
-
 	<com.teioh.m_feed.Utils.SlidingTabLayout
 		android:id="@+id/tabs"
 		android:layout_width="match_parent"

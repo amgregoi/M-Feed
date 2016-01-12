@@ -7,7 +7,7 @@ import android.util.Log;
 import com.squareup.otto.Subscribe;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapter;
-import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.FollowFragmentMap;
+import com.teioh.m_feed.UI.MainActivity.View.Mappers.FollowFragmentMapper;
 import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
 import com.teioh.m_feed.Utils.Database.ReactiveQueryManager;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
@@ -33,9 +33,9 @@ public class FollowedPresenterImpl implements FollowedPresenter {
     private SearchableAdapter mAdapter;
     private Observable<List<Manga>> mObservableMangaList;
 
-    private FollowFragmentMap mFollowFragmentMapper;
+    private FollowFragmentMapper mFollowFragmentMapper;
 
-    public FollowedPresenterImpl(FollowFragmentMap map) {
+    public FollowedPresenterImpl(FollowFragmentMapper map) {
         mFollowFragmentMapper = map;
     }
 
@@ -142,9 +142,13 @@ public class FollowedPresenterImpl implements FollowedPresenter {
 
     @Subscribe
     public void onUpdateSource(UpdateSource event) {
-        mFollowedMangaList.clear();
-        mAdapter.notifyDataSetChanged();
-        updateFollowedMangaList();
+        if(mFollowFragmentMapper.getContext() != null) {
+            if(mFollowedMangaList != null && mAdapter != null) {
+                mFollowedMangaList.clear();
+                mAdapter.notifyDataSetChanged();
+            }
+            updateFollowedMangaList();
+        }
     }
 
     private void updateFollowedGridView(List<Manga> mangaList) {

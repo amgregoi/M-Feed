@@ -1,4 +1,4 @@
-package com.teioh.m_feed.UI.LoginActivity.View;
+package com.teioh.m_feed.UI.LoginActivity.View.Fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,13 +11,13 @@ import android.widget.EditText;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.LoginActivity.Presenters.LoginFragmentPresenter;
 import com.teioh.m_feed.UI.LoginActivity.Presenters.LoginFragmentPresenterImpl;
-import com.teioh.m_feed.UI.LoginActivity.Presenters.Mappers.LoginFragmentMap;
+import com.teioh.m_feed.UI.LoginActivity.View.Mappers.LoginFragmentMapper;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LoginFragment extends Fragment implements LoginFragmentMap {
+public class LoginFragment extends Fragment implements LoginFragmentMapper {
     public final static String TAG = LoginFragment.class.getSimpleName();
 
     @Bind(R.id.password) EditText password;

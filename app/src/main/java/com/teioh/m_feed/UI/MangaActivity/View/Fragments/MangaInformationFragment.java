@@ -19,7 +19,7 @@ import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.MangaInformationPresenter;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.MangaInformationPresenterImpl;
-import com.teioh.m_feed.UI.MangaActivity.Presenters.Mappers.MangaInformationMapper;
+import com.teioh.m_feed.UI.MangaActivity.View.Mappers.MangaInformationMapper;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

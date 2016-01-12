@@ -13,14 +13,14 @@ import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MangaActivity.Adapters.ViewPagerAdapterManga;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.MangaPresenter;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.MangaPresenterImpl;
-import com.teioh.m_feed.UI.MangaActivity.Presenters.Mappers.MangaActivityMap;
+import com.teioh.m_feed.UI.MangaActivity.View.Mappers.MangaActivityMapper;
 import com.teioh.m_feed.Utils.SlidingTabLayout;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MangaActivity extends AppCompatActivity implements MangaActivityMap {
+public class MangaActivity extends AppCompatActivity implements MangaActivityMapper {
 
     @Bind(R.id.activityTitle) TextView mActivityTitle;
     @Bind(R.id.pager) ViewPager mViewPager;
@@ -32,7 +32,7 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_layout);
+        setContentView(R.layout.manga_activity);
         ButterKnife.bind(this);
         mMangaPresenter = new MangaPresenterImpl(this);
 

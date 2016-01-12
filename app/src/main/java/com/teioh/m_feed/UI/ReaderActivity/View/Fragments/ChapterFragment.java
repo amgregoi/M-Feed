@@ -16,7 +16,7 @@ import com.teioh.m_feed.UI.ReaderActivity.View.Widgets.GestureViewPager;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.ReaderActivity.Presenters.ChapterPresenter;
 import com.teioh.m_feed.UI.ReaderActivity.Presenters.ChapterPresenterImpl;
-import com.teioh.m_feed.UI.ReaderActivity.Presenters.Mappers.ChapterReaderMapper;
+import com.teioh.m_feed.UI.ReaderActivity.View.Mappers.ChapterReaderMapper;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -45,7 +45,13 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mChapterPresenter.onSaveState(outState);
+        if(mChapterPresenter != null) mChapterPresenter.onSaveState(outState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mChapterPresenter.onResume();
     }
 
     @Override
@@ -137,7 +143,7 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
 
     @OnClick(R.id.skipPreviousButton)
     public void onSkipPreviousClick(){
-//        mChapterPresenter.setToPreviousChapter();
+        mChapterPresenter.setToPreviousChapter();
     }
 
     @OnClick(R.id.backPageButton)
@@ -147,7 +153,7 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
 
     @OnClick(R.id.skipForwardButton)
     public void onSkipForwardClick(){
-//        mChapterPresenter.setToNextChapter();
+        mChapterPresenter.setToNextChapter();
     }
 
     @OnClick(R.id.forwardPageButton)

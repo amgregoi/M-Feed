@@ -20,7 +20,7 @@ import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
 import com.teioh.m_feed.UI.MainActivity.Presenters.MainPresenter;
 import com.teioh.m_feed.UI.MainActivity.Presenters.MainPresenterImpl;
-import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.MainActivityMap;
+import com.teioh.m_feed.UI.MainActivity.View.Mappers.MainActivityMapper;
 import com.teioh.m_feed.Utils.SlidingTabLayout;
 import com.teioh.m_feed.WebSources.MangaJoy;
 import com.teioh.m_feed.WebSources.WebSource;
@@ -29,7 +29,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 
-public class MainActivity extends AppCompatActivity implements MainActivityMap {
+public class MainActivity extends AppCompatActivity implements MainActivityMapper {
     public final static String TAG = MainActivity.class.getSimpleName();
 
     @Bind(R.id.search_view) SearchView mSearchView;

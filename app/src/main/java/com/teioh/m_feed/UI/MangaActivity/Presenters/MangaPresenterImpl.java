@@ -3,11 +3,10 @@ package com.teioh.m_feed.UI.MangaActivity.Presenters;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.UI.MangaActivity.Adapters.ViewPagerAdapterManga;
-import com.teioh.m_feed.UI.MangaActivity.Presenters.Mappers.MangaActivityMap;
+import com.teioh.m_feed.UI.MangaActivity.View.Mappers.MangaActivityMapper;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.Utils.OttoBus.ChapterOrderEvent;
@@ -25,9 +24,9 @@ public class MangaPresenterImpl implements MangaPresenter {
     private int numbtabs = 2;
     private Manga mManga;
 
-    private MangaActivityMap mMangaMapper;
+    private MangaActivityMapper mMangaMapper;
 
-    public MangaPresenterImpl(MangaActivityMap map) {
+    public MangaPresenterImpl(MangaActivityMapper map) {
         mMangaMapper = map;
     }
 

@@ -9,9 +9,10 @@ import android.support.v7.app.AppCompatActivity;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.LoginActivity.Presenters.LoginActivityPresenter;
 import com.teioh.m_feed.UI.LoginActivity.Presenters.LoginActivityPresenterImpl;
-import com.teioh.m_feed.UI.LoginActivity.Presenters.Mappers.LoginActivityMap;
+import com.teioh.m_feed.UI.LoginActivity.View.Fragments.LoginFragment;
+import com.teioh.m_feed.UI.LoginActivity.View.Mappers.LoginActivityMapper;
 
-public class LoginActivity extends AppCompatActivity implements LoginActivityMap {
+public class LoginActivity extends AppCompatActivity implements LoginActivityMapper {
     public final static String TAG = LoginActivity.class.getSimpleName();
 
     private LoginActivityPresenter mLoginPresenter;

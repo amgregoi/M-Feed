@@ -13,7 +13,7 @@ import android.widget.GridView;
 
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
-import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.RecentFragmentMap;
+import com.teioh.m_feed.UI.MainActivity.View.Mappers.RecentFragmentMapper;
 import com.teioh.m_feed.UI.MainActivity.Presenters.RecentPresenter;
 import com.teioh.m_feed.UI.MainActivity.Presenters.RecentPresenterImpl;
 
@@ -21,7 +21,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 
-public class RecentFragment extends Fragment implements RecentFragmentMap {
+public class RecentFragment extends Fragment implements RecentFragmentMapper {
     public final static String TAG =RecentFragment.class.getSimpleName();
 
     @Bind(R.id.recent_list_view) GridView mGridView;

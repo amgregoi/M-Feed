@@ -14,7 +14,13 @@ public interface ChapterPresenter {
 
     void onPause();
 
+    void onResume();
+
     void onDestroyView();
 
     void toggleToolbar();
+
+    void setToNextChapter();
+
+    void setToPreviousChapter();
 }

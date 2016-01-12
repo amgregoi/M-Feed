@@ -1,4 +1,4 @@
-package com.teioh.m_feed.UI.ReaderActivity.Presenters.Mappers;
+package com.teioh.m_feed.UI.ReaderActivity.View.Mappers;
 
 import android.support.v4.view.ViewPager;
 

@@ -9,7 +9,7 @@ import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
-import com.teioh.m_feed.UI.LoginActivity.Presenters.Mappers.LoginFragmentMap;
+import com.teioh.m_feed.UI.LoginActivity.View.Mappers.LoginFragmentMapper;
 import com.teioh.m_feed.UI.MainActivity.View.MainActivity;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 
@@ -20,9 +20,9 @@ public class LoginFragmentPresenterImpl implements LoginFragmentPresenter {
     public final static String TAG = LoginFragmentPresenterImpl.class.getSimpleName();
     public final static String USERNAME_KEY = TAG + ":USERNAME";
 
-    private LoginFragmentMap mLoginFragmentMapper;
+    private LoginFragmentMapper mLoginFragmentMapper;
 
-    public LoginFragmentPresenterImpl(LoginFragmentMap map) {
+    public LoginFragmentPresenterImpl(LoginFragmentMapper map) {
         mLoginFragmentMapper = map;
     }
 

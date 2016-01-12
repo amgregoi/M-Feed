@@ -1,4 +1,4 @@
-package com.teioh.m_feed.UI.MangaActivity.Presenters.Mappers;
+package com.teioh.m_feed.UI.MangaActivity.View.Mappers;
 
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.UI.Maps.BaseContextMap;

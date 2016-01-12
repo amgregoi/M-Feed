@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
-import com.teioh.m_feed.UI.MangaActivity.Presenters.Mappers.MangaInformationMapper;
+import com.teioh.m_feed.UI.MangaActivity.View.Mappers.MangaInformationMapper;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.Utils.OttoBus.RemoveFromLibrary;

@@ -6,7 +6,7 @@ import android.os.Bundle;
 import com.squareup.otto.Subscribe;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapterAlternate;
-import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.LibraryFragmentMap;
+import com.teioh.m_feed.UI.MainActivity.View.Mappers.LibraryFragmentMapper;
 import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
 import com.teioh.m_feed.Utils.Database.ReactiveQueryManager;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
@@ -32,10 +32,10 @@ public class LibraryPresenterImpl implements LibraryPresenter {
     private SearchableAdapterAlternate mAdapter;
     private Observable<List<Manga>> mObservableMangaList;
 
-    private LibraryFragmentMap mLibraryFragmentMapper;
+    private LibraryFragmentMapper mLibraryFragmentMapper;
 
 
-    public LibraryPresenterImpl(LibraryFragmentMap map) {
+    public LibraryPresenterImpl(LibraryFragmentMapper map) {
         mLibraryFragmentMapper = map;
     }
 
@@ -131,9 +131,13 @@ public class LibraryPresenterImpl implements LibraryPresenter {
 
     @Subscribe
     public void onUpdateSource(UpdateSource event) {
-        mLibraryMangaList.clear();
-        mAdapter.notifyDataSetChanged();
-        updateLibraryMangaList();
+        if(mLibraryFragmentMapper.getContext() != null) {
+            if(mLibraryMangaList != null && mAdapter != null) {
+                mLibraryMangaList.clear();
+                mAdapter.notifyDataSetChanged();
+            }
+            updateLibraryMangaList();
+        }
     }
 
 

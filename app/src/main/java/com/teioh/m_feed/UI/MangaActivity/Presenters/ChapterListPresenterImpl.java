@@ -2,16 +2,13 @@ package com.teioh.m_feed.UI.MangaActivity.Presenters;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 
 import com.squareup.otto.Subscribe;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MangaActivity.Adapters.ChapterListAdapter;
-import com.teioh.m_feed.UI.MangaActivity.Presenters.Mappers.ChapterListMapper;
-import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
-import com.teioh.m_feed.UI.ReaderActivity.View.Fragments.ChapterFragment;
+import com.teioh.m_feed.UI.MangaActivity.View.Mappers.ChapterListMapper;
 import com.teioh.m_feed.UI.ReaderActivity.View.ReaderActivity;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;

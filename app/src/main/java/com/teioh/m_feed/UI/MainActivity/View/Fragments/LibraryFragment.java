@@ -14,13 +14,13 @@ import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.Presenters.LibraryPresenter;
 import com.teioh.m_feed.UI.MainActivity.Presenters.LibraryPresenterImpl;
-import com.teioh.m_feed.UI.MainActivity.Presenters.Mappers.LibraryFragmentMap;
+import com.teioh.m_feed.UI.MainActivity.View.Mappers.LibraryFragmentMapper;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 
-public class LibraryFragment extends Fragment implements LibraryFragmentMap {
+public class LibraryFragment extends Fragment implements LibraryFragmentMapper {
     public final static String TAG = LibraryFragment.class.getSimpleName();
 
     @Bind(R.id.all_list_view) GridView mGridView;
