@@ -8,7 +8,7 @@
     android:orientation="vertical"
     tools:context="com.teioh.m_feed.UI.MainActivity.View.MainActivity">
 
-    <android.support.v4.view.ViewPager
+    <com.teioh.m_feed.UI.ReaderActivity.View.Widgets.NoScrollViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"

@@ -33,19 +33,21 @@ public class ReaderPresenterImpl implements ReaderPresenter {
 
     @Override
     public void onSaveState(Bundle bundle) {
-        if(mChapterList != null) bundle.putParcelableArrayList(CHAPTER_LIST_KEY, mChapterList);
+        if (mChapterList != null) bundle.putParcelableArrayList(CHAPTER_LIST_KEY, mChapterList);
         bundle.putInt(CHAPTER_POSITION, mChapterPosition);
     }
 
     @Override
     public void onRestoreState(Bundle bundle) {
-        if(bundle.containsKey(CHAPTER_LIST_KEY)) mChapterList = new ArrayList<>(bundle.getParcelableArrayList(CHAPTER_LIST_KEY));
-        if(bundle.containsKey(CHAPTER_POSITION)) mChapterPosition = bundle.getInt(CHAPTER_POSITION);
+        if (bundle.containsKey(CHAPTER_LIST_KEY))
+            mChapterList = new ArrayList<>(bundle.getParcelableArrayList(CHAPTER_LIST_KEY));
+        if (bundle.containsKey(CHAPTER_POSITION))
+            mChapterPosition = bundle.getInt(CHAPTER_POSITION);
     }
 
     @Override
     public void init(Intent intent) {
-        if(mChapterList == null) {
+        if (mChapterList == null) {
             mChapterList = new ArrayList<>(intent.getExtras().getParcelableArrayList(ChapterListPresenterImpl.CHAPTER_LIST_KEY));
             mChapterPosition = intent.getExtras().getInt(ChapterListPresenterImpl.LIST_POSITION_KEY);
         }
@@ -70,11 +72,12 @@ public class ReaderPresenterImpl implements ReaderPresenter {
         ButterKnife.unbind(this);
     }
 
+    //TODO possibly remove
     @Subscribe
-    public void onChangeChapter(ChangeChapter newChapter){
-        if(newChapter.getIsNext()){
+    public void onChangeChapter(ChangeChapter newChapter) {
+        if (newChapter.getIsNext()) {
             mReaderMap.setCurrentChapter(mChapterPosition + 1);
-        }else{
+        } else {
             mReaderMap.setCurrentChapter(mChapterPosition - 1);
         }
     }

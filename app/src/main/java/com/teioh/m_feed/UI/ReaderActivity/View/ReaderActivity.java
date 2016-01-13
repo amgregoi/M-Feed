@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.ReaderActivity.View.Mappers.ReaderActivityMapper;
@@ -32,7 +33,6 @@ public class ReaderActivity extends AppCompatActivity implements ReaderActivityM
         if (savedInstanceState != null) {
             mReaderPresenter.onRestoreState(savedInstanceState);
         }
-
         mReaderPresenter.init(getIntent());
     }
 
@@ -69,7 +69,6 @@ public class ReaderActivity extends AppCompatActivity implements ReaderActivityM
     public void registerAdapter(PagerAdapter adapter) {
         if (adapter != null) {
             mViewPager.setAdapter(adapter);
-            mViewPager.setOffscreenPageLimit(0);
         }
     }
 
@@ -87,7 +86,4 @@ public class ReaderActivity extends AppCompatActivity implements ReaderActivityM
     public void decrementChapter() {
         mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
     }
-
-
-
 }

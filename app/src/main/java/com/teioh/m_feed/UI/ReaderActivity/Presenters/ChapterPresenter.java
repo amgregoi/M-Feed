@@ -23,4 +23,8 @@ public interface ChapterPresenter {
     void setToNextChapter();
 
     void setToPreviousChapter();
+
+    void updateOffsetCounter(int offset, int position);
+
+    void updateState(int state);
 }

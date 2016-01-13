@@ -112,7 +112,7 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
             mObservableManga.unsubscribeOn(Schedulers.io());
             mObservableManga = null;
         }
-        mObservableManga = WebSource.updateMangaObservable(mManga);
+        mObservableManga = WebSource.updateMangaObservable(mManga); //TODO PROBLEM HERE occurs in mangainformation but while in reader activity?
         mObservableManga.subscribe(manga -> {
             mMangaInformationMapper.setMangaViews(manga);
             mMangaInformationMapper.stopRefresh();

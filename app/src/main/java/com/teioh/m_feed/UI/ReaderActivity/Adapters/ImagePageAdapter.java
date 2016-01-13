@@ -45,7 +45,6 @@ public class ImagePageAdapter extends PagerAdapter {
         GestureImageView mImage = (GestureImageView) viewLayout.findViewById(R.id.chapterPageImageView);
         Glide.with(context)
                 .load(imageUrls.get(position))
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .animate(android.R.anim.fade_in)
                 .into(new GlideDrawableImageViewTarget(mImage) {
                     @Override

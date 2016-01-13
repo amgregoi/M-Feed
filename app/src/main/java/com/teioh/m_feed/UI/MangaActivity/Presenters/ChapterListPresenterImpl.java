@@ -86,11 +86,13 @@ public class ChapterListPresenterImpl implements ChapterListPresenter {
 
     @Override
     public void onChapterClicked(Chapter chapter) {
-        if(mChapterOrderDescending) Collections.reverse(mChapterList);
+        ArrayList<Chapter> newChapterList = new ArrayList<>(mChapterList);
 
-        int position = mChapterList.indexOf(chapter);
+        if(mChapterOrderDescending) Collections.reverse(newChapterList);
+
+        int position = newChapterList.indexOf(chapter);
         Intent intent = new Intent(mChapterListMapper.getContext(), ReaderActivity.class);
-        intent.putParcelableArrayListExtra(CHAPTER_LIST_KEY, mChapterList);
+        intent.putParcelableArrayListExtra(CHAPTER_LIST_KEY, newChapterList);
         intent.putExtra(LIST_POSITION_KEY, position);
         mChapterListMapper.getContext().startActivity(intent);
     }

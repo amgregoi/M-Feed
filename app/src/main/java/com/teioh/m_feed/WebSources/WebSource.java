@@ -26,7 +26,7 @@ public class WebSource {
     }
 
     public static String getSourceKey(){
-        switch (wCurrentSource) {
+        switch (wCurrentSource) {       //TODO PROBLEM HERE
             case (MangaJoy.SourceKey):
                 return MangaJoy.SourceKey;
             case (MangaPark.SourceKey):

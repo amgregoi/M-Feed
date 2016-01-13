@@ -28,8 +28,8 @@ public class ChapterPresenterImpl implements ChapterPresenter {
     private ImagePageAdapter mChapterPageAdapter;
 
     private ArrayList<String> mChapterUrlList;
-    private int mPosition;
-    private boolean mToolbarShowing;
+    private int mPosition, mPageOffsetCount, mChapterListSize;
+    private boolean mToolbarShowing, mIsNext;
     private Chapter mChapter;
 
     public ChapterPresenterImpl(ChapterReaderMapper map, Bundle b) {
@@ -55,6 +55,7 @@ public class ChapterPresenterImpl implements ChapterPresenter {
         if (mChapterUrlList == null) this.getImageUrls();
         else updateImageUrlList(mChapterUrlList);
 
+        mPageOffsetCount = 0;
         mChapterReaderMapper.setupOnSingleTapListener();
     }
 
@@ -120,12 +121,34 @@ public class ChapterPresenterImpl implements ChapterPresenter {
 
     }
 
+    @Override
+    public void updateOffsetCounter(int offset, int position) {
+        if (position == 0 || position == mChapterListSize - 1) {
+            if (offset == 0) {
+                mPageOffsetCount++;
+            } else mPageOffsetCount = 0;
+
+            if (position == 0) mIsNext = false;
+            else mIsNext = true;
+        } else mPageOffsetCount = 0;
+    }
+
+    @Override
+    public void updateState(int state) {
+        if (mPageOffsetCount > 50 && state == 0) {
+            if (mIsNext) setToNextChapter();
+            else setToPreviousChapter();
+        }
+        mPageOffsetCount = 0;
+    }
+
     private void updateImageUrlList(List<String> urlList) {
         if (mChapterReaderMapper.getContext() != null) {
             mChapterUrlList = new ArrayList<>(urlList);
+            mChapterListSize = mChapterUrlList.size();
             mChapterPageAdapter = new ImagePageAdapter(mChapterReaderMapper.getContext(), mChapterUrlList);
             mChapterReaderMapper.registerAdapter(mChapterPageAdapter);
-            mChapterReaderMapper.setupToolbar(mChapter.toString(), mChapterUrlList.size());
+            mChapterReaderMapper.setupToolbar(mChapter.toString(), mChapterListSize);
         }
     }
 }

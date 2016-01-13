@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,7 +89,7 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//        mChapterPresenter.updateOffsetCounter(positionOffsetPixels, position);
+        mChapterPresenter.updateOffsetCounter(positionOffsetPixels, position);
     }
 
     @Override
@@ -98,7 +99,7 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
 
     @Override
     public void onPageScrollStateChanged(int state) {
-//        mChapterPresenter.updateState(state);
+        mChapterPresenter.updateState(state);
     }
 
     @Override
@@ -133,7 +134,7 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
 
     @Override
     public void incrementCurrentPage(int page){
-        mCurrentPage.setText(Integer.toString(page));
+        mCurrentPage.setText(String.valueOf(page));
     }
 
     @Override
