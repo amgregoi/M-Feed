@@ -7,6 +7,7 @@ import com.squareup.otto.Subscribe;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.ChapterListPresenterImpl;
 import com.teioh.m_feed.UI.ReaderActivity.Adapters.ChapterPageAdapter;
+import com.teioh.m_feed.UI.ReaderActivity.View.Fragments.ChapterFragment;
 import com.teioh.m_feed.UI.ReaderActivity.View.Mappers.ReaderActivityMapper;
 import com.teioh.m_feed.UI.ReaderActivity.View.ReaderActivity;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
@@ -70,6 +71,26 @@ public class ReaderPresenterImpl implements ReaderPresenter {
     @Override
     public void onDestroy() {
         ButterKnife.unbind(this);
+    }
+
+    @Override
+    public void updateToolbar(int position) {
+        ((ChapterFragment) mChapterPagerAdapter.getItem(position)).updateToolbar();
+    }
+
+    @Override
+    public void incrementChapterPage(int position) {
+        ((ChapterFragment) mChapterPagerAdapter.getItem(position)).incrementChapterPage();
+    }
+
+    @Override
+    public void decrementChapterPage(int position) {
+        ((ChapterFragment) mChapterPagerAdapter.getItem(position)).decrementChapterPage();
+    }
+
+    @Override
+    public void updateChapterViewStatus(int position){
+        ((ChapterFragment) mChapterPagerAdapter.getItem(position)).updateChapterViewStatus();
     }
 
     //TODO possibly remove

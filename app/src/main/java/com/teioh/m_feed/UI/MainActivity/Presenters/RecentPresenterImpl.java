@@ -42,7 +42,7 @@ public class RecentPresenterImpl implements RecentPresenter {
         if (mRecentMangaList != null) {
             bundle.putParcelableArrayList(RECENT_MANGA_LIST_KEY, mRecentMangaList);
         }
-        if(mLastSourceQuery != null){
+        if (mLastSourceQuery != null) {
             bundle.putString(LATEST_SOURCE, mLastSourceQuery);
         }
     }
@@ -52,18 +52,18 @@ public class RecentPresenterImpl implements RecentPresenter {
         if (bundle.containsKey(RECENT_MANGA_LIST_KEY)) {
             mRecentMangaList = new ArrayList<>(bundle.getParcelableArrayList(RECENT_MANGA_LIST_KEY));
         }
-        if(bundle.containsKey(LATEST_SOURCE)){
+        if (bundle.containsKey(LATEST_SOURCE)) {
             mLastSourceQuery = bundle.getString(LATEST_SOURCE);
         }
     }
 
     @Override
     public void init() {
-        if(mRecentMangaList == null) {
+        mRecentFragmentMapper.setupSwipeRefresh();
+        if (mRecentMangaList == null) {
             mRecentFragmentMapper.startRefresh();
-            mRecentFragmentMapper.setupSwipeRefresh();
             this.updateRecentMangaList();
-        }else{
+        } else {
             this.updateRecentGridView(mRecentMangaList);
         }
     }
@@ -107,7 +107,7 @@ public class RecentPresenterImpl implements RecentPresenter {
     public void onPause() {
         BusProvider.getInstance().unregister(this);
 
-        if(mObservableMangaList != null) {
+        if (mObservableMangaList != null) {
             mObservableMangaList.unsubscribeOn(Schedulers.io());
             mObservableMangaList = null;
         }
@@ -148,28 +148,24 @@ public class RecentPresenterImpl implements RecentPresenter {
 
     @Subscribe
     public void onUpdateSource(UpdateSource event) {
-        if(mRecentFragmentMapper.getContext() != null) {
-            if(mRecentMangaList != null && mAdapter != null) {
-                mRecentMangaList.clear();
-                mAdapter.notifyDataSetChanged();
-            }
+        if (mRecentFragmentMapper.getContext() != null) {
             mRecentFragmentMapper.startRefresh();
             updateRecentMangaList();
         }
     }
 
     private void updateRecentGridView(List<Manga> manga) {
-        Log.e("RAWR", mLastSourceQuery + "\t\t\t" + WebSource.getSourceKey());
-        if (mRecentFragmentMapper.getContext() != null && manga != null) {
-            if (manga.get(0).getmSource().equals(WebSource.getSourceKey())) {
+        if (mRecentFragmentMapper.getContext() != null) {
+            if (manga != null) {
                 mRecentMangaList = new ArrayList<>(manga);
                 mAdapter = new SearchableAdapterAlternate(mRecentFragmentMapper.getContext(), mRecentMangaList);
-                mRecentFragmentMapper.registerAdapter(mAdapter);
+                mObservableMangaList = null;
+            } else {
+                // failed to update list, show refresh view,
             }
+
+            mRecentFragmentMapper.registerAdapter(mAdapter);
             mRecentFragmentMapper.stopRefresh();
-            mObservableMangaList = null;
-        }else{
-            // failed to update list, show refresh view,
         }
     }
 

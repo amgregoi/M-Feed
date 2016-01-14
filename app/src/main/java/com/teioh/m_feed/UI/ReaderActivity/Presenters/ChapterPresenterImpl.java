@@ -2,6 +2,7 @@ package com.teioh.m_feed.UI.ReaderActivity.Presenters;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.UI.ReaderActivity.Adapters.ChapterPageAdapter;
@@ -32,21 +33,16 @@ public class ChapterPresenterImpl implements ChapterPresenter {
     private boolean mToolbarShowing, mIsNext;
     private Chapter mChapter;
 
-    public ChapterPresenterImpl(ChapterReaderMapper map, Bundle b) {
+    private ReaderActivity mBaseActivity;
+
+    public ChapterPresenterImpl(ChapterReaderMapper map, Bundle bundle) {
         mChapterReaderMapper = map;
 
-        mPosition = b.getInt(ChapterPageAdapter.POSITION_KEY);
-        mChapter = b.getParcelable(Chapter.TAG + ":" + mPosition);
+        mPosition = bundle.getInt(ChapterPageAdapter.POSITION_KEY);
+        mChapter = bundle.getParcelable(Chapter.TAG + ":" + mPosition);
         mToolbarShowing = true;
-        mChapterReaderMapper.updateToolbarTitle(mChapter.toString());
 
-        Chapter viewedChapter = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase())
-                .query(Chapter.class)
-                .withSelection("mTitle = ? AND cNumber = ?", mChapter.getMangaTitle(), Integer.toString(mChapter.getChapterNumber()))
-                .get();
-
-        if (viewedChapter == null)
-            cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).put(mChapter);
+        mBaseActivity = ((ReaderActivity) ((Fragment) mChapterReaderMapper).getActivity());
 
     }
 
@@ -88,36 +84,36 @@ public class ChapterPresenterImpl implements ChapterPresenter {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         BusProvider.getInstance().register(this);
     }
 
     @Override
     public void onDestroyView() {
-
+        mBaseActivity = null;
     }
 
     @Override
     public void toggleToolbar() {
         if (mToolbarShowing) {
             mToolbarShowing = false;
-            mChapterReaderMapper.hideToolbar(0);
+            mBaseActivity.hideToolbar(0);
         } else {
             mToolbarShowing = true;
-            mChapterReaderMapper.showToolbar();
+            mBaseActivity.showToolbar();
         }
     }
 
     @Override
     public void setToNextChapter() {
 //        BusProvider.getInstance().post(new ChangeChapter(true));
-        ((ReaderActivity)((Fragment) mChapterReaderMapper).getActivity()).incrementChapter();
+        mBaseActivity.incrementChapter();
     }
 
     @Override
     public void setToPreviousChapter() {
 //        BusProvider.getInstance().post(new ChangeChapter(false));
-        ((ReaderActivity)((Fragment) mChapterReaderMapper).getActivity()).decrementChapter();
+        mBaseActivity.decrementChapter();
 
     }
 
@@ -142,13 +138,34 @@ public class ChapterPresenterImpl implements ChapterPresenter {
         mPageOffsetCount = 0;
     }
 
+    @Override
+    public void updateToolbar() {
+        mBaseActivity.setupToolbar(mChapter.toString(), mChapterListSize, mPosition);
+    }
+
+    @Override
+    public void updateCurrentPage(int position) {
+        mBaseActivity.updateCurrentPage(position);
+    }
+
+    @Override
+    public void updateChapterViewStatus(){
+        Chapter viewedChapter = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase())
+                .query(Chapter.class)
+                .withSelection("mTitle = ? AND cNumber = ?", mChapter.getMangaTitle(), Integer.toString(mChapter.getChapterNumber()))
+                .get();
+
+        if (viewedChapter == null)
+            cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).put(mChapter);
+    }
+
     private void updateImageUrlList(List<String> urlList) {
         if (mChapterReaderMapper.getContext() != null) {
             mChapterUrlList = new ArrayList<>(urlList);
             mChapterListSize = mChapterUrlList.size();
             mChapterPageAdapter = new ImagePageAdapter(mChapterReaderMapper.getContext(), mChapterUrlList);
             mChapterReaderMapper.registerAdapter(mChapterPageAdapter);
-            mChapterReaderMapper.setupToolbar(mChapter.toString(), mChapterListSize);
+            updateToolbar();
         }
     }
 }

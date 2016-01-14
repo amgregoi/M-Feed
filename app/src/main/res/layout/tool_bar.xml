@@ -51,7 +51,7 @@
 			android:layout_toStartOf="@id/orderButton"
 			android:ellipsize="end"
 			android:singleLine="true"
-			android:text="Manga Feed"
+			android:text=""
 			android:textAlignment="center"
 			android:textSize="20sp"
 			android:textStyle="bold"

@@ -1,18 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/reader_activity"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.teioh.m_feed.UI.MainActivity.View.MainActivity">
+<RelativeLayout
+android:id="@+id/reader_fragment_container"
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@android:color/white"
+android:clickable="true">
+
+    <include
+        android:id="@+id/chapter_header"
+        layout="@layout/chapter_reader_header"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        />
 
     <com.teioh.m_feed.UI.ReaderActivity.View.Widgets.NoScrollViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="fill_parent"
         />
 
-</LinearLayout>
+    <include
+        android:id="@+id/chapter_footer"
+        layout="@layout/chapter_reader_footer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        />
+
+</RelativeLayout>

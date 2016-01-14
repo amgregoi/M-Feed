@@ -196,6 +196,7 @@ public class MainPresenterImpl implements MainPresenter {
                 if (!source.equals(WebSource.getSourceKey())) {
                     WebSource.setwCurrentSource(source);
                     BusProvider.getInstance().post(new UpdateSource());
+                    mMainMapper.setupToolbar();
                 }
         }
     }

@@ -109,8 +109,10 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
 
     public void incrementCurrentItem(){
         int position = getCurrentItem();
-        if (position != getAdapter().getCount() - 1) {
-            setCurrentItem(position + 1, true);
+        if(getAdapter() != null) {
+            if (position != getAdapter().getCount() - 1) {
+                setCurrentItem(position + 1, true);
+            }
         }
     }
 

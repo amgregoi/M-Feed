@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     @Override
     public void setupToolbar() {
         setSupportActionBar(mToolBar);
-        setTitle(getString(R.string.app_name));
+        mActivityTitle.setText(WebSource.getSourceKey());
         orderButton.setVisibility(View.GONE);
     }
 

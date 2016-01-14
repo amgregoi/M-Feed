@@ -115,7 +115,7 @@ public class FollowedPresenterImpl implements FollowedPresenter {
             mFollowedMangaList.add(manga);
             Collections.sort(mFollowedMangaList, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
             mAdapter.notifyDataSetChanged();
-            Log.i("FOLLOW MANGA success ", manga.getTitle());
+            Log.e("FOLLOW MANGA success ", manga.getTitle());
         }
 
     }
@@ -126,7 +126,7 @@ public class FollowedPresenterImpl implements FollowedPresenter {
         if (mFollowedMangaList.contains(manga)) {
             mFollowedMangaList.remove(manga);
             mAdapter.notifyDataSetChanged();
-            Log.i("UNFOLLOW MANGA success", manga.getTitle());
+            Log.e("UNFOLLOW MANGA success", manga.getTitle());
         }
     }
 

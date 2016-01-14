@@ -27,4 +27,10 @@ public interface ChapterPresenter {
     void updateOffsetCounter(int offset, int position);
 
     void updateState(int state);
+
+    void updateToolbar();
+
+    void updateCurrentPage(int position);
+
+    void updateChapterViewStatus();
 }

@@ -30,4 +30,18 @@ public class NoScrollViewPager extends ViewPager {
     public void setPagingEnabled(boolean b) {
         this.isPagingEnabled = b;
     }
+
+    public void incrementCurrentItem(){
+        int position = getCurrentItem();
+        if (position != getAdapter().getCount() - 1) {
+            setCurrentItem(position + 1, true);
+        }
+    }
+
+    public void decrememntCurrentItem(){
+        int position = getCurrentItem();
+        if (position != 0) {
+            setCurrentItem(position - 1, true);
+        }
+    }
 }

@@ -18,4 +18,12 @@ public interface ReaderPresenter {
     void onResume();
 
     void onDestroy();
+
+    void updateToolbar(int position);
+
+    void incrementChapterPage(int position);
+
+    void decrementChapterPage(int position);
+
+    void updateChapterViewStatus(int position);
 }
