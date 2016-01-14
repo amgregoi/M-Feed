@@ -32,7 +32,7 @@ public class SourceListAdapter extends ArrayAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
         SourceHolder holder;
-
+        String curSource = WebSource.getwCurrentSource();
         if (row == null) {
             row = mInflater.inflate(layoutResource, null);
 
@@ -52,8 +52,10 @@ public class SourceListAdapter extends ArrayAdapter {
         }else if(text.equals("Advanced Search")){
             holder.wIcon.setImageDrawable(context.getDrawable(R.drawable.ic_user));
         }else {
-            holder.wIcon.setImageDrawable(context.getDrawable(R.drawable.ic_box_uncheck));
+            if(text.equals(curSource)) holder.wIcon.setImageDrawable(context.getDrawable(R.drawable.ic_box_check));
+            else holder.wIcon.setImageDrawable(context.getDrawable(R.drawable.ic_box_uncheck));
         }
+
         return row;
     }
 

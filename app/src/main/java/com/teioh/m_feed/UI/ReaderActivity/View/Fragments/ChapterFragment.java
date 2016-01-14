@@ -128,7 +128,7 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
 //    }
 
 //    @Override
-//         public void setupToolbar(String title, int size){
+//         public void updateToolbar(String title, int size){
 //        mChapterTitle.setText(title);
 //        mEndPage.setText(String.valueOf(size));
 //    }

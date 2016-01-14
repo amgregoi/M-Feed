@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
@@ -40,6 +41,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderActivityM
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity);
         ButterKnife.bind(this);
+
         mReaderPresenter = new ReaderPresenterImpl(this);
 
         if (savedInstanceState != null) {
@@ -113,13 +115,26 @@ public class ReaderActivity extends AppCompatActivity implements ReaderActivityM
     }
 
     @Override
-    public void setupToolbar(String title, int size, int page) {
+    public void updateToolbar(String title, int size, int page) {
         if(page == mViewPager.getCurrentItem()) {
             mChapterTitle.setText(title);
             mEndPage.setText(String.valueOf(size));
             //update view status at the start of each chapter
             mReaderPresenter.updateChapterViewStatus(mViewPager.getCurrentItem());
         }
+    }
+
+    @Override
+    public void setupToolbar(){
+        setSupportActionBar(mToolbarHeader);
+        mToolbarHeader.setNavigationIcon(getDrawable(R.drawable.ic_back));
+        mToolbarHeader.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.teioh.m_feed.UI.ReaderActivity.Presenters;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.UI.ReaderActivity.Adapters.ChapterPageAdapter;
@@ -17,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
+import rx.schedulers.Schedulers;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
@@ -26,14 +26,13 @@ public class ChapterPresenterImpl implements ChapterPresenter {
     private static final String CHAPTER_POSITION_LIST_PARCELABLE_KEY = TAG + ":POSITION";
 
     private ChapterReaderMapper mChapterReaderMapper;
-    private ImagePageAdapter mChapterPageAdapter;
 
     private ArrayList<String> mChapterUrlList;
     private int mPosition, mPageOffsetCount, mChapterListSize;
     private boolean mToolbarShowing, mIsNext;
     private Chapter mChapter;
-
-    private ReaderActivity mBaseActivity;
+    private Observable<List<String>> mObservableImageUrlList;
+    private ReaderActivity mBaseActivity;       //bad practice?
 
     public ChapterPresenterImpl(ChapterReaderMapper map, Bundle bundle) {
         mChapterReaderMapper = map;
@@ -43,7 +42,6 @@ public class ChapterPresenterImpl implements ChapterPresenter {
         mToolbarShowing = true;
 
         mBaseActivity = ((ReaderActivity) ((Fragment) mChapterReaderMapper).getActivity());
-
     }
 
     @Override
@@ -74,8 +72,8 @@ public class ChapterPresenterImpl implements ChapterPresenter {
 
     @Override
     public void getImageUrls() {
-        Observable<List<String>> observableImageUrlList = WebSource.getChapterImageListObservable(mChapter.getChapterUrl());
-        observableImageUrlList.subscribe(urlList -> updateImageUrlList(urlList));
+        mObservableImageUrlList = WebSource.getChapterImageListObservable(mChapter.getChapterUrl());
+        mObservableImageUrlList.subscribe(urlList -> updateImageUrlList(urlList));
     }
 
     @Override
@@ -91,6 +89,10 @@ public class ChapterPresenterImpl implements ChapterPresenter {
     @Override
     public void onDestroyView() {
         mBaseActivity = null;
+        if(mObservableImageUrlList != null){
+            mObservableImageUrlList.unsubscribeOn(Schedulers.io());
+            mObservableImageUrlList = null;
+        }
     }
 
     @Override
@@ -140,7 +142,7 @@ public class ChapterPresenterImpl implements ChapterPresenter {
 
     @Override
     public void updateToolbar() {
-        mBaseActivity.setupToolbar(mChapter.toString(), mChapterListSize, mPosition);
+        mBaseActivity.updateToolbar(mChapter.toString(), mChapterListSize, mPosition);
     }
 
     @Override
@@ -163,7 +165,7 @@ public class ChapterPresenterImpl implements ChapterPresenter {
         if (mChapterReaderMapper.getContext() != null) {
             mChapterUrlList = new ArrayList<>(urlList);
             mChapterListSize = mChapterUrlList.size();
-            mChapterPageAdapter = new ImagePageAdapter(mChapterReaderMapper.getContext(), mChapterUrlList);
+            ImagePageAdapter mChapterPageAdapter = new ImagePageAdapter(mChapterReaderMapper.getContext(), mChapterUrlList);
             mChapterReaderMapper.registerAdapter(mChapterPageAdapter);
             updateToolbar();
         }

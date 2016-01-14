@@ -24,9 +24,9 @@ public class ReaderPresenterImpl implements ReaderPresenter {
 
 
     private ReaderActivityMapper mReaderMap;
-    ChapterPageAdapter mChapterPagerAdapter;
-    ArrayList<Chapter> mChapterList;
-    int mChapterPosition;
+    private ChapterPageAdapter mChapterPagerAdapter;
+    private ArrayList<Chapter> mChapterList;
+    private int mChapterPosition;
 
     public ReaderPresenterImpl(ReaderActivityMapper map) {
         mReaderMap = map;
@@ -56,6 +56,7 @@ public class ReaderPresenterImpl implements ReaderPresenter {
         mChapterPagerAdapter = new ChapterPageAdapter(((ReaderActivity) mReaderMap).getSupportFragmentManager(), mChapterList);
         mReaderMap.registerAdapter(mChapterPagerAdapter);
         mReaderMap.setCurrentChapter(mChapterPosition);
+        mReaderMap.setupToolbar();
     }
 
     @Override

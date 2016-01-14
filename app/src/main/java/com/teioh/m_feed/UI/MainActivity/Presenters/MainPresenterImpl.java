@@ -194,6 +194,8 @@ public class MainPresenterImpl implements MainPresenter {
                 return;
             default:
                 if (!source.equals(WebSource.getSourceKey())) {
+                    mSourceListAdapater.notifyDataSetChanged();
+                    mDrawerAdapter.notifyDataSetChanged();
                     WebSource.setwCurrentSource(source);
                     BusProvider.getInstance().post(new UpdateSource());
                     mMainMapper.setupToolbar();

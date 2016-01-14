@@ -6,6 +6,7 @@ import android.os.Parcelable;
 public class Manga implements Parcelable {
     public final static String TAG = "MANGA";
 
+    private long _id;
     private String mTitle;
     private String mPicUrl;
     private String mMangaUrl;
@@ -29,6 +30,7 @@ public class Manga implements Parcelable {
     }
 
     protected Manga(Parcel in) {
+        _id = in.readLong();
         mTitle = in.readString();
         mPicUrl = in.readString();
         mMangaUrl = in.readString();
@@ -50,6 +52,7 @@ public class Manga implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(_id);
         dest.writeString(mTitle);
         dest.writeString(mPicUrl);
         dest.writeString(mMangaUrl);
@@ -75,6 +78,14 @@ public class Manga implements Parcelable {
             return new Manga[size];
         }
     };
+
+    public long get_id() {
+        return _id;
+    }
+
+    public void set_id(long _id) {
+        this._id = _id;
+    }
 
     public String toString() {
         return mTitle;

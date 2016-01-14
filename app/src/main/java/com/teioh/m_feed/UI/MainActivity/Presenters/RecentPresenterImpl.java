@@ -2,13 +2,13 @@ package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.squareup.otto.Subscribe;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapterAlternate;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.RecentFragmentMapper;
 import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
+import com.teioh.m_feed.Utils.Database.ReactiveQueryManager;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.Utils.OttoBus.QueryChange;
 import com.teioh.m_feed.Utils.OttoBus.RemoveFromLibrary;
@@ -94,11 +94,21 @@ public class RecentPresenterImpl implements RecentPresenter {
     @Override
     public void onDestroyView() {
         ButterKnife.unbind(mRecentFragmentMapper);
+        if(mObservableMangaList != null){
+            mObservableMangaList.unsubscribeOn(Schedulers.io());
+            mObservableMangaList.publish().refCount();
+            mObservableMangaList = null;
+        }
     }
 
     @Override
     public void onResume() {
         BusProvider.getInstance().register(this);
+        if(mRecentMangaList != null){
+            mObservableMangaList = ReactiveQueryManager.updateRecentMangaListObservable(mRecentMangaList);
+            mObservableMangaList.subscribe(manga -> updateRecentGridView(manga));
+
+        }
         //TODO find way to force refresh item views do for all 3 main fragments
 
     }
@@ -116,29 +126,6 @@ public class RecentPresenterImpl implements RecentPresenter {
     @Override
     public void setAdapter() {
         mRecentFragmentMapper.registerAdapter(mAdapter);
-    }
-
-    @Subscribe
-    public void onMangaAdded(Manga manga) {
-        for (Manga m : mRecentMangaList) {
-            if (m.equals(manga)) {
-                m = manga;
-                m.setFollowing(false);
-                break;
-            }
-        }
-    }
-
-    @Subscribe
-    public void onMangaRemoved(RemoveFromLibrary rm) {
-        Manga manga = rm.getManga();
-        for (Manga m : mRecentMangaList) {
-            if (m.equals(manga)) {
-                m = manga;
-                m.setFollowing(false);
-                break;
-            }
-        }
     }
 
     @Subscribe

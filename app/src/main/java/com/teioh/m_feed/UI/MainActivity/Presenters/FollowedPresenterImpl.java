@@ -55,11 +55,11 @@ public class FollowedPresenterImpl implements FollowedPresenter {
 
     @Override
     public void init() {
-        if(mFollowedMangaList == null){
+//        if(mFollowedMangaList == null){
             this.updateFollowedMangaList();
-        }else{
-            updateFollowedGridView(mFollowedMangaList);
-        }
+//        }else{
+//            updateFollowedGridView(mFollowedMangaList);
+//        }
     }
 
     @Override
@@ -87,11 +87,18 @@ public class FollowedPresenterImpl implements FollowedPresenter {
     @Override
     public void onDestroyView() {
         ButterKnife.unbind(mFollowFragmentMapper);
+        if(mObservableMangaList != null){
+            mObservableMangaList.unsubscribeOn(Schedulers.io());
+            mObservableMangaList = null;
+        }
     }
 
     @Override
     public void onResume() {
         BusProvider.getInstance().register(this);
+        if(mFollowedMangaList != null){
+            init();
+        }
     }
 
     @Override

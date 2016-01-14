@@ -18,7 +18,9 @@ public interface ReaderActivityMapper extends BaseContextMap, PageAdapterMap{
 
     void showToolbar();
 
-    void setupToolbar(String title, int size, int page);
+    void updateToolbar(String title, int size, int page);
+
+    void setupToolbar();
 
     void updateCurrentPage(int position);
 }

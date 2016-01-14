@@ -55,11 +55,11 @@ public class LibraryPresenterImpl implements LibraryPresenter {
 
     @Override
     public void init() {
-        if (mLibraryMangaList == null) {
+//        if (mLibraryMangaList == null) {
             this.updateLibraryMangaList();
-        } else {
-            this.updateLibraryGridView(mLibraryMangaList);
-        }
+//        } else {
+//            this.updateLibraryGridView(mLibraryMangaList);
+//        }
     }
 
     @Override
@@ -87,11 +87,18 @@ public class LibraryPresenterImpl implements LibraryPresenter {
     @Override
     public void onDestroyView() {
         ButterKnife.unbind(mLibraryFragmentMapper);
+        if(mObservableMangaList != null){
+            mObservableMangaList.unsubscribeOn(Schedulers.io());
+            mObservableMangaList = null;
+        }
     }
 
     @Override
     public void onResume() {
         BusProvider.getInstance().register(this);
+        if(mLibraryMangaList != null){
+            init();
+        }
     }
 
     @Override
