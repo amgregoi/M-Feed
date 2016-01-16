@@ -97,7 +97,17 @@ public class LibraryPresenterImpl implements LibraryPresenter {
     public void onResume() {
         BusProvider.getInstance().register(this);
         if(mLibraryMangaList != null){
-            init();
+            mObservableMangaList = ReactiveQueryManager.getMangaLibraryObservable();
+            mObservableMangaList.subscribe(manga -> {
+                if (mLibraryFragmentMapper.getContext() != null) {
+                    if (manga != null) {
+                        mLibraryMangaList.clear();
+                        mLibraryMangaList.addAll(manga);
+                        mObservableMangaList = null;
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }
+            });
         }
     }
 

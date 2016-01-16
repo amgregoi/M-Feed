@@ -6,7 +6,7 @@ import android.os.Parcelable;
 public class Manga implements Parcelable {
     public final static String TAG = "MANGA";
 
-    private long _id;
+    private Long _id;
     private String mTitle;
     private String mPicUrl;
     private String mMangaUrl;
@@ -19,6 +19,7 @@ public class Manga implements Parcelable {
     private String mSource;
     private String mAlternate;
     private boolean mFollowing;
+    private int mIsInitialized;
 
     public Manga() {
     }
@@ -27,6 +28,8 @@ public class Manga implements Parcelable {
         this.mTitle = title;
         this.mMangaUrl = url;
         this.mSource = source;
+        this.mIsInitialized = 0;
+        this._id = null;
     }
 
     protected Manga(Parcel in) {
@@ -43,6 +46,7 @@ public class Manga implements Parcelable {
         mSource = in.readString();
         mAlternate = in.readString();
         mFollowing = in.readByte() != 0;
+        mIsInitialized = in.readInt();
     }
 
     @Override
@@ -65,6 +69,7 @@ public class Manga implements Parcelable {
         dest.writeString(mSource);
         dest.writeString(mAlternate);
         dest.writeByte((byte) (mFollowing ? 1 : 0));
+        dest.writeInt(mIsInitialized);
     }
 
     public static final Creator<Manga> CREATOR = new Creator<Manga>() {
@@ -83,7 +88,7 @@ public class Manga implements Parcelable {
         return _id;
     }
 
-    public void set_id(long _id) {
+    public void set_id(Long _id) {
         this._id = _id;
     }
 
@@ -170,6 +175,14 @@ public class Manga implements Parcelable {
     public boolean setFollowing(boolean val) {
         this.mFollowing = val;
         return this.mFollowing;
+    }
+
+    public int getmIsInitialized() {
+        return mIsInitialized;
+    }
+
+    public void setmIsInitialized(int mIsInitialized) {
+        this.mIsInitialized = mIsInitialized;
     }
 
     @Override public boolean equals(Object object) {

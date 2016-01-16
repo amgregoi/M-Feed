@@ -8,10 +8,10 @@ import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapterAlternate;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.RecentFragmentMapper;
 import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
+import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.Database.ReactiveQueryManager;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.Utils.OttoBus.QueryChange;
-import com.teioh.m_feed.Utils.OttoBus.RemoveFromLibrary;
 import com.teioh.m_feed.Utils.OttoBus.UpdateSource;
 import com.teioh.m_feed.WebSources.WebSource;
 
@@ -21,6 +21,8 @@ import java.util.List;
 import butterknife.ButterKnife;
 import rx.Observable;
 import rx.schedulers.Schedulers;
+
+import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 public class RecentPresenterImpl implements RecentPresenter {
     public final static String TAG = RecentPresenterImpl.class.getSimpleName();
@@ -32,6 +34,7 @@ public class RecentPresenterImpl implements RecentPresenter {
     private Observable<List<Manga>> mObservableMangaList;
     private RecentFragmentMapper mRecentFragmentMapper;
     private String mLastSourceQuery;
+    private int mGridViewScrollY;
 
     public RecentPresenterImpl(RecentFragmentMapper map) {
         mRecentFragmentMapper = map;
@@ -74,7 +77,7 @@ public class RecentPresenterImpl implements RecentPresenter {
             mObservableMangaList.unsubscribeOn(Schedulers.io());
             mObservableMangaList = null;
         }
-        mLastSourceQuery = WebSource.getSourceKey();
+        mLastSourceQuery = WebSource.getCurrentSource();
         mObservableMangaList = WebSource.getRecentUpdatesObservable();
         mObservableMangaList.subscribe(manga -> updateRecentGridView(manga));
     }
@@ -106,8 +109,17 @@ public class RecentPresenterImpl implements RecentPresenter {
         BusProvider.getInstance().register(this);
         if(mRecentMangaList != null){
             mObservableMangaList = ReactiveQueryManager.updateRecentMangaListObservable(mRecentMangaList);
-            mObservableMangaList.subscribe(manga -> updateRecentGridView(manga));
-
+            mObservableMangaList.subscribe(manga -> {
+                if (mRecentFragmentMapper.getContext() != null) {
+                    if (manga != null) {
+                        mRecentMangaList.clear();
+                        mRecentMangaList.addAll(manga);
+                        mObservableMangaList = null;
+                        mAdapter.notifyDataSetChanged();
+                    }
+                    mRecentFragmentMapper.stopRefresh();
+                }
+            });
         }
         //TODO find way to force refresh item views do for all 3 main fragments
 

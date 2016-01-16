@@ -54,7 +54,7 @@ public class ReactiveQueryManager {
         ArrayList<Manga> mangaList = new ArrayList<>();
         QueryResultIterable<Manga> itr = cupboard().withDatabase(MangaFeedDbHelper.getInstance()
                 .getReadableDatabase()).query(Manga.class)
-                .withSelection("mSource = ?", WebSource.getSourceKey())
+                .withSelection("mSource = ?", WebSource.getCurrentSource())
                 .query();
 
         for (Manga manga : itr) {
@@ -99,7 +99,7 @@ public class ReactiveQueryManager {
     private static List<Manga> getFollowedManga() {
         ArrayList<Manga> mangaList = new ArrayList<>();
         QueryResultIterable<Manga> itr = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase())
-                .query(Manga.class).withSelection("mFollowing = ? AND mSource = ?", "1", WebSource.getSourceKey()).query();
+                .query(Manga.class).withSelection("mFollowing = ? AND mSource = ?", "1", WebSource.getCurrentSource()).query();
         for (Manga manga : itr) {
             mangaList.add(manga);
         }

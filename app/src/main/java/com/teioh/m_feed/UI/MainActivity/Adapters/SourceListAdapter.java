@@ -32,7 +32,7 @@ public class SourceListAdapter extends ArrayAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
         SourceHolder holder;
-        String curSource = WebSource.getwCurrentSource();
+        String curSource = WebSource.getCurrentSource();
         if (row == null) {
             row = mInflater.inflate(layoutResource, null);
 

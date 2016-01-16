@@ -43,7 +43,7 @@ public class ChapterListPresenterImpl implements ChapterListPresenter {
     public ChapterListPresenterImpl(ChapterListMapper map, Bundle b) {
         String title = b.getString(Manga.TAG);
         mManga = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase())
-                .query(Manga.class).withSelection("mTitle = ? AND mSource = ?", title, WebSource.getwCurrentSource()).get();
+                .query(Manga.class).withSelection("mTitle = ? AND mSource = ?", title, WebSource.getCurrentSource()).get();
 
         mChapterListMapper = map;
         mChapterOrderDescending = true;

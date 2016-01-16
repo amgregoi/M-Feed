@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +49,7 @@ public class RecentFragment extends Fragment implements RecentFragmentMapper {
         if(savedInstanceState != null){
             mRecentPresenterManga.onRestoreState(savedInstanceState);
         }
+
         mRecentPresenterManga.init();
     }
 
@@ -65,6 +67,7 @@ public class RecentFragment extends Fragment implements RecentFragmentMapper {
     @Override public void onResume() {
         super.onResume();
         mRecentPresenterManga.onResume();
+        mGridView.refreshDrawableState();
     }
 
     @Override public void onPause() {
@@ -99,5 +102,4 @@ public class RecentFragment extends Fragment implements RecentFragmentMapper {
     @Override public void setupSwipeRefresh() {
         swipeContainer.setOnRefreshListener(() -> mRecentPresenterManga.updateRecentMangaList());
 
-    }
-}
+    }}

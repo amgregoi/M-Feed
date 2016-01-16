@@ -49,11 +49,12 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
             if (mManga == null) {
                 String title = bundle.getString(Manga.TAG);
                 mManga = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase())
-                        .query(Manga.class).withSelection("mTitle = ? AND mSource = ?", title, WebSource.getwCurrentSource()).get();
+                        .query(Manga.class).withSelection("mTitle = ? AND mSource = ?", title, WebSource.getCurrentSource()).get();
 
             }
+
             this.setFollowButtonText(mManga.getFollowing(), true); //second parameter signifies if the button is being initialized
-            if (mManga.getmGenre() != null && mManga.getmAlternate() != null && !mManga.getPicUrl().equals("")) {
+            if (mManga.getmIsInitialized() == 1) {
                 mMangaInformationMapper.setupFollowButton();
                 mMangaInformationMapper.setMangaViews(mManga);
                 mMangaInformationMapper.showCoverLayout();
@@ -117,6 +118,8 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
             mMangaInformationMapper.setMangaViews(manga);
             mMangaInformationMapper.stopRefresh();
             mMangaInformationMapper.showCoverLayout();
+            manga.setmIsInitialized(1);
+            cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).put(manga);
         });
     }
 

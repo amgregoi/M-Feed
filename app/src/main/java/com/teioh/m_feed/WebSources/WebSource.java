@@ -10,10 +10,10 @@ import rx.Observable;
 
 public class WebSource {
 
-    private static String wCurrentSource;
+    private static String wCurrentSource = MangaJoy.SourceKey;
     private static String[] wSources = {MangaJoy.SourceKey, MangaPark.SourceKey};
 
-    public static String getwCurrentSource() {
+    public static String getCurrentSource() {
         return wCurrentSource;
     }
 
@@ -23,17 +23,6 @@ public class WebSource {
 
     public static List<String> getSourceList(){
         return Arrays.asList(wSources);
-    }
-
-    public static String getSourceKey(){
-        switch (wCurrentSource) {       //TODO PROBLEM HERE
-            case (MangaJoy.SourceKey):
-                return MangaJoy.SourceKey;
-            case (MangaPark.SourceKey):
-                return MangaPark.SourceKey;
-            default:
-                return MangaJoy.SourceKey;
-        }
     }
 
     public static Observable<List<Manga>> getRecentUpdatesObservable() {

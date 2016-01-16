@@ -193,7 +193,7 @@ public class MainPresenterImpl implements MainPresenter {
             case ("Advanced Search"):
                 return;
             default:
-                if (!source.equals(WebSource.getSourceKey())) {
+                if (!source.equals(WebSource.getCurrentSource())) {
                     mSourceListAdapater.notifyDataSetChanged();
                     mDrawerAdapter.notifyDataSetChanged();
                     WebSource.setwCurrentSource(source);

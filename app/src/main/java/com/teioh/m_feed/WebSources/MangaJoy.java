@@ -137,7 +137,7 @@ public class MangaJoy {
                 } else {
                     manga = new Manga(mangaTitle, mangaUrl, SourceKey);
                     mangaList.add(manga);
-                    cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).put(manga);
+                    Long t = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).put(manga);
                     Observable<Manga> observableManga = MangaJoy.updateMangaObservable(manga);
                     observableManga.subscribe();
                 }

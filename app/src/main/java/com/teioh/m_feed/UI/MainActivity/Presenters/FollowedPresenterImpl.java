@@ -97,7 +97,17 @@ public class FollowedPresenterImpl implements FollowedPresenter {
     public void onResume() {
         BusProvider.getInstance().register(this);
         if(mFollowedMangaList != null){
-            init();
+            mObservableMangaList = ReactiveQueryManager.getFollowedMangaObservable();
+            mObservableMangaList.subscribe(manga -> {
+                if (mFollowFragmentMapper.getContext() != null) {
+                    if (manga != null) {
+                        mFollowedMangaList.clear();
+                        mFollowedMangaList.addAll(manga);
+                        mObservableMangaList = null;
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }
+            });
         }
     }
 

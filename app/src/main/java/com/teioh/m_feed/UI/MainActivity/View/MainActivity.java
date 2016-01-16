@@ -53,10 +53,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
 
         if (savedInstanceState != null) {
             mMainPresenter.onRestoreState(savedInstanceState);
-        }else{
-            //default source for the moment
-            WebSource.setwCurrentSource(MangaJoy.SourceKey);
         }
+
         mMainPresenter.parseLogin();
         mMainPresenter.setupDrawerLayoutListener(mToolBar, mDrawerLayout);
 
@@ -178,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     @Override
     public void setupToolbar() {
         setSupportActionBar(mToolBar);
-        mActivityTitle.setText(WebSource.getSourceKey());
+        mActivityTitle.setText(WebSource.getCurrentSource());
         orderButton.setVisibility(View.GONE);
     }
 

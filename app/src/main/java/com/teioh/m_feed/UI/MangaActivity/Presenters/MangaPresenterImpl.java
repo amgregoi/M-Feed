@@ -10,6 +10,7 @@ import com.teioh.m_feed.UI.MangaActivity.View.Mappers.MangaActivityMapper;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.Utils.OttoBus.ChapterOrderEvent;
+import com.teioh.m_feed.WebSources.WebSource;
 
 import butterknife.ButterKnife;
 
@@ -47,8 +48,8 @@ public class MangaPresenterImpl implements MangaPresenter {
     @Override public void init(Intent intent) {
         if(mManga == null) {
             String title = intent.getStringExtra(Manga.TAG);
-            mManga = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase())
-                    .query(Manga.class).withSelection("mTitle = ?", title).get();
+            mManga = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase()).query(Manga.class)
+                    .withSelection("mTitle = ? AND mSource = ?", title, WebSource.getCurrentSource()).get();
         }
 
         mViewPagerAdapterManga = new ViewPagerAdapterManga(((FragmentActivity) mMangaMapper.getContext()).getSupportFragmentManager(), Titles, numbtabs, mManga.getTitle());
