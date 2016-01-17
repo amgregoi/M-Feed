@@ -3,12 +3,13 @@ package com.teioh.m_feed.UI.LoginActivity.Presenters;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
-import com.parse.SignUpCallback;
+import com.teioh.m_feed.UI.LoginActivity.View.Fragments.SignupFragment;
 import com.teioh.m_feed.UI.LoginActivity.View.Mappers.LoginFragmentMapper;
 import com.teioh.m_feed.UI.MainActivity.View.MainActivity;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
@@ -17,7 +18,7 @@ import butterknife.ButterKnife;
 
 
 public class LoginFragmentPresenterImpl implements LoginFragmentPresenter {
-    public final static String TAG = LoginFragmentPresenterImpl.class.getSimpleName();
+    public final static String TAG = SignupFragmentPresenterImpl.class.getSimpleName();
     public final static String USERNAME_KEY = TAG + ":USERNAME";
 
     private LoginFragmentMapper mLoginFragmentMapper;
@@ -28,7 +29,7 @@ public class LoginFragmentPresenterImpl implements LoginFragmentPresenter {
 
     @Override
     public void onSaveState(Bundle bundle, String username) {
-        if(username != null || !username.equals("")){
+        if(username != null && !username.equals("")){
             bundle.putString(USERNAME_KEY, username);
         }
     }
@@ -57,28 +58,12 @@ public class LoginFragmentPresenterImpl implements LoginFragmentPresenter {
 
     @Override
     public void onSignupButton(String mUserName, String mPassword) {
-        if (mUserName.equals("") || mPassword.equals("")) {
-            Toast.makeText(mLoginFragmentMapper.getContext(),
-                    "Please complete the sign up form",
-                    Toast.LENGTH_LONG).show();
-        } else {
-            ParseUser user = new ParseUser();
-            user.setUsername(mUserName);
-            user.setPassword(mPassword);
-            user.signUpInBackground(new SignUpCallback() {
-                public void done(ParseException e) {
-                    if (e == null) {
-                        Toast.makeText(mLoginFragmentMapper.getContext(),
-                                "Successfully Signed up, please log in.",
-                                Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(mLoginFragmentMapper.getContext(),
-                                "Sign up Error", Toast.LENGTH_LONG)
-                                .show();
-                    }
-                }
-            });
-        }
+        Fragment signupFragment = new SignupFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(USERNAME_KEY, mUserName);
+        signupFragment.setArguments(bundle);
+        ((FragmentActivity) mLoginFragmentMapper.getContext()).getSupportFragmentManager().beginTransaction()
+                .add(android.R.id.content, signupFragment, SignupFragment.TAG).commit();
     }
 
     @Override
