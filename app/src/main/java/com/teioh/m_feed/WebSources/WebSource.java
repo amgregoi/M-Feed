@@ -10,8 +10,10 @@ import rx.Observable;
 
 public class WebSource {
 
-    private static String wCurrentSource = MangaJoy.SourceKey;
-    private static String[] wSources = {MangaJoy.SourceKey, MangaPark.SourceKey};
+//    private static String wCurrentSource = MangaJoy.SourceKey;
+private static String wCurrentSource = MangaHere.SourceKey;
+
+    private static String[] wSources = {MangaJoy.SourceKey, MangaPark.SourceKey, MangaHere.SourceKey};
 
     public static String getCurrentSource() {
         return wCurrentSource;
@@ -31,6 +33,8 @@ public class WebSource {
                 return MangaJoy.getRecentUpdatesObservable();
             case (MangaPark.SourceKey):
                 return MangaPark.getRecentUpdatesObservable();
+            case (MangaHere.SourceKey):
+                return MangaHere.getRecentUpdatesObservable();
             default:
                 return MangaJoy.getRecentUpdatesObservable();
         }
@@ -42,6 +46,8 @@ public class WebSource {
                 return MangaJoy.getChapterListObservable(url);
             case (MangaPark.SourceKey):
                 return MangaPark.getChapterListObservable(url);
+            case (MangaHere.SourceKey):
+                return MangaHere.getChapterListObservable(url);
             default:
                 return MangaJoy.getChapterListObservable(url);
         }
@@ -53,6 +59,8 @@ public class WebSource {
                 return MangaJoy.getChapterImageListObservable(url);
             case (MangaPark.SourceKey):
                 return MangaPark.getChapterImageListObservable(url);
+            case (MangaHere.SourceKey):
+                return MangaHere.getChapterImageListObservable(url);
             default:
                 return MangaJoy.getChapterImageListObservable(url);
         }
@@ -64,6 +72,8 @@ public class WebSource {
                 return MangaJoy.updateMangaObservable(m);
             case (MangaPark.SourceKey):
                 return MangaPark.updateMangaObservable(m);
+            case (MangaHere.SourceKey):
+                return MangaHere.updateMangaObservable(m);
             default:
                 return MangaJoy.updateMangaObservable(m);
         }

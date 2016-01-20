@@ -7,6 +7,17 @@
                 android:orientation="vertical"
                 android:showDividers="middle">
 
+	<!--<com.getbase.floatingactionbutton.FloatingActionButton-->
+		<!--android:id="@+id/follow_button"-->
+		<!--android:layout_width="wrap_content"-->
+		<!--android:layout_height="wrap_content"-->
+		<!--android:layout_alignParentBottom="true"-->
+		<!--android:layout_alignParentEnd="true"-->
+		<!--android:background="@color/ColorPrimary"-->
+		<!--android:src="@drawable/ic_done"-->
+		<!--android:text="Follow"-->
+		<!--/>-->
+
 	<android.support.v4.widget.SwipeRefreshLayout
 		android:id="@+id/swipe_container"
 		android:layout_width="match_parent"
@@ -109,17 +120,6 @@
 
 
 						</LinearLayout>
-
-						<com.getbase.floatingactionbutton.FloatingActionButton
-							android:id="@+id/follow_button"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"
-							android:layout_alignParentBottom="true"
-							android:layout_alignParentEnd="true"
-							android:background="@color/ColorPrimary"
-							android:src="@drawable/ic_done"
-							android:text="Follow"
-							/>
 
 					</RelativeLayout>
 				</LinearLayout>

@@ -2,10 +2,10 @@ package com.teioh.m_feed.UI.MangaActivity.Presenters;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.UI.MangaActivity.Adapters.ViewPagerAdapterManga;
+import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
 import com.teioh.m_feed.UI.MangaActivity.View.Mappers.MangaActivityMapper;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
@@ -52,7 +52,7 @@ public class MangaPresenterImpl implements MangaPresenter {
                     .withSelection("mTitle = ? AND mSource = ?", title, WebSource.getCurrentSource()).get();
         }
 
-        mViewPagerAdapterManga = new ViewPagerAdapterManga(((FragmentActivity) mMangaMapper.getContext()).getSupportFragmentManager(), Titles, numbtabs, mManga.getTitle());
+        mViewPagerAdapterManga = new ViewPagerAdapterManga(((MangaActivity) mMangaMapper.getContext()).getSupportFragmentManager(), Titles, numbtabs, mManga.getTitle());
         mMangaMapper.setActivityTitle(mManga.getTitle());
         mMangaMapper.registerAdapter(mViewPagerAdapterManga);
         mMangaMapper.setupSlidingTabLayout();

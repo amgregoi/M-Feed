@@ -1,13 +1,18 @@
 package com.teioh.m_feed.UI.MangaActivity.View.Fragments;
 
+import android.content.Context;
+import android.graphics.PixelFormat;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,7 +28,6 @@ import com.teioh.m_feed.UI.MangaActivity.View.Mappers.MangaInformationMapper;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
@@ -37,18 +41,21 @@ public class MangaInformationFragment extends Fragment implements MangaInformati
     @Bind(R.id.artist) TextView artist;
     @Bind(R.id.genre) TextView genres;
     @Bind(R.id.status) TextView status;
-    @Bind(R.id.follow_button) FloatingActionButton followButton;
+//    @Bind(R.id.follow_button) FloatingActionButton followButton;
     @Bind(R.id.swipe_container) SwipeRefreshLayout mSwipeRefresh;
     @Bind(R.id.relativeLayout) RelativeLayout mRelativeLayout;
 
     private MangaInformationPresenter mMangaInformationPresenter;
+    private WindowManager mWindowManager;
+    private FloatingActionButton mImgFloatingView;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.manga_info_fragment, container, false);
         ButterKnife.bind(this, v);
-
         mMangaInformationPresenter = new MangaInformationPresenterImpl(this);
+
         return v;
     }
 
@@ -86,21 +93,63 @@ public class MangaInformationFragment extends Fragment implements MangaInformati
         mMangaInformationPresenter.onDestroyView();
     }
 
-    @OnClick(R.id.follow_button) void onClick(View v) {
-        mMangaInformationPresenter.onFollwButtonClick();
-    }
+//    @OnClick(R.id.follow_button) void onClick(View v) {
+//
+//    }
 
     @Override
     public void setFollowButtonText(int resourceId, boolean isInit) {
         if (resourceId == R.drawable.ic_done && !isInit) {
             Toast.makeText(getContext(), "Now following", LENGTH_SHORT).show();
         }
-        followButton.setImageResource(resourceId);
+        if(mImgFloatingView != null)
+            mImgFloatingView.setImageResource(resourceId);
     }
 
     @Override
     public void setupFollowButton() {
-        followButton.setColorNormal(getResources().getColor(R.color.ColorPrimary));
+//        followButton.setColorNormal(getResources().getColor(R.color.ColorPrimary));
+
+        mWindowManager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
+        final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.TYPE_APPLICATION_PANEL,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT);
+        params.gravity = Gravity.CENTER_VERTICAL | Gravity.END;
+
+        mImgFloatingView = new FloatingActionButton(this.getContext());
+        mImgFloatingView.setColorNormal(getResources().getColor(R.color.ColorPrimary));
+        mWindowManager.addView(mImgFloatingView, params);
+
+        mImgFloatingView.setOnTouchListener(new View.OnTouchListener() {
+            private int initialY;
+            private float initialTouchY;
+            private boolean isClick = false;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        initialY = params.y;
+                        initialTouchY = event.getRawY();
+                        isClick = true;
+                        return true;
+
+                    case MotionEvent.ACTION_UP:
+                        if (isClick) mMangaInformationPresenter.onFollwButtonClick();
+                        return true;
+
+                    case MotionEvent.ACTION_MOVE:
+                        params.y = initialY + (int) (event.getRawY() - initialTouchY);
+                        mWindowManager.updateViewLayout(mImgFloatingView, params);
+                        if (Math.abs(initialY - params.y) > 50) isClick = false;
+                        return true;
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -126,7 +175,6 @@ public class MangaInformationFragment extends Fragment implements MangaInformati
     public void stopRefresh() {
         mSwipeRefresh.post(() -> mSwipeRefresh.setRefreshing(false));
         mSwipeRefresh.setEnabled(false);
-
     }
 
     @Override
@@ -143,4 +191,5 @@ public class MangaInformationFragment extends Fragment implements MangaInformati
     public void showCoverLayout() {
         mRelativeLayout.setVisibility(View.VISIBLE);
     }
+
 }

@@ -27,15 +27,14 @@
 				android:id="@+id/drawer_username"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="RAWR"
 				android:textColor="@color/white"
 				android:textSize="@dimen/text_heading_18sp"
 				android:textStyle="bold"/>
 
 			<TextView
+				android:id="@+id/drawer_email"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="rawr@gmail.com"
 				android:textColor="@color/white"
 				android:textSize="@dimen/text_options_14sp"
 				android:textStyle="italic"/>

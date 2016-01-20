@@ -7,7 +7,6 @@ import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MangaActivity.View.Mappers.MangaInformationMapper;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
-import com.teioh.m_feed.Utils.OttoBus.RemoveFromLibrary;
 import com.teioh.m_feed.WebSources.WebSource;
 
 import butterknife.ButterKnife;
@@ -53,14 +52,13 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
 
             }
 
-            this.setFollowButtonText(mManga.getFollowing(), true); //second parameter signifies if the button is being initialized
             if (mManga.getmIsInitialized() == 1) {
-                mMangaInformationMapper.setupFollowButton();
                 mMangaInformationMapper.setMangaViews(mManga);
                 mMangaInformationMapper.showCoverLayout();
+                mMangaInformationMapper.setupFollowButton();
+                this.setFollowButtonText(mManga.getFollowing(), true); //second parameter signifies if the button is being initialized
             } else {
                 mMangaInformationMapper.hideCoverLayout();
-                mMangaInformationMapper.setupFollowButton();
                 mMangaInformationMapper.setupSwipeRefresh();
                 this.getMangaViewInfo();
             }
@@ -73,10 +71,8 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
         this.setFollowButtonText(follow, false);        //second parameter signifies if the button is being initialized
         if (follow) {
             MangaFeedDbHelper.getInstance().updateMangaFollow(mManga.getTitle());
-            BusProvider.getInstance().post(mManga);
         } else {
             MangaFeedDbHelper.getInstance().updateMangaUnfollow(mManga.getTitle());
-            BusProvider.getInstance().post(new RemoveFromLibrary(mManga));
         }
     }
 
@@ -118,6 +114,8 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
             mMangaInformationMapper.setMangaViews(manga);
             mMangaInformationMapper.stopRefresh();
             mMangaInformationMapper.showCoverLayout();
+            mMangaInformationMapper.setupFollowButton();
+            this.setFollowButtonText(mManga.getFollowing(), true); //second parameter signifies if the button is being initialized
             manga.setmIsInitialized(1);
             cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).put(manga);
         });

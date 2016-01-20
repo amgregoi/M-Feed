@@ -96,4 +96,9 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
     public void orderButton(View view) {
         mMangaPresenter.chapterOrderButtonClick();
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

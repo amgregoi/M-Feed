@@ -77,6 +77,7 @@ public class SignupFragmentPresenterImpl implements SignupFragmentPresenter {
             ParseUser user = new ParseUser();
             user.setUsername(mUserName);
             user.setPassword(mPassword);
+            user.setEmail(mEmail);
             user.signUpInBackground(new SignUpCallback() {
 
 
@@ -93,7 +94,7 @@ public class SignupFragmentPresenterImpl implements SignupFragmentPresenter {
                 public void done(ParseException e) {
                     if (e == null) {
                         Toast.makeText(mSignupFragmentMapper.getContext(),
-                                "Successfully Signed up, please log in.",
+                                "Successfully Signed up.",
                                 Toast.LENGTH_LONG).show();
 
                         Intent intent = new Intent(mSignupFragmentMapper.getContext(), MainActivity.class);

@@ -24,7 +24,7 @@ public class LoginActivityPresenterImpl implements LoginActivityPresenter {
     public void onResume() {
         Fragment fragment = new LoginFragment();
         ((FragmentActivity) mLoginMap.getContext()).getSupportFragmentManager().beginTransaction()
-                .add(android.R.id.content, fragment, LoginFragment.TAG).addToBackStack(null).commit();
+                .add(android.R.id.content, fragment, LoginFragment.TAG).addToBackStack(LoginFragment.TAG).commit();
     }
 
     @Override

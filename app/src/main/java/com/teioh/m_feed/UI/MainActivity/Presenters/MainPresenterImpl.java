@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.parse.ParseAnonymousUtils;
@@ -78,6 +79,15 @@ public class MainPresenterImpl implements MainPresenter {
         View general = ((FragmentActivity) mMainMapper.getContext()).getLayoutInflater().inflate(R.layout.drawer_general_header, null);
         View source = ((FragmentActivity) mMainMapper.getContext()).getLayoutInflater().inflate(R.layout.drawer_source_header, null);
 
+        //setup header
+        TextView username = (TextView) header.findViewById(R.id.drawer_username);
+        TextView userEmail = (TextView) header.findViewById(R.id.drawer_email);
+        ParseUser user = ParseUser.getCurrentUser();
+
+        username.setText(user.getUsername());
+        userEmail.setText(user.getEmail());
+
+
         //setup drawer adapter
         mDrawerAdapter = new MergeAdapter();
         mDrawerAdapter.addView(header);
@@ -91,6 +101,7 @@ public class MainPresenterImpl implements MainPresenter {
         mMainMapper.registerAdapter(mViewPagerAdapterMain, mDrawerAdapter);
         mMainMapper.setupSearchview();
         mMainMapper.setupToolbar();
+
     }
 
     @Override
@@ -111,8 +122,6 @@ public class MainPresenterImpl implements MainPresenter {
                 mMainMapper.onDrawerOpen();
             }
         };
-
-        mMainMapper.setDrawerLayoutListener(mDrawerToggle);
     }
 
     @Override

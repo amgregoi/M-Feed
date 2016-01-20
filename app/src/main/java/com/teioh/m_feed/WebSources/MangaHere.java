@@ -163,10 +163,9 @@ public class MangaHere {
 
         for (Element chapterElement : chapterElements) {
             String chapterUrl = chapterElement.select("a").attr("href");
-            String title = chapterElement.select("a").val();
+            String title = chapterElement.select("a").text();
             String cTitle = chapterElement.select("span.left").text();
-
-            String chapterDate = chapterElement.select("span").get(1).text();
+            String chapterDate = chapterElement.select("span.right").text();
 
             Chapter curChapter = new Chapter(chapterUrl, title, cTitle, chapterDate, numChapters);
             numChapters--;
@@ -208,7 +207,7 @@ public class MangaHere {
                         unparsedHtml = connect.get().html();
                     }
 
-                    subscriber.onNext(getBaseUrlDirectory(unparsedHtml));
+                    subscriber.onNext(getUrlList(unparsedHtml));
                     subscriber.onCompleted();
                 } catch (Throwable e) {
                     subscriber.onError(e);
@@ -217,48 +216,39 @@ public class MangaHere {
         });
     }
 
-    private static List<String> getBaseUrlDirectory(final String unparsedHtml) {
+    private static List<String> getUrlList(final String unparsedHtml) {
+        List<String> pageUrls = new ArrayList<>();
+        List<String> imageUnparsedHtml = new ArrayList<>();
+
         //get base url for images
         Document parsedDocumentForImage = Jsoup.parse(unparsedHtml);
-        Elements imageUpdate = parsedDocumentForImage.select("div.prw");
-        parsedDocumentForImage = Jsoup.parse(imageUpdate.toString());
-        String imageUrl = parsedDocumentForImage.select("img").attr("src");
-
-        //get img extension
-        Pattern regex2 = Pattern.compile("\\/(?!.*\\/).*");
-        Matcher regexMatcher2 = regex2.matcher(imageUrl);
-        regexMatcher2.find();
-        String extension = regexMatcher2.group();
-
-        String baseUrl = imageUrl.replace(extension, "");
-        String directoryHtml = null;
-        try {
-            Connection connect = Jsoup.connect(baseUrl)
-                    .userAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.21")
-                    .timeout(10000);
-            if (connect.execute().statusCode() == 200) {
-                directoryHtml = connect.get().html();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        Elements imageUpdates = parsedDocumentForImage.select("select.wid60").first().select("option");
+        for(Element url: imageUpdates){
+            pageUrls.add(url.attr("value"));
         }
-        return buildImageUrlList(directoryHtml);
+
+        for(String url : pageUrls) {
+            try {
+                Connection connect = Jsoup.connect(url)
+                        .userAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.21")
+                        .timeout(10000);
+                if (connect.execute().statusCode() == 200) {
+                    imageUnparsedHtml.add(connect.get().html());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return buildImageUrlList(imageUnparsedHtml);
     }
 
-    private static List<String> buildImageUrlList(final String unparsedHtml) {
+    private static List<String> buildImageUrlList(final List<String> unparsedHtml) {
         List<String> imageUrls = new ArrayList<>();
-        String prefix = "http://manga-joy.com";
-        Document parsedDocumentForImage = Jsoup.parse(unparsedHtml);
-        Elements imageUpdate = parsedDocumentForImage.select("a");
-        int i = 0;
-        for (Element e : imageUpdate) {
-            if (i > 4) {
-                String postfix = e.select("a").attr("href");
-                if (postfix.contains("manga")) {
-                    imageUrls.add(prefix + postfix);
-                }
-            }
-            i++;
+        for(String s : unparsedHtml){
+            Document parsedDocumentForImage = Jsoup.parse(s);
+            Elements imageUpdate = parsedDocumentForImage.select("section#viewer.read_img");
+            parsedDocumentForImage = Jsoup.parse(imageUpdate.toString());
+            imageUrls.add(parsedDocumentForImage.select("img#image").attr("src"));
         }
         return imageUrls;
     }
@@ -307,31 +297,34 @@ public class MangaHere {
 
     private static Manga scrapeAndUpdateManga(final String unparsedHtml, String url) {
         Document html = Jsoup.parse(unparsedHtml);
+        Elements usefulSection = html.select("div.manga_detail_top.clearfix");
 
         //image url
-        Element imageElement = html.body().select("img.cvr").first();
+        Element imageElement = usefulSection.select("img").first();
         //summary
-        Element summaryElement = html.body().select("p.summary").first();
+        Elements e = usefulSection.select("ul.detail_topText").select("li");
 
-        Elements e = html.body().select("div.det").select("span");
+
         String img = imageElement.attr("src");
-        String summary = summaryElement.text().substring(7);
+        String summary = null;
         String alternate = null;
         String author = null;
         String artist = null;
         String genres = null;
         String status = null;
         for (int i = 0; i < e.size(); i++) {
-            if (i == 0) {
-                alternate = e.get(i).text();
-            } else if (i == 1) {
-                author = e.get(i).text();
-            } else if (i == 2) {
-                artist = e.get(i).text();
-            } else if (i == 3) {
-                genres = e.get(i).text();
+            if (i == 2) {
+                alternate = e.get(i).text().replace(e.get(i).select("label").text(), "");
+            } else if (i == 4) {
+                author = e.get(i).text().replace(e.get(i).select("label").text(), "");
             } else if (i == 5) {
-                status = e.get(i).text();
+                artist = e.get(i).text().replace(e.get(i).select("label").text(), "");
+            } else if (i == 3) {
+                genres = e.get(i).text().replace(e.get(i).select("label").text(), "");
+            } else if( i == 6) {
+                status = e.get(i).text().replace(e.get(i).select("label").text(), "");
+            }else if (i == 8) {
+                summary = e.get(i).text();
             }
         }
 
