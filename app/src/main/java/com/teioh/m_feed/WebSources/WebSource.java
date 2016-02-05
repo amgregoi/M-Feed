@@ -10,8 +10,8 @@ import rx.Observable;
 
 public class WebSource {
 
-//    private static String wCurrentSource = MangaJoy.SourceKey;
-private static String wCurrentSource = MangaHere.SourceKey;
+    private static String wCurrentSource = MangaJoy.SourceKey;
+//private static String wCurrentSource = MangaHere.SourceKey;
 
     private static String[] wSources = {MangaJoy.SourceKey, MangaPark.SourceKey, MangaHere.SourceKey};
 

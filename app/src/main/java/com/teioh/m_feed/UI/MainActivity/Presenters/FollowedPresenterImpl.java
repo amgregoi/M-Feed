@@ -22,6 +22,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import rx.Observable;
+import rx.Subscription;
 import rx.schedulers.Schedulers;
 
 
@@ -31,7 +32,7 @@ public class FollowedPresenterImpl implements FollowedPresenter {
 
     private ArrayList<Manga> mFollowedMangaList;
     private SearchableAdapter mAdapter;
-    private Observable<List<Manga>> mObservableMangaList;
+    private Subscription mMangaListSubscription;
 
     private FollowFragmentMapper mFollowFragmentMapper;
 
@@ -41,14 +42,14 @@ public class FollowedPresenterImpl implements FollowedPresenter {
 
     @Override
     public void onSaveState(Bundle bundle) {
-        if(mFollowedMangaList != null){
+        if (mFollowedMangaList != null) {
             bundle.putParcelableArrayList(FOLLOWED_MANGA_LIST_KEY, mFollowedMangaList);
         }
     }
 
     @Override
     public void onRestoreState(Bundle bundle) {
-        if(bundle.containsKey(FOLLOWED_MANGA_LIST_KEY)){
+        if (bundle.containsKey(FOLLOWED_MANGA_LIST_KEY)) {
             mFollowedMangaList = new ArrayList<>(bundle.getParcelableArrayList(FOLLOWED_MANGA_LIST_KEY));
         }
     }
@@ -56,7 +57,7 @@ public class FollowedPresenterImpl implements FollowedPresenter {
     @Override
     public void init() {
 //        if(mFollowedMangaList == null){
-            this.updateFollowedMangaList();
+        this.updateFollowedMangaList();
 //        }else{
 //            updateFollowedGridView(mFollowedMangaList);
 //        }
@@ -64,12 +65,12 @@ public class FollowedPresenterImpl implements FollowedPresenter {
 
     @Override
     public void updateFollowedMangaList() {
-        if (mObservableMangaList != null) {
-            mObservableMangaList.unsubscribeOn(Schedulers.io());
-            mObservableMangaList = null;
+        if (mMangaListSubscription != null) {
+            mMangaListSubscription.unsubscribe();
+            mMangaListSubscription = null;
         }
-        mObservableMangaList = ReactiveQueryManager.getFollowedMangaObservable();
-        mObservableMangaList.subscribe(manga -> updateFollowedGridView(manga));
+        mMangaListSubscription = ReactiveQueryManager.getFollowedMangaObservable()
+                .subscribe(manga -> updateFollowedGridView(manga));
     }
 
     @Override
@@ -87,38 +88,33 @@ public class FollowedPresenterImpl implements FollowedPresenter {
     @Override
     public void onDestroyView() {
         ButterKnife.unbind(mFollowFragmentMapper);
-        if(mObservableMangaList != null){
-            mObservableMangaList.unsubscribeOn(Schedulers.io());
-            mObservableMangaList = null;
+        if (mMangaListSubscription != null) {
+            mMangaListSubscription.unsubscribe();
+            mMangaListSubscription = null;
         }
     }
 
     @Override
     public void onResume() {
         BusProvider.getInstance().register(this);
-        if(mFollowedMangaList != null){
-            mObservableMangaList = ReactiveQueryManager.getFollowedMangaObservable();
-            mObservableMangaList.subscribe(manga -> {
-                if (mFollowFragmentMapper.getContext() != null) {
-                    if (manga != null) {
-                        mFollowedMangaList.clear();
-                        mFollowedMangaList.addAll(manga);
-                        mObservableMangaList = null;
-                        mAdapter.notifyDataSetChanged();
-                    }
-                }
-            });
+        if (mFollowedMangaList != null) {
+            mMangaListSubscription = ReactiveQueryManager.getFollowedMangaObservable()
+                    .subscribe(manga -> {
+                        if (mFollowFragmentMapper.getContext() != null) {
+                            if (manga != null) {
+                                mFollowedMangaList.clear();
+                                mFollowedMangaList.addAll(manga);
+                                mMangaListSubscription = null;
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    });
         }
     }
 
     @Override
     public void onPause() {
         BusProvider.getInstance().unregister(this);
-
-        if(mObservableMangaList != null) {
-            mObservableMangaList.unsubscribeOn(Schedulers.io());
-            mObservableMangaList = null;
-        }
     }
 
     @Override
@@ -159,8 +155,8 @@ public class FollowedPresenterImpl implements FollowedPresenter {
 
     @Subscribe
     public void onUpdateSource(UpdateSource event) {
-        if(mFollowFragmentMapper.getContext() != null) {
-            if(mFollowedMangaList != null && mAdapter != null) {
+        if (mFollowFragmentMapper.getContext() != null) {
+            if (mFollowedMangaList != null && mAdapter != null) {
                 mFollowedMangaList.clear();
                 mAdapter.notifyDataSetChanged();
             }
@@ -169,12 +165,12 @@ public class FollowedPresenterImpl implements FollowedPresenter {
     }
 
     private void updateFollowedGridView(List<Manga> mangaList) {
-        if(mFollowFragmentMapper.getContext() != null && mangaList != null) {
+        if (mFollowFragmentMapper.getContext() != null && mangaList != null) {
             mFollowedMangaList = new ArrayList<>(mangaList);
             Collections.sort(mFollowedMangaList, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
             mAdapter = new SearchableAdapter(mFollowFragmentMapper.getContext(), mFollowedMangaList);
             mFollowFragmentMapper.registerAdapter(mAdapter);
-            mObservableMangaList = null;
+            mMangaListSubscription = null;
         }
     }
 

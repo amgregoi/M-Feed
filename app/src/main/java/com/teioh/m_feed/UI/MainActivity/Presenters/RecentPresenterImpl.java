@@ -20,6 +20,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import rx.Observable;
+import rx.Subscription;
 import rx.schedulers.Schedulers;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
@@ -31,10 +32,9 @@ public class RecentPresenterImpl implements RecentPresenter {
 
     private ArrayList<Manga> mRecentMangaList;
     private SearchableAdapterAlternate mAdapter;
-    private Observable<List<Manga>> mObservableMangaList;
+    private Subscription mMangaListSubscription;
     private RecentFragmentMapper mRecentFragmentMapper;
     private String mLastSourceQuery;
-    private int mGridViewScrollY;
 
     public RecentPresenterImpl(RecentFragmentMapper map) {
         mRecentFragmentMapper = map;
@@ -73,13 +73,13 @@ public class RecentPresenterImpl implements RecentPresenter {
 
     @Override
     public void updateRecentMangaList() {
-        if (mObservableMangaList != null) {
-            mObservableMangaList.unsubscribeOn(Schedulers.io());
-            mObservableMangaList = null;
+        if (mMangaListSubscription != null) {
+            mMangaListSubscription.unsubscribe();
+            mMangaListSubscription = null;
         }
         mLastSourceQuery = WebSource.getCurrentSource();
-        mObservableMangaList = WebSource.getRecentUpdatesObservable();
-        mObservableMangaList.subscribe(manga -> updateRecentGridView(manga));
+        mMangaListSubscription = WebSource.getRecentUpdatesObservable()
+                .subscribe(manga -> updateRecentGridView(manga));
     }
 
     @Override
@@ -97,29 +97,28 @@ public class RecentPresenterImpl implements RecentPresenter {
     @Override
     public void onDestroyView() {
         ButterKnife.unbind(mRecentFragmentMapper);
-        if(mObservableMangaList != null){
-            mObservableMangaList.unsubscribeOn(Schedulers.io());
-            mObservableMangaList.publish().refCount();
-            mObservableMangaList = null;
+        if (mMangaListSubscription != null) {
+            mMangaListSubscription.unsubscribe();
+            mMangaListSubscription = null;
         }
     }
 
     @Override
     public void onResume() {
         BusProvider.getInstance().register(this);
-        if(mRecentMangaList != null){
-            mObservableMangaList = ReactiveQueryManager.updateRecentMangaListObservable(mRecentMangaList);
-            mObservableMangaList.subscribe(manga -> {
-                if (mRecentFragmentMapper.getContext() != null) {
-                    if (manga != null) {
-                        mRecentMangaList.clear();
-                        mRecentMangaList.addAll(manga);
-                        mObservableMangaList = null;
-                        mAdapter.notifyDataSetChanged();
-                    }
-                    mRecentFragmentMapper.stopRefresh();
-                }
-            });
+        if (mRecentMangaList != null) {
+            mMangaListSubscription = ReactiveQueryManager.updateRecentMangaListObservable(mRecentMangaList)
+                    .subscribe(manga -> {
+                        if (mRecentFragmentMapper.getContext() != null) {
+                            if (manga != null) {
+                                mRecentMangaList.clear();
+                                mRecentMangaList.addAll(manga);
+                                mMangaListSubscription = null;
+                                mAdapter.notifyDataSetChanged();
+                            }
+                            mRecentFragmentMapper.stopRefresh();
+                        }
+                    });
         }
         //TODO find way to force refresh item views do for all 3 main fragments
 
@@ -128,11 +127,6 @@ public class RecentPresenterImpl implements RecentPresenter {
     @Override
     public void onPause() {
         BusProvider.getInstance().unregister(this);
-
-        if (mObservableMangaList != null) {
-            mObservableMangaList.unsubscribeOn(Schedulers.io());
-            mObservableMangaList = null;
-        }
     }
 
     @Override
@@ -158,7 +152,7 @@ public class RecentPresenterImpl implements RecentPresenter {
             if (manga != null) {
                 mRecentMangaList = new ArrayList<>(manga);
                 mAdapter = new SearchableAdapterAlternate(mRecentFragmentMapper.getContext(), mRecentMangaList);
-                mObservableMangaList = null;
+                mMangaListSubscription = null;
             } else {
                 // failed to update list, show refresh view,
             }

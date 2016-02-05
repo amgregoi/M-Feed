@@ -25,12 +25,11 @@ import butterknife.ButterKnife;
 public class ChapterFragment extends Fragment implements ChapterReaderMapper {
     public final static String TAG = ChapterFragment.class.getSimpleName();
 
+
+
     @Bind(R.id.pager) GestureViewPager mViewPager;
-//    @Bind(R.id.chapterTitle) TextView mChapterTitle;
-//    @Bind(R.id.currentPageNumber) TextView mCurrentPage;
-//    @Bind(R.id.endPageNumber) TextView mEndPage;
-//    @Bind(R.id.chapter_header) Toolbar mToolbarHeader;
-//    @Bind(R.id.chapter_footer) Toolbar mToolbarFooter;
+    private ChapterPresenter mChapterPresenter;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,8 +37,6 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
         mChapterPresenter = new ChapterPresenterImpl(this, getArguments());
 
     }
-
-    private ChapterPresenter mChapterPresenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

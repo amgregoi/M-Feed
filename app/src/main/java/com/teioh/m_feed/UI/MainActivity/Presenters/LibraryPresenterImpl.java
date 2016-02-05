@@ -21,6 +21,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import rx.Observable;
+import rx.Subscription;
 import rx.schedulers.Schedulers;
 
 
@@ -30,7 +31,7 @@ public class LibraryPresenterImpl implements LibraryPresenter {
 
     private ArrayList<Manga> mLibraryMangaList;
     private SearchableAdapterAlternate mAdapter;
-    private Observable<List<Manga>> mObservableMangaList;
+    private Subscription mMangaListSubscription;
 
     private LibraryFragmentMapper mLibraryFragmentMapper;
 
@@ -55,21 +56,17 @@ public class LibraryPresenterImpl implements LibraryPresenter {
 
     @Override
     public void init() {
-//        if (mLibraryMangaList == null) {
-            this.updateLibraryMangaList();
-//        } else {
-//            this.updateLibraryGridView(mLibraryMangaList);
-//        }
+        updateLibraryMangaList();
     }
 
     @Override
     public void updateLibraryMangaList() {
-        if (mObservableMangaList != null) {
-            mObservableMangaList.unsubscribeOn(Schedulers.io());
-            mObservableMangaList = null;
+        if (mMangaListSubscription != null) {
+            mMangaListSubscription.unsubscribe();
+            mMangaListSubscription = null;
         }
-        mObservableMangaList = ReactiveQueryManager.getMangaLibraryObservable();
-        mObservableMangaList.subscribe(manga -> updateLibraryGridView(manga));
+        mMangaListSubscription = ReactiveQueryManager.getMangaLibraryObservable()
+                .subscribe(manga -> updateLibraryGridView(manga));
     }
 
     @Override
@@ -87,38 +84,33 @@ public class LibraryPresenterImpl implements LibraryPresenter {
     @Override
     public void onDestroyView() {
         ButterKnife.unbind(mLibraryFragmentMapper);
-        if(mObservableMangaList != null){
-            mObservableMangaList.unsubscribeOn(Schedulers.io());
-            mObservableMangaList = null;
+        if (mMangaListSubscription != null) {
+            mMangaListSubscription.unsubscribe();
+            mMangaListSubscription = null;
         }
     }
 
     @Override
     public void onResume() {
         BusProvider.getInstance().register(this);
-        if(mLibraryMangaList != null){
-            mObservableMangaList = ReactiveQueryManager.getMangaLibraryObservable();
-            mObservableMangaList.subscribe(manga -> {
-                if (mLibraryFragmentMapper.getContext() != null) {
-                    if (manga != null) {
-                        mLibraryMangaList.clear();
-                        mLibraryMangaList.addAll(manga);
-                        mObservableMangaList = null;
-                        mAdapter.notifyDataSetChanged();
-                    }
-                }
-            });
+        if (mLibraryMangaList != null) {
+            mMangaListSubscription = ReactiveQueryManager.getMangaLibraryObservable()
+                    .subscribe(manga -> {
+                        if (mLibraryFragmentMapper.getContext() != null) {
+                            if (manga != null) {
+                                mLibraryMangaList.clear();
+                                mLibraryMangaList.addAll(manga);
+                                mMangaListSubscription = null;
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    });
         }
     }
 
     @Override
     public void onPause() {
         BusProvider.getInstance().unregister(this);
-
-        if(mObservableMangaList != null) {
-            mObservableMangaList.unsubscribeOn(Schedulers.io());
-            mObservableMangaList = null;
-        }
     }
 
     @Override
@@ -148,8 +140,8 @@ public class LibraryPresenterImpl implements LibraryPresenter {
 
     @Subscribe
     public void onUpdateSource(UpdateSource event) {
-        if(mLibraryFragmentMapper.getContext() != null) {
-            if(mLibraryMangaList != null && mAdapter != null) {
+        if (mLibraryFragmentMapper.getContext() != null) {
+            if (mLibraryMangaList != null && mAdapter != null) {
                 mLibraryMangaList.clear();
                 mAdapter.notifyDataSetChanged();
             }
@@ -165,7 +157,7 @@ public class LibraryPresenterImpl implements LibraryPresenter {
 
             mAdapter = new SearchableAdapterAlternate(mLibraryFragmentMapper.getContext(), mLibraryMangaList);
             mLibraryFragmentMapper.registerAdapter(mAdapter);
-            mObservableMangaList = null;
+            mMangaListSubscription = null;
         }
     }
 }

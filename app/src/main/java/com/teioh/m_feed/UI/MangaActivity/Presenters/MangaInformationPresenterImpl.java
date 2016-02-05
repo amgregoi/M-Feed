@@ -1,17 +1,23 @@
 package com.teioh.m_feed.UI.MangaActivity.Presenters;
 
+import android.content.Context;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.WindowManager;
 
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
+import com.teioh.m_feed.UI.MangaActivity.View.Fragments.MangaInformationFragment;
 import com.teioh.m_feed.UI.MangaActivity.View.Mappers.MangaInformationMapper;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.WebSources.WebSource;
 
 import butterknife.ButterKnife;
-import rx.Observable;
-import rx.schedulers.Schedulers;
+import rx.Subscription;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
@@ -21,11 +27,10 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
 
     private Manga mManga;
     private MangaInformationMapper mMangaInformationMapper;
-    private Observable<Manga> mObservableManga;
+    private Subscription mObservableMangaSubscription;
 
-
-    public MangaInformationPresenterImpl(MangaInformationMapper base) {
-        mMangaInformationMapper = base;
+    public MangaInformationPresenterImpl(MangaInformationMapper map) {
+        mMangaInformationMapper = map;
     }
 
     @Override
@@ -93,9 +98,9 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
     @Override
     public void onPause() {
         BusProvider.getInstance().unregister(this);
-        if (mObservableManga != null) {
-            mObservableManga.unsubscribeOn(Schedulers.io());
-            mObservableManga = null;
+        if (mObservableMangaSubscription != null) {
+            mObservableMangaSubscription.unsubscribe();
+            mObservableMangaSubscription = null;
         }
     }
 
@@ -105,19 +110,19 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
     }
 
     private void getMangaViewInfo() {
-        if (mObservableManga != null) {
-            mObservableManga.unsubscribeOn(Schedulers.io());
-            mObservableManga = null;
-        }
-        mObservableManga = WebSource.updateMangaObservable(mManga); //TODO PROBLEM HERE occurs in mangainformation but while in reader activity?
-        mObservableManga.subscribe(manga -> {
-            mMangaInformationMapper.setMangaViews(manga);
-            mMangaInformationMapper.stopRefresh();
-            mMangaInformationMapper.showCoverLayout();
-            mMangaInformationMapper.setupFollowButton();
-            this.setFollowButtonText(mManga.getFollowing(), true); //second parameter signifies if the button is being initialized
-            manga.setmIsInitialized(1);
-            cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).put(manga);
+        mObservableMangaSubscription = WebSource.updateMangaObservable(mManga).subscribe(manga -> {
+            if(mMangaInformationMapper.getContext() != null) {
+                mMangaInformationMapper.setMangaViews(manga);
+                mMangaInformationMapper.stopRefresh();
+                mMangaInformationMapper.showCoverLayout();
+                mMangaInformationMapper.setupFollowButton();
+                this.setFollowButtonText(mManga.getFollowing(), true); //fix this
+            }
+                manga.setmIsInitialized(1);
+                cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).put(manga);
+            mObservableMangaSubscription.unsubscribe();
+            mObservableMangaSubscription = null;
+
         });
     }
 

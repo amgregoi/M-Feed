@@ -20,8 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import rx.Observable;
-import rx.schedulers.Schedulers;
+import rx.Subscription;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
@@ -32,7 +31,7 @@ public class ChapterListPresenterImpl implements ChapterListPresenter {
     public final static String ORDER_DESCENDING_KEY = TAG + ":DESCENDING";
     public final static String LIST_POSITION_KEY = TAG + ":POSITION";
 
-    private Observable<List<Chapter>> mObservableChapterList;
+    private Subscription mChapterListSubscription;
     private ArrayList<Chapter> mChapterList;
     private ChapterListAdapter mAdapter;
     private Manga mManga;
@@ -80,8 +79,7 @@ public class ChapterListPresenterImpl implements ChapterListPresenter {
 
     @Override
     public void getChapterList() {
-        mObservableChapterList = WebSource.getChapterListObservable(mManga.getMangaURL());
-        mObservableChapterList.subscribe(chapters -> updateChapterList(chapters));
+        mChapterListSubscription = WebSource.getChapterListObservable(mManga.getMangaURL()).subscribe(chapters -> updateChapterList(chapters));
     }
 
     @Override
@@ -101,9 +99,9 @@ public class ChapterListPresenterImpl implements ChapterListPresenter {
     public void onPause() {
         BusProvider.getInstance().unregister(this);
 
-        if(mObservableChapterList != null) {
-            mObservableChapterList.unsubscribeOn(Schedulers.io());
-            mObservableChapterList = null;
+        if(mChapterListSubscription != null) {
+            mChapterListSubscription.unsubscribe();
+            mChapterListSubscription = null;
         }
     }
 

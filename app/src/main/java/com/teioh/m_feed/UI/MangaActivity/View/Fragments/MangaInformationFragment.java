@@ -41,7 +41,6 @@ public class MangaInformationFragment extends Fragment implements MangaInformati
     @Bind(R.id.artist) TextView artist;
     @Bind(R.id.genre) TextView genres;
     @Bind(R.id.status) TextView status;
-//    @Bind(R.id.follow_button) FloatingActionButton followButton;
     @Bind(R.id.swipe_container) SwipeRefreshLayout mSwipeRefresh;
     @Bind(R.id.relativeLayout) RelativeLayout mRelativeLayout;
 
@@ -108,8 +107,6 @@ public class MangaInformationFragment extends Fragment implements MangaInformati
 
     @Override
     public void setupFollowButton() {
-//        followButton.setColorNormal(getResources().getColor(R.color.ColorPrimary));
-
         mWindowManager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -123,14 +120,14 @@ public class MangaInformationFragment extends Fragment implements MangaInformati
         mImgFloatingView.setColorNormal(getResources().getColor(R.color.ColorPrimary));
         mWindowManager.addView(mImgFloatingView, params);
 
-        mImgFloatingView.setOnTouchListener(new View.OnTouchListener() {
+        mImgFloatingView.setOnTouchListener(new View.OnTouchListener(){
             private int initialY;
             private float initialTouchY;
             private boolean isClick = false;
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
+        switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         initialY = params.y;
                         initialTouchY = event.getRawY();

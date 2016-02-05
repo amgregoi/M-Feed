@@ -25,7 +25,6 @@ public class SignupFragmentPresenterImpl implements SignupFragmentPresenter {
     public SignupFragmentPresenterImpl(LoginFragmentMapper map) {
         mSignupFragmentMapper = map;
     }
-    private String mUserName;
 
     @Override
     public void onSaveState(Bundle bundle, String username) {
@@ -43,6 +42,7 @@ public class SignupFragmentPresenterImpl implements SignupFragmentPresenter {
 
     @Override
     public void init(Bundle bundle) {
+        String mUserName;
         if(bundle != null){
             mUserName = bundle.getString(LoginFragmentPresenterImpl.USERNAME_KEY);
         }else{

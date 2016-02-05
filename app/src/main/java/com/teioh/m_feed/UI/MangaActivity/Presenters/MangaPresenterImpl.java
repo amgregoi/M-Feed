@@ -20,12 +20,11 @@ public class MangaPresenterImpl implements MangaPresenter {
     public static final String TAG = MangaPresenterImpl.class.getSimpleName();
     public static final String MANGA_KEY = TAG + ":MANGA";
 
-    private ViewPagerAdapterManga mViewPagerAdapterManga;
     private CharSequence Titles[] = {"Info", "Chapters"};
-    private int numbtabs = 2;
     private Manga mManga;
 
     private MangaActivityMapper mMangaMapper;
+
 
     public MangaPresenterImpl(MangaActivityMapper map) {
         mMangaMapper = map;
@@ -52,7 +51,7 @@ public class MangaPresenterImpl implements MangaPresenter {
                     .withSelection("mTitle = ? AND mSource = ?", title, WebSource.getCurrentSource()).get();
         }
 
-        mViewPagerAdapterManga = new ViewPagerAdapterManga(((MangaActivity) mMangaMapper.getContext()).getSupportFragmentManager(), Titles, numbtabs, mManga.getTitle());
+        ViewPagerAdapterManga mViewPagerAdapterManga = new ViewPagerAdapterManga(((MangaActivity) mMangaMapper.getContext()).getSupportFragmentManager(), Titles, 2, mManga.getTitle());
         mMangaMapper.setActivityTitle(mManga.getTitle());
         mMangaMapper.registerAdapter(mViewPagerAdapterManga);
         mMangaMapper.setupSlidingTabLayout();

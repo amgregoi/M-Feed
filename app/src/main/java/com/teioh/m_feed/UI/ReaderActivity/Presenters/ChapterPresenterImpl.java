@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
+import rx.Subscription;
 import rx.schedulers.Schedulers;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
@@ -31,7 +32,7 @@ public class ChapterPresenterImpl implements ChapterPresenter {
     private int mPosition, mPageOffsetCount, mChapterListSize;
     private boolean mToolbarShowing, mIsNext;
     private Chapter mChapter;
-    private Observable<List<String>> mObservableImageUrlList;
+    private Subscription mImageListSubscription;
     private ReaderActivity mBaseActivity;       //bad practice?
 
     public ChapterPresenterImpl(ChapterReaderMapper map, Bundle bundle) {
@@ -72,8 +73,8 @@ public class ChapterPresenterImpl implements ChapterPresenter {
 
     @Override
     public void getImageUrls() {
-        mObservableImageUrlList = WebSource.getChapterImageListObservable(mChapter.getChapterUrl());
-        mObservableImageUrlList.subscribe(urlList -> updateImageUrlList(urlList));
+        mImageListSubscription = WebSource.getChapterImageListObservable(mChapter.getChapterUrl())
+                .subscribe(urlList -> updateImageUrlList(urlList));
     }
 
     @Override
@@ -89,9 +90,9 @@ public class ChapterPresenterImpl implements ChapterPresenter {
     @Override
     public void onDestroyView() {
         mBaseActivity = null;
-        if(mObservableImageUrlList != null){
-            mObservableImageUrlList.unsubscribeOn(Schedulers.io());
-            mObservableImageUrlList = null;
+        if (mImageListSubscription != null) {
+            mImageListSubscription.unsubscribe();
+            mImageListSubscription = null;
         }
     }
 
@@ -108,15 +109,12 @@ public class ChapterPresenterImpl implements ChapterPresenter {
 
     @Override
     public void setToNextChapter() {
-//        BusProvider.getInstance().post(new ChangeChapter(true));
         mBaseActivity.incrementChapter();
     }
 
     @Override
     public void setToPreviousChapter() {
-//        BusProvider.getInstance().post(new ChangeChapter(false));
         mBaseActivity.decrementChapter();
-
     }
 
     @Override
@@ -151,7 +149,7 @@ public class ChapterPresenterImpl implements ChapterPresenter {
     }
 
     @Override
-    public void updateChapterViewStatus(){
+    public void updateChapterViewStatus() {
         Chapter viewedChapter = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase())
                 .query(Chapter.class)
                 .withSelection("mTitle = ? AND cNumber = ?", mChapter.getMangaTitle(), Integer.toString(mChapter.getChapterNumber()))
