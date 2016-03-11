@@ -3,14 +3,12 @@ package com.teioh.m_feed.UI.MainActivity.Presenters;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.squareup.otto.Subscribe;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapterAlternate;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.RecentFragmentMapper;
 import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.Database.ReactiveQueryManager;
-import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.Utils.OttoBus.QueryChange;
 import com.teioh.m_feed.Utils.OttoBus.UpdateSource;
 import com.teioh.m_feed.WebSources.WebSource;
@@ -105,7 +103,7 @@ public class RecentPresenterImpl implements RecentPresenter {
 
     @Override
     public void onResume() {
-        BusProvider.getInstance().register(this);
+//        BusProvider.getInstance().register(this);
         if (mRecentMangaList != null) {
             mMangaListSubscription = ReactiveQueryManager.updateRecentMangaListObservable(mRecentMangaList)
                     .subscribe(manga -> {
@@ -126,7 +124,7 @@ public class RecentPresenterImpl implements RecentPresenter {
 
     @Override
     public void onPause() {
-        BusProvider.getInstance().unregister(this);
+//        BusProvider.getInstance().unregister(this);
     }
 
     @Override
@@ -134,18 +132,18 @@ public class RecentPresenterImpl implements RecentPresenter {
         mRecentFragmentMapper.registerAdapter(mAdapter);
     }
 
-    @Subscribe
-    public void activityQueryChange(QueryChange query) {
-        onQueryTextChange(query.getQuery());
-    }
-
-    @Subscribe
-    public void onUpdateSource(UpdateSource event) {
-        if (mRecentFragmentMapper.getContext() != null) {
-            mRecentFragmentMapper.startRefresh();
-            updateRecentMangaList();
-        }
-    }
+//    @Subscribe
+//    public void activityQueryChange(QueryChange query) {
+//        onQueryTextChange(query.getQuery());
+//    }
+//
+//    @Subscribe
+//    public void onUpdateSource(UpdateSource event) {
+//        if (mRecentFragmentMapper.getContext() != null) {
+//            mRecentFragmentMapper.startRefresh();
+//            updateRecentMangaList();
+//        }
+//    }
 
     private void updateRecentGridView(List<Manga> manga) {
         if (mRecentFragmentMapper.getContext() != null) {

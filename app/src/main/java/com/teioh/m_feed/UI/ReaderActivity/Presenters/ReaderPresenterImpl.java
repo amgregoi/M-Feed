@@ -3,14 +3,12 @@ package com.teioh.m_feed.UI.ReaderActivity.Presenters;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.squareup.otto.Subscribe;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.ChapterListPresenterImpl;
 import com.teioh.m_feed.UI.ReaderActivity.Adapters.ChapterPageAdapter;
 import com.teioh.m_feed.UI.ReaderActivity.View.Fragments.ChapterFragment;
 import com.teioh.m_feed.UI.ReaderActivity.View.Mappers.ReaderActivityMapper;
 import com.teioh.m_feed.UI.ReaderActivity.View.ReaderActivity;
-import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.Utils.OttoBus.ChangeChapter;
 
 import java.util.ArrayList;
@@ -61,12 +59,12 @@ public class ReaderPresenterImpl implements ReaderPresenter {
 
     @Override
     public void onPause() {
-        BusProvider.getInstance().unregister(this);
+//        BusProvider.getInstance().unregister(this);
     }
 
     @Override
     public void onResume() {
-        BusProvider.getInstance().register(this);
+//        BusProvider.getInstance().register(this);
     }
 
     @Override
@@ -95,12 +93,12 @@ public class ReaderPresenterImpl implements ReaderPresenter {
     }
 
     //TODO possibly remove
-    @Subscribe
-    public void onChangeChapter(ChangeChapter newChapter) {
-        if (newChapter.getIsNext()) {
-            mReaderMap.setCurrentChapter(mChapterPosition + 1);
-        } else {
-            mReaderMap.setCurrentChapter(mChapterPosition - 1);
-        }
-    }
+//    @Subscribe
+//    public void onChangeChapter(ChangeChapter newChapter) {
+//        if (newChapter.getIsNext()) {
+//            mReaderMap.setCurrentChapter(mChapterPosition + 1);
+//        } else {
+//            mReaderMap.setCurrentChapter(mChapterPosition - 1);
+//        }
+//    }
 }

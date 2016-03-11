@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/tool_bar"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="@dimen/baseline_content_left"
+    android:elevation="2dp"
+    android:orientation="horizontal">
+
+
+    <RelativeLayout
+        android:id="@+id/searchBar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="5dp">
+
+        <ImageButton
+            android:id="@+id/orderButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="@dimen/baseline_grid_unit"
+            android:alpha=".7"
+            android:src="@drawable/ic_order"
+            android:background="@color/black"
+            android:gravity="end"
+            android:padding="@dimen/baseline_margin_unit"
+            />
+	    <!--android:background="@drawable/clear_button_background"-->
+
+    </RelativeLayout>
+</LinearLayout>
+

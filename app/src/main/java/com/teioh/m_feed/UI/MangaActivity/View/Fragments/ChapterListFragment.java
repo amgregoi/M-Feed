@@ -53,6 +53,7 @@ public class ChapterListFragment extends Fragment implements ChapterListMapper {
 
         mChapterListPresenter.init();
     }
+
     @Override public void onResume() {
         super.onResume();
         mChapterListPresenter.onResume();

@@ -146,12 +146,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     @Override
     public void setupTabLayout() {
         tabs.setDistributeEvenly(true); // To make the Tabs Fixed set this true, This makes the tabs Space Evenly in Available width
-        tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
-            @Override
-            public int getIndicatorColor(int position) {
-                return getResources().getColor(R.color.tabsScrollColor);
-            }
-        });
+        tabs.setCustomTabColorizer(position -> getResources().getColor(R.color.tabsScrollColor));
     }
 
     @Override

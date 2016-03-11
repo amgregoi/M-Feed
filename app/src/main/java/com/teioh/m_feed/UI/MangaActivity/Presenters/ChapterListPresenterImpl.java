@@ -3,7 +3,6 @@ package com.teioh.m_feed.UI.MangaActivity.Presenters;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.squareup.otto.Subscribe;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
@@ -11,7 +10,6 @@ import com.teioh.m_feed.UI.MangaActivity.Adapters.ChapterListAdapter;
 import com.teioh.m_feed.UI.MangaActivity.View.Mappers.ChapterListMapper;
 import com.teioh.m_feed.UI.ReaderActivity.View.ReaderActivity;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
-import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.Utils.OttoBus.ChapterOrderEvent;
 import com.teioh.m_feed.WebSources.WebSource;
 
@@ -97,7 +95,7 @@ public class ChapterListPresenterImpl implements ChapterListPresenter {
 
     @Override
     public void onPause() {
-        BusProvider.getInstance().unregister(this);
+//        BusProvider.getInstance().unregister(this);
 
         if(mChapterListSubscription != null) {
             mChapterListSubscription.unsubscribe();
@@ -107,7 +105,7 @@ public class ChapterListPresenterImpl implements ChapterListPresenter {
 
     @Override
     public void onResume() {
-        BusProvider.getInstance().register(this);
+//        BusProvider.getInstance().register(this);
     }
 
     @Override
@@ -115,15 +113,15 @@ public class ChapterListPresenterImpl implements ChapterListPresenter {
         ButterKnife.unbind(mChapterListMapper);
     }
 
-    @Subscribe
-    public void onChapterOrderChange(ChapterOrderEvent event) {
-        if (mChapterList != null) {
-            mChapterOrderDescending = !mChapterOrderDescending;
-            Collections.reverse(mChapterList);
-            mAdapter = new ChapterListAdapter(mChapterListMapper.getContext(), R.layout.chapter_list_item, mChapterList);
-            mChapterListMapper.registerAdapter(mAdapter);
-        }
-    }
+//    @Subscribe
+//    public void onChapterOrderChange(ChapterOrderEvent event) {
+//        if (mChapterList != null) {
+//            mChapterOrderDescending = !mChapterOrderDescending;
+//            Collections.reverse(mChapterList);
+//            mAdapter = new ChapterListAdapter(mChapterListMapper.getContext(), R.layout.chapter_list_item, mChapterList);
+//            mChapterListMapper.registerAdapter(mAdapter);
+//        }
+//    }
 
     private void updateChapterList(List<Chapter> chapters) {
         if (chapters != null && mChapterListMapper.getContext() != null) {

@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 23
@@ -10,6 +11,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+
     }
 
     buildTypes {
@@ -28,6 +30,7 @@ android {
                             'src/main/res',
                             'src/main/res/layout/drawer_layouts',
                             'src/main/res/layout/login_layouts',
+                            'src/main/res/layout/reader_layouts',
                             'src/main/res/layout/manga_layouts',
                             'src/main/res/layout/main_layouts'
                     ]
@@ -43,16 +46,13 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.0.1'
 
     //parse
-    compile 'com.parse.bolts:bolts-android:1.2.1'
+//    compile 'com.parse.bolts:bolts-android:1.2.1'
     compile 'com.parse:parse-android:1.10.3'
 
 
-    //Event bus
-    compile 'com.squareup:otto:1.3.8'
 
     //picasso and glide
     compile 'com.github.bumptech.glide:glide:3.5.2'
-    compile 'com.squareup.picasso:picasso:2.5.2'
 
     //butterknife
     compile 'com.jakewharton:butterknife:7.0.1'
@@ -60,8 +60,6 @@ dependencies {
     //rx java
     compile 'io.reactivex:rxandroid:1.0.1'
     compile 'io.reactivex:rxjava:1.0.14'
-    compile 'io.reactivex:rxjava-math:1.0.0'
-    compile 'com.jakewharton.rxbinding:rxbinding:0.2.0'
 
     //jsoup
     compile 'org.jsoup:jsoup:1.8.1'
@@ -69,8 +67,23 @@ dependencies {
     //cupboard
     compile 'nl.qbusict:cupboard:2.1.4'
 
+    //retrofit
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
+    compile 'com.squareup.okhttp:okhttp:2.5.0'
+    compile 'com.squareup.okio:okio:1.0.1'
+    compile ('com.squareup.retrofit:converter-simplexml:1.9.0') {
+        exclude group: 'xpp3', module: 'xpp3'
+        exclude group: 'stax', module: 'stax-api'
+        exclude group: 'stax', module: 'stax'
+    }
+
     //float action button
     compile 'com.getbase:floatingactionbutton:1.10.1'
+
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
+        transitive = true;
+    }
 
 
 }
@@ -79,16 +92,19 @@ dependencies {
 buildscript {
     repositories {
         mavenCentral()
+        maven { url 'https://maven.fabric.io/public' }
     }
 
     dependencies {
         classpath 'me.tatarka:gradle-retrolambda:3.2.4'
+        classpath 'io.fabric.tools:gradle:1.+'
     }
 }
 
 // Required because retrolambda is on maven central
 repositories {
     mavenCentral()
+    maven { url 'https://maven.fabric.io/public' }
 }
 
 apply plugin: 'com.android.application' //or apply plugin: 'java'

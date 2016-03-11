@@ -11,7 +11,6 @@ import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 import com.teioh.m_feed.UI.LoginActivity.View.Mappers.LoginFragmentMapper;
 import com.teioh.m_feed.UI.MainActivity.View.MainActivity;
-import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 
 import butterknife.ButterKnife;
 
@@ -59,12 +58,12 @@ public class SignupFragmentPresenterImpl implements SignupFragmentPresenter {
 
     @Override
     public void onPause() {
-        BusProvider.getInstance().unregister(mSignupFragmentMapper);
+//        BusProvider.getInstance().unregister(mSignupFragmentMapper);
     }
 
     @Override
     public void onResume() {
-        BusProvider.getInstance().register(mSignupFragmentMapper);
+//        BusProvider.getInstance().register(mSignupFragmentMapper);
     }
 
     @Override
@@ -91,6 +90,7 @@ public class SignupFragmentPresenterImpl implements SignupFragmentPresenter {
                  * 204 - email missing
                  *
                  */
+
                 public void done(ParseException e) {
                     if (e == null) {
                         Toast.makeText(mSignupFragmentMapper.getContext(),

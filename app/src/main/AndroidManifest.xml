@@ -81,6 +81,9 @@
 
         <service android:name=".RecentUpdateService" ></service>
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="a5a93ba075aebacf45ad00cc24f5d024c86accdd" />
     </application>
 
 </manifest>

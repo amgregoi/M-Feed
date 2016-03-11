@@ -7,14 +7,6 @@
 	android:background="@android:color/white"
 	android:clickable="true">
 
-	<!--<include-->
-		<!--android:id="@+id/chapter_header"-->
-		<!--layout="@layout/chapter_reader_header"-->
-		<!--android:layout_width="fill_parent"-->
-		<!--android:layout_height="wrap_content"-->
-		<!--android:layout_alignParentTop="true"-->
-		<!--/>-->
-
 	<com.teioh.m_feed.UI.ReaderActivity.View.Widgets.GestureViewPager
 		android:id="@id/pager"
 		android:layout_width="fill_parent"
@@ -22,11 +14,4 @@
 		android:background="#cc000000"
 		/>
 
-	<!--<include-->
-		<!--android:id="@+id/chapter_footer"-->
-		<!--layout="@layout/chapter_reader_footer"-->
-		<!--android:layout_width="fill_parent"-->
-		<!--android:layout_height="wrap_content"-->
-		<!--android:layout_alignParentBottom="true"-->
-		<!--/>-->
 </RelativeLayout>

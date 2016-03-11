@@ -8,7 +8,6 @@ import com.teioh.m_feed.UI.MangaActivity.Adapters.ViewPagerAdapterManga;
 import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
 import com.teioh.m_feed.UI.MangaActivity.View.Mappers.MangaActivityMapper;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
-import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.Utils.OttoBus.ChapterOrderEvent;
 import com.teioh.m_feed.WebSources.WebSource;
 
@@ -59,11 +58,11 @@ public class MangaPresenterImpl implements MangaPresenter {
     }
 
     @Override public void onResume() {
-        BusProvider.getInstance().register(this);
+//        BusProvider.getInstance().register(this);
     }
 
     @Override public void onPause() {
-        BusProvider.getInstance().unregister(this);
+//        BusProvider.getInstance().unregister(this);
     }
 
     @Override public void onDestroy() {
@@ -71,6 +70,6 @@ public class MangaPresenterImpl implements MangaPresenter {
     }
 
     @Override public void chapterOrderButtonClick() {
-        BusProvider.getInstance().post(new ChapterOrderEvent());
+//        BusProvider.getInstance().post(new ChapterOrderEvent());
     }
 }

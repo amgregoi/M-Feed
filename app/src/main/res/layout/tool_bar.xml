@@ -22,10 +22,12 @@
 			android:layout_height="wrap_content"
 			android:layout_alignParentEnd="true"
 			android:layout_centerInParent="true"
-			android:layout_marginRight="@dimen/baseline_grid_unit"
+			android:layout_marginEnd="@dimen/baseline_grid_unit"
 			android:focusable="false"
 			android:iconifiedByDefault="true"
 			android:queryHint="Search Here"
+			android:background="@drawable/clear_button_background"
+
 			/>
 
 		<ImageButton
@@ -36,7 +38,8 @@
 			android:layout_centerInParent="true"
 			android:layout_marginEnd="@dimen/baseline_grid_unit"
 			android:alpha=".7"
-			android:background="@drawable/ic_order"
+			android:src="@drawable/ic_order"
+			android:background="@drawable/clear_button_background"
 			android:gravity="end"
 			android:padding="@dimen/baseline_margin_unit"
 			/>

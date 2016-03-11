@@ -1,19 +1,11 @@
 package com.teioh.m_feed.UI.MangaActivity.Presenters;
 
-import android.content.Context;
-import android.graphics.PixelFormat;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.WindowManager;
 
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
-import com.teioh.m_feed.UI.MangaActivity.View.Fragments.MangaInformationFragment;
 import com.teioh.m_feed.UI.MangaActivity.View.Mappers.MangaInformationMapper;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
-import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.WebSources.WebSource;
 
 import butterknife.ButterKnife;
@@ -92,12 +84,12 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
 
     @Override
     public void onResume() {
-        BusProvider.getInstance().register(this);
+//        BusProvider.getInstance().register(this);
     }
 
     @Override
     public void onPause() {
-        BusProvider.getInstance().unregister(this);
+//        BusProvider.getInstance().unregister(this);
         if (mObservableMangaSubscription != null) {
             mObservableMangaSubscription.unsubscribe();
             mObservableMangaSubscription = null;
@@ -111,15 +103,15 @@ public class MangaInformationPresenterImpl implements MangaInformationPresenter 
 
     private void getMangaViewInfo() {
         mObservableMangaSubscription = WebSource.updateMangaObservable(mManga).subscribe(manga -> {
-            if(mMangaInformationMapper.getContext() != null) {
+            if (mMangaInformationMapper.getContext() != null) {
                 mMangaInformationMapper.setMangaViews(manga);
                 mMangaInformationMapper.stopRefresh();
                 mMangaInformationMapper.showCoverLayout();
                 mMangaInformationMapper.setupFollowButton();
                 this.setFollowButtonText(mManga.getFollowing(), true); //fix this
             }
-                manga.setmIsInitialized(1);
-                cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).put(manga);
+            manga.setmIsInitialized(1);
+            cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).put(manga);
             mObservableMangaSubscription.unsubscribe();
             mObservableMangaSubscription = null;
 

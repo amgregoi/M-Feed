@@ -28,4 +28,5 @@
     <!-- TAG Resources-->
     <string name="ChapterListAdapterHolder">1</string>
     <string name="ChapterListAdapterTAG">2</string>
+    <string name="com.appsee.apikey" translatable="false">9f9af3c86f7441d486152cc00cdc55ee</string>
 </resources>

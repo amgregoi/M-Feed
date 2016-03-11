@@ -4,15 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.parse.ParsePushBroadcastReceiver;
-import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.Utils.OttoBus.UpdateListEvent;
 
 public class ParsePushReciever extends ParsePushBroadcastReceiver {
 
     protected void onPushReceive(Context context, Intent intent) {
         super.onPushReceive(context, intent);
-        BusProvider.getInstance().register(this);
-        BusProvider.getInstance().post(new UpdateListEvent());
-        BusProvider.getInstance().unregister(this);
+//        BusProvider.getInstance().register(this);
+//        BusProvider.getInstance().post(new UpdateListEvent());
+//        BusProvider.getInstance().unregister(this);
     }
 }

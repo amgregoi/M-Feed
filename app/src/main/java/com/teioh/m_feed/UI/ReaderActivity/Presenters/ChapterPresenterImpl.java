@@ -9,7 +9,6 @@ import com.teioh.m_feed.UI.ReaderActivity.Adapters.ImagePageAdapter;
 import com.teioh.m_feed.UI.ReaderActivity.View.Mappers.ChapterReaderMapper;
 import com.teioh.m_feed.UI.ReaderActivity.View.ReaderActivity;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
-import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.WebSources.WebSource;
 
 import java.util.ArrayList;
@@ -79,12 +78,12 @@ public class ChapterPresenterImpl implements ChapterPresenter {
 
     @Override
     public void onPause() {
-        BusProvider.getInstance().unregister(this);
+//        BusProvider.getInstance().unregister(this);
     }
 
     @Override
     public void onResume() {
-        BusProvider.getInstance().register(this);
+//        BusProvider.getInstance().register(this);
     }
 
     @Override

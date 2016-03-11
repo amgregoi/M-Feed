@@ -4,13 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.squareup.otto.Subscribe;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapter;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.FollowFragmentMapper;
 import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
 import com.teioh.m_feed.Utils.Database.ReactiveQueryManager;
-import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 import com.teioh.m_feed.Utils.OttoBus.QueryChange;
 import com.teioh.m_feed.Utils.OttoBus.RemoveFromLibrary;
 import com.teioh.m_feed.Utils.OttoBus.UpdateListEvent;
@@ -56,11 +54,7 @@ public class FollowedPresenterImpl implements FollowedPresenter {
 
     @Override
     public void init() {
-//        if(mFollowedMangaList == null){
         this.updateFollowedMangaList();
-//        }else{
-//            updateFollowedGridView(mFollowedMangaList);
-//        }
     }
 
     @Override
@@ -69,6 +63,7 @@ public class FollowedPresenterImpl implements FollowedPresenter {
             mMangaListSubscription.unsubscribe();
             mMangaListSubscription = null;
         }
+
         mMangaListSubscription = ReactiveQueryManager.getFollowedMangaObservable()
                 .subscribe(manga -> updateFollowedGridView(manga));
     }
@@ -96,7 +91,7 @@ public class FollowedPresenterImpl implements FollowedPresenter {
 
     @Override
     public void onResume() {
-        BusProvider.getInstance().register(this);
+//        BusProvider.getInstance().register(this);
         if (mFollowedMangaList != null) {
             mMangaListSubscription = ReactiveQueryManager.getFollowedMangaObservable()
                     .subscribe(manga -> {
@@ -114,7 +109,7 @@ public class FollowedPresenterImpl implements FollowedPresenter {
 
     @Override
     public void onPause() {
-        BusProvider.getInstance().unregister(this);
+//        BusProvider.getInstance().unregister(this);
     }
 
     @Override
@@ -122,47 +117,47 @@ public class FollowedPresenterImpl implements FollowedPresenter {
         mFollowFragmentMapper.registerAdapter(mAdapter);
     }
 
-    @Subscribe
-    public void onMangaAdded(Manga manga) {
-        if (!mFollowedMangaList.contains(manga)) {
-            mFollowedMangaList.add(manga);
-            Collections.sort(mFollowedMangaList, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
-            mAdapter.notifyDataSetChanged();
-            Log.e("FOLLOW MANGA success ", manga.getTitle());
-        }
+//    @Subscribe
+//    public void onMangaAdded(Manga manga) {
+//        if (!mFollowedMangaList.contains(manga)) {
+//            mFollowedMangaList.add(manga);
+//            Collections.sort(mFollowedMangaList, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
+//            mAdapter.notifyDataSetChanged();
+//            Log.e("FOLLOW MANGA success ", manga.getTitle());
+//        }
+//
+//    }
 
-    }
-
-    @Subscribe
-    public void onMangaRemoved(RemoveFromLibrary rm) {
-        Manga manga = rm.getManga();
-        if (mFollowedMangaList.contains(manga)) {
-            mFollowedMangaList.remove(manga);
-            mAdapter.notifyDataSetChanged();
-            Log.e("UNFOLLOW MANGA success", manga.getTitle());
-        }
-    }
-
-    @Subscribe
-    public void onPushRecieved(UpdateListEvent event) {
-        //TODO - potentially get rid of
-    }
-
-    @Subscribe
-    public void activityQueryChange(QueryChange q) {
-        onQueryTextChange(q.getQuery());
-    }
-
-    @Subscribe
-    public void onUpdateSource(UpdateSource event) {
-        if (mFollowFragmentMapper.getContext() != null) {
-            if (mFollowedMangaList != null && mAdapter != null) {
-                mFollowedMangaList.clear();
-                mAdapter.notifyDataSetChanged();
-            }
-            updateFollowedMangaList();
-        }
-    }
+//    @Subscribe
+//    public void onMangaRemoved(RemoveFromLibrary rm) {
+//        Manga manga = rm.getManga();
+//        if (mFollowedMangaList.contains(manga)) {
+//            mFollowedMangaList.remove(manga);
+//            mAdapter.notifyDataSetChanged();
+//            Log.e("UNFOLLOW MANGA success", manga.getTitle());
+//        }
+//    }
+//
+//    @Subscribe
+//    public void onPushRecieved(UpdateListEvent event) {
+//        //TODO - potentially get rid of
+//    }
+//
+//    @Subscribe
+//    public void activityQueryChange(QueryChange q) {
+//        onQueryTextChange(q.getQuery());
+//    }
+//
+//    @Subscribe
+//    public void onUpdateSource(UpdateSource event) {
+//        if (mFollowFragmentMapper.getContext() != null) {
+//            if (mFollowedMangaList != null && mAdapter != null) {
+//                mFollowedMangaList.clear();
+//                mAdapter.notifyDataSetChanged();
+//            }
+//            updateFollowedMangaList();
+//        }
+//    }
 
     private void updateFollowedGridView(List<Manga> mangaList) {
         if (mFollowFragmentMapper.getContext() != null && mangaList != null) {

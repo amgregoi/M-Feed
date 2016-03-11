@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -22,15 +23,20 @@ import com.teioh.m_feed.UI.MainActivity.Adapters.SourceListAdapter;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.MainActivityMapper;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
-import com.teioh.m_feed.Utils.OttoBus.BusProvider;
+import com.teioh.m_feed.Utils.MAL.MALApi;
+import com.teioh.m_feed.Utils.MAL.MALService;
 import com.teioh.m_feed.Utils.OttoBus.QueryChange;
 import com.teioh.m_feed.Utils.OttoBus.UpdateSource;
 import com.teioh.m_feed.WebSources.WebSource;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import butterknife.ButterKnife;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class MainPresenterImpl implements MainPresenter {
     public final static String TAG = MainPresenterImpl.class.getSimpleName();
@@ -136,18 +142,18 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void onResume() {
-        BusProvider.getInstance().register(mMainMapper);
+//        BusProvider.getInstance().register(mMainMapper);
         mMainMapper.closeDrawer();
     }
 
     @Override
     public void onPause() {
-        BusProvider.getInstance().unregister(mMainMapper);
+//        BusProvider.getInstance().unregister(mMainMapper);
     }
 
     @Override
     public void updateQueryChange(String newTest) {
-        BusProvider.getInstance().post(new QueryChange(newTest));
+//        BusProvider.getInstance().post(new QueryChange(newTest));
     }
 
     @Override
@@ -194,10 +200,23 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void onSourceChosen(String source) {
-
         switch (source) {
             case ("Logout"):
-                onLogout();
+//                onLogout();
+                MALService service = MALApi.createService(null, null);
+                service.verifyUserAccount(new Callback<String>() {
+                    @Override
+                    public void success(String s, Response response) {
+                        //TODO verification successfull for MAL, this works, can start MAL integration
+                        //TODO after replacing ottobus functionality that was just commented out
+                        Log.e(TAG, s);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.e(TAG, error.getMessage());
+                    }
+                });
                 return;
             case ("Advanced Search"):
                 return;
@@ -206,7 +225,7 @@ public class MainPresenterImpl implements MainPresenter {
                     mSourceListAdapater.notifyDataSetChanged();
                     mDrawerAdapter.notifyDataSetChanged();
                     WebSource.setwCurrentSource(source);
-                    BusProvider.getInstance().post(new UpdateSource());
+//                    BusProvider.getInstance().post(new UpdateSource());
                     mMainMapper.setupToolbar();
                 }
         }

@@ -12,7 +12,6 @@ import com.parse.ParseUser;
 import com.teioh.m_feed.UI.LoginActivity.View.Fragments.SignupFragment;
 import com.teioh.m_feed.UI.LoginActivity.View.Mappers.LoginFragmentMapper;
 import com.teioh.m_feed.UI.MainActivity.View.MainActivity;
-import com.teioh.m_feed.Utils.OttoBus.BusProvider;
 
 import butterknife.ButterKnife;
 
@@ -48,12 +47,12 @@ public class LoginFragmentPresenterImpl implements LoginFragmentPresenter {
 
     @Override
     public void onPause() {
-        BusProvider.getInstance().unregister(mLoginFragmentMapper);
+//        BusProvider.getInstance().unregister(mLoginFragmentMapper);
     }
 
     @Override
     public void onResume() {
-        BusProvider.getInstance().register(mLoginFragmentMapper);
+//        BusProvider.getInstance().register(mLoginFragmentMapper);
     }
 
     @Override
