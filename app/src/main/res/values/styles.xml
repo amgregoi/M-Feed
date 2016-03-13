@@ -32,4 +32,22 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
+
+
+
+
+
+    <style name="MyCustomTheme" parent="@android:style/Theme.Panel">
+        <item name="android:windowAnimationStyle">@style/MyAnimation.Window</item>
+        <item name="android:windowBackground">@color/ColorPrimary</item>
+        <item name="android:colorAccent">@color/ColorAccent</item>
+
+    </style>
+
+    <style name="MyAnimation.Window" parent="@android:style/Animation.Activity">
+        <item name="android:windowEnterAnimation">@transition/anim_in</item>
+        <item name="android:windowExitAnimation">@transition/anim_out</item>
+    </style>
+
+
 </resources>

@@ -1,8 +1,11 @@
 package com.teioh.m_feed.UI.MangaActivity.View;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -24,6 +27,8 @@ import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.MangaPresenter;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.MangaPresenterImpl;
+import com.teioh.m_feed.UI.MangaActivity.View.Fragments.FRemoveDialogFragment;
+import com.teioh.m_feed.UI.MangaActivity.View.Fragments.FProgressDialogFragment;
 import com.teioh.m_feed.UI.MangaActivity.View.Mappers.MangaActivityMapper;
 
 import butterknife.Bind;
@@ -32,6 +37,7 @@ import butterknife.OnClick;
 import butterknife.OnItemClick;
 
 public class MangaActivity extends AppCompatActivity implements MangaActivityMapper {
+    final public static String TAG = MangaActivity.class.getSimpleName();
 
     @Bind(R.id.activityTitle) TextView mActivityTitle;
     @Bind(R.id.tool_bar) Toolbar mToolBar;
@@ -112,14 +118,28 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
         int id = item.getItemId();
         if (id == R.id.remove_list) {
             //popup dialog
-            mSyncMALButton.setVisibility(View.GONE);
-            mFollowButton.setVisibility(View.VISIBLE);
-            mMangaPresenter.onFollwButtonClick();
-            invalidateOptionsMenu();
+            DialogFragment newFragment = FRemoveDialogFragment.newInstance(R.string.DialogFragmentRemove);
+            newFragment.show(getSupportFragmentManager(), "dialog");
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityReenter(int resultCode, Intent data) {
+        super.onActivityReenter(resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if(data == null) {
+                // After Ok code.
+                mSyncMALButton.setVisibility(View.GONE);
+                mFollowButton.setVisibility(View.VISIBLE);
+                mMangaPresenter.onFollwButtonClick();
+                invalidateOptionsMenu();
+            }//else if(data.hasextra(etc...)
+        } else if (resultCode == Activity.RESULT_CANCELED){
+            // After Cancel code.
+        }
     }
 
     @Override
@@ -164,7 +184,7 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
             mArtistText.setText(manga.getmArtist());
             mGenresText.setText(manga.getmGenre());
             mStatusText.setText(manga.getmStatus());
-            Glide.with(getContext()).load(manga.getPicUrl()).into(mMangaImage);
+            Glide.with(getContext()).load(manga.getPicUrl()).fitCenter().into(mMangaImage);
             mChapterList.addHeaderView(mMangaInfoHeader, null, false);
             mChapterList.addHeaderView(mChapterHeader, null, false);
 
@@ -263,6 +283,8 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
         });
 
         mMultiIncButton.setOnClickListener(v -> {
+            DialogFragment newFragment = new FProgressDialogFragment();
+            newFragment.show(getSupportFragmentManager(), "dialog");
 
         });
     }
