@@ -40,10 +40,9 @@ public class LibraryFragment extends Fragment implements LibraryFragmentMapper {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             mLibraryPresenter.onRestoreState(savedInstanceState);
         }
-
         mLibraryPresenter.init();
     }
 
@@ -51,12 +50,6 @@ public class LibraryFragment extends Fragment implements LibraryFragmentMapper {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         mLibraryPresenter.onSaveState(outState);
-    }
-
-    @OnItemClick(R.id.all_list_view)
-    void onItemClick(AdapterView<?> adapter, View view, int pos) {
-        final Manga item = (Manga) adapter.getItemAtPosition(pos);
-        mLibraryPresenter.onItemClick(item.toString());
     }
 
     @Override
@@ -87,16 +80,6 @@ public class LibraryFragment extends Fragment implements LibraryFragmentMapper {
     }
 
     @Override
-    public void hideGridView() {
-        //TODO REMOVE
-    }
-
-    @Override
-    public void showGridView() {
-        //TODO REMOVE
-    }
-
-    @Override
     public boolean onQueryTextChange(String newText) {
         mLibraryPresenter.onQueryTextChange(newText);
         return true;
@@ -105,5 +88,16 @@ public class LibraryFragment extends Fragment implements LibraryFragmentMapper {
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
+    }
+
+    @Override
+    public void updateSource() {
+        mLibraryPresenter.updateSource();
+    }
+
+    @OnItemClick(R.id.all_list_view)
+    void onItemClick(AdapterView<?> adapter, View view, int pos) {
+        final Manga item = (Manga) adapter.getItemAtPosition(pos);
+        mLibraryPresenter.onItemClick(item.toString());
     }
 }

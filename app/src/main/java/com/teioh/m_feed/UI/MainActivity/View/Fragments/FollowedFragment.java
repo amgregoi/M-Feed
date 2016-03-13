@@ -95,4 +95,9 @@ public class FollowedFragment extends Fragment implements FollowFragmentMapper {
             registerForContextMenu(mGridView);
         }
     }
+
+    @Override
+    public void updateSource() {
+        mFollowedPresenter.updateSource();
+    }
 }

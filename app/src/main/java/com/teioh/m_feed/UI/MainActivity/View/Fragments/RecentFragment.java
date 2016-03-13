@@ -30,7 +30,8 @@ public class RecentFragment extends Fragment implements RecentFragmentMapper {
 
     private RecentPresenter mRecentPresenterManga;
 
-    @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab1_recent_fragment, container, false);
         ButterKnife.bind(this, v);
 
@@ -53,53 +54,71 @@ public class RecentFragment extends Fragment implements RecentFragmentMapper {
         mRecentPresenterManga.init();
     }
 
-    @OnItemClick(R.id.recent_list_view) void onItemClick(AdapterView<?> adapter, View view, int pos) {
-        Manga item = (Manga) adapter.getItemAtPosition(pos);
-        mRecentPresenterManga.onItemClick(item.getTitle());
-    }
-
-    @Override public void onDestroyView() {
+    @Override
+    public void onDestroyView() {
         super.onDestroyView();
         mRecentPresenterManga.onDestroyView();
 
     }
 
-    @Override public void onResume() {
+    @Override
+    public void onResume() {
         super.onResume();
         mRecentPresenterManga.onResume();
         mGridView.refreshDrawableState();
     }
 
-    @Override public void onPause() {
+    @Override
+    public void onPause() {
         super.onPause();
         mRecentPresenterManga.onPause();
     }
 
-    @Override public void registerAdapter(BaseAdapter adapter) {
+    @Override
+    public void registerAdapter(BaseAdapter adapter) {
         if (adapter != null) {
             mGridView.setAdapter(adapter);
             mGridView.setTextFilterEnabled(true);
         }
     }
 
-    @Override public boolean onQueryTextSubmit(String newText) {
+    @Override
+    public boolean onQueryTextSubmit(String newText) {
         return false;
     }
 
-    @Override public boolean onQueryTextChange(String newText) {
+    @Override
+    public boolean onQueryTextChange(String newText) {
         mRecentPresenterManga.onQueryTextChange(newText);
         return false;
     }
 
-    @Override public void startRefresh() {
-        swipeContainer.post(() -> swipeContainer.setRefreshing(true));  // starts activity with loading icon while retrieving list
+    @Override
+    public void startRefresh() {
+
     }
 
-    @Override public void stopRefresh() {
+    @Override
+    public void stopRefresh() {
         swipeContainer.setRefreshing(false);
     }
 
-    @Override public void setupSwipeRefresh() {
+    @Override
+    public void setupSwipeRefresh() {
+        swipeContainer.post(() -> swipeContainer.setRefreshing(true));
         swipeContainer.setOnRefreshListener(() -> mRecentPresenterManga.updateRecentMangaList());
 
-    }}
+    }
+
+    @Override
+    public void updateSource() {
+        mRecentPresenterManga.updateSource();
+    }
+
+    @OnItemClick(R.id.recent_list_view)
+    void onItemClick(AdapterView<?> adapter, View view, int pos) {
+        Manga item = (Manga) adapter.getItemAtPosition(pos);
+        mRecentPresenterManga.onItemClick(item.getTitle());
+    }
+
+}

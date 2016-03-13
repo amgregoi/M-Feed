@@ -3,23 +3,36 @@ package com.teioh.m_feed.UI.MangaActivity.Presenters;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
-import com.teioh.m_feed.UI.MangaActivity.Adapters.ViewPagerAdapterManga;
-import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
+import com.teioh.m_feed.R;
+import com.teioh.m_feed.UI.MangaActivity.Adapters.ChapterListAdapter;
 import com.teioh.m_feed.UI.MangaActivity.View.Mappers.MangaActivityMapper;
+import com.teioh.m_feed.UI.ReaderActivity.View.ReaderActivity;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
-import com.teioh.m_feed.Utils.OttoBus.ChapterOrderEvent;
 import com.teioh.m_feed.WebSources.WebSource;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import butterknife.ButterKnife;
+import rx.Subscription;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 public class MangaPresenterImpl implements MangaPresenter {
     public static final String TAG = MangaPresenterImpl.class.getSimpleName();
-    public static final String MANGA_KEY = TAG + ":MANGA";
+    public final static String CHAPTER_LIST_KEY = TAG + ":CHAPTER_LIST";
+    public final static String MANGA_KEY = TAG + ":MANGA";
+    public final static String ORDER_DESCENDING_KEY = TAG + ":DESCENDING";
+    public final static String LIST_POSITION_KEY = TAG + ":POSITION";
 
-    private CharSequence Titles[] = {"Info", "Chapters"};
+    private Subscription mChapterListSubscription;
+    private Subscription mObservableMangaSubscription;
+    private ArrayList<Chapter> mChapterList;
+    private ChapterListAdapter mAdapter;
+    private boolean mChapterOrderDescending;
     private Manga mManga;
 
     private MangaActivityMapper mMangaMapper;
@@ -31,45 +44,147 @@ public class MangaPresenterImpl implements MangaPresenter {
 
     @Override
     public void onSaveState(Bundle bundle) {
-        if(mManga != null){
-            bundle.putParcelable(MANGA_KEY, mManga);
-        }
+        if (mManga != null) bundle.putParcelable(MANGA_KEY, mManga);
+        if (mChapterList != null) bundle.putParcelableArrayList(CHAPTER_LIST_KEY, mChapterList);
+        bundle.putBoolean(ORDER_DESCENDING_KEY, mChapterOrderDescending);
+
     }
 
     @Override
     public void onRestoreState(Bundle bundle) {
-        if(bundle.containsKey(MANGA_KEY)){
+        if (bundle.containsKey(MANGA_KEY))
             mManga = bundle.getParcelable(MANGA_KEY);
-        }
+
+        if (bundle.containsKey(CHAPTER_LIST_KEY))
+            mChapterList = new ArrayList<>(bundle.getParcelableArrayList(CHAPTER_LIST_KEY));
+
+        if (bundle.containsKey(MANGA_KEY))
+            mManga = bundle.getParcelable(MANGA_KEY);
+
+        if (bundle.containsKey(ORDER_DESCENDING_KEY))
+            mChapterOrderDescending = bundle.getBoolean(ORDER_DESCENDING_KEY);
+
     }
 
-    @Override public void init(Intent intent) {
-        if(mManga == null) {
+    @Override
+    public void init(Intent intent) {
+        if (mManga == null) {
             String title = intent.getStringExtra(Manga.TAG);
-            mManga = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase()).query(Manga.class)
-                    .withSelection("mTitle = ? AND mSource = ?", title, WebSource.getCurrentSource()).get();
+            mManga = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase())
+                    .query(Manga.class)
+                    .withSelection("mTitle = ? AND mSource = ?", title, WebSource.getCurrentSource())
+                    .get();
+        }
+        mChapterOrderDescending = true;
+        mMangaMapper.setActivityTitle(mManga.getTitle());
+        mMangaMapper.setupToolBar();
+        mMangaMapper.initializeHeaderViews();
+        mMangaMapper.setupHeaderButtons();
+        mMangaMapper.setupSwipeRefresh();
+        mMangaMapper.hideCoverLayout();
+
+        if (mManga.getmIsInitialized() == 1) updateMangaView(mManga);
+        else getMangaViewInfo();
+
+        if (mChapterList == null) getChapterList();
+        else updateChapterList(mChapterList);
+
+    }
+
+    @Override
+    public void onResume() {
+
+    }
+
+    @Override
+    public void onPause() {
+        if (mObservableMangaSubscription != null) {
+            mObservableMangaSubscription.unsubscribe();
+            mObservableMangaSubscription = null;
         }
 
-        ViewPagerAdapterManga mViewPagerAdapterManga = new ViewPagerAdapterManga(((MangaActivity) mMangaMapper.getContext()).getSupportFragmentManager(), Titles, 2, mManga.getTitle());
-        mMangaMapper.setActivityTitle(mManga.getTitle());
-        mMangaMapper.registerAdapter(mViewPagerAdapterManga);
-        mMangaMapper.setupSlidingTabLayout();
-        mMangaMapper.setupToolBar();
+        if (mChapterListSubscription != null) {
+            mChapterListSubscription.unsubscribe();
+            mChapterListSubscription = null;
+        }
     }
 
-    @Override public void onResume() {
-//        BusProvider.getInstance().register(this);
-    }
-
-    @Override public void onPause() {
-//        BusProvider.getInstance().unregister(this);
-    }
-
-    @Override public void onDestroy() {
+    @Override
+    public void onDestroy() {
         ButterKnife.unbind(mMangaMapper);
     }
 
-    @Override public void chapterOrderButtonClick() {
-//        BusProvider.getInstance().post(new ChapterOrderEvent());
+    @Override
+    public void chapterOrderButtonClick() {
+        if (mChapterList != null) {
+            Collections.reverse(mChapterList);
+            mAdapter.reverseChapterListOrder();
+            mChapterOrderDescending = !mChapterOrderDescending;
+        }
     }
+
+    @Override
+    public void onChapterClicked(Chapter chapter) {
+        ArrayList<Chapter> newChapterList = new ArrayList<>(mChapterList);
+
+        if (mChapterOrderDescending)
+            Collections.reverse(newChapterList);
+
+        int position = newChapterList.indexOf(chapter);
+        Intent intent = new Intent(mMangaMapper.getContext(), ReaderActivity.class);
+        intent.putParcelableArrayListExtra(CHAPTER_LIST_KEY, newChapterList);
+        intent.putExtra(LIST_POSITION_KEY, position);
+        mMangaMapper.getContext().startActivity(intent);
+    }
+
+    @Override
+    public void onFollwButtonClick() {
+        boolean follow = mManga.setFollowing(!mManga.getFollowing());
+        mMangaMapper.changeFollowButton(mManga.getFollowing());
+        if (follow) {
+            MangaFeedDbHelper.getInstance().updateMangaFollow(mManga.getTitle());
+        } else {
+            MangaFeedDbHelper.getInstance().updateMangaUnfollow(mManga.getTitle());
+        }
+    }
+
+    private void getMangaViewInfo() {
+        mObservableMangaSubscription = WebSource.updateMangaObservable(mManga).subscribe(manga -> updateMangaView(manga));
+    }
+
+    private void updateMangaView(Manga manga) {
+        if (mMangaMapper.getContext() != null) {
+            mMangaMapper.setMangaViews(manga);
+            mMangaMapper.changeFollowButton(manga.getFollowing());
+            if (mChapterList != null) {
+                mMangaMapper.stopRefresh();
+                mMangaMapper.showCoverLayout();
+            }
+        }
+        mManga = manga;
+        mManga.setmIsInitialized(1);
+        cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).put(manga);
+        if (mChapterListSubscription != null) {
+            mObservableMangaSubscription.unsubscribe();
+            mObservableMangaSubscription = null;
+        }
+    }
+
+    private void getChapterList() {
+        mChapterListSubscription = WebSource.getChapterListObservable(mManga.getMangaURL()).subscribe(chapters -> updateChapterList(chapters));
+    }
+
+    private void updateChapterList(List<Chapter> chapters) {
+        if (mMangaMapper.getContext() != null) {
+            mChapterList = new ArrayList<>(chapters);
+            mAdapter = new ChapterListAdapter(mMangaMapper.getContext(), R.layout.chapter_list_item, mChapterList);
+            mMangaMapper.registerAdapter(mAdapter);
+            if (mManga.getmIsInitialized() == 1) {
+                mMangaMapper.stopRefresh();
+                mMangaMapper.showCoverLayout();
+            }
+        }
+    }
+
+
 }

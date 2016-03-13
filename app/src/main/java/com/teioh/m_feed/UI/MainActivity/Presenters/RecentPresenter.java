@@ -2,9 +2,6 @@ package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 import android.os.Bundle;
 
-import com.teioh.m_feed.Models.Manga;
-import com.teioh.m_feed.Utils.OttoBus.RemoveFromLibrary;
-
 public interface RecentPresenter {
 
     void onSaveState(Bundle bundle);
@@ -26,4 +23,6 @@ public interface RecentPresenter {
     void onPause();
 
     void setAdapter();
+
+    void updateSource();
 }

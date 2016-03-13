@@ -3,6 +3,7 @@ package com.teioh.m_feed.UI.MainActivity.Adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.SparseArray;
 
 import com.teioh.m_feed.UI.MainActivity.View.Fragments.FollowedFragment;
 import com.teioh.m_feed.UI.MainActivity.View.Fragments.LibraryFragment;
@@ -12,6 +13,8 @@ public class ViewPagerAdapterMain extends FragmentStatePagerAdapter {
 
     CharSequence Titles[];
     int NumbOfTabs;
+    SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
+
 
     public ViewPagerAdapterMain(FragmentManager fm, CharSequence mTitles[], int mNumbOfTabsumb) {
         super(fm);
@@ -27,11 +30,17 @@ public class ViewPagerAdapterMain extends FragmentStatePagerAdapter {
 
         if (position == 0) // if the position is 0 we are returning the First tab
         {
-            return new RecentFragment();
+            Fragment recent = new RecentFragment();
+            registeredFragments.put(0, recent);
+            return recent;
         } else if (position == 1) {
-            return new FollowedFragment();
+            Fragment follwed = new FollowedFragment();
+            registeredFragments.put(1, follwed);
+            return follwed;
         } else {
-            return new LibraryFragment();
+            Fragment library = new LibraryFragment();
+            registeredFragments.put(2, library);
+            return library;
         }
     }
 
@@ -45,5 +54,9 @@ public class ViewPagerAdapterMain extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         return NumbOfTabs;
+    }
+
+    public Fragment getRegisteredFragment(int position) {
+        return registeredFragments.get(position);
     }
 }

@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class ReaderActivity extends AppCompatActivity implements ReaderActivityMapper, ViewPager.OnPageChangeListener {
+public class ReaderActivity extends AppCompatActivity implements ReaderActivityMapper {
 
     @Bind(R.id.pager) NoScrollViewPager mViewPager;
     @Bind(R.id.chapter_header) Toolbar mToolbarHeader;
@@ -116,7 +116,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderActivityM
 
     @Override
     public void updateToolbar(String title, int size, int page) {
-        if(page == mViewPager.getCurrentItem()) {
+        if (page == mViewPager.getCurrentItem()) {
             mChapterTitle.setText(title);
             mEndPage.setText(String.valueOf(size));
             //update view status at the start of each chapter
@@ -125,7 +125,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderActivityM
     }
 
     @Override
-    public void setupToolbar(){
+    public void setupToolbar() {
         setSupportActionBar(mToolbarHeader);
         mToolbarHeader.setNavigationIcon(getDrawable(R.drawable.ic_back));
         mToolbarHeader.setNavigationOnClickListener(new View.OnClickListener() {

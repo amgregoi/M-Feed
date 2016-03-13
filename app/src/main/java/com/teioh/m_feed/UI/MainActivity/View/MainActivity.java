@@ -176,6 +176,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
         orderButton.setVisibility(View.GONE);
     }
 
+    @Override
+    public void changeSourceTitle(String source){
+        mActivityTitle.setText(source);
+    }
+
     @OnItemClick(R.id.drawerLayoutListView)
     public void onSourceChosen(AdapterView<?> adapter, View view, int pos) {
         mMainPresenter.onSourceChosen(adapter.getItemAtPosition(pos).toString());

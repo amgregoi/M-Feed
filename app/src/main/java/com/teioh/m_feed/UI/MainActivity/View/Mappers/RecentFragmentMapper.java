@@ -6,4 +6,5 @@ import com.teioh.m_feed.UI.Maps.SearchViewListenerMap;
 import com.teioh.m_feed.UI.Maps.SwipeRefreshMap;
 
 public interface RecentFragmentMapper extends BaseAdapterMap, SwipeRefreshMap, SearchViewListenerMap, BaseContextMap {
+    void updateSource();
 }

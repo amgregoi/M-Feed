@@ -2,11 +2,6 @@ package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 import android.os.Bundle;
 
-import com.teioh.m_feed.Models.Manga;
-import com.teioh.m_feed.Utils.OttoBus.RemoveFromLibrary;
-
-import java.util.List;
-
 public interface LibraryPresenter {
     void onSaveState(Bundle bundle);
 
@@ -27,4 +22,7 @@ public interface LibraryPresenter {
     void onPause();
 
     void setAdapter();
+
+    void updateSource();
+
 }

@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.teioh.m_feed.UI.MainActivity.View.MainActivity">
+    <item
+        android:id="@+id/remove_list"
+        android:title="Remove from list"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+</menu>

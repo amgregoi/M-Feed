@@ -22,4 +22,6 @@ public interface FollowedPresenter {
     void onPause();
 
     void setAdapter();
+
+    void updateSource();
 }

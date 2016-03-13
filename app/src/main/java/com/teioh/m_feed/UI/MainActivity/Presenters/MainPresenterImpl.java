@@ -21,15 +21,15 @@ import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.LoginActivity.View.LoginActivity;
 import com.teioh.m_feed.UI.MainActivity.Adapters.SourceListAdapter;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
+import com.teioh.m_feed.UI.MainActivity.View.Fragments.FollowedFragment;
+import com.teioh.m_feed.UI.MainActivity.View.Fragments.LibraryFragment;
+import com.teioh.m_feed.UI.MainActivity.View.Fragments.RecentFragment;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.MainActivityMapper;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.MAL.MALApi;
 import com.teioh.m_feed.Utils.MAL.MALService;
-import com.teioh.m_feed.Utils.OttoBus.QueryChange;
-import com.teioh.m_feed.Utils.OttoBus.UpdateSource;
 import com.teioh.m_feed.WebSources.WebSource;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -142,18 +142,20 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void onResume() {
-//        BusProvider.getInstance().register(mMainMapper);
         mMainMapper.closeDrawer();
     }
 
     @Override
     public void onPause() {
-//        BusProvider.getInstance().unregister(mMainMapper);
+
     }
 
     @Override
     public void updateQueryChange(String newTest) {
-//        BusProvider.getInstance().post(new QueryChange(newTest));
+        ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).onQueryTextChange(newTest);
+        ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).onQueryTextChange(newTest);
+        ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).onQueryTextChange(newTest);
+
     }
 
     @Override
@@ -225,8 +227,10 @@ public class MainPresenterImpl implements MainPresenter {
                     mSourceListAdapater.notifyDataSetChanged();
                     mDrawerAdapter.notifyDataSetChanged();
                     WebSource.setwCurrentSource(source);
-//                    BusProvider.getInstance().post(new UpdateSource());
-                    mMainMapper.setupToolbar();
+                    ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).updateSource();
+                    ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).updateSource();
+                    ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).updateSource();
+                    mMainMapper.changeSourceTitle(source);
                 }
         }
     }

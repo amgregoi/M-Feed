@@ -12,6 +12,7 @@ import com.teioh.m_feed.R;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
@@ -76,5 +77,10 @@ public class ChapterListAdapter extends ArrayAdapter {
     static class ChapterHolder {
         TextView mTitle;
         TextView cDate;
+    }
+
+    public void reverseChapterListOrder(){
+        Collections.reverse(chapters);
+        notifyDataSetChanged();
     }
 }

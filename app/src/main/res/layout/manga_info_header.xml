@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+	>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_marginEnd="5dp"
+		android:layout_marginStart="10dp"
+		android:orientation="vertical"
+		>
+
+		<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			>
+
+			<!--android:layout_width="198dp"-->
+			<!--android:layout_height="@dimen/manga_header_img_height"-->
+
+			<ImageView
+				android:id="@+id/manga_image"
+				android:layout_width="198dp"
+				android:layout_height="@dimen/manga_header_img_height"
+				android:adjustViewBounds="true"
+				android:paddingBottom="10dp"
+				android:paddingEnd="10dp"
+				android:paddingTop="5dp"
+				android:scaleType="fitXY"/>
+
+			<LinearLayout
+				android:id="@+id/top"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:layout_centerVertical="true"
+				android:layout_toRightOf="@id/manga_image"
+				android:orientation="vertical"
+				>
+
+				<Button
+					android:id="@+id/followButton"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginBottom="@dimen/baseline_grid_unit"
+					android:background="@drawable/button_animation"
+					android:text="Add to list"
+					android:visibility="visible"/>
+
+				<!-- when synced with MAL-->
+				<Button
+					android:id="@+id/read_status_mal"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginBottom="@dimen/baseline_grid_unit"
+					android:background="@drawable/button_animation"
+					android:text="Plan to read"
+					android:visibility="gone"/>
+
+				<!-- when synced with MAL-->
+				<Button
+					android:id="@+id/score_mal"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginBottom="@dimen/baseline_grid_unit"
+					android:background="@drawable/button_animation"
+					android:text="Score"
+					android:visibility="gone"/>
+
+				<!-- when added to list-->
+				<Button
+					android:id="@+id/syncMALButton"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginBottom="@dimen/baseline_grid_unit"
+					android:background="@drawable/button_animation"
+					android:text="Sync with MAL?"
+					android:visibility="gone"/>
+
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:orientation="horizontal">
+
+					<!-- when synced with MAL-->
+					<Button
+						android:id="@+id/chapter_plus"
+						android:layout_width="fill_parent"
+						android:layout_height="wrap_content"
+						android:layout_marginRight="@dimen/baseline_grid_unit"
+						android:layout_weight=".8"
+						android:background="@drawable/button_animation"
+						android:text="+1C"
+						android:visibility="gone"/>
+
+					<!-- when synced with MAL-->
+					<Button
+						android:id="@+id/volume_plus"
+						android:layout_width="fill_parent"
+						android:layout_height="wrap_content"
+						android:layout_marginRight="@dimen/baseline_grid_unit"
+						android:layout_weight=".8"
+						android:background="@drawable/button_animation"
+						android:text="+1V"
+
+						android:visibility="gone"/>
+
+					<!-- when synced with MAL-->
+					<Button
+						android:id="@+id/multi_update"
+						android:layout_width="fill_parent"
+						android:layout_height="wrap_content"
+						android:layout_weight="1"
+						android:background="@drawable/button_animation"
+						android:text="+"
+						android:visibility="gone"/>
+
+				</LinearLayout>
+			</LinearLayout>
+		</RelativeLayout>
+
+		<LinearLayout
+			android:id="@+id/manga_info"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_below="@+id/top"
+			android:orientation="vertical">
+
+			<View
+				android:layout_width="fill_parent"
+				android:layout_height="1dp"
+				android:layout_marginBottom="3dp"
+				android:layout_marginTop="3dp"
+				android:background="@color/black"/>
+
+			<RelativeLayout
+				android:id="@+id/summary_layout"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:layout_marginBottom="5dp"
+				android:layout_marginTop="5dp"
+				>
+
+				<TextView
+					android:id="@+id/summaryLabel"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Summary:"
+					android:textStyle="bold"/>
+
+				<TextView
+					android:id="@+id/mangaDescription"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_below="@id/summaryLabel"
+					/>
+			</RelativeLayout>
+
+
+			<RelativeLayout
+				android:id="@+id/author_layout"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				>
+
+				<TextView
+					android:id="@+id/author_label"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignParentStart="true"
+					android:text="Author:"
+					android:textStyle="bold"
+					/>
+
+				<TextView
+					android:id="@+id/author"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignParentEnd="true"
+					android:layout_toRightOf="@id/author_label"
+					android:gravity="right"
+					android:paddingBottom="16dp"
+					android:textAlignment="gravity"
+					android:textSize="12dp"
+					android:textStyle="italic"
+					/>
+			</RelativeLayout>
+
+			<RelativeLayout
+				android:id="@+id/artist_layout"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent">
+
+				<TextView
+					android:id="@+id/artist_label"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignParentStart="true"
+					android:text="Artist:"
+					android:textStyle="bold"
+					/>
+
+
+				<TextView
+					android:id="@+id/artist"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignParentEnd="true"
+					android:layout_toRightOf="@id/artist_label"
+					android:gravity="right"
+					android:paddingBottom="16dp"
+					android:textAlignment="gravity"
+					android:textSize="12dp"
+					android:textStyle="italic"
+					/>
+			</RelativeLayout>
+
+			<RelativeLayout
+				android:id="@+id/genre_layout"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent">
+
+				<TextView
+					android:id="@+id/genre_label"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignParentStart="true"
+					android:text="Genres:"
+					android:textStyle="bold"
+					/>
+
+				<TextView
+					android:id="@+id/genre"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignParentEnd="true"
+					android:layout_toRightOf="@id/genre_label"
+					android:gravity="right"
+					android:paddingBottom="16dp"
+					android:textAlignment="gravity"
+					android:textSize="12dp"
+					android:textStyle="italic"/>
+			</RelativeLayout>
+
+			<RelativeLayout
+				android:id="@+id/status_layout"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent">
+
+				<TextView
+					android:id="@+id/status_label"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignParentStart="true"
+					android:text="Status:"
+					android:textStyle="bold"/>
+
+				<TextView
+					android:id="@+id/status"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignParentEnd="true"
+					android:layout_toRightOf="@id/status_label"
+					android:gravity="right"
+					android:paddingBottom="16dp"
+					android:textAlignment="gravity"
+					android:textSize="12dp"
+					android:textStyle="italic"
+					/>
+			</RelativeLayout>
+
+			<!--<View-->
+			<!--android:layout_width="fill_parent"-->
+			<!--android:layout_height="1dp"-->
+			<!--android:layout_marginBottom="3dp"-->
+			<!--android:layout_marginTop="3dp"-->
+			<!--android:background="@color/black"/>-->
+		</LinearLayout>
+	</LinearLayout>
+</LinearLayout>

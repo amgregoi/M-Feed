@@ -17,6 +17,8 @@ public class Chapter implements Parcelable{
 
     public Chapter() { }
 
+    public Chapter(String title) { this.mTitle = title; this.cTitle = title;}
+
     public Chapter(String url, String mTitle, String cTitle, String date, int num) {
         this.mUrl = url;
         this.mDate = date;

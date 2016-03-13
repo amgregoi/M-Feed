@@ -1,5 +1,6 @@
 package com.teioh.m_feed.UI.ReaderActivity.View.Fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,7 +25,6 @@ import butterknife.ButterKnife;
 
 public class ChapterFragment extends Fragment implements ChapterReaderMapper {
     public final static String TAG = ChapterFragment.class.getSimpleName();
-
 
 
     @Bind(R.id.pager) GestureViewPager mViewPager;
@@ -112,34 +112,6 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
         mChapterPresenter.toggleToolbar();
     }
 
-//    @Override
-//    public void hideToolbar(long delay){
-//        mToolbarHeader.animate().translationY(-mToolbarHeader.getHeight()).setInterpolator(new AccelerateInterpolator()).setStartDelay(delay).start();
-//        mToolbarFooter.animate().translationY(mToolbarFooter.getHeight()).setInterpolator(new DecelerateInterpolator()).setStartDelay(delay).start();
-//    }
-//
-//    @Override
-//    public void showToolbar(){
-//        mToolbarHeader.animate().translationY(mToolbarHeader.getScrollY()).setInterpolator(new DecelerateInterpolator()).setStartDelay(10).start();
-//        mToolbarFooter.animate().translationY(-mToolbarFooter.getScrollY()).setInterpolator(new AccelerateInterpolator()).start();
-//    }
-
-//    @Override
-//         public void updateToolbar(String title, int size){
-//        mChapterTitle.setText(title);
-//        mEndPage.setText(String.valueOf(size));
-//    }
-
-//    @Override
-//    public void updateToolbarTitle(String title) {
-//        mChapterTitle.setText(title);
-//    }
-
-//    @Override
-//    public void incrementCurrentPage(int page){
-//        mCurrentPage.setText(String.valueOf(page));
-//    }
-
     @Override
     public void setupOnSingleTapListener() {
         mViewPager.setOnSingleTapListener(this);
@@ -169,8 +141,66 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
 
     @Override
     public void updateChapterViewStatus() {
-        if(mChapterPresenter != null) {
+        if (mChapterPresenter != null) {
             mChapterPresenter.updateChapterViewStatus();
         }
     }
+
+    private ChapterCommunication listener;
+
+    public interface ChapterCommunication {
+        void incrementChapter();
+
+        void decrementChapter();
+
+        void hideToolbar(long delay);
+
+        void showToolbar();
+
+        void updateToolbar(String title, int size, int page);
+
+        void updateCurrentPage(int position);
+    }
+
+    @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+        if (context instanceof ChapterCommunication) listener = (ChapterCommunication) context;
+        else throw new ClassCastException(context.toString() + " must implement ChapterPresenterImpl.ChapterCommunication");
+
+    }
+
+    @Override
+    public void incrementChapter() {
+        listener.incrementChapter();
+    }
+
+    @Override
+    public void decrementChapter() {
+        listener.decrementChapter();
+    }
+
+    @Override
+    public void hideToolbar(long delay) {
+        listener.hideToolbar(delay);
+    }
+
+    @Override
+    public void showToolbar() {
+        listener.showToolbar();
+    }
+
+    @Override
+    public void updateToolbar(String title, int size, int page) {
+        listener.updateToolbar(title, size, page);
+    }
+
+    @Override
+    public void updateCurrentPage(int position) {
+        listener.updateCurrentPage(position);
+    }
+
+
+
+
 }

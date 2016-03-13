@@ -8,19 +8,13 @@ import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapterAlternate;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.LibraryFragmentMapper;
 import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
 import com.teioh.m_feed.Utils.Database.ReactiveQueryManager;
-import com.teioh.m_feed.Utils.OttoBus.QueryChange;
-import com.teioh.m_feed.Utils.OttoBus.RemoveFromLibrary;
-import com.teioh.m_feed.Utils.OttoBus.UpdateListEvent;
-import com.teioh.m_feed.Utils.OttoBus.UpdateSource;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import rx.Observable;
 import rx.Subscription;
-import rx.schedulers.Schedulers;
 
 
 public class LibraryPresenterImpl implements LibraryPresenter {
@@ -90,7 +84,6 @@ public class LibraryPresenterImpl implements LibraryPresenter {
 
     @Override
     public void onResume() {
-//        BusProvider.getInstance().register(this);
         if (mLibraryMangaList != null) {
             mMangaListSubscription = ReactiveQueryManager.getMangaLibraryObservable()
                     .subscribe(manga -> {
@@ -108,7 +101,7 @@ public class LibraryPresenterImpl implements LibraryPresenter {
 
     @Override
     public void onPause() {
-//        BusProvider.getInstance().unregister(this);
+
     }
 
     @Override
@@ -116,37 +109,16 @@ public class LibraryPresenterImpl implements LibraryPresenter {
         mLibraryFragmentMapper.registerAdapter(mAdapter);
     }
 
-//    @Subscribe
-//    public void onMangaRemoved(RemoveFromLibrary rm) {
-//        Manga manga = rm.getManga();
-//        for (Manga m : mLibraryMangaList) {
-//            if (m.getTitle().equals(manga.getTitle())) {
-//                m.setFollowing(manga.getFollowing());
-//            }
-//        }
-//    }
-//
-//    @Subscribe
-//    public void activityQueryChange(QueryChange q) {
-//        onQueryTextChange(q.getQuery());
-//    }
-//
-//    @Subscribe
-//    public void onPushRecieved(UpdateListEvent event) {
-//    }
-//
-//
-//    @Subscribe
-//    public void onUpdateSource(UpdateSource event) {
-//        if (mLibraryFragmentMapper.getContext() != null) {
-//            if (mLibraryMangaList != null && mAdapter != null) {
-//                mLibraryMangaList.clear();
-//                mAdapter.notifyDataSetChanged();
-//            }
-//            updateLibraryMangaList();
-//        }
-//    }
-
+    @Override
+    public void updateSource() {
+        if (mLibraryFragmentMapper.getContext() != null) {
+            if (mLibraryMangaList != null && mAdapter != null) {
+                mLibraryMangaList.clear();
+                mAdapter.notifyDataSetChanged();
+            }
+            updateLibraryMangaList();
+        }
+    }
 
     private void updateLibraryGridView(List<Manga> mList) {
         if (mLibraryFragmentMapper.getContext() != null && mList != null) {

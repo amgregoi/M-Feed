@@ -61,12 +61,9 @@ public class RecentPresenterImpl implements RecentPresenter {
     @Override
     public void init() {
         mRecentFragmentMapper.setupSwipeRefresh();
-        if (mRecentMangaList == null) {
-            mRecentFragmentMapper.startRefresh();
-            this.updateRecentMangaList();
-        } else {
-            this.updateRecentGridView(mRecentMangaList);
-        }
+
+        if (mRecentMangaList == null) this.updateRecentMangaList();
+        else updateRecentGridView(mRecentMangaList);
     }
 
     @Override
@@ -103,7 +100,6 @@ public class RecentPresenterImpl implements RecentPresenter {
 
     @Override
     public void onResume() {
-//        BusProvider.getInstance().register(this);
         if (mRecentMangaList != null) {
             mMangaListSubscription = ReactiveQueryManager.updateRecentMangaListObservable(mRecentMangaList)
                     .subscribe(manga -> {
@@ -124,7 +120,7 @@ public class RecentPresenterImpl implements RecentPresenter {
 
     @Override
     public void onPause() {
-//        BusProvider.getInstance().unregister(this);
+
     }
 
     @Override
@@ -132,18 +128,13 @@ public class RecentPresenterImpl implements RecentPresenter {
         mRecentFragmentMapper.registerAdapter(mAdapter);
     }
 
-//    @Subscribe
-//    public void activityQueryChange(QueryChange query) {
-//        onQueryTextChange(query.getQuery());
-//    }
-//
-//    @Subscribe
-//    public void onUpdateSource(UpdateSource event) {
-//        if (mRecentFragmentMapper.getContext() != null) {
-//            mRecentFragmentMapper.startRefresh();
-//            updateRecentMangaList();
-//        }
-//    }
+    @Override
+    public void updateSource() {
+        if (mRecentFragmentMapper.getContext() != null) {
+            mRecentFragmentMapper.startRefresh();
+            updateRecentMangaList();
+        }
+    }
 
     private void updateRecentGridView(List<Manga> manga) {
         if (mRecentFragmentMapper.getContext() != null) {

@@ -4,12 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.teioh.m_feed.Models.Chapter;
-import com.teioh.m_feed.UI.MangaActivity.Presenters.ChapterListPresenterImpl;
+import com.teioh.m_feed.UI.MangaActivity.Presenters.MangaPresenter;
+import com.teioh.m_feed.UI.MangaActivity.Presenters.MangaPresenterImpl;
+import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
 import com.teioh.m_feed.UI.ReaderActivity.Adapters.ChapterPageAdapter;
 import com.teioh.m_feed.UI.ReaderActivity.View.Fragments.ChapterFragment;
 import com.teioh.m_feed.UI.ReaderActivity.View.Mappers.ReaderActivityMapper;
 import com.teioh.m_feed.UI.ReaderActivity.View.ReaderActivity;
-import com.teioh.m_feed.Utils.OttoBus.ChangeChapter;
 
 import java.util.ArrayList;
 
@@ -47,8 +48,8 @@ public class ReaderPresenterImpl implements ReaderPresenter {
     @Override
     public void init(Intent intent) {
         if (mChapterList == null) {
-            mChapterList = new ArrayList<>(intent.getExtras().getParcelableArrayList(ChapterListPresenterImpl.CHAPTER_LIST_KEY));
-            mChapterPosition = intent.getExtras().getInt(ChapterListPresenterImpl.LIST_POSITION_KEY);
+            mChapterList = new ArrayList<>(intent.getExtras().getParcelableArrayList(MangaPresenterImpl.CHAPTER_LIST_KEY));
+            mChapterPosition = intent.getExtras().getInt(MangaPresenterImpl.LIST_POSITION_KEY);
         }
 
         mChapterPagerAdapter = new ChapterPageAdapter(((ReaderActivity) mReaderMap).getSupportFragmentManager(), mChapterList);
@@ -59,12 +60,12 @@ public class ReaderPresenterImpl implements ReaderPresenter {
 
     @Override
     public void onPause() {
-//        BusProvider.getInstance().unregister(this);
+
     }
 
     @Override
     public void onResume() {
-//        BusProvider.getInstance().register(this);
+
     }
 
     @Override

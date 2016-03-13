@@ -19,10 +19,17 @@ public interface ChapterReaderMapper extends BaseContextMap, PageAdapterMap, Vie
 
     void updateChapterViewStatus();
 
-//    void incrementCurrentPage(int page);
+    void incrementChapter();
 
-//    void hideToolbar(long delay);
-//
-//    void showToolbar();
+    void decrementChapter();
+
+    void hideToolbar(long delay);
+
+    void showToolbar();
+
+    void updateToolbar(String title, int size, int page);
+
+    void updateCurrentPage(int position);
+
 
 }

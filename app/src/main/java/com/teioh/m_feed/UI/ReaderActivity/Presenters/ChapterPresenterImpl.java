@@ -1,5 +1,6 @@
 package com.teioh.m_feed.UI.ReaderActivity.Presenters;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
@@ -32,7 +33,8 @@ public class ChapterPresenterImpl implements ChapterPresenter {
     private boolean mToolbarShowing, mIsNext;
     private Chapter mChapter;
     private Subscription mImageListSubscription;
-    private ReaderActivity mBaseActivity;       //bad practice?
+
+
 
     public ChapterPresenterImpl(ChapterReaderMapper map, Bundle bundle) {
         mChapterReaderMapper = map;
@@ -40,8 +42,6 @@ public class ChapterPresenterImpl implements ChapterPresenter {
         mPosition = bundle.getInt(ChapterPageAdapter.POSITION_KEY);
         mChapter = bundle.getParcelable(Chapter.TAG + ":" + mPosition);
         mToolbarShowing = true;
-
-        mBaseActivity = ((ReaderActivity) ((Fragment) mChapterReaderMapper).getActivity());
     }
 
     @Override
@@ -78,17 +78,16 @@ public class ChapterPresenterImpl implements ChapterPresenter {
 
     @Override
     public void onPause() {
-//        BusProvider.getInstance().unregister(this);
+
     }
 
     @Override
     public void onResume() {
-//        BusProvider.getInstance().register(this);
+
     }
 
     @Override
     public void onDestroyView() {
-        mBaseActivity = null;
         if (mImageListSubscription != null) {
             mImageListSubscription.unsubscribe();
             mImageListSubscription = null;
@@ -99,21 +98,21 @@ public class ChapterPresenterImpl implements ChapterPresenter {
     public void toggleToolbar() {
         if (mToolbarShowing) {
             mToolbarShowing = false;
-            mBaseActivity.hideToolbar(0);
+            mChapterReaderMapper.hideToolbar(0);
         } else {
             mToolbarShowing = true;
-            mBaseActivity.showToolbar();
+            mChapterReaderMapper.showToolbar();
         }
     }
 
     @Override
     public void setToNextChapter() {
-        mBaseActivity.incrementChapter();
+        mChapterReaderMapper.incrementChapter();
     }
 
     @Override
     public void setToPreviousChapter() {
-        mBaseActivity.decrementChapter();
+        mChapterReaderMapper.decrementChapter();
     }
 
     @Override
@@ -139,12 +138,12 @@ public class ChapterPresenterImpl implements ChapterPresenter {
 
     @Override
     public void updateToolbar() {
-        mBaseActivity.updateToolbar(mChapter.toString(), mChapterListSize, mPosition);
+        mChapterReaderMapper.updateToolbar(mChapter.toString(), mChapterListSize, mPosition);
     }
 
     @Override
     public void updateCurrentPage(int position) {
-        mBaseActivity.updateCurrentPage(position);
+        mChapterReaderMapper.updateCurrentPage(position);
     }
 
     @Override
