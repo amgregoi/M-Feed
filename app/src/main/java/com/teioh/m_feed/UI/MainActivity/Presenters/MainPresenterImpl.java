@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -26,17 +25,12 @@ import com.teioh.m_feed.UI.MainActivity.View.Fragments.LibraryFragment;
 import com.teioh.m_feed.UI.MainActivity.View.Fragments.RecentFragment;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.MainActivityMapper;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
-import com.teioh.m_feed.Utils.MAL.MALApi;
-import com.teioh.m_feed.Utils.MAL.MALService;
 import com.teioh.m_feed.WebSources.WebSource;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import butterknife.ButterKnife;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public class MainPresenterImpl implements MainPresenter {
     public final static String TAG = MainPresenterImpl.class.getSimpleName();
@@ -152,10 +146,11 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void updateQueryChange(String newTest) {
-        ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).onQueryTextChange(newTest);
-        ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).onQueryTextChange(newTest);
-        ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).onQueryTextChange(newTest);
-
+        if(mViewPagerAdapterMain.hasRegisteredFragments()) {
+            ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).onQueryTextChange(newTest);
+            ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).onQueryTextChange(newTest);
+            ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).onQueryTextChange(newTest);
+        }
     }
 
     @Override
@@ -205,20 +200,7 @@ public class MainPresenterImpl implements MainPresenter {
         switch (source) {
             case ("Logout"):
 //                onLogout();
-                MALService service = MALApi.createService(null, null);
-                service.verifyUserAccount(new Callback<String>() {
-                    @Override
-                    public void success(String s, Response response) {
-                        //TODO verification successfull for MAL, this works, can start MAL integration
-                        //TODO after replacing ottobus functionality that was just commented out
-                        Log.e(TAG, s);
-                    }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Log.e(TAG, error.getMessage());
-                    }
-                });
                 return;
             case ("Advanced Search"):
                 return;
@@ -227,9 +209,11 @@ public class MainPresenterImpl implements MainPresenter {
                     mSourceListAdapater.notifyDataSetChanged();
                     mDrawerAdapter.notifyDataSetChanged();
                     WebSource.setwCurrentSource(source);
-                    ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).updateSource();
-                    ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).updateSource();
-                    ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).updateSource();
+                    if(mViewPagerAdapterMain.hasRegisteredFragments()) {
+                        ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).updateSource();
+                        ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).updateSource();
+                        ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).updateSource();
+                    }
                     mMainMapper.changeSourceTitle(source);
                 }
         }

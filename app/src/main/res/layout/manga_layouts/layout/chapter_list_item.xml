@@ -5,7 +5,6 @@
 	android:layout_height="match_parent"
 	android:minHeight="@dimen/baseline_content_left"
 	android:orientation="vertical"
-	android:background="@color/charcoal"
 	>
 
 	<RelativeLayout

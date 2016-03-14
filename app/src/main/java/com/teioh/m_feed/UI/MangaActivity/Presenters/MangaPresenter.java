@@ -24,4 +24,6 @@ public interface MangaPresenter {
     void onFollwButtonClick();
 
     void onChapterClicked(Chapter chapter);
+
+    void onMALSyncClicked();
 }

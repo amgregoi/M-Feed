@@ -5,7 +5,6 @@
                 android:clickable="true"
                 android:orientation="vertical"
                 android:showDividers="middle"
-                android:background="@color/charcoal"
 	>
 
 	<android.support.v4.widget.SwipeRefreshLayout

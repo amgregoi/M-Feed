@@ -59,4 +59,8 @@ public class ViewPagerAdapterMain extends FragmentStatePagerAdapter {
     public Fragment getRegisteredFragment(int position) {
         return registeredFragments.get(position);
     }
+
+    public boolean hasRegisteredFragments(){
+        return registeredFragments.get(0) != null;
+    }
 }

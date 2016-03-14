@@ -22,6 +22,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.teioh.m_feed.MAL_Models.MALMangaList;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
@@ -77,7 +78,6 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
             mMangaPresenter.onRestoreState(savedInstanceState);
         }
         mMangaPresenter.init(getIntent());
-        boolean temp = mToolBar.hideOverflowMenu();
     }
 
     @Override
@@ -184,7 +184,7 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
             mArtistText.setText(manga.getmArtist());
             mGenresText.setText(manga.getmGenre());
             mStatusText.setText(manga.getmStatus());
-            Glide.with(getContext()).load(manga.getPicUrl()).fitCenter().into(mMangaImage);
+            Glide.with(getContext()).load(manga.getPicUrl()).into(mMangaImage);
             mChapterList.addHeaderView(mMangaInfoHeader, null, false);
             mChapterList.addHeaderView(mChapterHeader, null, false);
 
@@ -254,6 +254,11 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
     }
 
     @Override
+    public void onMALSyncClicked(MALMangaList list) {
+        //start fragment or activity
+    }
+
+    @Override
     public void setupHeaderButtons() {
         mFollowButton.setOnClickListener(v -> {
             mMangaPresenter.onFollwButtonClick();
@@ -271,7 +276,7 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
         });
 
         mSyncMALButton.setOnClickListener(v -> {
-
+            mMangaPresenter.onMALSyncClicked();
         });
 
         mChapterIncButton.setOnClickListener(v -> {

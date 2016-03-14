@@ -60,7 +60,7 @@ public class MALApi {
                 @Override
                 public void intercept(RequestInterceptor.RequestFacade request) {
                     request.addHeader("Authorization", basic);
-                    request.addHeader("Accept", "application/xml");
+                    request.addHeader("Accept", "application/json");
                 }
             });
         }
