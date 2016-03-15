@@ -95,12 +95,15 @@ public class RecentFragment extends Fragment implements RecentFragmentMapper {
 
     @Override
     public void startRefresh() {
-
+        mGridView.setVisibility(View.GONE);
+        swipeContainer.post(() -> swipeContainer.setRefreshing(true));
     }
 
     @Override
     public void stopRefresh() {
         swipeContainer.setRefreshing(false);
+        mGridView.setVisibility(View.VISIBLE);
+
     }
 
     @Override

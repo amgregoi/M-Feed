@@ -8,9 +8,14 @@ import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
 import com.teioh.m_feed.UI.Maps.BaseContextMap;
 import com.teioh.m_feed.UI.Maps.SearchViewListenerMap;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 public interface MainActivityMapper extends BaseContextMap, SearchViewListenerMap {
 
-    void registerAdapter(ViewPagerAdapterMain adapter, MergeAdapter sourceAdapter);
+    void registerAdapter(ViewPagerAdapterMain adapter);
 
     void setupSearchview();
 
@@ -28,4 +33,6 @@ public interface MainActivityMapper extends BaseContextMap, SearchViewListenerMa
 
     void changeSourceTitle(String source);
 
-}
+    void setupDrawerLayout(List<String> mDrawerItems, Map<String, List<String>> mSourceCollections);
+
+    }

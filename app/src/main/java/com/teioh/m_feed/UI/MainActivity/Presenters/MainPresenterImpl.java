@@ -12,9 +12,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.commonsware.cwac.merge.MergeAdapter;
-import com.parse.ParseAnonymousUtils;
 import com.parse.ParseUser;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.LoginActivity.View.LoginActivity;
@@ -25,10 +25,16 @@ import com.teioh.m_feed.UI.MainActivity.View.Fragments.LibraryFragment;
 import com.teioh.m_feed.UI.MainActivity.View.Fragments.RecentFragment;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.MainActivityMapper;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
+import com.teioh.m_feed.WebSources.MangaHere;
+import com.teioh.m_feed.WebSources.MangaJoy;
+import com.teioh.m_feed.WebSources.MangaPark;
 import com.teioh.m_feed.WebSources.WebSource;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.ButterKnife;
 
@@ -37,14 +43,10 @@ public class MainPresenterImpl implements MainPresenter {
 
 
     private ViewPagerAdapterMain mViewPagerAdapterMain;
-    private SourceListAdapter mSourceListAdapater, mGeneralListAdapter;
-    private MergeAdapter mDrawerAdapter;
-
-    private final CharSequence mTabTitles[] = {"Recent", "Followed", "Library"};
-    private final String mGeneralListContent[] = {"Logout", "Advanced Search"};
-    private ArrayList<String> mSourceList, mGeneralList;
     private ActionBarDrawerToggle mDrawerToggle;
     private MainActivityMapper mMainMapper;
+    private final CharSequence mTabTitles[] = {"Recent", "Followed", "Library"};
+
 
     public MainPresenterImpl(MainActivityMapper main) {
         mMainMapper = main;
@@ -64,41 +66,13 @@ public class MainPresenterImpl implements MainPresenter {
     public void init() {
         //creates database if fresh install
         MangaFeedDbHelper.getInstance().createDatabase();
+        setupDrawerLayouts();
 
-        //init arrays
-        mSourceList = new ArrayList<>(WebSource.getSourceList());
-        mGeneralList = new ArrayList<>(Arrays.asList(mGeneralListContent));
-
-        //init adapters
         mViewPagerAdapterMain = new ViewPagerAdapterMain(((FragmentActivity) mMainMapper.getContext()).getSupportFragmentManager(), mTabTitles, 3);
-        mSourceListAdapater = new SourceListAdapter(mMainMapper.getContext(), R.layout.source_list_item, mSourceList);
-        mGeneralListAdapter = new SourceListAdapter(mMainMapper.getContext(), R.layout.source_list_item, mGeneralList);
-
-        //init views
-        View header = ((FragmentActivity) mMainMapper.getContext()).getLayoutInflater().inflate(R.layout.drawer_header, null);
-        View general = ((FragmentActivity) mMainMapper.getContext()).getLayoutInflater().inflate(R.layout.drawer_general_header, null);
-        View source = ((FragmentActivity) mMainMapper.getContext()).getLayoutInflater().inflate(R.layout.drawer_source_header, null);
-
-        //setup header
-        TextView username = (TextView) header.findViewById(R.id.drawer_username);
-        TextView userEmail = (TextView) header.findViewById(R.id.drawer_email);
-        ParseUser user = ParseUser.getCurrentUser();
-
-        username.setText(user.getUsername());
-        userEmail.setText(user.getEmail());
-
-
-        //setup drawer adapter
-        mDrawerAdapter = new MergeAdapter();
-        mDrawerAdapter.addView(header);
-        mDrawerAdapter.addView(general);
-        mDrawerAdapter.addAdapter(mGeneralListAdapter);
-        mDrawerAdapter.addView(source);
-        mDrawerAdapter.addAdapter(mSourceListAdapater);
 
         //init layout
         mMainMapper.setupTabLayout();
-        mMainMapper.registerAdapter(mViewPagerAdapterMain, mDrawerAdapter);
+        mMainMapper.registerAdapter(mViewPagerAdapterMain);
         mMainMapper.setupSearchview();
         mMainMapper.setupToolbar();
 
@@ -126,12 +100,8 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void onLogout() {
-        ParseUser.logOutInBackground();
         Intent intent = new Intent(mMainMapper.getContext(), LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         mMainMapper.getContext().startActivity(intent);
-
     }
 
     @Override
@@ -146,7 +116,7 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void updateQueryChange(String newTest) {
-        if(mViewPagerAdapterMain.hasRegisteredFragments()) {
+        if (mViewPagerAdapterMain.hasRegisteredFragments()) {
             ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).onQueryTextChange(newTest);
             ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).onQueryTextChange(newTest);
             ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).onQueryTextChange(newTest);
@@ -175,47 +145,65 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void parseLogin() {
-        if (ParseAnonymousUtils.isLinked(ParseUser.getCurrentUser())) {
-            Intent intent = new Intent(mMainMapper.getContext(), LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            mMainMapper.getContext().startActivity(intent);
 
-        } else {
-            ParseUser currentUser = ParseUser.getCurrentUser();
-            if (currentUser == null) {
-                Intent intent = new Intent(mMainMapper.getContext(), LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                mMainMapper.getContext().startActivity(intent);
+    }
 
-            } else {
-                init();
-            }
+    @Override
+    public void onDrawerItemChosen(int position) {
+        switch (position) {
+            case (0):
+                //TODO need to do more research in MAL api options
+                onLogout();
+                return;
+            case (2):
+                return;
         }
     }
 
     @Override
-    public void onSourceChosen(String source) {
-        switch (source) {
-            case ("Logout"):
-//                onLogout();
-
-                return;
-            case ("Advanced Search"):
-                return;
+    public void onSourceItemChosen(int position) {
+        String source;
+        switch (position) {
+            case (0):
+                source = MangaHere.SourceKey;
+                break;
+            case(1):
+                source = MangaPark.SourceKey;
+                break;
             default:
-                if (!source.equals(WebSource.getCurrentSource())) {
-                    mSourceListAdapater.notifyDataSetChanged();
-                    mDrawerAdapter.notifyDataSetChanged();
-                    WebSource.setwCurrentSource(source);
-                    if(mViewPagerAdapterMain.hasRegisteredFragments()) {
-                        ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).updateSource();
-                        ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).updateSource();
-                        ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).updateSource();
-                    }
-                    mMainMapper.changeSourceTitle(source);
-                }
+                source = MangaJoy.SourceKey;
+                break;
         }
+
+        if (!source.equals(WebSource.getCurrentSource())) {
+            WebSource.setwCurrentSource(source);
+            Toast.makeText(mMainMapper.getContext(), "Changing source to " + source,  Toast.LENGTH_SHORT).show();
+            if (mViewPagerAdapterMain.hasRegisteredFragments()) {
+                ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).updateSource();
+                ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).updateSource();
+                ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).updateSource();
+            }
+            mMainMapper.changeSourceTitle(source);
+        }
+    }
+
+    private void setupDrawerLayouts() {
+        List<String> mDrawerItems = new ArrayList<>();
+        mDrawerItems.add("MAL Sign In");
+        mDrawerItems.add("Sources");
+        mDrawerItems.add("Search");
+
+
+        String[] sources = {MangaHere.SourceKey, MangaPark.SourceKey, MangaJoy.SourceKey};
+        Map<String, List<String>> mSourceCollections = new LinkedHashMap<>();
+        for (String item : mDrawerItems) {
+            List<String> mDrawerChildren = new ArrayList<>();
+            if (item.equals("Sources")) {
+                for (String model : sources)
+                    mDrawerChildren.add(model);
+            }
+            mSourceCollections.put(item, mDrawerChildren);
+        }
+        mMainMapper.setupDrawerLayout(mDrawerItems, mSourceCollections);
     }
 }

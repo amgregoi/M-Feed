@@ -1,12 +1,21 @@
 package com.teioh.m_feed.UI.LoginActivity.Presenters;
 
+import android.os.Bundle;
+
 public interface LoginActivityPresenter {
 
-    void init();
+    void onSaveState(Bundle bundle, String username);
 
-    void onResume();
+    void onRestoreState(Bundle bundle);
+
+    void onDestroy();
 
     void onPause();
 
-    void onDestroy();
+    void onResume();
+
+    void onSignupButton(String mUserName, String mPassword);
+
+    void onLoginbutton(String mUserName, String mPassword);
+
 }

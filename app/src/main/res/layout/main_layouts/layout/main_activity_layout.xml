@@ -16,7 +16,7 @@
 		<include layout="@layout/activity_layout"/>
 
 		<!-- left drawer -->
-		<ListView
+		<ExpandableListView
 			android:id="@+id/drawerLayoutListView"
 			android:layout_width="280dp"
 			android:layout_height="match_parent"

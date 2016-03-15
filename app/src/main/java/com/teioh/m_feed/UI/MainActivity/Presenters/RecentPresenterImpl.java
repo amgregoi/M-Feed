@@ -130,6 +130,7 @@ public class RecentPresenterImpl implements RecentPresenter {
 
     @Override
     public void updateSource() {
+        mRecentFragmentMapper.startRefresh();
         if (mRecentFragmentMapper.getContext() != null) {
             mRecentFragmentMapper.startRefresh();
             updateRecentMangaList();

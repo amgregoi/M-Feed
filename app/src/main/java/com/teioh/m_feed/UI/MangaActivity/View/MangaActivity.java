@@ -42,7 +42,6 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
 
     @Bind(R.id.activityTitle) TextView mActivityTitle;
     @Bind(R.id.tool_bar) Toolbar mToolBar;
-    @Bind(R.id.search_view) SearchView mSearchView;
     @Bind(R.id.swipe_container) SwipeRefreshLayout mSwipeRefresh;
     @Bind(R.id.chapter_list) ListView mChapterList;
 
@@ -152,7 +151,6 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
         setSupportActionBar(mToolBar);
         mToolBar.setNavigationIcon(R.drawable.ic_back);
         mToolBar.setNavigationOnClickListener(v -> onBackPressed());
-        mSearchView.setVisibility(View.GONE);
     }
 
     @Override
@@ -192,7 +190,7 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
                 mFollowButton.setVisibility(View.GONE);
                 //TODO update database (add MAL id column)
                 //TODO to check if sync set up, and make other buttons visible
-                mSyncMALButton.setVisibility(View.VISIBLE);
+                mSyncMALButton.setVisibility(View.VISIBLE); //TODO uncomment when MAL implemented
                 invalidateOptionsMenu();
             }
         }
@@ -263,7 +261,7 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
         mFollowButton.setOnClickListener(v -> {
             mMangaPresenter.onFollwButtonClick();
             mFollowButton.setVisibility(View.GONE); //uncomment after menu remove is  put in
-            mSyncMALButton.setVisibility(View.VISIBLE);
+            mSyncMALButton.setVisibility(View.VISIBLE);   //TODO uncomment when MAL implemented
             invalidateOptionsMenu();
         });
 
@@ -276,7 +274,13 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
         });
 
         mSyncMALButton.setOnClickListener(v -> {
-            mMangaPresenter.onMALSyncClicked();
+//            mMangaPresenter.onMALSyncClicked();
+            //TODO temp remove button until MAL implemented
+            mMangaPresenter.onFollwButtonClick();
+            mFollowButton.setVisibility(View.VISIBLE); //uncomment after menu remove is  put in
+            mSyncMALButton.setVisibility(View.GONE);   //TODO uncomment when MAL implemented
+            invalidateOptionsMenu();
+
         });
 
         mChapterIncButton.setOnClickListener(v -> {

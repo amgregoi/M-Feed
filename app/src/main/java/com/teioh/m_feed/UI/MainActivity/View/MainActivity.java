@@ -8,23 +8,27 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.teioh.m_feed.R;
+import com.teioh.m_feed.UI.MainActivity.Adapters.ExpandableListAdapter;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
 import com.teioh.m_feed.UI.MainActivity.Presenters.MainPresenter;
 import com.teioh.m_feed.UI.MainActivity.Presenters.MainPresenterImpl;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.MainActivityMapper;
 import com.teioh.m_feed.Utils.SlidingTabLayout;
-import com.teioh.m_feed.WebSources.MangaJoy;
 import com.teioh.m_feed.WebSources.WebSource;
+
+import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -39,9 +43,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     @Bind(R.id.tabs) SlidingTabLayout tabs;
     @Bind(R.id.tool_bar) Toolbar mToolBar;
     @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-    @Bind(R.id.orderButton) ImageButton orderButton;
 
-    @Bind(R.id.drawerLayoutListView) ListView mSourceListView;
+    @Bind(R.id.drawerLayoutListView) ExpandableListView expListView;
 
     private MainPresenter mMainPresenter;
 
@@ -56,11 +59,26 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
             mMainPresenter.onRestoreState(savedInstanceState);
         }
 
-        mMainPresenter.parseLogin();
+        mMainPresenter.init();
         mMainPresenter.setupDrawerLayoutListener(mToolBar, mDrawerLayout);
 
         //start service in new thread, substantial slow down on main thread
         //startService(new Intent(this, RecentUpdateService.class));
+    }
+
+    @Override
+    public void setupDrawerLayout(List<String> mDrawerItems, Map<String, List<String>> mSourceCollections) {
+        final ExpandableListAdapter adapter = new ExpandableListAdapter(this, mDrawerItems, mSourceCollections);
+
+        expListView.setAdapter(adapter);
+        expListView.setOnGroupClickListener((parent, v, groupPosition, id) -> {
+            mMainPresenter.onDrawerItemChosen(groupPosition);
+            return false;
+        });
+        expListView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
+            mMainPresenter.onSourceItemChosen(childPosition);
+            return true;
+        });
     }
 
     @Override
@@ -100,6 +118,26 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.settings) {
+            return true;
+        } else if (id == R.id.refresh) {
+            return true;
+        } else if (id == R.id.views) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
     }
@@ -116,15 +154,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     }
 
     @Override
-    public void registerAdapter(ViewPagerAdapterMain adapter, MergeAdapter sourceAdapter) {
+    public void registerAdapter(ViewPagerAdapterMain adapter) {
         if (adapter != null) {
             mViewPager.setAdapter(adapter);
             mViewPager.setOffscreenPageLimit(3);
             tabs.setViewPager(mViewPager);
-        }
-        if (sourceAdapter != null) {
-            mSourceListView.setAdapter(sourceAdapter);
-            sourceAdapter.notifyDataSetChanged();
         }
     }
 
@@ -165,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     }
 
     @Override
-    public void closeDrawer(){
+    public void closeDrawer() {
         mDrawerLayout.closeDrawers();
     }
 
@@ -173,16 +207,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     public void setupToolbar() {
         setSupportActionBar(mToolBar);
         mActivityTitle.setText(WebSource.getCurrentSource());
-        orderButton.setVisibility(View.GONE);
     }
 
     @Override
-    public void changeSourceTitle(String source){
+    public void changeSourceTitle(String source) {
         mActivityTitle.setText(source);
     }
 
-    @OnItemClick(R.id.drawerLayoutListView)
-    public void onSourceChosen(AdapterView<?> adapter, View view, int pos) {
-        mMainPresenter.onSourceChosen(adapter.getItemAtPosition(pos).toString());
-    }
+
 }

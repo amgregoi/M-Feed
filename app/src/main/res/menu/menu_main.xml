@@ -3,8 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.teioh.m_feed.UI.MainActivity.View.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/settings"
         android:title="@string/Settings"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/refresh"
+        android:title="@string/refresh"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/views"
+        android:title="@string/view_options"
         android:orderInCategory="100"
         app:showAsAction="never" />
 

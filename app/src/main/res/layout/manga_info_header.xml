@@ -26,7 +26,8 @@
 				android:paddingBottom="10dp"
 				android:paddingEnd="10dp"
 				android:paddingTop="5dp"
-				android:scaleType="fitXY"/>
+				android:scaleType="fitXY"
+				/>
 
 			<LinearLayout
 				android:id="@+id/top"
@@ -45,6 +46,8 @@
 					android:background="@drawable/button_animation"
 					android:text="Add to list"
 					android:textColor="@color/button_color"
+					android:layout_gravity="center"
+					android:gravity="center"
 					android:visibility="visible"/>
 
 				<!-- when synced with MAL-->
@@ -56,7 +59,7 @@
 					android:background="@drawable/button_animation"
 					android:text="Plan to read"
 					android:textColor="@color/button_color"
-					android:visibility="visible"/>
+					android:visibility="gone"/>
 
 				<!-- when synced with MAL-->
 				<Button
@@ -92,6 +95,7 @@
 						android:layout_marginStart="@dimen/baseline_grid_unit"
 						android:text="0 | 9000"
 						android:textSize="18sp"
+					    android:visibility="gone"
 						/>
 
 					<TextView
@@ -102,7 +106,7 @@
 						android:layout_marginEnd="@dimen/baseline_grid_unit"
 						android:text="0 | 9000"
 						android:textSize="18sp"
-
+						android:visibility="gone"
 						/>
 				</RelativeLayout>
 
@@ -121,7 +125,8 @@
 						android:background="@drawable/button_animation"
 						android:text="+1C"
 						android:textColor="@color/button_color"
-						android:visibility="visible"/>
+						android:visibility="gone"
+						/>
 
 					<!-- when synced with MAL-->
 					<Button
@@ -133,7 +138,7 @@
 						android:background="@drawable/button_animation"
 						android:text="+1V"
 						android:textColor="@color/button_color"
-						android:visibility="visible"/>
+						android:visibility="gone"/>
 
 					<!-- when synced with MAL-->
 					<Button
@@ -144,7 +149,7 @@
 						android:background="@drawable/button_animation"
 						android:text="+"
 						android:textColor="@color/button_color"
-						android:visibility="visible"/>
+						android:visibility="gone"/>
 
 				</LinearLayout>
 			</LinearLayout>

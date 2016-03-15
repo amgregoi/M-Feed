@@ -1,10 +1,4 @@
 <resources>
-
-    <!--&lt;!&ndash; Base application theme. &ndash;&gt;-->
-    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
-        <!--&lt;!&ndash; Customize your theme here. &ndash;&gt;-->
-    <!--</style>-->
-
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/ColorPrimary</item>
         <item name="colorPrimaryDark">@color/ColorPrimaryDark</item>
@@ -12,31 +6,22 @@
         <item name="searchViewStyle">@style/SearchViewStyle</item>
         <item name="android:textColorHighlight">#99ff4081</item>
         <item name="android:windowAnimationStyle">@null</item>
-        <!--<item name="android:textSelectHandleLeft">@drawable/text_select_handle_left</item>-->
-        <!--<item name="android:textSelectHandleRight">@drawable/text_select_handle_right</item>-->
-        <!--<item name="android:textSelectHandle">@drawable/text_select_handle_middle</item>-->
-
-        <!--<item name="android:fastScrollThumbDrawable">@drawable/fastscroll_thumb</item>-->
+        <item name="actionOverflowMenuStyle">@style/PopupMenu</item>
     </style>
 
 
     <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
-        <!-- Empty -->
+	    <item name="android:icon">@drawable/filter</item>
     </style>
 
-    <style name="ToolbarStyle" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <!-- Empty -->
-    </style>
+	<style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
+		<item name="android:popupBackground">@color/ColorPrimary</item>
 
-    <style name="noAnimTheme" parent="android:Theme">
-        <item name="android:windowAnimationStyle">@null</item>
-    </style>
+	</style>
 
 
 
-
-
-
+	<!-- Dialog Fragment in Manga Activity -->
     <style name="MyCustomTheme" parent="@android:style/Theme.Panel">
         <item name="android:windowAnimationStyle">@style/MyAnimation.Window</item>
         <item name="android:windowBackground">@color/ColorPrimary</item>
@@ -44,6 +29,7 @@
 
     </style>
 
+	<!-- Dialog Fragment in Manga Activity -->
     <style name="MyAnimation.Window" parent="@android:style/Animation.Activity">
         <item name="android:windowEnterAnimation">@transition/anim_in</item>
         <item name="android:windowExitAnimation">@transition/anim_out</item>

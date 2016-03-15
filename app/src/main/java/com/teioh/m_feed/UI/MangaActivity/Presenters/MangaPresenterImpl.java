@@ -42,7 +42,7 @@ public class MangaPresenterImpl implements MangaPresenter {
     private boolean mChapterOrderDescending;
     private Manga mManga;
 
-    MALService mMALService;
+//    MALService mMALService;
     MALMangaList mMALMangaList;
 
     private MangaActivityMapper mMangaMapper;
@@ -99,9 +99,10 @@ public class MangaPresenterImpl implements MangaPresenter {
         if (mChapterList == null) getChapterList();
         else updateChapterList(mChapterList);
 
-        //shared prefs set on login, eventually
-        mMALService = MALApi.createService(null, null);
-        getMALSyncOptions();
+//        shared prefs set on login, eventually
+//        username, pass stored in shared prefs
+//        mMALService = MALApi.createService(null, null);
+//        getMALSyncOptions();
     }
 
     @Override
@@ -167,18 +168,18 @@ public class MangaPresenterImpl implements MangaPresenter {
     }
 
     private void getMALSyncOptions(){
-        mMALService.searchManga(mManga.getTitle(), new Callback<MALMangaList>() {
-            @Override
-            public void success(MALMangaList list, Response response) {
-                Log.e(TAG, list.toString());
-                mMALMangaList = list;
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.e(TAG, error.getMessage());
-            }
-        });
+//        mMALService.searchManga(mManga.getTitle(), new Callback<MALMangaList>() {
+//            @Override
+//            public void success(MALMangaList list, Response response) {
+//                Log.e(TAG, list.toString());
+//                mMALMangaList = list;
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                Log.e(TAG, error.getMessage());
+//            }
+//        });
     }
 
     private void getMangaViewInfo() {
