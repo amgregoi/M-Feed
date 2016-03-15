@@ -200,7 +200,10 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
         listener.updateCurrentPage(position);
     }
 
-
+    @Override
+    public void onRefresh() {
+        mChapterPresenter.onRefresh(mViewPager.getCurrentItem());
+    }
 
 
 }

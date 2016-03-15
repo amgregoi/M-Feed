@@ -3,6 +3,7 @@ package com.teioh.m_feed.UI.ReaderActivity.Adapters;
 import android.content.Context;
 import android.net.Uri;
 import android.support.v4.view.PagerAdapter;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,9 @@ public class ImagePageAdapter extends PagerAdapter {
     private Context context;
     private List<String> imageUrls;
     private LayoutInflater inflater;
+
+    SparseArray<View> views = new SparseArray<View>();
+
 
     public ImagePageAdapter(Context c, List<String> imagePaths) {
         this.context = c;
@@ -61,11 +65,17 @@ public class ImagePageAdapter extends PagerAdapter {
                     }
                 });
         (container).addView(viewLayout);
+        views.put(position, viewLayout);
         return viewLayout;
     }
 
     @Override public void destroyItem(ViewGroup container, int position, Object object) {
         (container).removeView((RelativeLayout) object);
+        views.remove(position);
+    }
+
+    public void refreshView(int position){
+        views.get(position).invalidate();
     }
 
 

@@ -66,4 +66,5 @@ public class ChapterPageAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return mChapterList.size();
     }
+
 }

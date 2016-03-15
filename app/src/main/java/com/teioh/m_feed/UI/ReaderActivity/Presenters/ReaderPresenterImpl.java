@@ -93,6 +93,11 @@ public class ReaderPresenterImpl implements ReaderPresenter {
         ((ChapterFragment) mChapterPagerAdapter.getItem(position)).updateChapterViewStatus();
     }
 
+    @Override
+    public void onRefreshButton(int position) {
+        ((ChapterFragment) mChapterPagerAdapter.getItem(position)).onRefresh();
+    }
+
     //TODO possibly remove
 //    @Subscribe
 //    public void onChangeChapter(ChangeChapter newChapter) {

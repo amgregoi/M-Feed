@@ -26,4 +26,6 @@ public interface ReaderPresenter {
     void decrementChapterPage(int position);
 
     void updateChapterViewStatus(int position);
+
+    void onRefreshButton(int position);
 }

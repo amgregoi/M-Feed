@@ -35,4 +35,6 @@ public interface ChapterPresenter {
 
     void updateChapterViewStatus();
 
+    void onRefresh(int position);
+
 }

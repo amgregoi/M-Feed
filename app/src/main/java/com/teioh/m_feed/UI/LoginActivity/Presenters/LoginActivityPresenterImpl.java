@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
-import com.teioh.m_feed.MAL_Models.MALMangaList;
 import com.teioh.m_feed.MAL_Models.verify_credentials;
 import com.teioh.m_feed.MFeedApplication;
 import com.teioh.m_feed.UI.LoginActivity.View.Mappers.LoginActivityMapper;
@@ -18,7 +17,7 @@ import retrofit.client.Response;
 
 
 public class LoginActivityPresenterImpl implements LoginActivityPresenter {
-    public final static String TAG = SignupFragmentPresenterImpl.class.getSimpleName();
+    public final static String TAG = LoginActivityPresenterImpl.class.getSimpleName();
     public final static String USERNAME_KEY = TAG + ":USERNAME";
 
     private LoginActivityMapper mLoginActivityMapper;

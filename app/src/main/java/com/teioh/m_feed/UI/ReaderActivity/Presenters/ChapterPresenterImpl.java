@@ -33,7 +33,7 @@ public class ChapterPresenterImpl implements ChapterPresenter {
     private boolean mToolbarShowing, mIsNext;
     private Chapter mChapter;
     private Subscription mImageListSubscription;
-
+    private ImagePageAdapter mChapterPageAdapter;
 
 
     public ChapterPresenterImpl(ChapterReaderMapper map, Bundle bundle) {
@@ -157,11 +157,16 @@ public class ChapterPresenterImpl implements ChapterPresenter {
             cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).put(mChapter);
     }
 
+    @Override
+    public void onRefresh(int position) {
+        mChapterPageAdapter.refreshView(position);
+    }
+
     private void updateImageUrlList(List<String> urlList) {
         if (mChapterReaderMapper.getContext() != null) {
             mChapterUrlList = new ArrayList<>(urlList);
             mChapterListSize = mChapterUrlList.size();
-            ImagePageAdapter mChapterPageAdapter = new ImagePageAdapter(mChapterReaderMapper.getContext(), mChapterUrlList);
+            mChapterPageAdapter = new ImagePageAdapter(mChapterReaderMapper.getContext(), mChapterUrlList);
             mChapterReaderMapper.registerAdapter(mChapterPageAdapter);
             updateToolbar();
         }

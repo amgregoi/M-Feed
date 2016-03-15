@@ -18,7 +18,6 @@ import com.commonsware.cwac.merge.MergeAdapter;
 import com.parse.ParseUser;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.LoginActivity.View.LoginActivity;
-import com.teioh.m_feed.UI.MainActivity.Adapters.SourceListAdapter;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
 import com.teioh.m_feed.UI.MainActivity.View.Fragments.FollowedFragment;
 import com.teioh.m_feed.UI.MainActivity.View.Fragments.LibraryFragment;
@@ -41,11 +40,10 @@ import butterknife.ButterKnife;
 public class MainPresenterImpl implements MainPresenter {
     public final static String TAG = MainPresenterImpl.class.getSimpleName();
 
-
+    private final CharSequence mTabTitles[] = {"Recent", "Followed", "Library"};
     private ViewPagerAdapterMain mViewPagerAdapterMain;
     private ActionBarDrawerToggle mDrawerToggle;
     private MainActivityMapper mMainMapper;
-    private final CharSequence mTabTitles[] = {"Recent", "Followed", "Library"};
 
 
     public MainPresenterImpl(MainActivityMapper main) {
@@ -139,16 +137,6 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Override
-    public boolean onOptionsSelected(MenuItem item) {
-        return mDrawerToggle.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void parseLogin() {
-
-    }
-
-    @Override
     public void onDrawerItemChosen(int position) {
         switch (position) {
             case (0):
@@ -156,6 +144,7 @@ public class MainPresenterImpl implements MainPresenter {
                 onLogout();
                 return;
             case (2):
+                //advanced search fragment
                 return;
         }
     }

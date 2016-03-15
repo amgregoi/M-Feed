@@ -70,7 +70,8 @@ public class FollowedPresenterImpl implements FollowedPresenter {
 
     @Override
     public void onQueryTextChange(String newText) {
-        mAdapter.getFilter().filter(newText);
+        if(mAdapter != null)
+            mAdapter.getFilter().filter(newText);
     }
 
     @Override

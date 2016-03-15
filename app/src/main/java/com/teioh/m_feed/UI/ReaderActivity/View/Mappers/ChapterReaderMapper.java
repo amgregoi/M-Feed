@@ -31,5 +31,7 @@ public interface ChapterReaderMapper extends BaseContextMap, PageAdapterMap, Vie
 
     void updateCurrentPage(int position);
 
+    void onRefresh();
+
 
 }

@@ -168,6 +168,10 @@ public class ReaderActivity extends AppCompatActivity implements ReaderActivityM
     }
 
     //refresh button
+    @OnClick(R.id.refreshButton)
+    public void onRefreshClicked(){
+        mReaderPresenter.onRefreshButton(mViewPager.getCurrentItem());
+    }
 
     @OnClick(R.id.forwardPageButton)
     public void onForwardPageClick() {
@@ -178,4 +182,6 @@ public class ReaderActivity extends AppCompatActivity implements ReaderActivityM
     public void onSkipForwardClick() {
         mViewPager.incrementCurrentItem();
     }
+
+
 }

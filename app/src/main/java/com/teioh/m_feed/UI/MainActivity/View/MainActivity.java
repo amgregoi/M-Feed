@@ -8,16 +8,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.commonsware.cwac.merge.MergeAdapter;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ExpandableListAdapter;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
@@ -32,7 +30,6 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnItemClick;
 
 public class MainActivity extends AppCompatActivity implements MainActivityMapper {
     public final static String TAG = MainActivity.class.getSimpleName();
@@ -43,8 +40,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     @Bind(R.id.tabs) SlidingTabLayout tabs;
     @Bind(R.id.tool_bar) Toolbar mToolBar;
     @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-
-    @Bind(R.id.drawerLayoutListView) ExpandableListView expListView;
+    @Bind(R.id.drawerLayoutListView) ExpandableListView mDrawerList;
 
     private MainPresenter mMainPresenter;
 
@@ -70,12 +66,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     public void setupDrawerLayout(List<String> mDrawerItems, Map<String, List<String>> mSourceCollections) {
         final ExpandableListAdapter adapter = new ExpandableListAdapter(this, mDrawerItems, mSourceCollections);
 
-        expListView.setAdapter(adapter);
-        expListView.setOnGroupClickListener((parent, v, groupPosition, id) -> {
+        View header = LayoutInflater.from(getContext()).inflate(R.layout.drawer_header, null);
+        mDrawerList.addHeaderView(header);
+        mDrawerList.setAdapter(adapter);
+        mDrawerList.setOnGroupClickListener((parent, v, groupPosition, id) -> {
             mMainPresenter.onDrawerItemChosen(groupPosition);
             return false;
         });
-        expListView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
+        mDrawerList.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
             mMainPresenter.onSourceItemChosen(childPosition);
             return true;
         });
@@ -214,5 +212,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
         mActivityTitle.setText(source);
     }
 
-
+    @Override
+    public void onBackPressed() {
+        if(mDrawerLayout.isDrawerOpen(mDrawerList)){
+            mDrawerLayout.closeDrawer(mDrawerList);
+        }else {
+            super.onBackPressed();
+        }
+    }
 }

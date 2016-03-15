@@ -30,5 +30,11 @@
 			android:textColor="@color/white"
 			android:textStyle="bold"/>
 
+		<View
+			android:layout_below="@id/sourceTitle"
+			android:layout_width="fill_parent"
+			android:layout_height="1dp"
+		    android:background="@color/white"/>
+
 	</RelativeLayout>
 </LinearLayout>
