@@ -1,23 +1,18 @@
 package com.teioh.m_feed.UI.ReaderActivity.Presenters;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.UI.ReaderActivity.Adapters.ChapterPageAdapter;
 import com.teioh.m_feed.UI.ReaderActivity.Adapters.ImagePageAdapter;
 import com.teioh.m_feed.UI.ReaderActivity.View.Mappers.ChapterReaderMapper;
-import com.teioh.m_feed.UI.ReaderActivity.View.ReaderActivity;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.WebSources.WebSource;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
 import rx.Subscription;
-import rx.schedulers.Schedulers;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 

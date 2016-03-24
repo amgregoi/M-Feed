@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.teioh.m_feed.Models.Chapter;
-import com.teioh.m_feed.UI.MangaActivity.Presenters.MangaPresenter;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.MangaPresenterImpl;
-import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
 import com.teioh.m_feed.UI.ReaderActivity.Adapters.ChapterPageAdapter;
 import com.teioh.m_feed.UI.ReaderActivity.View.Fragments.ChapterFragment;
 import com.teioh.m_feed.UI.ReaderActivity.View.Mappers.ReaderActivityMapper;

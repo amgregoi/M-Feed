@@ -9,13 +9,9 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.commonsware.cwac.merge.MergeAdapter;
-import com.parse.ParseUser;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.LoginActivity.View.LoginActivity;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
@@ -30,7 +26,6 @@ import com.teioh.m_feed.WebSources.MangaPark;
 import com.teioh.m_feed.WebSources.WebSource;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,7 +66,7 @@ public class MainPresenterImpl implements MainPresenter {
         //init layout
         mMainMapper.setupTabLayout();
         mMainMapper.registerAdapter(mViewPagerAdapterMain);
-        mMainMapper.setupSearchview();
+        mMainMapper.setupSearchView();
         mMainMapper.setupToolbar();
 
     }
@@ -146,6 +141,9 @@ public class MainPresenterImpl implements MainPresenter {
             case (2):
                 //advanced search fragment
                 return;
+            case(3):
+                //settings fragment
+                return;
         }
     }
 
@@ -178,17 +176,20 @@ public class MainPresenterImpl implements MainPresenter {
 
     private void setupDrawerLayouts() {
         List<String> mDrawerItems = new ArrayList<>();
+        //TODO if sign in credential set, change to Sign out.
+        //NOTE: only necessary when MAL fully implemented
         mDrawerItems.add("MAL Sign In");
         mDrawerItems.add("Sources");
         mDrawerItems.add("Search");
+        mDrawerItems.add("Settings");
 
 
-        String[] sources = {MangaHere.SourceKey, MangaPark.SourceKey, MangaJoy.SourceKey};
+//        String[] sources = {MangaHere.SourceKey, MangaPark.SourceKey, MangaJoy.SourceKey};
         Map<String, List<String>> mSourceCollections = new LinkedHashMap<>();
         for (String item : mDrawerItems) {
             List<String> mDrawerChildren = new ArrayList<>();
             if (item.equals("Sources")) {
-                for (String model : sources)
+                for (String model : WebSource.getSourceList())
                     mDrawerChildren.add(model);
             }
             mSourceCollections.put(item, mDrawerChildren);

@@ -1,4 +1,4 @@
-package com.teioh.m_feed.Utils;
+package com.teioh.m_feed.UI.MainActivity.View.Widgets;
 
 /*
  * Copyright 2014 Google Inc. All rights reserved.

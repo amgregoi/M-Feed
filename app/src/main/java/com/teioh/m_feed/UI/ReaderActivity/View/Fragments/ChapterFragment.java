@@ -5,20 +5,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.TextView;
 
-import com.teioh.m_feed.UI.ReaderActivity.View.Widgets.GestureViewPager;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.ReaderActivity.Presenters.ChapterPresenter;
 import com.teioh.m_feed.UI.ReaderActivity.Presenters.ChapterPresenterImpl;
 import com.teioh.m_feed.UI.ReaderActivity.View.Mappers.ChapterReaderMapper;
+import com.teioh.m_feed.UI.ReaderActivity.View.Widgets.GestureViewPager;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

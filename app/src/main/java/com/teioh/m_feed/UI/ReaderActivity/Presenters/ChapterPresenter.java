@@ -1,6 +1,5 @@
 package com.teioh.m_feed.UI.ReaderActivity.Presenters;
 
-import android.content.Context;
 import android.os.Bundle;
 
 public interface ChapterPresenter {

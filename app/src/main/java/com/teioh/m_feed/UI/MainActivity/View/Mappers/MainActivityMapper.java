@@ -3,13 +3,10 @@ package com.teioh.m_feed.UI.MainActivity.View.Mappers;
 
 import android.support.v7.app.ActionBarDrawerToggle;
 
-import com.commonsware.cwac.merge.MergeAdapter;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
 import com.teioh.m_feed.UI.Maps.BaseContextMap;
 import com.teioh.m_feed.UI.Maps.SearchViewListenerMap;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +14,7 @@ public interface MainActivityMapper extends BaseContextMap, SearchViewListenerMa
 
     void registerAdapter(ViewPagerAdapterMain adapter);
 
-    void setupSearchview();
+    void setupSearchView();
 
     void setupTabLayout();
 

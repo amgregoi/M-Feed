@@ -7,8 +7,7 @@
 	android:background="@color/ColorPrimary"
 	android:elevation="2dp"
 	android:navigationIcon="@android:drawable/arrow_down_float"
-	android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
-	xmlns:app="http://schemas.android.com/apk/res-auto">
+	android:theme="@style/Base.ThemeOverlay.AppCompat.Dark">
 
 	<RelativeLayout
 		android:id="@+id/searchBar"
@@ -23,7 +22,6 @@
 			android:layout_height="wrap_content"
 			android:layout_alignParentEnd="true"
 			android:layout_centerInParent="true"
-			android:layout_marginEnd="@dimen/baseline_grid_unit"
 			android:focusable="false"
 			android:iconifiedByDefault="true"
 			android:queryHint="Search Here"

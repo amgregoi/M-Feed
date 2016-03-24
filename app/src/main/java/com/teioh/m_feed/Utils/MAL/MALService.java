@@ -1,8 +1,8 @@
 package com.teioh.m_feed.Utils.MAL;
 
 
-import com.teioh.m_feed.MAL_Models.verify_credentials;
 import com.teioh.m_feed.MAL_Models.MALMangaList;
+import com.teioh.m_feed.MAL_Models.verify_credentials;
 
 import retrofit.Callback;
 import retrofit.http.GET;

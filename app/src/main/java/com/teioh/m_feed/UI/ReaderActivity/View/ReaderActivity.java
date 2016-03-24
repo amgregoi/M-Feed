@@ -4,19 +4,17 @@ package com.teioh.m_feed.UI.ReaderActivity.View;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
 import com.teioh.m_feed.R;
-import com.teioh.m_feed.UI.ReaderActivity.View.Mappers.ReaderActivityMapper;
 import com.teioh.m_feed.UI.ReaderActivity.Presenters.ReaderPresenter;
 import com.teioh.m_feed.UI.ReaderActivity.Presenters.ReaderPresenterImpl;
+import com.teioh.m_feed.UI.ReaderActivity.View.Mappers.ReaderActivityMapper;
 import com.teioh.m_feed.UI.ReaderActivity.View.Widgets.NoScrollViewPager;
 
 import butterknife.Bind;

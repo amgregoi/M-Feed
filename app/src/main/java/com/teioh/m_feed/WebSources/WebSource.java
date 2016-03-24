@@ -13,7 +13,7 @@ public class WebSource {
     private static String wCurrentSource = MangaJoy.SourceKey;
 //private static String wCurrentSource = MangaHere.SourceKey;
 
-    private static String[] wSources = {MangaJoy.SourceKey, MangaPark.SourceKey, MangaHere.SourceKey};
+    private static String[] wSources = {MangaHere.SourceKey, MangaPark.SourceKey, MangaJoy.SourceKey};
 
     public static String getCurrentSource() {
         return wCurrentSource;

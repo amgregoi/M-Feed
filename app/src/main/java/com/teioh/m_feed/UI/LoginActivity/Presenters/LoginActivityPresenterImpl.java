@@ -1,15 +1,12 @@
 package com.teioh.m_feed.UI.LoginActivity.Presenters;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 
 import com.teioh.m_feed.MAL_Models.verify_credentials;
-import com.teioh.m_feed.MFeedApplication;
 import com.teioh.m_feed.UI.LoginActivity.View.Mappers.LoginActivityMapper;
 import com.teioh.m_feed.Utils.MAL.MALApi;
 import com.teioh.m_feed.Utils.MAL.MALService;
+import com.teioh.m_feed.Utils.SharedPrefsUtil;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -64,11 +61,12 @@ public class LoginActivityPresenterImpl implements LoginActivityPresenter {
             @Override
             public void success(verify_credentials credentials, Response response) {
                 //add to shared prefs
-                Context context = MFeedApplication.getInstance();
-                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-                editor.putString("USER", mUserName);
-                editor.putString("PASS", mPassword);
-                editor.apply();
+//                Context context = MFeedApplication.getInstance();
+//                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+//                editor.putString("USER", mUserName);
+//                editor.putString("PASS", mPassword);
+//                editor.apply();
+                SharedPrefsUtil.setMALCredential(mUserName, mPassword);
                 mLoginActivityMapper.onLoginSuccess();
             }
 

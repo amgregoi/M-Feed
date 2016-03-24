@@ -2,7 +2,6 @@ package com.teioh.m_feed.UI.MangaActivity.Presenters;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.teioh.m_feed.MAL_Models.MALMangaList;
 import com.teioh.m_feed.Models.Chapter;
@@ -12,8 +11,6 @@ import com.teioh.m_feed.UI.MangaActivity.Adapters.ChapterListAdapter;
 import com.teioh.m_feed.UI.MangaActivity.View.Mappers.MangaActivityMapper;
 import com.teioh.m_feed.UI.ReaderActivity.View.ReaderActivity;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
-import com.teioh.m_feed.Utils.MAL.MALApi;
-import com.teioh.m_feed.Utils.MAL.MALService;
 import com.teioh.m_feed.WebSources.WebSource;
 
 import java.util.ArrayList;
@@ -21,9 +18,6 @@ import java.util.Collections;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import rx.Subscription;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;

@@ -1,10 +1,6 @@
 package com.teioh.m_feed.UI.MainActivity.Adapters;
 
 
-import java.util.List;
-import java.util.Map;
-
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
@@ -15,6 +11,9 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
 import com.teioh.m_feed.R;
+
+import java.util.List;
+import java.util.Map;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 

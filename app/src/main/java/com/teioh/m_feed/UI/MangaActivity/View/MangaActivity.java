@@ -18,7 +18,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -28,8 +27,8 @@ import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.MangaPresenter;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.MangaPresenterImpl;
-import com.teioh.m_feed.UI.MangaActivity.View.Fragments.FRemoveDialogFragment;
 import com.teioh.m_feed.UI.MangaActivity.View.Fragments.FProgressDialogFragment;
+import com.teioh.m_feed.UI.MangaActivity.View.Fragments.FRemoveDialogFragment;
 import com.teioh.m_feed.UI.MangaActivity.View.Mappers.MangaActivityMapper;
 
 import butterknife.Bind;

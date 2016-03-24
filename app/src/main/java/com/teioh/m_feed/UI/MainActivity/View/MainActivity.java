@@ -22,7 +22,7 @@ import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
 import com.teioh.m_feed.UI.MainActivity.Presenters.MainPresenter;
 import com.teioh.m_feed.UI.MainActivity.Presenters.MainPresenterImpl;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.MainActivityMapper;
-import com.teioh.m_feed.Utils.SlidingTabLayout;
+import com.teioh.m_feed.UI.MainActivity.View.Widgets.SlidingTabLayout;
 import com.teioh.m_feed.WebSources.WebSource;
 
 import java.util.List;
@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     }
 
     @Override
-    public void setupSearchview() {
+    public void setupSearchView() {
         mSearchView.setOnQueryTextListener(this);
         mSearchView.setSubmitButtonEnabled(true);
         mSearchView.setOnQueryTextFocusChangeListener((view, queryTextFocused) -> {

@@ -1,27 +1,20 @@
 package com.teioh.m_feed.UI.ReaderActivity.Adapters;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v4.view.PagerAdapter;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.widget.MediaController;
 import android.widget.RelativeLayout;
-import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
-import com.teioh.m_feed.UI.ReaderActivity.View.Widgets.GestureImageView;
 import com.teioh.m_feed.R;
+import com.teioh.m_feed.UI.ReaderActivity.View.Widgets.GestureImageView;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 

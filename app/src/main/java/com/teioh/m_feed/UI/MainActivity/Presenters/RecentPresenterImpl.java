@@ -7,21 +7,14 @@ import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapterAlternate;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.RecentFragmentMapper;
 import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
-import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.Database.ReactiveQueryManager;
-import com.teioh.m_feed.Utils.OttoBus.QueryChange;
-import com.teioh.m_feed.Utils.OttoBus.UpdateSource;
 import com.teioh.m_feed.WebSources.WebSource;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import rx.Observable;
 import rx.Subscription;
-import rx.schedulers.Schedulers;
-
-import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 public class RecentPresenterImpl implements RecentPresenter {
     public final static String TAG = RecentPresenterImpl.class.getSimpleName();
@@ -86,7 +79,7 @@ public class RecentPresenterImpl implements RecentPresenter {
 
     @Override
     public void onQueryTextChange(String newText) {
-        if(mAdapter != null)
+        if (mAdapter != null)
             mAdapter.getFilter().filter(newText);
     }
 
