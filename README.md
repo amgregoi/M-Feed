@@ -1,5 +1,5 @@
-M-Feed
-======
+<center>M-Feed</center>
+        ======
 
 __TODO:__
 * Research MAL Integration
@@ -19,9 +19,16 @@ __Libraries Used__
 - **Glide**: https://github.com/bumptech/glide
 - **Jsoup**: http://jsoup.org/
 
+<br><br>
+<center>Current Layout (3-23-2016)</center>
+--------------------------
+__Navigation__
+![alt text](https://raw.githubusercontent.com/amgregoi/M-Feed/master/images/Nav.png "Navigation menu")
+<br><br>
 
-![alt text](https://github.com/amgregoi/M-Feed/images/Home.png "Home screen")
+__Home Screen__
+![alt text](https://raw.githubusercontent.com/amgregoi/M-Feed/master/images/Home.png "Home screen")
+<br><br>
 
-![alt text](https://github.com/amgregoi/M-Feed/images/Manga.png "Manga information and chapter list")
-
-![alt text](https://github.com/amgregoi/M-Feed/images/Nav.png "Navigation menu")
+__Manga information page__
+![alt text](https://raw.githubusercontent.com/amgregoi/M-Feed/master/images/Manga.png "Manga information and chapter list")
