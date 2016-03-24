@@ -23,12 +23,15 @@ __Libraries Used__
 <center>Current Layout (3-23-2016)</center>
 --------------------------
 __Navigation__
+<br>
 ![alt text](https://raw.githubusercontent.com/amgregoi/M-Feed/master/images/Nav.png "Navigation menu")
 <br><br>
 
 __Home Screen__
+<br>
 ![alt text](https://raw.githubusercontent.com/amgregoi/M-Feed/master/images/Home.png "Home screen")
 <br><br>
 
 __Manga information page__
+<br>
 ![alt text](https://raw.githubusercontent.com/amgregoi/M-Feed/master/images/Manga.png "Manga information and chapter list")
