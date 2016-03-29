@@ -24,4 +24,7 @@ public interface FollowedPresenter {
     void setAdapter();
 
     void updateSource();
+
+    void onFilterSelected(int filter);
+
 }

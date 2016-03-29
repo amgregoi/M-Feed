@@ -12,10 +12,14 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ExpandableListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ExpandableListAdapter;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
@@ -23,6 +27,7 @@ import com.teioh.m_feed.UI.MainActivity.Presenters.MainPresenter;
 import com.teioh.m_feed.UI.MainActivity.Presenters.MainPresenterImpl;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.MainActivityMapper;
 import com.teioh.m_feed.UI.MainActivity.View.Widgets.SlidingTabLayout;
+import com.teioh.m_feed.Utils.SharedPrefsUtil;
 import com.teioh.m_feed.WebSources.WebSource;
 
 import java.util.List;
@@ -42,6 +47,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @Bind(R.id.drawerLayoutListView) ExpandableListView mDrawerList;
 
+    @Bind(R.id.actionMenu) FloatingActionsMenu menuMultipleActions;
+    private View mDrawerHeader;
+    private Toast toast;
+
     private MainPresenter mMainPresenter;
 
     @Override
@@ -57,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
 
         mMainPresenter.init();
         mMainPresenter.setupDrawerLayoutListener(mToolBar, mDrawerLayout);
+        toast = Toast.makeText(this, "Press back again to exit!", Toast.LENGTH_SHORT);
 
         //start service in new thread, substantial slow down on main thread
         //startService(new Intent(this, RecentUpdateService.class));
@@ -65,9 +75,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     @Override
     public void setupDrawerLayout(List<String> mDrawerItems, Map<String, List<String>> mSourceCollections) {
         final ExpandableListAdapter adapter = new ExpandableListAdapter(this, mDrawerItems, mSourceCollections);
+        if (mDrawerHeader != null) mDrawerList.removeHeaderView(mDrawerHeader);
 
-        View header = LayoutInflater.from(getContext()).inflate(R.layout.drawer_header, null);
-        mDrawerList.addHeaderView(header);
+        mDrawerHeader = LayoutInflater.from(getContext()).inflate(R.layout.drawer_header, null);
+        TextView username = (TextView) mDrawerHeader.findViewById(R.id.drawer_username);
+        username.setText(SharedPrefsUtil.getMALUsername());
+
+        mDrawerList.addHeaderView(mDrawerHeader);
         mDrawerList.setAdapter(adapter);
         mDrawerList.setOnGroupClickListener((parent, v, groupPosition, id) -> {
             mMainPresenter.onDrawerItemChosen(groupPosition);
@@ -187,6 +201,35 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     }
 
     @Override
+    public void setupSourceFilterMenu() {
+
+        FloatingActionButton A2 = new FloatingActionButton(getBaseContext());
+        A2.setTitle("Show All");
+        A2.setIcon(R.drawable.ic_favorite_border_white_18dp);
+        A2.setSize(FloatingActionButton.SIZE_MINI);
+        A2.setColorNormalResId(R.color.ColorAccent);
+        A2.setOnClickListener(v -> {
+            mSearchView.clearFocus();
+            menuMultipleActions.collapse();
+            mMainPresenter.onFilterSelected(0);
+        });
+
+        FloatingActionButton A1 = new FloatingActionButton(getBaseContext());
+        A1.setTitle("Favourites Only");
+        A1.setSize(FloatingActionButton.SIZE_MINI);
+        A1.setColorNormalResId(R.color.ColorAccent);
+        A1.setIcon(R.drawable.ic_favorite_white_18dp);
+        A1.setOnClickListener(v -> {
+            menuMultipleActions.collapse();
+            mMainPresenter.onFilterSelected(1);
+        });
+
+        menuMultipleActions.addButton(A1);
+        menuMultipleActions.addButton(A2);
+
+    }
+
+    @Override
     public void onDrawerOpen() {
         invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
     }
@@ -214,9 +257,15 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
 
     @Override
     public void onBackPressed() {
-        if(mDrawerLayout.isDrawerOpen(mDrawerList)){
+        if (menuMultipleActions.isExpanded()) { //closes action menu
+            menuMultipleActions.collapse();
+        }else if (!toast.getView().isShown() && mDrawerLayout.isDrawerOpen(mDrawerList)) { //closes drawer, if exit toast isn't active
             mDrawerLayout.closeDrawer(mDrawerList);
-        }else {
+        } else if (!toast.getView().isShown()) { //opens drawer, and shows exit toast to verify exit
+            mDrawerLayout.openDrawer(mDrawerList);
+            toast.show();
+        } else {    //user double back pressed to exit within time frame (toast length)
+            toast.cancel();
             super.onBackPressed();
         }
     }

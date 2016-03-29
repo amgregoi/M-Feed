@@ -7,5 +7,6 @@ import com.teioh.m_feed.UI.Maps.SearchViewListenerMap;
 
 public interface FollowFragmentMapper extends BaseAdapterMap, SearchViewListenerMap, BaseContextMap {
     void updateSource();
+    void onFilterSelected(int filter);
 
 }

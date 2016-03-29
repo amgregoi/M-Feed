@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.teioh.m_feed.Models.Manga;
-import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapterAlternate;
+import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapter;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.LibraryFragmentMapper;
 import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
 import com.teioh.m_feed.Utils.Database.ReactiveQueryManager;
@@ -22,7 +22,7 @@ public class LibraryPresenterImpl implements LibraryPresenter {
     public final static String LIBRARY_LIST_KEY = TAG + ":LIBRARY_LIST";
 
     private ArrayList<Manga> mLibraryMangaList;
-    private SearchableAdapterAlternate mAdapter;
+    private SearchableAdapter mAdapter;
     private Subscription mMangaListSubscription;
 
     private LibraryFragmentMapper mLibraryFragmentMapper;
@@ -121,12 +121,18 @@ public class LibraryPresenterImpl implements LibraryPresenter {
         }
     }
 
+    @Override
+    public void onFilterSelected(int filter) {
+        if (mAdapter != null)
+            mAdapter.filterByStatus(filter);
+    }
+
     private void updateLibraryGridView(List<Manga> mList) {
         if (mLibraryFragmentMapper.getContext() != null && mList != null) {
             mLibraryMangaList = new ArrayList<>(mList);
             Collections.sort(mLibraryMangaList, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
 
-            mAdapter = new SearchableAdapterAlternate(mLibraryFragmentMapper.getContext(), mLibraryMangaList);
+            mAdapter = new SearchableAdapter(mLibraryFragmentMapper.getContext(), mLibraryMangaList);
             mLibraryFragmentMapper.registerAdapter(mAdapter);
             mMangaListSubscription = null;
         }

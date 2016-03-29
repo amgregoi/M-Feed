@@ -25,4 +25,6 @@ public interface LibraryPresenter {
 
     void updateSource();
 
+    void onFilterSelected(int filter);
+
 }

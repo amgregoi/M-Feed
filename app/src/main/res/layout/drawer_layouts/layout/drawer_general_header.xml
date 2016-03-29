@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:layout_marginStart="@dimen/baseline_margin_unit"
+              android:layout_marginStart="@dimen/baseline_margin_unit_16dp"
               android:orientation="vertical">
 
 	<TextView
@@ -14,6 +14,7 @@
 		android:textSize="@dimen/text_heading_18sp"
 		android:textStyle="bold"/>
 
+
 	<View
 		android:layout_width="fill_parent"
 		android:layout_height="@dimen/fab_stroke_width"
@@ -21,4 +22,5 @@
 		android:layout_marginTop="@dimen/fab_labels_margin"
 		android:background="@color/ColorPrimary"
 		/>
+
 </LinearLayout>

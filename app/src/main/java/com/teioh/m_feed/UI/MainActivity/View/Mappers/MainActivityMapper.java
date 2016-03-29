@@ -14,10 +14,6 @@ public interface MainActivityMapper extends BaseContextMap, SearchViewListenerMa
 
     void registerAdapter(ViewPagerAdapterMain adapter);
 
-    void setupSearchView();
-
-    void setupTabLayout();
-
     void setDrawerLayoutListener(ActionBarDrawerToggle mDrawerToggle);
 
     void onDrawerOpen();
@@ -28,8 +24,15 @@ public interface MainActivityMapper extends BaseContextMap, SearchViewListenerMa
 
     void setupToolbar();
 
-    void changeSourceTitle(String source);
+    void setupTabLayout();
+
+    void setupSearchView();
 
     void setupDrawerLayout(List<String> mDrawerItems, Map<String, List<String>> mSourceCollections);
 
-    }
+    void setupSourceFilterMenu();
+
+    void changeSourceTitle(String source);
+
+
+}

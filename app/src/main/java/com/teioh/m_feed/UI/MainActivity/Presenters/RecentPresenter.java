@@ -25,4 +25,6 @@ public interface RecentPresenter {
     void setAdapter();
 
     void updateSource();
+
+    void onFilterSelected(int filter);
 }

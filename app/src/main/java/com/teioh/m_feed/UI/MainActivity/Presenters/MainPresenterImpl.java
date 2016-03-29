@@ -19,7 +19,7 @@ import com.teioh.m_feed.UI.MainActivity.View.Fragments.FollowedFragment;
 import com.teioh.m_feed.UI.MainActivity.View.Fragments.LibraryFragment;
 import com.teioh.m_feed.UI.MainActivity.View.Fragments.RecentFragment;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.MainActivityMapper;
-import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
+import com.teioh.m_feed.Utils.SharedPrefsUtil;
 import com.teioh.m_feed.WebSources.MangaHere;
 import com.teioh.m_feed.WebSources.MangaJoy;
 import com.teioh.m_feed.WebSources.MangaPark;
@@ -57,18 +57,16 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void init() {
-        //creates database if fresh install
-        MangaFeedDbHelper.getInstance().createDatabase();
-        setupDrawerLayouts();
-
-        mViewPagerAdapterMain = new ViewPagerAdapterMain(((FragmentActivity) mMainMapper.getContext()).getSupportFragmentManager(), mTabTitles, 3);
-
-        //init layout
+        //setup base layout first
         mMainMapper.setupTabLayout();
+        mViewPagerAdapterMain = new ViewPagerAdapterMain(((FragmentActivity) mMainMapper.getContext()).getSupportFragmentManager(), mTabTitles, 3);
         mMainMapper.registerAdapter(mViewPagerAdapterMain);
+
+        //init rest of the layout
+        setupDrawerLayouts();
         mMainMapper.setupSearchView();
         mMainMapper.setupToolbar();
-
+        mMainMapper.setupSourceFilterMenu();
     }
 
     @Override
@@ -89,10 +87,11 @@ public class MainPresenterImpl implements MainPresenter {
                 mMainMapper.onDrawerOpen();
             }
         };
+        mMainMapper.setDrawerLayoutListener(mDrawerToggle);
     }
 
     @Override
-    public void onLogout() {
+    public void onSignIn() {
         Intent intent = new Intent(mMainMapper.getContext(), LoginActivity.class);
         mMainMapper.getContext().startActivity(intent);
     }
@@ -100,6 +99,7 @@ public class MainPresenterImpl implements MainPresenter {
     @Override
     public void onResume() {
         mMainMapper.closeDrawer();
+        setupDrawerLayouts();
     }
 
     @Override
@@ -136,7 +136,12 @@ public class MainPresenterImpl implements MainPresenter {
         switch (position) {
             case (0):
                 //TODO need to do more research in MAL api options
-                onLogout();
+                if(SharedPrefsUtil.isSignedIn()) {
+                    SharedPrefsUtil.setMALCredential(null, null);
+                    setupDrawerLayouts();
+                }else{
+                    onSignIn();
+                }
                 return;
             case (2):
                 //advanced search fragment
@@ -174,11 +179,22 @@ public class MainPresenterImpl implements MainPresenter {
         }
     }
 
+    @Override
+    public void onFilterSelected(int filter) {
+        if (mViewPagerAdapterMain.hasRegisteredFragments()) {
+            ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).onFilterSelected(filter);
+            ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).onFilterSelected(filter);
+            ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).onFilterSelected(filter);
+        }
+    }
+
     private void setupDrawerLayouts() {
         List<String> mDrawerItems = new ArrayList<>();
         //TODO if sign in credential set, change to Sign out.
         //NOTE: only necessary when MAL fully implemented
-        mDrawerItems.add("MAL Sign In");
+        if(SharedPrefsUtil.isSignedIn()) mDrawerItems.add("MAL Sign Out");
+        else mDrawerItems.add("MAL Sign In");
+
         mDrawerItems.add("Sources");
         mDrawerItems.add("Search");
         mDrawerItems.add("Settings");

@@ -63,10 +63,8 @@ public class ChapterListAdapter extends ArrayAdapter {
                 .get();
 
 
-        if (viewedChapter == null) {
-            row.setBackgroundColor(context.getResources().getColor(R.color.white));
-        } else {
-            row.setBackgroundColor(context.getResources().getColor(R.color.grey));
+        if (viewedChapter != null) {
+            row.setBackgroundColor(context.getResources().getColor(R.color.ColorPrimary));
         }
 
         holder.mTitle.setText(ch.getMangaTitle());

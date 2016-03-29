@@ -14,7 +14,7 @@ public interface MainPresenter {
 
     void setupDrawerLayoutListener(Toolbar mToolBar, DrawerLayout mDrawerLayout);
 
-    void onLogout();
+    void onSignIn();
 
     void onResume();
 
@@ -31,6 +31,8 @@ public interface MainPresenter {
     void onDrawerItemChosen(int position);
 
     void onSourceItemChosen(int position);
+
+    void onFilterSelected(int filter);
 
 
     }

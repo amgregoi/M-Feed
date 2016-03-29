@@ -121,6 +121,12 @@ public class FollowedPresenterImpl implements FollowedPresenter {
         }
     }
 
+    @Override
+    public void onFilterSelected(int filter) {
+        if (mAdapter != null)
+            mAdapter.filterByStatus(filter);
+    }
+
     private void updateFollowedGridView(List<Manga> mangaList) {
         if (mFollowFragmentMapper.getContext() != null && mangaList != null) {
             mFollowedMangaList = new ArrayList<>(mangaList);
@@ -128,6 +134,10 @@ public class FollowedPresenterImpl implements FollowedPresenter {
             mAdapter = new SearchableAdapter(mFollowFragmentMapper.getContext(), mFollowedMangaList);
             mFollowFragmentMapper.registerAdapter(mAdapter);
             mMangaListSubscription = null;
+
+            for(Manga m : mFollowedMangaList)
+                System.out.println("MangaFeedDbHelper.getInstance().updateMangaFollow(\""+m.getTitle()+"\");");
+
         }
     }
 

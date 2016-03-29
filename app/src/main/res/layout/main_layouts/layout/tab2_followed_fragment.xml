@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout layout="@layout/tool_bar"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<RelativeLayout
+	layout="@layout/tool_bar"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:layout_marginEnd="@dimen/baseline_grid_unit_4dp"
+	android:layout_marginStart="@dimen/baseline_grid_unit_4dp"
+	>
 
 	<GridView
 		android:id="@+id/library_list_view"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:background="@color/white"
+		android:background="@color/charcoal"
 		android:clipToPadding="false"
-		android:columnWidth="@dimen/grid_item_width"
+		android:columnWidth="@dimen/grid_item_width_96dp"
 		android:drawSelectorOnTop="true"
 		android:fastScrollEnabled="true"
-		android:horizontalSpacing="@dimen/baseline_grid_unit"
+		android:horizontalSpacing="@dimen/baseline_grid_unit_4dp"
 		android:numColumns="auto_fit"
 		android:paddingTop="5dp"
 		android:stretchMode="columnWidth"
-		android:verticalSpacing="@dimen/baseline_grid_unit"
-		android:layout_marginStart="@dimen/baseline_grid_unit"
-		android:layout_marginEnd="@dimen/baseline_grid_unit"
+		android:verticalSpacing="@dimen/baseline_grid_unit_4dp"
 		/>
 </RelativeLayout>

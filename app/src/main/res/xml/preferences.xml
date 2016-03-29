@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<PreferenceCategory
+		android:key="@string/PREF_CATEGORY_SOURCE"
+		android:title="@string/PREF_CATEGORY_SOURCE_TITLE">
+
+		<ListPreference
+			android:defaultValue="@string/PREF_DEFAULT_SOURCE"
+			android:dialogTitle="@string/PREF_SOURCE_TITLE"
+			android:entries="@array/PREF_SOURCE_ENTIRES"
+			android:entryValues="@array/PREF_SOURCE_VALUES"
+			android:key="@string/PREF_SOURCE_KEY"
+			android:summary="@string/PREF_SOURCE_SUMMARY"
+			android:title="@string/PREF_SOURCE_TITLE"/>
+	</PreferenceCategory>
+
+</PreferenceScreen>

@@ -35,7 +35,7 @@
 			android:layout_height="wrap_content"
 			android:layout_alignParentStart="true"
 			android:layout_centerVertical="true"
-			android:layout_marginBottom="@dimen/baseline_grid_unit"
+			android:layout_marginBottom="@dimen/baseline_grid_unit_4dp"
 			android:layout_toStartOf="@id/search_view"
 			android:ellipsize="end"
 			android:singleLine="true"

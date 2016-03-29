@@ -27,50 +27,50 @@ public class RecentFragment extends Fragment implements RecentFragmentMapper {
     @Bind(R.id.recent_list_view) GridView mGridView;
     @Bind(R.id.swipe_container) SwipeRefreshLayout swipeContainer;
 
-    private RecentPresenter mRecentPresenterManga;
+    private RecentPresenter mRecentPresenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab1_recent_fragment, container, false);
         ButterKnife.bind(this, v);
 
-        mRecentPresenterManga = new RecentPresenterImpl(this);
+        mRecentPresenter = new RecentPresenterImpl(this);
         return v;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mRecentPresenterManga.onSaveState(outState);
+        mRecentPresenter.onSaveState(outState);
     }
 
     @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if(savedInstanceState != null){
-            mRecentPresenterManga.onRestoreState(savedInstanceState);
+            mRecentPresenter.onRestoreState(savedInstanceState);
         }
 
-        mRecentPresenterManga.init();
+        mRecentPresenter.init();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mRecentPresenterManga.onDestroyView();
+        mRecentPresenter.onDestroyView();
 
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mRecentPresenterManga.onResume();
+        mRecentPresenter.onResume();
         mGridView.refreshDrawableState();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mRecentPresenterManga.onPause();
+        mRecentPresenter.onPause();
     }
 
     @Override
@@ -88,7 +88,7 @@ public class RecentFragment extends Fragment implements RecentFragmentMapper {
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        mRecentPresenterManga.onQueryTextChange(newText);
+        mRecentPresenter.onQueryTextChange(newText);
         return false;
     }
 
@@ -108,19 +108,24 @@ public class RecentFragment extends Fragment implements RecentFragmentMapper {
     @Override
     public void setupSwipeRefresh() {
         swipeContainer.post(() -> swipeContainer.setRefreshing(true));
-        swipeContainer.setOnRefreshListener(() -> mRecentPresenterManga.updateRecentMangaList());
+        swipeContainer.setOnRefreshListener(() -> mRecentPresenter.updateRecentMangaList());
 
     }
 
     @Override
     public void updateSource() {
-        mRecentPresenterManga.updateSource();
+        mRecentPresenter.updateSource();
+    }
+
+    @Override
+    public void onFilterSelected(int filter) {
+        mRecentPresenter.onFilterSelected(filter);
     }
 
     @OnItemClick(R.id.recent_list_view)
     void onItemClick(AdapterView<?> adapter, View view, int pos) {
         Manga item = (Manga) adapter.getItemAtPosition(pos);
-        mRecentPresenterManga.onItemClick(item.getTitle());
+        mRecentPresenter.onItemClick(item.getTitle());
     }
 
 }

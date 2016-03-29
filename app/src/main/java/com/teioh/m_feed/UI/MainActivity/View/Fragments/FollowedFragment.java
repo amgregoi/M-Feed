@@ -100,4 +100,9 @@ public class FollowedFragment extends Fragment implements FollowFragmentMapper {
     public void updateSource() {
         mFollowedPresenter.updateSource();
     }
+
+    @Override
+    public void onFilterSelected(int filter) {
+        mFollowedPresenter.onFilterSelected(filter);
+    }
 }

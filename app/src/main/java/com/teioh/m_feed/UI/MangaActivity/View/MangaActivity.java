@@ -21,12 +21,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.teioh.m_feed.MAL_Models.MALMangaList;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.MangaPresenter;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.MangaPresenterImpl;
+import com.teioh.m_feed.UI.MangaActivity.View.Fragments.FImageDialogFragment;
 import com.teioh.m_feed.UI.MangaActivity.View.Fragments.FProgressDialogFragment;
 import com.teioh.m_feed.UI.MangaActivity.View.Fragments.FRemoveDialogFragment;
 import com.teioh.m_feed.UI.MangaActivity.View.Mappers.MangaActivityMapper;
@@ -49,6 +51,7 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
     private TextView mAuthorText;
     private TextView mArtistText;
     private TextView mGenresText;
+    private TextView mAlternateText;
     private TextView mStatusText;
     private Button mFollowButton;
     private Button mMALStatusButton;
@@ -180,8 +183,9 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
             mAuthorText.setText(manga.getmAuthor());
             mArtistText.setText(manga.getmArtist());
             mGenresText.setText(manga.getmGenre());
+            mAlternateText.setText(manga.getmAlternate());
             mStatusText.setText(manga.getmStatus());
-            Glide.with(getContext()).load(manga.getPicUrl()).into(mMangaImage);
+            Glide.with(getContext()).load(manga.getPicUrl()).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(mMangaImage);
             mChapterList.addHeaderView(mMangaInfoHeader, null, false);
             mChapterList.addHeaderView(mChapterHeader, null, false);
 
@@ -237,7 +241,9 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
         mAuthorText = (TextView) mMangaInfoHeader.findViewById(R.id.author);
         mArtistText = (TextView) mMangaInfoHeader.findViewById(R.id.artist);
         mGenresText = (TextView) mMangaInfoHeader.findViewById(R.id.genre);
+        mAlternateText = (TextView) mMangaInfoHeader.findViewById(R.id.alternate);
         mStatusText = (TextView) mMangaInfoHeader.findViewById(R.id.status);
+
 
         mFollowButton = (Button) mMangaInfoHeader.findViewById(R.id.followButton);
         mMALStatusButton = (Button) mMangaInfoHeader.findViewById(R.id.read_status_mal);
@@ -246,8 +252,6 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
         mChapterIncButton = (Button) mMangaInfoHeader.findViewById(R.id.chapter_plus);
         mVolumeIncButton = (Button) mMangaInfoHeader.findViewById(R.id.volume_plus);
         mMultiIncButton = (Button) mMangaInfoHeader.findViewById(R.id.multi_update);
-
-
     }
 
     @Override
@@ -257,6 +261,14 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
 
     @Override
     public void setupHeaderButtons() {
+
+        //Image Click
+        mMangaImage.setOnClickListener(v -> {
+            DialogFragment dialog = FImageDialogFragment.getNewInstance(mMangaPresenter.getImageUrl());
+            dialog.show(getSupportFragmentManager(), null);
+        });
+
+        //Follow Button
         mFollowButton.setOnClickListener(v -> {
             mMangaPresenter.onFollwButtonClick();
             mFollowButton.setVisibility(View.GONE); //uncomment after menu remove is  put in
@@ -264,14 +276,17 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
             invalidateOptionsMenu();
         });
 
+        //Change follow status (Reading, Plan to read, on hold, etc..) MAL
         mMALStatusButton.setOnClickListener(v -> {
 
         });
 
+        //Rate the manga (1-10) MAL
         mMALScoreButton.setOnClickListener(v -> {
 
         });
 
+        //Find MAL equivalent of manga and link to it
         mSyncMALButton.setOnClickListener(v -> {
 //            mMangaPresenter.onMALSyncClicked();
             //TODO temp remove button until MAL implemented
@@ -282,14 +297,17 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
 
         });
 
+        //Increment Chapter button
         mChapterIncButton.setOnClickListener(v -> {
 
         });
 
+        //Increment Volume button
         mVolumeIncButton.setOnClickListener(v -> {
 
         });
 
+        //Manually set chapter/volume
         mMultiIncButton.setOnClickListener(v -> {
             DialogFragment newFragment = new FProgressDialogFragment();
             newFragment.show(getSupportFragmentManager(), "dialog");
@@ -300,7 +318,6 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
     @OnItemClick(R.id.chapter_list)
     void onItemClick(AdapterView<?> adapter, View view, int pos) {
         mMangaPresenter.onChapterClicked((Chapter) adapter.getItemAtPosition(pos));
-        view.setBackgroundColor(getResources().getColor(R.color.grey));
     }
 
     @OnClick(R.id.orderButton)

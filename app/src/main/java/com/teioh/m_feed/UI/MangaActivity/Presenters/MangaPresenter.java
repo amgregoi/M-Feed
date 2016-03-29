@@ -26,4 +26,6 @@ public interface MangaPresenter {
     void onChapterClicked(Chapter chapter);
 
     void onMALSyncClicked();
+
+    String getImageUrl();
 }

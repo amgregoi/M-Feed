@@ -2,8 +2,8 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:orientation="vertical"
-              android:paddingEnd="@dimen/single_line_height"
-              android:paddingStart="@dimen/baseline_grid_unit"
+              android:paddingEnd="@dimen/single_line_height_48dp"
+              android:paddingStart="@dimen/baseline_grid_unit_4dp"
 	>
 
 	<LinearLayout
@@ -26,7 +26,7 @@
 			android:layout_gravity="center"
 			android:gravity="center_vertical"
 			android:inputType="number"
-			android:minWidth="@dimen/single_line_height"
+			android:minWidth="@dimen/single_line_height_48dp"
 			android:hint="0"
 			android:textColorHint="@color/white"
 			android:textColor="@color/white"/>
@@ -53,7 +53,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:orientation="horizontal"
-		android:layout_marginTop="@dimen/baseline_content_unit">
+		android:layout_marginTop="@dimen/baseline_content_unit_16dp">
 
 		<TextView
 			android:layout_width="fill_parent"
@@ -70,7 +70,7 @@
 			android:layout_gravity="center"
 			android:gravity="center_vertical"
 			android:inputType="number"
-			android:minWidth="@dimen/single_line_height"
+			android:minWidth="@dimen/single_line_height_48dp"
 			android:hint="0"
 			android:textColorHint="@color/white"
 			android:textColor="@color/white"/>

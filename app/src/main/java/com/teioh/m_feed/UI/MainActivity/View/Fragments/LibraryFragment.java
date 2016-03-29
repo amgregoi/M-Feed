@@ -95,6 +95,11 @@ public class LibraryFragment extends Fragment implements LibraryFragmentMapper {
         mLibraryPresenter.updateSource();
     }
 
+    @Override
+    public void onFilterSelected(int filter) {
+        mLibraryPresenter.onFilterSelected(filter);
+    }
+
     @OnItemClick(R.id.all_list_view)
     void onItemClick(AdapterView<?> adapter, View view, int pos) {
         final Manga item = (Manga) adapter.getItemAtPosition(pos);

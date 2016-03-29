@@ -1,6 +1,7 @@
 package com.teioh.m_feed.UI.MainActivity.Adapters;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -15,13 +17,17 @@ import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
+// The standard text view adapter only seems to search from the beginning of whole words
+// so we've had to write this whole class to make it possible to search
+// for parts of the arbitrary string we want
 public class SearchableAdapter extends BaseAdapter implements Filterable {
 
     private ArrayList<Manga> originalData = null;
     private ArrayList<Manga> filteredData = null;
     private LayoutInflater mInflater;
-    private ItemFilter mFilter = new ItemFilter();
+    private TextFilter mFilter = new TextFilter();
     private Context context;
 
     public SearchableAdapter(Context context, ArrayList<Manga> data) {
@@ -29,6 +35,7 @@ public class SearchableAdapter extends BaseAdapter implements Filterable {
         this.filteredData = data;
         this.originalData = data;
         mInflater = LayoutInflater.from(context);
+
     }
 
     public int getCount() {
@@ -53,6 +60,9 @@ public class SearchableAdapter extends BaseAdapter implements Filterable {
             holder = new MangaHolder();
             holder.txt = (TextView) row.findViewById(R.id.itemTitleField);
             holder.img = (ImageView) row.findViewById(R.id.imageView);
+            holder.follow = (ImageView) row.findViewById(R.id.followStatus);
+            holder.footer = (LinearLayout) row.findViewById(R.id.footerLinearLayout);
+            holder.card = (CardView) row.findViewById(R.id.card_view);
             row.setTag(holder);
         } else {
             holder = (MangaHolder) row.getTag();
@@ -63,6 +73,20 @@ public class SearchableAdapter extends BaseAdapter implements Filterable {
         if (tManga == null) {
             return row;
         }
+
+        if (tManga.getFollowing()) {
+            holder.follow.setVisibility(View.VISIBLE);
+            holder.footer.setBackgroundColor(context.getResources().getColor(R.color.ColorPrimary));
+            holder.txt.setBackgroundColor(context.getResources().getColor(R.color.ColorPrimary));
+            holder.txt.setTextColor(context.getResources().getColor(R.color.white));
+
+        } else {
+            holder.follow.setVisibility(View.GONE);
+            holder.footer.setBackgroundColor(context.getResources().getColor(R.color.white));
+            holder.txt.setBackgroundColor(context.getResources().getColor(R.color.white));
+            holder.txt.setTextColor(context.getResources().getColor(R.color.black));
+        }
+
         //Picasso.with(context).load(tManga.getPicUrl()).resize(139, 200).into(holder.img);
         Glide.with(context).load(tManga.getPicUrl()).into(holder.img);
         holder.txt.setText(tManga.toString());
@@ -72,13 +96,20 @@ public class SearchableAdapter extends BaseAdapter implements Filterable {
     static class MangaHolder {
         TextView txt;
         ImageView img;
+        ImageView follow;
+        LinearLayout footer;
+        CardView card;
     }
 
     public Filter getFilter() {
         return mFilter;
     }
 
-    private class ItemFilter extends Filter {
+    public void filterByStatus(int filter){
+        mFilter.filterByStatus(filter);
+    }
+
+    public class TextFilter extends Filter {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
 
@@ -91,9 +122,15 @@ public class SearchableAdapter extends BaseAdapter implements Filterable {
             final ArrayList<Manga> nlist = new ArrayList<>(count);
 
             String filterableString;
-
+            Manga manga;
             for (int i = 0; i < count; i++) {
-                filterableString = list.get(i).toString();
+                manga = list.get(i);
+
+                //filter by title & alternate titles
+                filterableString = manga.toString();
+                if (manga.getmAlternate() != null)
+                    filterableString += ", " + list.get(i).getmAlternate();
+
                 if (filterableString.toLowerCase().contains(filterString)) {
                     nlist.add(list.get(i));
                 }
@@ -109,6 +146,26 @@ public class SearchableAdapter extends BaseAdapter implements Filterable {
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             filteredData = (ArrayList<Manga>) results.values;
+            notifyDataSetChanged();
+        }
+
+        public void filterByStatus(int filter){
+            ArrayList<Manga> result = new ArrayList<>();
+
+            //can later expand to plan to read, reading, on hold etc..
+            if(filter == 0){
+                result = originalData;
+            }
+            else if(filter == 1) {
+                for (Manga m : filteredData) {
+                    if (m.getFollowing()) {
+                        result.add(m);
+                    }
+                }
+            }
+            //...
+
+            filteredData = result;
             notifyDataSetChanged();
         }
 

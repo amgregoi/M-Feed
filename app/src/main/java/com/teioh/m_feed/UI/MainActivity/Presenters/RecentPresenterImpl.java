@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.teioh.m_feed.Models.Manga;
-import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapterAlternate;
+import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapter;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.RecentFragmentMapper;
 import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
 import com.teioh.m_feed.Utils.Database.ReactiveQueryManager;
@@ -22,7 +22,7 @@ public class RecentPresenterImpl implements RecentPresenter {
     public final static String LATEST_SOURCE = TAG + ":SOURCE";
 
     private ArrayList<Manga> mRecentMangaList;
-    private SearchableAdapterAlternate mAdapter;
+    private SearchableAdapter mAdapter;
     private Subscription mMangaListSubscription;
     private RecentFragmentMapper mRecentFragmentMapper;
     private String mLastSourceQuery;
@@ -131,11 +131,18 @@ public class RecentPresenterImpl implements RecentPresenter {
         }
     }
 
+    @Override
+    public void onFilterSelected(int filter) {
+        //TODO
+        if (mAdapter != null)
+            mAdapter.filterByStatus(filter);
+    }
+
     private void updateRecentGridView(List<Manga> manga) {
         if (mRecentFragmentMapper.getContext() != null) {
             if (manga != null) {
                 mRecentMangaList = new ArrayList<>(manga);
-                mAdapter = new SearchableAdapterAlternate(mRecentFragmentMapper.getContext(), mRecentMangaList);
+                mAdapter = new SearchableAdapter(mRecentFragmentMapper.getContext(), mRecentMangaList);
                 mMangaListSubscription = null;
             } else {
                 // failed to update list, show refresh view,

@@ -3,18 +3,20 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:minHeight="@dimen/baseline_content_left"
+	android:minHeight="@dimen/baseline_content_left_56dp"
 	android:orientation="vertical"
+    android:background="@color/charcoal"
 	>
 
 	<RelativeLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_gravity="center_vertical"
-		android:layout_marginEnd="@dimen/baseline_content_unit"
-		android:layout_marginLeft="@dimen/baseline_content_left"
-		android:layout_marginRight="@dimen/baseline_content_unit"
-		android:layout_marginStart="@dimen/baseline_content_left"
+		android:layout_marginEnd="@dimen/baseline_content_unit_16dp"
+		android:layout_marginLeft="@dimen/baseline_content_left_56dp"
+		android:layout_marginRight="@dimen/baseline_content_unit_16dp"
+		android:layout_marginStart="@dimen/baseline_content_left_56dp"
+		android:textColor="@color/charcoal"
 		>
 
 		<TextView
@@ -26,6 +28,7 @@
 			android:ellipsize="middle"
 			android:gravity="center_vertical"
 			android:singleLine="true"
+			android:textColor="@color/white"
 			android:textSize="15dp"
 			android:textStyle="bold"/>
 
@@ -38,6 +41,7 @@
 			android:layout_below="@+id/mangaTitle"
 			android:gravity="center_vertical"
 			android:singleLine="true"
+			android:textColor="@color/grey"
 			android:textStyle="italic"/>
 
 	</RelativeLayout>

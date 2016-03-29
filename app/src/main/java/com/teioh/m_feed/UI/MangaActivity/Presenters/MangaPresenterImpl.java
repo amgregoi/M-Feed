@@ -101,7 +101,7 @@ public class MangaPresenterImpl implements MangaPresenter {
 
     @Override
     public void onResume() {
-
+        if(mAdapter != null)mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -151,6 +151,11 @@ public class MangaPresenterImpl implements MangaPresenter {
     }
 
     @Override
+    public String getImageUrl() {
+        return mManga.getPicUrl();
+    }
+
+    @Override
     public void onFollwButtonClick() {
         boolean follow = mManga.setFollowing(!mManga.getFollowing());
         mMangaMapper.changeFollowButton(mManga.getFollowing());
@@ -184,10 +189,6 @@ public class MangaPresenterImpl implements MangaPresenter {
         if (mMangaMapper.getContext() != null) {
             mMangaMapper.setMangaViews(manga);
             mMangaMapper.changeFollowButton(manga.getFollowing());
-            if (mChapterList != null) {
-                mMangaMapper.stopRefresh();
-                mMangaMapper.showCoverLayout();
-            }
         }
         mManga = manga;
         mManga.setmIsInitialized(1);
@@ -207,10 +208,8 @@ public class MangaPresenterImpl implements MangaPresenter {
             mChapterList = new ArrayList<>(chapters);
             mAdapter = new ChapterListAdapter(mMangaMapper.getContext(), R.layout.chapter_list_item, mChapterList);
             mMangaMapper.registerAdapter(mAdapter);
-            if (mManga.getmIsInitialized() == 1) {
                 mMangaMapper.stopRefresh();
                 mMangaMapper.showCoverLayout();
-            }
         }
     }
 
