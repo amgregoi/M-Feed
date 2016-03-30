@@ -27,7 +27,7 @@ public class FProgressDialogFragment extends DialogFragment implements TextView.
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyCustomTheme);
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        return builder.setView(inflater.inflate(R.layout.multi_increment_dialog_fragment, null))
+        return builder.setView(inflater.inflate(R.layout.info_header_inc_dialog, null))
                 .setPositiveButton("OK", (dialog, which) -> {
                     FProgressDialogFragment.this.getActivity().onActivityReenter(Activity.RESULT_OK, FProgressDialogFragment.this.getActivity().getIntent());
                 }).create();

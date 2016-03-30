@@ -34,5 +34,8 @@ public interface MainActivityMapper extends BaseContextMap, SearchViewListenerMa
 
     void changeSourceTitle(String source);
 
+    void toggleToolbarElements();
+
+    void searchActivityStart();
 
 }

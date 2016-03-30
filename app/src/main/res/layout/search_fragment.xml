@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+	<include layout="@layout/toolbar_search"/>
+
+	<FrameLayout
+		android:id="@+id/search_container"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<com.teioh.m_feed.UI.SearchActivity.View.Widgets.HeaderGridView
+			android:id="@+id/genreList"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_margin="@dimen/baseline_grid_unit_4dp"
+			android:background="@color/charcoal"
+			android:clipToPadding="false"
+			android:drawSelectorOnTop="true"
+			android:fastScrollEnabled="true"
+			android:horizontalSpacing="@dimen/baseline_grid_unit_4dp"
+			android:numColumns="3"
+			android:paddingTop="5dp"
+			android:stretchMode="columnWidth"
+			android:verticalSpacing="@dimen/baseline_grid_unit_4dp"
+			/>
+	</FrameLayout>
+
+</LinearLayout>

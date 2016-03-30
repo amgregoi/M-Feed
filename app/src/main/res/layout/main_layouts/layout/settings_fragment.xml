@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@color/charcoal"
+             android:clickable="true"
+             android:orientation="vertical">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_margin="8dp"
+		android:orientation="vertical"
+		>
+
+		<TextView
+			android:id="@+id/general_heading"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="@dimen/baseline_grid_unit_4dp"
+			android:text="General"
+			android:textColor="@color/ColorAccent"
+			android:textSize="16sp"
+			android:textStyle="bold"
+			/>
+
+		<LinearLayout
+			android:id="@+id/google_play_pref"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@drawable/layout_selectors"
+			android:clickable="true"
+			android:orientation="vertical"
+			>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="View MFeed on Google Play"
+				android:textColor="@color/white"
+				android:textSize="16sp"/>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Please rate MFeed on Google Play or email the  developer"
+				android:textColor="@color/grey"
+				android:textSize="14sp"
+				/>
+		</LinearLayout>
+		
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_marginBottom="8dp"
+			android:layout_marginTop="8dp"
+			android:background="@color/white"
+			/>
+
+		<LinearLayout
+			android:id="@+id/reset_followed_manga_pref"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@drawable/layout_selectors"
+			android:clickable="true"
+			android:orientation="vertical"
+			>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Clear Followed Manga"
+				android:textColor="@color/white"
+				android:textSize="16sp"
+				/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Clear all followed manga from the followed list"
+				android:textColor="@color/grey"
+				android:textSize="14sp"
+				/>
+		</LinearLayout>
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_marginBottom="8dp"
+			android:layout_marginTop="8dp"
+			android:background="@color/white"
+			/>
+
+		<RelativeLayout
+			android:id="@+id/reset_followed_manga"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:background="@drawable/layout_selectors"
+			android:clickable="true"
+			>
+
+			<CheckBox
+				android:id="@+id/clear_followed_manga_box"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentEnd="true"
+				android:button="@drawable/ic_box_uncheck"
+				android:gravity="center"
+				/>
+
+			<LinearLayout
+				android:id="@+id/followed_contents"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentStart="true"
+				android:layout_toLeftOf="@id/clear_followed_manga_box"
+				android:orientation="vertical">
+
+				<TextView
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="Checkbox teset"
+					android:textColor="@color/white"
+					android:textSize="16sp"/>
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="Checking checkbox layout"
+					android:textColor="@color/grey"
+					android:textSize="14sp"
+					/>
+			</LinearLayout>
+		</RelativeLayout>
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_below="@+id/followed_contents"
+			android:layout_marginBottom="8dp"
+			android:layout_marginTop="8dp"
+			android:background="@color/white"
+			/>
+	</LinearLayout>
+</FrameLayout>

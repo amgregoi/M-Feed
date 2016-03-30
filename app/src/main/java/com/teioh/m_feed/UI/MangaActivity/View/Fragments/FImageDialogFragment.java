@@ -1,8 +1,6 @@
 package com.teioh.m_feed.UI.MangaActivity.View.Fragments;
 
 
-import android.app.Dialog;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -35,7 +33,7 @@ public class FImageDialogFragment extends DialogFragment {
     private String mImageUrl;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.image_dialog_fragment, null);
+        View view = inflater.inflate(R.layout.info_image_dialog, null);
         ButterKnife.bind(this, view);
 
         if(getArguments().containsKey(IMAGE_URL_KEY))

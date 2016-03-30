@@ -33,7 +33,7 @@ public class MangaJoy {
 
     final static String MangaJoyUrl = "http://manga-joy.com/latest-chapters/";
 
-    final String genres[] = {
+    final public static String genres[] = {
             "Action",
             "Adult",
             "Adventure",

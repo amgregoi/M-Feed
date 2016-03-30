@@ -1,6 +1,7 @@
 package com.teioh.m_feed.UI.MainActivity.View;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -12,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ExpandableListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -27,6 +27,7 @@ import com.teioh.m_feed.UI.MainActivity.Presenters.MainPresenter;
 import com.teioh.m_feed.UI.MainActivity.Presenters.MainPresenterImpl;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.MainActivityMapper;
 import com.teioh.m_feed.UI.MainActivity.View.Widgets.SlidingTabLayout;
+import com.teioh.m_feed.UI.SearchActivity.View.SearchActivity;
 import com.teioh.m_feed.Utils.SharedPrefsUtil;
 import com.teioh.m_feed.WebSources.WebSource;
 
@@ -73,27 +74,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     }
 
     @Override
-    public void setupDrawerLayout(List<String> mDrawerItems, Map<String, List<String>> mSourceCollections) {
-        final ExpandableListAdapter adapter = new ExpandableListAdapter(this, mDrawerItems, mSourceCollections);
-        if (mDrawerHeader != null) mDrawerList.removeHeaderView(mDrawerHeader);
-
-        mDrawerHeader = LayoutInflater.from(getContext()).inflate(R.layout.drawer_header, null);
-        TextView username = (TextView) mDrawerHeader.findViewById(R.id.drawer_username);
-        username.setText(SharedPrefsUtil.getMALUsername());
-
-        mDrawerList.addHeaderView(mDrawerHeader);
-        mDrawerList.setAdapter(adapter);
-        mDrawerList.setOnGroupClickListener((parent, v, groupPosition, id) -> {
-            mMainPresenter.onDrawerItemChosen(groupPosition);
-            return false;
-        });
-        mDrawerList.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
-            mMainPresenter.onSourceItemChosen(childPosition);
-            return true;
-        });
-    }
-
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         mMainPresenter.onSavedState(outState);
@@ -131,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -166,12 +146,61 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     }
 
     @Override
+    public void onDrawerOpen() {
+        invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+    }
+
+    @Override
+    public void onDrawerClose() {
+        invalidateOptionsMenu();  // creates call to onPrepareOptionsMenu()
+    }
+
+    @Override
     public void registerAdapter(ViewPagerAdapterMain adapter) {
         if (adapter != null) {
             mViewPager.setAdapter(adapter);
             mViewPager.setOffscreenPageLimit(3);
             tabs.setViewPager(mViewPager);
         }
+    }
+
+    @Override
+    public void setDrawerLayoutListener(ActionBarDrawerToggle mDrawerToggle) {
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+    }
+
+
+    @Override
+    public void closeDrawer() {
+        mDrawerLayout.closeDrawers();
+    }
+
+    @Override
+    public void changeSourceTitle(String source) {
+        mActivityTitle.setText(source);
+    }
+
+    @Override
+    public void toggleToolbarElements() {
+        if (mSearchView.getVisibility() == View.GONE){
+            mSearchView.setVisibility(View.VISIBLE);
+            changeSourceTitle(WebSource.getCurrentSource());
+        }else{
+            mSearchView.setVisibility(View.GONE);
+            changeSourceTitle("Search");
+        }
+    }
+
+    @Override
+    public void searchActivityStart() {
+        Intent intent = SearchActivity.getnewInstance(this);
+        startActivity(intent);
+    }
+
+    @Override
+    public void setupToolbar() {
+        setSupportActionBar(mToolBar);
+        mActivityTitle.setText(WebSource.getCurrentSource());
     }
 
     @Override
@@ -193,11 +222,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     public void setupTabLayout() {
         tabs.setDistributeEvenly(true); // To make the Tabs Fixed set this true, This makes the tabs Space Evenly in Available width
         tabs.setCustomTabColorizer(position -> getResources().getColor(R.color.tabsScrollColor));
-    }
-
-    @Override
-    public void setDrawerLayoutListener(ActionBarDrawerToggle mDrawerToggle) {
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
     @Override
@@ -226,33 +250,33 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
 
         menuMultipleActions.addButton(A1);
         menuMultipleActions.addButton(A2);
-
     }
 
     @Override
-    public void onDrawerOpen() {
-        invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-    }
+    public void setupDrawerLayout(List<String> mDrawerItems, Map<String, List<String>> mSourceCollections) {
+        final ExpandableListAdapter adapter = new ExpandableListAdapter(this, mDrawerItems, mSourceCollections);
+        if (mDrawerHeader != null) mDrawerList.removeHeaderView(mDrawerHeader);
 
-    @Override
-    public void onDrawerClose() {
-        invalidateOptionsMenu();  // creates call to onPrepareOptionsMenu()
-    }
+        mDrawerHeader = LayoutInflater.from(getContext()).inflate(R.layout.drawer_header, null);
+        TextView username = (TextView) mDrawerHeader.findViewById(R.id.drawer_username);
+        username.setText(SharedPrefsUtil.getMALUsername());
 
-    @Override
-    public void closeDrawer() {
-        mDrawerLayout.closeDrawers();
-    }
-
-    @Override
-    public void setupToolbar() {
-        setSupportActionBar(mToolBar);
-        mActivityTitle.setText(WebSource.getCurrentSource());
-    }
-
-    @Override
-    public void changeSourceTitle(String source) {
-        mActivityTitle.setText(source);
+        mDrawerList.addHeaderView(mDrawerHeader);
+        mDrawerList.setAdapter(adapter);
+        mDrawerList.setOnGroupClickListener((parent, v, groupPosition, id) -> {
+            mMainPresenter.onDrawerItemChosen(groupPosition);
+            return false;
+        });
+        mDrawerList.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
+            mMainPresenter.onSourceItemChosen(childPosition);
+            return true;
+        });
+        mDrawerHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMainPresenter.onMALSignIn();
+            }
+        });
     }
 
     @Override

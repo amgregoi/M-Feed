@@ -233,8 +233,8 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
 
     @Override
     public void initializeHeaderViews() {
-        mMangaInfoHeader = LayoutInflater.from(getContext()).inflate(R.layout.manga_info_header, null);
-        mChapterHeader = LayoutInflater.from(getContext()).inflate(R.layout.manga_chapters_header, null);
+        mMangaInfoHeader = LayoutInflater.from(getContext()).inflate(R.layout.info_header, null);
+        mChapterHeader = LayoutInflater.from(getContext()).inflate(R.layout.chapter_list_header, null);
 
         mMangaImage = (ImageView) mMangaInfoHeader.findViewById(R.id.manga_image);
         mDescriptionText = (TextView) mMangaInfoHeader.findViewById(R.id.mangaDescription);

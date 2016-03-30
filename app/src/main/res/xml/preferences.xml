@@ -11,7 +11,8 @@
 			android:entryValues="@array/PREF_SOURCE_VALUES"
 			android:key="@string/PREF_SOURCE_KEY"
 			android:summary="@string/PREF_SOURCE_SUMMARY"
-			android:title="@string/PREF_SOURCE_TITLE"/>
+			android:title="@string/PREF_SOURCE_TITLE"
+			/>
 	</PreferenceCategory>
 
 </PreferenceScreen>

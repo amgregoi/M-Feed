@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,6 +19,8 @@ import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
 import com.teioh.m_feed.UI.MainActivity.View.Fragments.FollowedFragment;
 import com.teioh.m_feed.UI.MainActivity.View.Fragments.LibraryFragment;
 import com.teioh.m_feed.UI.MainActivity.View.Fragments.RecentFragment;
+import com.teioh.m_feed.UI.MainActivity.View.Fragments.SettingsFragment;
+import com.teioh.m_feed.UI.MainActivity.View.MainActivity;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.MainActivityMapper;
 import com.teioh.m_feed.Utils.SharedPrefsUtil;
 import com.teioh.m_feed.WebSources.MangaHere;
@@ -39,7 +42,7 @@ public class MainPresenterImpl implements MainPresenter {
     private ViewPagerAdapterMain mViewPagerAdapterMain;
     private ActionBarDrawerToggle mDrawerToggle;
     private MainActivityMapper mMainMapper;
-
+    private Fragment settings;
 
     public MainPresenterImpl(MainActivityMapper main) {
         mMainMapper = main;
@@ -135,19 +138,16 @@ public class MainPresenterImpl implements MainPresenter {
     public void onDrawerItemChosen(int position) {
         switch (position) {
             case (0):
-                //TODO need to do more research in MAL api options
-                if(SharedPrefsUtil.isSignedIn()) {
-                    SharedPrefsUtil.setMALCredential(null, null);
-                    setupDrawerLayouts();
-                }else{
-                    onSignIn();
-                }
+                //home button
+                if(settings != null) removeSettingsFragment();
                 return;
-            case (2):
+            case (1):
                 //advanced search fragment
+                mMainMapper.searchActivityStart();
                 return;
-            case(3):
-                //settings fragment
+            case (3):
+                //setftings fragment
+                if(settings == null) addSettingsFragment();
                 return;
         }
     }
@@ -159,7 +159,7 @@ public class MainPresenterImpl implements MainPresenter {
             case (0):
                 source = MangaHere.SourceKey;
                 break;
-            case(1):
+            case (1):
                 source = MangaPark.SourceKey;
                 break;
             default:
@@ -169,7 +169,7 @@ public class MainPresenterImpl implements MainPresenter {
 
         if (!source.equals(WebSource.getCurrentSource())) {
             WebSource.setwCurrentSource(source);
-            Toast.makeText(mMainMapper.getContext(), "Changing source to " + source,  Toast.LENGTH_SHORT).show();
+            Toast.makeText(mMainMapper.getContext(), "Changing source to " + source, Toast.LENGTH_SHORT).show();
             if (mViewPagerAdapterMain.hasRegisteredFragments()) {
                 ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).updateSource();
                 ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).updateSource();
@@ -177,6 +177,8 @@ public class MainPresenterImpl implements MainPresenter {
             }
             mMainMapper.changeSourceTitle(source);
         }
+
+        if(settings != null) removeSettingsFragment();
     }
 
     @Override
@@ -188,19 +190,27 @@ public class MainPresenterImpl implements MainPresenter {
         }
     }
 
+    @Override
+    public void onMALSignIn() {
+        //TODO need to do more research in MAL api options
+        if (SharedPrefsUtil.isSignedIn()) {
+            SharedPrefsUtil.setMALCredential(null, null);
+            setupDrawerLayouts();
+        } else {
+            onSignIn();
+        }
+    }
+
     private void setupDrawerLayouts() {
         List<String> mDrawerItems = new ArrayList<>();
         //TODO if sign in credential set, change to Sign out.
         //NOTE: only necessary when MAL fully implemented
-        if(SharedPrefsUtil.isSignedIn()) mDrawerItems.add("MAL Sign Out");
-        else mDrawerItems.add("MAL Sign In");
-
-        mDrawerItems.add("Sources");
+        mDrawerItems.add("Home");
         mDrawerItems.add("Search");
+        mDrawerItems.add("Sources");
         mDrawerItems.add("Settings");
 
 
-//        String[] sources = {MangaHere.SourceKey, MangaPark.SourceKey, MangaJoy.SourceKey};
         Map<String, List<String>> mSourceCollections = new LinkedHashMap<>();
         for (String item : mDrawerItems) {
             List<String> mDrawerChildren = new ArrayList<>();
@@ -211,5 +221,24 @@ public class MainPresenterImpl implements MainPresenter {
             mSourceCollections.put(item, mDrawerChildren);
         }
         mMainMapper.setupDrawerLayout(mDrawerItems, mSourceCollections);
+    }
+
+    private void removeSettingsFragment() {
+        ((MainActivity) mMainMapper.getContext()).getSupportFragmentManager().beginTransaction()
+                .remove(settings)
+                .commit();
+        settings = null;
+        mMainMapper.closeDrawer();
+        mMainMapper.toggleToolbarElements();
+
+    }
+
+    private void addSettingsFragment() {
+        mMainMapper.toggleToolbarElements();
+        settings = new SettingsFragment();
+        ((MainActivity) mMainMapper.getContext()).getSupportFragmentManager().beginTransaction()
+                .add(R.id.main_activity_content, settings)
+                .commit();
+        mMainMapper.closeDrawer();
     }
 }

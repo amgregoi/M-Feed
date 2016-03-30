@@ -23,6 +23,7 @@ public class SharedPrefsUtil {
             editor.commit();
         }
     }
+
     /**
      * Sets the users MyAnimeList(MAL) login credentials for authorized API calls
      *
@@ -44,7 +45,7 @@ public class SharedPrefsUtil {
      */
     public static String getMALUsername(){
         Context context = MFeedApplication.getInstance();
-        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.PREF_MAL_USERNAME), "Guest");
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.PREF_MAL_USERNAME), "Guest (Sign in)");
     }
 
     /**

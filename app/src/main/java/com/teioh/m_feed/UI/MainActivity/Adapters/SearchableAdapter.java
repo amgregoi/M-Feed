@@ -105,7 +105,7 @@ public class SearchableAdapter extends BaseAdapter implements Filterable {
         return mFilter;
     }
 
-    public void filterByStatus(int filter){
+    public void filterByStatus(int filter) {
         mFilter.filterByStatus(filter);
     }
 
@@ -149,21 +149,19 @@ public class SearchableAdapter extends BaseAdapter implements Filterable {
             notifyDataSetChanged();
         }
 
-        public void filterByStatus(int filter){
+        public void filterByStatus(int filter) {
             ArrayList<Manga> result = new ArrayList<>();
 
             //can later expand to plan to read, reading, on hold etc..
-            if(filter == 0){
+            if (filter == 0) {
                 result = originalData;
-            }
-            else if(filter == 1) {
+            } else if (filter == 1) {
                 for (Manga m : filteredData) {
                     if (m.getFollowing()) {
                         result.add(m);
                     }
                 }
             }
-            //...
 
             filteredData = result;
             notifyDataSetChanged();

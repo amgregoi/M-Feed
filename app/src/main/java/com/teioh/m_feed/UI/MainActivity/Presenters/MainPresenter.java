@@ -34,5 +34,6 @@ public interface MainPresenter {
 
     void onFilterSelected(int filter);
 
+    void onMALSignIn();
 
-    }
+}

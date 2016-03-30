@@ -9,7 +9,7 @@ android:clickable="true">
 
     <include
         android:id="@+id/chapter_header"
-        layout="@layout/chapter_reader_header"
+        layout="@layout/reader_header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -23,7 +23,7 @@ android:clickable="true">
 
     <include
         android:id="@+id/chapter_footer"
-        layout="@layout/chapter_reader_footer"
+        layout="@layout/reader_footer"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
