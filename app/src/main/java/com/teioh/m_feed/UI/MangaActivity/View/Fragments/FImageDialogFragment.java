@@ -31,6 +31,7 @@ public class FImageDialogFragment extends DialogFragment {
     @Bind(R.id.image_for_dialog) ImageView mImage;
 
     private String mImageUrl;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.info_image_dialog, null);

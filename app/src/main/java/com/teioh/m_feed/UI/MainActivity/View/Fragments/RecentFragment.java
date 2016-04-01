@@ -17,6 +17,8 @@ import com.teioh.m_feed.UI.MainActivity.Presenters.RecentPresenter;
 import com.teioh.m_feed.UI.MainActivity.Presenters.RecentPresenterImpl;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.RecentFragmentMapper;
 
+import java.util.ArrayList;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
@@ -109,7 +111,6 @@ public class RecentFragment extends Fragment implements RecentFragmentMapper {
     public void setupSwipeRefresh() {
         swipeContainer.post(() -> swipeContainer.setRefreshing(true));
         swipeContainer.setOnRefreshListener(() -> mRecentPresenter.updateRecentMangaList());
-
     }
 
     @Override
@@ -120,6 +121,18 @@ public class RecentFragment extends Fragment implements RecentFragmentMapper {
     @Override
     public void onFilterSelected(int filter) {
         mRecentPresenter.onFilterSelected(filter);
+    }
+
+    @Override
+    public void onGenreFilterSelected(ArrayList<String> keep, ArrayList<Manga> remove) {
+        swipeContainer.setEnabled(false);
+        mRecentPresenter.onGenreFilterSelected(keep, remove);
+    }
+
+    @Override
+    public void onClearGenreFilter() {
+        swipeContainer.setEnabled(true);
+        mRecentPresenter.onClearGenreFilter();
     }
 
     @OnItemClick(R.id.recent_list_view)

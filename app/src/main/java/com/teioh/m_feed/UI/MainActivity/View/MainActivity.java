@@ -1,9 +1,11 @@
 package com.teioh.m_feed.UI.MainActivity.View;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -14,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,9 +28,10 @@ import com.teioh.m_feed.UI.MainActivity.Adapters.ExpandableListAdapter;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
 import com.teioh.m_feed.UI.MainActivity.Presenters.MainPresenter;
 import com.teioh.m_feed.UI.MainActivity.Presenters.MainPresenterImpl;
+import com.teioh.m_feed.UI.MainActivity.View.Fragments.SettingsFragment;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.MainActivityMapper;
 import com.teioh.m_feed.UI.MainActivity.View.Widgets.SlidingTabLayout;
-import com.teioh.m_feed.UI.SearchActivity.View.SearchActivity;
+import com.teioh.m_feed.UI.MainActivity.View.Fragments.FilterDialogFragment;
 import com.teioh.m_feed.Utils.SharedPrefsUtil;
 import com.teioh.m_feed.WebSources.WebSource;
 
@@ -41,14 +45,15 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     public final static String TAG = MainActivity.class.getSimpleName();
 
     @Bind(R.id.search_view) SearchView mSearchView;
+    @Bind(R.id.filter_view) ImageView mFilterView;
     @Bind(R.id.activityTitle) TextView mActivityTitle;
     @Bind(R.id.pager) ViewPager mViewPager;
     @Bind(R.id.tabs) SlidingTabLayout tabs;
     @Bind(R.id.tool_bar) Toolbar mToolBar;
     @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @Bind(R.id.drawerLayoutListView) ExpandableListView mDrawerList;
+    @Bind(R.id.actionMenu) FloatingActionsMenu mMultiActionMenu;
 
-    @Bind(R.id.actionMenu) FloatingActionsMenu menuMultipleActions;
     private View mDrawerHeader;
     private Toast toast;
 
@@ -141,6 +146,21 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     }
 
     @Override
+    public void onActivityReenter(int resultCode, Intent data) {
+        super.onActivityReenter(resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                mActivityTitle.setText(mMainPresenter.onGenreFilterSelected(data));
+                mFilterView.setImageDrawable(getDrawable(R.drawable.filter_remove_outline_24dp));
+
+            } else {
+                mMainPresenter.onClearGenreFilter();
+                mMainPresenter.toggleGenreFilterActive();
+            }
+        }
+    }
+
+    @Override
     public Context getContext() {
         return this;
     }
@@ -176,31 +196,49 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     }
 
     @Override
+    public void openDrawer() {
+        mDrawerLayout.openDrawer(mDrawerList);
+    }
+
+    @Override
     public void changeSourceTitle(String source) {
         mActivityTitle.setText(source);
     }
 
     @Override
     public void toggleToolbarElements() {
-        if (mSearchView.getVisibility() == View.GONE){
+        if (mSearchView.getVisibility() == View.GONE) {
             mSearchView.setVisibility(View.VISIBLE);
+            mFilterView.setVisibility(View.VISIBLE);
             changeSourceTitle(WebSource.getCurrentSource());
-        }else{
+        } else {
             mSearchView.setVisibility(View.GONE);
-            changeSourceTitle("Search");
+            mFilterView.setVisibility(View.GONE);
+            changeSourceTitle("Settings");
         }
     }
 
     @Override
-    public void searchActivityStart() {
-        Intent intent = SearchActivity.getnewInstance(this);
-        startActivity(intent);
+    public void filterDialogOpen() {
+        DialogFragment dialog = FilterDialogFragment.getnewInstance();
+        dialog.show(getSupportFragmentManager(), null);
     }
 
     @Override
     public void setupToolbar() {
         setSupportActionBar(mToolBar);
         mActivityTitle.setText(WebSource.getCurrentSource());
+
+        mFilterView.setOnClickListener(v -> {
+            if (!mMainPresenter.genreFilterActive()) {
+                DialogFragment dialog = FilterDialogFragment.getnewInstance();
+                dialog.show(getSupportFragmentManager(), null);
+            } else {
+                mMainPresenter.onClearGenreFilter();
+                mFilterView.setImageDrawable(getDrawable(R.drawable.filter_outline_24dp));
+                mActivityTitle.setText(WebSource.getCurrentSource());
+            }
+        });
     }
 
     @Override
@@ -210,10 +248,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
         mSearchView.setOnQueryTextFocusChangeListener((view, queryTextFocused) -> {
             if (!queryTextFocused) {
                 mActivityTitle.setVisibility(View.VISIBLE);
+                mFilterView.setVisibility(View.VISIBLE);
                 mSearchView.setIconified(true);
                 mSearchView.setQuery("", true);
             } else {
                 mActivityTitle.setVisibility(View.GONE);
+                mFilterView.setVisibility(View.GONE);
             }
         });
     }
@@ -225,8 +265,17 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     }
 
     @Override
-    public void setupSourceFilterMenu() {
+    public void setPageAdapterItem(int position){
+        mViewPager.setCurrentItem(position);
+    }
 
+    @Override
+    public void resetFilterImage(){
+        mFilterView.setImageDrawable(getDrawable(R.drawable.filter_outline_24dp));
+    }
+
+    @Override
+    public void setupSourceFilterMenu() {
         FloatingActionButton A2 = new FloatingActionButton(getBaseContext());
         A2.setTitle("Show All");
         A2.setIcon(R.drawable.ic_favorite_border_white_18dp);
@@ -234,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
         A2.setColorNormalResId(R.color.ColorAccent);
         A2.setOnClickListener(v -> {
             mSearchView.clearFocus();
-            menuMultipleActions.collapse();
+            mMultiActionMenu.collapse();
             mMainPresenter.onFilterSelected(0);
         });
 
@@ -244,12 +293,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
         A1.setColorNormalResId(R.color.ColorAccent);
         A1.setIcon(R.drawable.ic_favorite_white_18dp);
         A1.setOnClickListener(v -> {
-            menuMultipleActions.collapse();
+            mMultiActionMenu.collapse();
             mMainPresenter.onFilterSelected(1);
         });
 
-        menuMultipleActions.addButton(A1);
-        menuMultipleActions.addButton(A2);
+        mMultiActionMenu.addButton(A1);
+        mMultiActionMenu.addButton(A2);
     }
 
     @Override
@@ -271,21 +320,24 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
             mMainPresenter.onSourceItemChosen(childPosition);
             return true;
         });
-        mDrawerHeader.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mMainPresenter.onMALSignIn();
-            }
-        });
+        mDrawerHeader.setOnClickListener(v -> mMainPresenter.onMALSignIn());
     }
 
     @Override
     public void onBackPressed() {
-        if (menuMultipleActions.isExpanded()) { //closes action menu
-            menuMultipleActions.collapse();
-        }else if (!toast.getView().isShown() && mDrawerLayout.isDrawerOpen(mDrawerList)) { //closes drawer, if exit toast isn't active
+        if (mMultiActionMenu.isExpanded()) { //closes action menu
+            mMultiActionMenu.collapse();
+        } else if (!toast.getView().isShown() && mDrawerLayout.isDrawerOpen(mDrawerList)) { //closes drawer, if exit toast isn't active
             mDrawerLayout.closeDrawer(mDrawerList);
-        } else if (!toast.getView().isShown()) { //opens drawer, and shows exit toast to verify exit
+        } else if (getSupportFragmentManager().findFragmentByTag(SettingsFragment.TAG) != null) {
+            mMainPresenter.removeSettingsFragment();
+            openDrawer();
+        }
+        else if(mMainPresenter.genreFilterActive()){
+            mMainPresenter.onClearGenreFilter();
+            mFilterView.setImageDrawable(getDrawable(R.drawable.filter_outline_24dp));
+            mActivityTitle.setText(WebSource.getCurrentSource());
+        }else if (!toast.getView().isShown()) { //opens drawer, and shows exit toast to verify exit
             mDrawerLayout.openDrawer(mDrawerList);
             toast.show();
         } else {    //user double back pressed to exit within time frame (toast length)

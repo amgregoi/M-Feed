@@ -16,6 +16,8 @@ import com.teioh.m_feed.UI.MainActivity.Presenters.FollowedPresenter;
 import com.teioh.m_feed.UI.MainActivity.Presenters.FollowedPresenterImpl;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.FollowFragmentMapper;
 
+import java.util.ArrayList;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
@@ -94,6 +96,16 @@ public class FollowedFragment extends Fragment implements FollowFragmentMapper {
             mGridView.setAdapter(adapter);
             registerForContextMenu(mGridView);
         }
+    }
+
+    @Override
+    public void onGenreFilterSelected(ArrayList<String> keep, ArrayList<String> remove) {
+        mFollowedPresenter.onGenreFilterSelected(keep, remove);
+    }
+
+    @Override
+    public void onClearGenreFilter() {
+        mFollowedPresenter.onClearGenreFilter();
     }
 
     @Override

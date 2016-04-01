@@ -49,7 +49,7 @@
             android:theme="@style/AppTheme">
         </activity>
         <activity
-            android:name=".UI.SearchActivity.View.SearchActivity"
+            android:name=".UI.MainActivity.View.Fragments.FilterDialogFragment"
             android:label="ReaderActivity"
             android:theme="@style/AppTheme">
         </activity>

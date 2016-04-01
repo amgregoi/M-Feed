@@ -2,6 +2,10 @@ package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 import android.os.Bundle;
 
+import com.teioh.m_feed.Models.Manga;
+
+import java.util.ArrayList;
+
 public interface RecentPresenter {
 
     void onSaveState(Bundle bundle);
@@ -27,4 +31,8 @@ public interface RecentPresenter {
     void updateSource();
 
     void onFilterSelected(int filter);
+
+    void onGenreFilterSelected(ArrayList<String> keep, ArrayList<Manga> remove);
+
+    void onClearGenreFilter();
 }

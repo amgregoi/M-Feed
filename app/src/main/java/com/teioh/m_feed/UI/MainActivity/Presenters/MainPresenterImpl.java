@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
+import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.LoginActivity.View.LoginActivity;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
@@ -43,6 +44,8 @@ public class MainPresenterImpl implements MainPresenter {
     private ActionBarDrawerToggle mDrawerToggle;
     private MainActivityMapper mMainMapper;
     private Fragment settings;
+    private boolean mGenreFilterActive;
+    private String resultTitle;
 
     public MainPresenterImpl(MainActivityMapper main) {
         mMainMapper = main;
@@ -70,6 +73,8 @@ public class MainPresenterImpl implements MainPresenter {
         mMainMapper.setupSearchView();
         mMainMapper.setupToolbar();
         mMainMapper.setupSourceFilterMenu();
+
+        mGenreFilterActive = false;
     }
 
     @Override
@@ -139,15 +144,27 @@ public class MainPresenterImpl implements MainPresenter {
         switch (position) {
             case (0):
                 //home button
-                if(settings != null) removeSettingsFragment();
+                if (settings != null) {
+                    removeSettingsFragment();
+                    mMainMapper.closeDrawer();
+                    mMainMapper.toggleToolbarElements();
+                    if(mGenreFilterActive) mMainMapper.changeSourceTitle(resultTitle);
+                }
+                else mMainMapper.closeDrawer();
                 return;
             case (1):
                 //advanced search fragment
-                mMainMapper.searchActivityStart();
+                mMainMapper.closeDrawer();
+                mMainMapper.setPageAdapterItem(2);
+                if(settings != null) removeSettingsFragment();
+                mMainMapper.filterDialogOpen();
                 return;
             case (3):
                 //setftings fragment
-                if(settings == null) addSettingsFragment();
+                if (settings == null) {
+                    addSettingsFragment();
+                    mMainMapper.closeDrawer();
+                }
                 return;
         }
     }
@@ -171,6 +188,8 @@ public class MainPresenterImpl implements MainPresenter {
             WebSource.setwCurrentSource(source);
             Toast.makeText(mMainMapper.getContext(), "Changing source to " + source, Toast.LENGTH_SHORT).show();
             if (mViewPagerAdapterMain.hasRegisteredFragments()) {
+                mMainMapper.resetFilterImage();
+                mGenreFilterActive = false;
                 ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).updateSource();
                 ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).updateSource();
                 ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).updateSource();
@@ -178,7 +197,11 @@ public class MainPresenterImpl implements MainPresenter {
             mMainMapper.changeSourceTitle(source);
         }
 
-        if(settings != null) removeSettingsFragment();
+        if (settings != null) {
+            removeSettingsFragment();
+            mMainMapper.openDrawer();
+            mMainMapper.toggleToolbarElements();
+        }
     }
 
     @Override
@@ -201,10 +224,37 @@ public class MainPresenterImpl implements MainPresenter {
         }
     }
 
+    public String onGenreFilterSelected(Intent intent){
+        ArrayList<String> keep = intent.getStringArrayListExtra("KEEP");
+        ArrayList<Manga> thing = intent.getParcelableArrayListExtra("MANGA");
+        ArrayList<String> remove = intent.getStringArrayListExtra("REMOVE");
+
+        if (mViewPagerAdapterMain.hasRegisteredFragments()) {
+            mGenreFilterActive = true;
+            ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).onGenreFilterSelected(keep, thing);
+            ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).onGenreFilterSelected(keep, remove);
+            ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).onGenreFilterSelected(keep, remove);
+        }
+
+        resultTitle = "Filters: ";
+        if(intent.hasExtra("KEEP") || intent.hasExtra("REMOVE")) resultTitle += "Genre(s) ";
+        if(intent.hasExtra("STATUS")) resultTitle += "Status ";
+
+        return resultTitle;
+    }
+
+    @Override
+    public void onClearGenreFilter() {
+        if (mViewPagerAdapterMain.hasRegisteredFragments()) {
+            mGenreFilterActive = false;
+            ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).onClearGenreFilter();
+            ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).onClearGenreFilter();
+            ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).onClearGenreFilter();
+        }
+    }
+
     private void setupDrawerLayouts() {
         List<String> mDrawerItems = new ArrayList<>();
-        //TODO if sign in credential set, change to Sign out.
-        //NOTE: only necessary when MAL fully implemented
         mDrawerItems.add("Home");
         mDrawerItems.add("Search");
         mDrawerItems.add("Sources");
@@ -223,22 +273,28 @@ public class MainPresenterImpl implements MainPresenter {
         mMainMapper.setupDrawerLayout(mDrawerItems, mSourceCollections);
     }
 
-    private void removeSettingsFragment() {
+    @Override
+    public void removeSettingsFragment() {
         ((MainActivity) mMainMapper.getContext()).getSupportFragmentManager().beginTransaction()
                 .remove(settings)
                 .commit();
         settings = null;
-        mMainMapper.closeDrawer();
-        mMainMapper.toggleToolbarElements();
-
     }
 
     private void addSettingsFragment() {
         mMainMapper.toggleToolbarElements();
         settings = new SettingsFragment();
         ((MainActivity) mMainMapper.getContext()).getSupportFragmentManager().beginTransaction()
-                .add(R.id.main_activity_content, settings)
+                .add(R.id.main_activity_content, settings, SettingsFragment.TAG)
                 .commit();
-        mMainMapper.closeDrawer();
+    }
+
+    @Override
+    public boolean genreFilterActive(){
+        return mGenreFilterActive;
+    }
+
+    @Override
+    public void toggleGenreFilterActive(){
     }
 }

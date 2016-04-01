@@ -3,11 +3,12 @@
 	android:id="@+id/tool_bar"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
+	android:layout_height="?attr/actionBarSize"
 	android:background="@color/ColorPrimary"
 	android:elevation="2dp"
 	android:navigationIcon="@android:drawable/arrow_down_float"
-	android:theme="@style/Base.ThemeOverlay.AppCompat.Dark">
+	android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
 
 	<RelativeLayout
 		android:id="@+id/searchBar"
@@ -19,14 +20,25 @@
 		<SearchView
 			android:id="@+id/search_view"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
+			android:layout_height="fill_parent"
 			android:layout_alignParentEnd="true"
 			android:layout_centerInParent="true"
+			android:background="@drawable/clear_button_background"
 			android:focusable="false"
+			android:searchIcon="@drawable/ic_search_white_24dp"
 			android:iconifiedByDefault="true"
 			android:queryHint="Search Here"
-			android:searchIcon="@drawable/filter"
+			/>
+
+		<ImageButton
+			android:id="@+id/filter_view"
+			android:layout_toLeftOf="@id/search_view"
+			android:layout_width="wrap_content"
+			android:layout_height="fill_parent"
 			android:background="@drawable/clear_button_background"
+			android:src="@drawable/filter_outline_24dp"
+		    android:layout_centerInParent="true"
+		    android:padding="18dp"
 			/>
 
 		<TextView
@@ -40,8 +52,8 @@
 			android:ellipsize="end"
 			android:singleLine="true"
 			android:text=""
-			android:textColor="@color/white"
 			android:textAlignment="center"
+			android:textColor="@color/white"
 			android:textSize="20sp"
 			android:textStyle="bold"
 			/>

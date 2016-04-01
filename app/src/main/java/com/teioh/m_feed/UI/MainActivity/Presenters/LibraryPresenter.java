@@ -2,6 +2,8 @@ package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 import android.os.Bundle;
 
+import java.util.ArrayList;
+
 public interface LibraryPresenter {
     void onSaveState(Bundle bundle);
 
@@ -26,5 +28,9 @@ public interface LibraryPresenter {
     void updateSource();
 
     void onFilterSelected(int filter);
+
+    void onGenreFilterSelected(ArrayList<String> keep, ArrayList<String> remove);
+
+    void onClearGenreFilter();
 
 }

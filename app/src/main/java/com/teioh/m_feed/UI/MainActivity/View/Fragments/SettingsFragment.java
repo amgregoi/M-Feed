@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.teioh.m_feed.R;
 
 public class SettingsFragment extends Fragment {
+    public final static String TAG = SettingsFragment.class.getSimpleName();
 
     //TODO implement settings with shared prefs
     @Override

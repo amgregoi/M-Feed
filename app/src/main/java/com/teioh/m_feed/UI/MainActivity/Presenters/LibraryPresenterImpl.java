@@ -7,14 +7,19 @@ import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapter;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.LibraryFragmentMapper;
 import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
+import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.Database.ReactiveQueryManager;
+import com.teioh.m_feed.WebSources.WebSource;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import butterknife.ButterKnife;
+import nl.qbusict.cupboard.QueryResultIterable;
 import rx.Subscription;
+
+import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 
 public class LibraryPresenterImpl implements LibraryPresenter {
@@ -22,6 +27,7 @@ public class LibraryPresenterImpl implements LibraryPresenter {
     public final static String LIBRARY_LIST_KEY = TAG + ":LIBRARY_LIST";
 
     private ArrayList<Manga> mLibraryMangaList;
+    private ArrayList<Manga> mGenreFilterList;
     private SearchableAdapter mAdapter;
     private Subscription mMangaListSubscription;
 
@@ -125,6 +131,40 @@ public class LibraryPresenterImpl implements LibraryPresenter {
     public void onFilterSelected(int filter) {
         if (mAdapter != null)
             mAdapter.filterByStatus(filter);
+    }
+
+    @Override
+    public void onGenreFilterSelected(ArrayList<String> keep, ArrayList<String> remove) {
+        StringBuilder selection = new StringBuilder();
+        List<String> selectionArgs = new ArrayList<>();
+
+        selection.append("mSource" + " = ?");
+        selectionArgs.add(WebSource.getCurrentSource());
+
+        for(String s : keep) {
+            selection.append(" AND ");
+            selection.append("mGenres" + " LIKE ?");
+            selectionArgs.add("%" + s.replaceAll("\\s","") + "%");
+        }
+
+        for(String s : remove) {
+            selection.append(" AND ");
+            selection.append("mGenres" + " NOT LIKE ?");
+            selectionArgs.add("%" + s.replaceAll("\\s","") + "%");
+        }
+
+        QueryResultIterable<Manga> filteredManga = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase()).query(Manga.class)
+                .withSelection(selection.toString(), selectionArgs.toArray(new String[selectionArgs.size()]))
+                .query();
+
+        mGenreFilterList = new ArrayList<>(filteredManga.list());
+        mGenreFilterList.retainAll(mLibraryMangaList);
+        mAdapter.setOriginalData(mGenreFilterList);
+    }
+
+    @Override
+    public void onClearGenreFilter() {
+        mAdapter.setOriginalData(mLibraryMangaList);
     }
 
     private void updateLibraryGridView(List<Manga> mList) {

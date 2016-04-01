@@ -16,6 +16,8 @@ import com.teioh.m_feed.UI.MainActivity.Presenters.LibraryPresenter;
 import com.teioh.m_feed.UI.MainActivity.Presenters.LibraryPresenterImpl;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.LibraryFragmentMapper;
 
+import java.util.ArrayList;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
@@ -77,6 +79,16 @@ public class LibraryFragment extends Fragment implements LibraryFragmentMapper {
             mGridView.setAdapter(adapter);
             mGridView.setTextFilterEnabled(true);
         }
+    }
+
+    @Override
+    public void onGenreFilterSelected(ArrayList<String> keep, ArrayList<String> remove) {
+        mLibraryPresenter.onGenreFilterSelected(keep, remove);
+    }
+
+    @Override
+    public void onClearGenreFilter() {
+        mLibraryPresenter.onClearGenreFilter();
     }
 
     @Override

@@ -13,6 +13,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 
@@ -50,6 +53,12 @@ public class SearchableAdapter extends BaseAdapter implements Filterable {
         return position;
     }
 
+    public void setOriginalData(ArrayList<Manga> data){
+        this.originalData = data;
+        this.filteredData = data;
+        notifyDataSetChanged();
+    }
+
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
         MangaHolder holder;
@@ -60,7 +69,6 @@ public class SearchableAdapter extends BaseAdapter implements Filterable {
             holder = new MangaHolder();
             holder.txt = (TextView) row.findViewById(R.id.itemTitleField);
             holder.img = (ImageView) row.findViewById(R.id.imageView);
-            holder.follow = (ImageView) row.findViewById(R.id.followStatus);
             holder.footer = (LinearLayout) row.findViewById(R.id.footerLinearLayout);
             holder.card = (CardView) row.findViewById(R.id.card_view);
             row.setTag(holder);
@@ -75,20 +83,27 @@ public class SearchableAdapter extends BaseAdapter implements Filterable {
         }
 
         if (tManga.getFollowing()) {
-            holder.follow.setVisibility(View.VISIBLE);
             holder.footer.setBackgroundColor(context.getResources().getColor(R.color.ColorPrimary));
             holder.txt.setBackgroundColor(context.getResources().getColor(R.color.ColorPrimary));
             holder.txt.setTextColor(context.getResources().getColor(R.color.white));
 
         } else {
-            holder.follow.setVisibility(View.GONE);
             holder.footer.setBackgroundColor(context.getResources().getColor(R.color.white));
             holder.txt.setBackgroundColor(context.getResources().getColor(R.color.white));
             holder.txt.setTextColor(context.getResources().getColor(R.color.black));
         }
 
         //Picasso.with(context).load(tManga.getPicUrl()).resize(139, 200).into(holder.img);
-        Glide.with(context).load(tManga.getPicUrl()).into(holder.img);
+        Glide.with(context)
+                .load(tManga.getPicUrl())
+                .animate(android.R.anim.fade_in)
+                .into(new GlideDrawableImageViewTarget(holder.img) {
+                    @Override
+                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+                        super.onResourceReady(resource, animation);
+                        holder.img.setScaleType(ImageView.ScaleType.FIT_XY);
+                    }
+                });
         holder.txt.setText(tManga.toString());
         return row;
     }
@@ -96,7 +111,6 @@ public class SearchableAdapter extends BaseAdapter implements Filterable {
     static class MangaHolder {
         TextView txt;
         ImageView img;
-        ImageView follow;
         LinearLayout footer;
         CardView card;
     }

@@ -3,10 +3,12 @@ package com.teioh.m_feed.UI.MainActivity.Presenters;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.teioh.m_feed.Manifest;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapter;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.RecentFragmentMapper;
 import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
+import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.Database.ReactiveQueryManager;
 import com.teioh.m_feed.WebSources.WebSource;
 
@@ -14,7 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
+import nl.qbusict.cupboard.QueryResultIterable;
 import rx.Subscription;
+
+import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 public class RecentPresenterImpl implements RecentPresenter {
     public final static String TAG = RecentPresenterImpl.class.getSimpleName();
@@ -22,6 +27,7 @@ public class RecentPresenterImpl implements RecentPresenter {
     public final static String LATEST_SOURCE = TAG + ":SOURCE";
 
     private ArrayList<Manga> mRecentMangaList;
+    private ArrayList<Manga> mGenreFilterList;
     private SearchableAdapter mAdapter;
     private Subscription mMangaListSubscription;
     private RecentFragmentMapper mRecentFragmentMapper;
@@ -138,6 +144,20 @@ public class RecentPresenterImpl implements RecentPresenter {
             mAdapter.filterByStatus(filter);
     }
 
+    @Override
+    public void onGenreFilterSelected(ArrayList<String> keep, ArrayList<Manga> remove) {
+        if(remove != null) {
+            mGenreFilterList = new ArrayList<>(remove);
+            mGenreFilterList.retainAll(mRecentMangaList);
+            mAdapter.setOriginalData(mGenreFilterList);
+        }
+    }
+
+    @Override
+    public void onClearGenreFilter() {
+        mAdapter.setOriginalData(mRecentMangaList);
+    }
+
     private void updateRecentGridView(List<Manga> manga) {
         if (mRecentFragmentMapper.getContext() != null) {
             if (manga != null) {
@@ -152,6 +172,7 @@ public class RecentPresenterImpl implements RecentPresenter {
             mRecentFragmentMapper.stopRefresh();
         }
     }
+
 
 
 }

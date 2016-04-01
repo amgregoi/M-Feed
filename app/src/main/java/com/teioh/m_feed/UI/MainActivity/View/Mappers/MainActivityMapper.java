@@ -22,6 +22,8 @@ public interface MainActivityMapper extends BaseContextMap, SearchViewListenerMa
 
     void closeDrawer();
 
+    void openDrawer();
+
     void setupToolbar();
 
     void setupTabLayout();
@@ -36,6 +38,9 @@ public interface MainActivityMapper extends BaseContextMap, SearchViewListenerMa
 
     void toggleToolbarElements();
 
-    void searchActivityStart();
+    void filterDialogOpen();
 
+    void setPageAdapterItem(int position);
+
+    void resetFilterImage();
 }
