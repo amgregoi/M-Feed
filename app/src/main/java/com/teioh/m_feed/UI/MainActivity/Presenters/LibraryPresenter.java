@@ -2,6 +2,8 @@ package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 import android.os.Bundle;
 
+import com.teioh.m_feed.Models.Manga;
+
 import java.util.ArrayList;
 
 public interface LibraryPresenter {
@@ -13,7 +15,7 @@ public interface LibraryPresenter {
 
     void updateLibraryMangaList();
 
-    void onItemClick(String mTitle);
+    void onItemClick(Manga manga);
 
     void onQueryTextChange(String newText);
 
@@ -23,8 +25,6 @@ public interface LibraryPresenter {
 
     void onPause();
 
-    void setAdapter();
-
     void updateSource();
 
     void onFilterSelected(int filter);
@@ -32,5 +32,9 @@ public interface LibraryPresenter {
     void onGenreFilterSelected(ArrayList<String> keep, ArrayList<String> remove);
 
     void onClearGenreFilter();
+
+
+    void updateSelection(Manga manga);
+
 
 }

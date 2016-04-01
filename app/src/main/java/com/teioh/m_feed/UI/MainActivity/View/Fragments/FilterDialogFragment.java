@@ -114,23 +114,18 @@ public class FilterDialogFragment extends DialogFragment {
                 selection.append("mGenres" + " NOT LIKE ?");
                 selectionArgs.add("%" + s.replaceAll("\\s", "") + "%"); //genres have been stripped of spaces in the database
             }
-            Log.e(TAG, "starting search");
 
             QueryResultIterable<Manga> filteredManga = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase()).query(Manga.class)
                     .withSelection(selection.toString(), selectionArgs.toArray(new String[selectionArgs.size()]))
                     .query();
-            Log.e(TAG, "finished search");
 
-//            List<Manga> m = filteredManga.list();
             if (filteredManga.iterator().hasNext()) {
-                // return search stuff
                 Intent intent = new Intent();
                 intent.putStringArrayListExtra("KEEP", new ArrayList<>(keepList));
                 intent.putStringArrayListExtra("REMOVE", new ArrayList<>(removeList));
-                intent.putParcelableArrayListExtra("MANGA", new ArrayList<>(filteredManga.list()));
+                intent.putParcelableArrayListExtra("MANGA", new ArrayList<>(filteredManga.list())); //TODO decide if i want to pass whole list or query contents
                 FilterDialogFragment.this.getActivity().onActivityReenter(Activity.RESULT_OK, intent);
                 getDialog().dismiss();
-//                Log.e(TAG, "dismissing");
             } else {
                 Toast.makeText(getContext(), "Search result empty", Toast.LENGTH_SHORT).show();
             }

@@ -2,24 +2,20 @@ package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
-import com.teioh.m_feed.Manifest;
 import com.teioh.m_feed.Models.Manga;
-import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapter;
+import com.teioh.m_feed.UI.MainActivity.Adapters.RecyclerSearchAdapater;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.RecentFragmentMapper;
 import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
-import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
-import com.teioh.m_feed.Utils.Database.ReactiveQueryManager;
 import com.teioh.m_feed.WebSources.WebSource;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.ButterKnife;
-import nl.qbusict.cupboard.QueryResultIterable;
 import rx.Subscription;
 
-import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 public class RecentPresenterImpl implements RecentPresenter {
     public final static String TAG = RecentPresenterImpl.class.getSimpleName();
@@ -28,7 +24,9 @@ public class RecentPresenterImpl implements RecentPresenter {
 
     private ArrayList<Manga> mRecentMangaList;
     private ArrayList<Manga> mGenreFilterList;
-    private SearchableAdapter mAdapter;
+    private RecyclerSearchAdapater mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+
     private Subscription mMangaListSubscription;
     private RecentFragmentMapper mRecentFragmentMapper;
     private String mLastSourceQuery;
@@ -61,6 +59,7 @@ public class RecentPresenterImpl implements RecentPresenter {
     public void init() {
         mRecentFragmentMapper.setupSwipeRefresh();
 
+        mLayoutManager = new GridLayoutManager(mRecentFragmentMapper.getContext(), 3);
         if (mRecentMangaList == null) this.updateRecentMangaList();
         else updateRecentGridView(mRecentMangaList);
     }
@@ -77,9 +76,10 @@ public class RecentPresenterImpl implements RecentPresenter {
     }
 
     @Override
-    public void onItemClick(String mTitle) {
+    public void onItemClick(Manga manga) {
+        mRecentFragmentMapper.updateRecentSelection(manga.get_id());
         Intent intent = new Intent(mRecentFragmentMapper.getContext(), MangaActivity.class);
-        intent.putExtra(Manga.TAG, mTitle);
+        intent.putExtra(Manga.TAG, manga.getTitle());
         mRecentFragmentMapper.getContext().startActivity(intent);
     }
 
@@ -91,7 +91,6 @@ public class RecentPresenterImpl implements RecentPresenter {
 
     @Override
     public void onDestroyView() {
-        ButterKnife.unbind(mRecentFragmentMapper);
         if (mMangaListSubscription != null) {
             mMangaListSubscription.unsubscribe();
             mMangaListSubscription = null;
@@ -101,31 +100,25 @@ public class RecentPresenterImpl implements RecentPresenter {
     @Override
     public void onResume() {
         if (mRecentMangaList != null) {
-            mMangaListSubscription = ReactiveQueryManager.updateRecentMangaListObservable(mRecentMangaList)
-                    .subscribe(manga -> {
-                        if (mRecentFragmentMapper.getContext() != null) {
-                            if (manga != null) {
-                                mRecentMangaList.clear();
-                                mRecentMangaList.addAll(manga);
-                                mMangaListSubscription = null;
-                                mAdapter.notifyDataSetChanged();
-                            }
-                            mRecentFragmentMapper.stopRefresh();
-                        }
-                    });
+            mRecentFragmentMapper.refreshRecentSelection();
+//            mMangaListSubscription = ReactiveQueryManager.updateRecentMangaListObservable(mRecentMangaList)
+//                    .subscribe(manga -> {
+//                        if (mRecentFragmentMapper.getContext() != null) {
+//                            if (manga != null) {
+//                                mRecentMangaList.clear();
+//                                mRecentMangaList.addAll(manga);
+//                                mAdapter.setOriginalData(mRecentMangaList);
+//                                mMangaListSubscription = null;
+//                            }
+//                            mRecentFragmentMapper.stopRefresh();
+//                        }
+//                    });
         }
-        //TODO find way to force refresh item views do for all 3 main fragments
-
     }
 
     @Override
     public void onPause() {
 
-    }
-
-    @Override
-    public void setAdapter() {
-        mRecentFragmentMapper.registerAdapter(mAdapter);
     }
 
     @Override
@@ -146,7 +139,7 @@ public class RecentPresenterImpl implements RecentPresenter {
 
     @Override
     public void onGenreFilterSelected(ArrayList<String> keep, ArrayList<Manga> remove) {
-        if(remove != null) {
+        if (remove != null) {
             mGenreFilterList = new ArrayList<>(remove);
             mGenreFilterList.retainAll(mRecentMangaList);
             mAdapter.setOriginalData(mGenreFilterList);
@@ -158,21 +151,29 @@ public class RecentPresenterImpl implements RecentPresenter {
         mAdapter.setOriginalData(mRecentMangaList);
     }
 
+    @Override
+    public void updateSelection(Manga manga) {
+        for (int pos = 0; pos < mRecentMangaList.size(); pos++) {
+            if (mRecentMangaList.get(pos).equals(manga)) {
+                mAdapter.updateItem(pos, manga);
+            }
+        }
+    }
+
     private void updateRecentGridView(List<Manga> manga) {
         if (mRecentFragmentMapper.getContext() != null) {
             if (manga != null) {
                 mRecentMangaList = new ArrayList<>(manga);
-                mAdapter = new SearchableAdapter(mRecentFragmentMapper.getContext(), mRecentMangaList);
+                mAdapter = new RecyclerSearchAdapater(mRecentFragmentMapper.getContext(), mRecentMangaList, (itemView, item) -> onItemClick(item));
                 mMangaListSubscription = null;
             } else {
                 // failed to update list, show refresh view,
             }
 
-            mRecentFragmentMapper.registerAdapter(mAdapter);
+            mRecentFragmentMapper.registerAdapter(mAdapter, mLayoutManager);
+//            mRecentFragmentMapper.registerAdapter(mAdapter);
             mRecentFragmentMapper.stopRefresh();
         }
     }
-
-
 
 }

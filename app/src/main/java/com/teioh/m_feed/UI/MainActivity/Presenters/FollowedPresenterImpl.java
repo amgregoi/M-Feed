@@ -2,8 +2,11 @@ package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
 import com.teioh.m_feed.Models.Manga;
+import com.teioh.m_feed.UI.MainActivity.Adapters.RecyclerSearchAdapater;
 import com.teioh.m_feed.UI.MainActivity.Adapters.SearchableAdapter;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.FollowFragmentMapper;
 import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
@@ -28,8 +31,11 @@ public class FollowedPresenterImpl implements FollowedPresenter {
 
     private ArrayList<Manga> mFollowedMangaList;
     private ArrayList<Manga> mGenreFilterList;
-    private SearchableAdapter mAdapter;
+    private RecyclerSearchAdapater mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+
     private Subscription mMangaListSubscription;
+
 
     private FollowFragmentMapper mFollowFragmentMapper;
 
@@ -53,7 +59,8 @@ public class FollowedPresenterImpl implements FollowedPresenter {
 
     @Override
     public void init() {
-        this.updateFollowedMangaList();
+        mLayoutManager = new GridLayoutManager(mFollowFragmentMapper.getContext(), 3);
+        updateFollowedMangaList();
     }
 
     @Override
@@ -76,13 +83,12 @@ public class FollowedPresenterImpl implements FollowedPresenter {
 
     @Override
     public void onQueryTextChange(String newText) {
-        if(mAdapter != null)
+        if (mAdapter != null)
             mAdapter.getFilter().filter(newText);
     }
 
     @Override
     public void onDestroyView() {
-        ButterKnife.unbind(mFollowFragmentMapper);
         if (mMangaListSubscription != null) {
             mMangaListSubscription.unsubscribe();
             mMangaListSubscription = null;
@@ -92,14 +98,16 @@ public class FollowedPresenterImpl implements FollowedPresenter {
     @Override
     public void onResume() {
         if (mFollowedMangaList != null) {
+            mFollowFragmentMapper.refreshRecentSelection();
+
             mMangaListSubscription = ReactiveQueryManager.getFollowedMangaObservable()
                     .subscribe(manga -> {
                         if (mFollowFragmentMapper.getContext() != null) {
                             if (manga != null) {
                                 mFollowedMangaList.clear();
                                 mFollowedMangaList.addAll(manga);
+                                mAdapter.setOriginalData(mFollowedMangaList);
                                 mMangaListSubscription = null;
-                                mAdapter.notifyDataSetChanged();
                             }
                         }
                     });
@@ -109,11 +117,6 @@ public class FollowedPresenterImpl implements FollowedPresenter {
     @Override
     public void onPause() {
 
-    }
-
-    @Override
-    public void setAdapter() {
-        mFollowFragmentMapper.registerAdapter(mAdapter);
     }
 
     @Override
@@ -141,16 +144,16 @@ public class FollowedPresenterImpl implements FollowedPresenter {
         selection.append("mSource" + " = ?");
         selectionArgs.add(WebSource.getCurrentSource());
 
-        for(String s : keep) {
+        for (String s : keep) {
             selection.append(" AND ");
             selection.append("mGenres" + " LIKE ?");
-            selectionArgs.add("%" + s.replaceAll("\\s","") + "%");
+            selectionArgs.add("%" + s.replaceAll("\\s", "") + "%");
         }
 
-        for(String s : remove) {
+        for (String s : remove) {
             selection.append(" AND ");
             selection.append("mGenres" + " NOT LIKE ?");
-            selectionArgs.add("%" + s.replaceAll("\\s","") + "%");
+            selectionArgs.add("%" + s.replaceAll("\\s", "") + "%");
         }
 
         QueryResultIterable<Manga> filteredManga = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase()).query(Manga.class)
@@ -167,16 +170,25 @@ public class FollowedPresenterImpl implements FollowedPresenter {
         mAdapter.setOriginalData(mFollowedMangaList);
     }
 
+    @Override
+    public void updateSelection(Manga manga) {
+        for (int pos = 0; pos < mFollowedMangaList.size(); pos++) {
+            if (mFollowedMangaList.get(pos).equals(manga)) {
+                mAdapter.updateItem(pos, manga);
+            }
+        }
+    }
+
     private void updateFollowedGridView(List<Manga> mangaList) {
         if (mFollowFragmentMapper.getContext() != null && mangaList != null) {
             mFollowedMangaList = new ArrayList<>(mangaList);
             Collections.sort(mFollowedMangaList, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
-            mAdapter = new SearchableAdapter(mFollowFragmentMapper.getContext(), mFollowedMangaList);
-            mFollowFragmentMapper.registerAdapter(mAdapter);
+            mAdapter = new RecyclerSearchAdapater(mFollowFragmentMapper.getContext(), mFollowedMangaList, (itemView, item) -> onItemClick(item.getTitle()));
+            mFollowFragmentMapper.registerAdapter(mAdapter, mLayoutManager);
             mMangaListSubscription = null;
 
-            for(Manga m : mFollowedMangaList)
-                System.out.println("MangaFeedDbHelper.getInstance().updateMangaFollow(\""+m.getTitle()+"\");");
+            for (Manga m : mFollowedMangaList)
+                System.out.println("MangaFeedDbHelper.getInstance().updateMangaFollow(\"" + m.getTitle() + "\");");
 
         }
     }

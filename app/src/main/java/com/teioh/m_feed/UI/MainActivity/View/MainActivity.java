@@ -155,7 +155,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
 
             } else {
                 mMainPresenter.onClearGenreFilter();
-                mMainPresenter.toggleGenreFilterActive();
             }
         }
     }
@@ -344,5 +343,15 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
             toast.cancel();
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void updateRecentSelection(Long id) {
+        mMainPresenter.setRecentManga(id);
+    }
+
+    @Override
+    public void refreshRecentSelection() {
+        mMainPresenter.getRecentManga();
     }
 }

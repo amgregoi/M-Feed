@@ -16,7 +16,7 @@ public interface RecentPresenter {
 
     void updateRecentMangaList();
 
-    void onItemClick(String mTitle);
+    void onItemClick(Manga manga);
 
     void onQueryTextChange(String newText);
 
@@ -26,8 +26,6 @@ public interface RecentPresenter {
 
     void onPause();
 
-    void setAdapter();
-
     void updateSource();
 
     void onFilterSelected(int filter);
@@ -35,4 +33,8 @@ public interface RecentPresenter {
     void onGenreFilterSelected(ArrayList<String> keep, ArrayList<Manga> remove);
 
     void onClearGenreFilter();
+
+
+    void updateSelection(Manga manga);
+
 }

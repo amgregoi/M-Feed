@@ -23,6 +23,7 @@ import com.teioh.m_feed.UI.MainActivity.View.Fragments.RecentFragment;
 import com.teioh.m_feed.UI.MainActivity.View.Fragments.SettingsFragment;
 import com.teioh.m_feed.UI.MainActivity.View.MainActivity;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.MainActivityMapper;
+import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.SharedPrefsUtil;
 import com.teioh.m_feed.WebSources.MangaHere;
 import com.teioh.m_feed.WebSources.MangaJoy;
@@ -35,6 +36,9 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.ButterKnife;
+import nl.qbusict.cupboard.Cupboard;
+
+import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 public class MainPresenterImpl implements MainPresenter {
     public final static String TAG = MainPresenterImpl.class.getSimpleName();
@@ -46,6 +50,7 @@ public class MainPresenterImpl implements MainPresenter {
     private Fragment settings;
     private boolean mGenreFilterActive;
     private String resultTitle;
+    private long mRecentMangaId;
 
     public MainPresenterImpl(MainActivityMapper main) {
         mMainMapper = main;
@@ -295,6 +300,21 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Override
-    public void toggleGenreFilterActive(){
+    public void setRecentManga(long id){
+        mRecentMangaId = id;
     }
+
+    @Override
+    public void getRecentManga(){
+        Manga manga = cupboard().withDatabase(MangaFeedDbHelper.getInstance()
+                .getReadableDatabase()).query(Manga.class).withSelection("_id = ?", Long.toString(mRecentMangaId)).get();
+
+        if ( manga != null) {
+            ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).updateSelection(manga);
+            ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).updateSelection(manga);
+            ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).updateSelection(manga);
+        }
+    }
+
+
 }

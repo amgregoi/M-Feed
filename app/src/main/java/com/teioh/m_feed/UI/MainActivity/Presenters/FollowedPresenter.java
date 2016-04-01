@@ -2,6 +2,8 @@ package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 import android.os.Bundle;
 
+import com.teioh.m_feed.Models.Manga;
+
 import java.util.ArrayList;
 
 public interface FollowedPresenter {
@@ -23,8 +25,6 @@ public interface FollowedPresenter {
 
     void onPause();
 
-    void setAdapter();
-
     void updateSource();
 
     void onFilterSelected(int filter);
@@ -32,6 +32,10 @@ public interface FollowedPresenter {
     void onGenreFilterSelected(ArrayList<String> keep, ArrayList<String> remove);
 
     void onClearGenreFilter();
+
+
+    void updateSelection(Manga manga);
+
 
 
 }

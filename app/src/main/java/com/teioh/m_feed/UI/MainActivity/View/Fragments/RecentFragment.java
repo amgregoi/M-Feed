@@ -1,9 +1,11 @@
 package com.teioh.m_feed.UI.MainActivity.View.Fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import android.widget.GridView;
 
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
+import com.teioh.m_feed.UI.MainActivity.Adapters.RecyclerSearchAdapater;
 import com.teioh.m_feed.UI.MainActivity.Presenters.RecentPresenter;
 import com.teioh.m_feed.UI.MainActivity.Presenters.RecentPresenterImpl;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.RecentFragmentMapper;
@@ -26,15 +29,17 @@ import butterknife.OnItemClick;
 public class RecentFragment extends Fragment implements RecentFragmentMapper {
     public final static String TAG =RecentFragment.class.getSimpleName();
 
-    @Bind(R.id.recent_list_view) GridView mGridView;
-    @Bind(R.id.swipe_container) SwipeRefreshLayout swipeContainer;
+    RecyclerView mGridView;
+    SwipeRefreshLayout swipeContainer;
 
     private RecentPresenter mRecentPresenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab1_recent_fragment, container, false);
-        ButterKnife.bind(this, v);
+        mGridView = (RecyclerView) v.findViewById(R.id.recent_list_view);
+        swipeContainer = (SwipeRefreshLayout) v.findViewById(R.id.swipe_container);
+//        ButterKnife.bind(this, v);  //TODO find out why butterknife broke when implementing recyclerview?
 
         mRecentPresenter = new RecentPresenterImpl(this);
         return v;
@@ -59,6 +64,8 @@ public class RecentFragment extends Fragment implements RecentFragmentMapper {
     public void onDestroyView() {
         super.onDestroyView();
         mRecentPresenter.onDestroyView();
+//        ButterKnife.unbind(this);
+
 
     }
 
@@ -78,8 +85,8 @@ public class RecentFragment extends Fragment implements RecentFragmentMapper {
     @Override
     public void registerAdapter(BaseAdapter adapter) {
         if (adapter != null) {
-            mGridView.setAdapter(adapter);
-            mGridView.setTextFilterEnabled(true);
+//            mGridView.setAdapter(adapter);
+//            mGridView.setTextFilterEnabled(true);
         }
     }
 
@@ -135,10 +142,47 @@ public class RecentFragment extends Fragment implements RecentFragmentMapper {
         mRecentPresenter.onClearGenreFilter();
     }
 
-    @OnItemClick(R.id.recent_list_view)
-    void onItemClick(AdapterView<?> adapter, View view, int pos) {
-        Manga item = (Manga) adapter.getItemAtPosition(pos);
-        mRecentPresenter.onItemClick(item.getTitle());
+    @Override
+    public void registerAdapter(RecyclerSearchAdapater mAdapter, RecyclerView.LayoutManager layout) {
+        if (mAdapter != null) {
+            mGridView.setAdapter(mAdapter);
+            mGridView.setLayoutManager(layout);
+            mGridView.addItemDecoration(new RecyclerSearchAdapater.SpacesItemDecoration(8));
+        }
     }
+
+    @Override
+    public void updateSelection(Manga manga) {
+        mRecentPresenter.updateSelection(manga);
+    }
+
+
+
+    private RecentFragmentListener listener;
+
+    @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+
+        if (context instanceof RecentFragmentListener) listener = (RecentFragmentListener) context;
+        else throw new ClassCastException(context.toString() + " must implement RecentFragment.RecentFragmentListener");
+    }
+
+    public interface RecentFragmentListener {
+        void updateRecentSelection(Long id); //sets id to track
+
+        void refreshRecentSelection(); //refreshes view
+    }
+
+    @Override
+    public void updateRecentSelection(Long id){
+        listener.updateRecentSelection(id);
+    }
+
+    @Override
+    public void refreshRecentSelection() {
+        listener.refreshRecentSelection();
+    }
+
 
 }

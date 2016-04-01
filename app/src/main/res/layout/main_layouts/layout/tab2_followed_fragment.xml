@@ -8,19 +8,15 @@
 	android:layout_marginStart="@dimen/baseline_grid_unit_4dp"
 	>
 
-	<GridView
+	<android.support.v7.widget.RecyclerView
 		android:id="@+id/library_list_view"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:background="@color/charcoal"
-		android:clipToPadding="false"
-		android:columnWidth="@dimen/grid_item_width_96dp"
-		android:drawSelectorOnTop="true"
+		android:drawSelectorOnTop="false"
 		android:fastScrollEnabled="true"
-		android:horizontalSpacing="@dimen/baseline_grid_unit_4dp"
-		android:numColumns="auto_fit"
+		android:fadeScrollbars="false"
 		android:paddingTop="5dp"
 		android:stretchMode="columnWidth"
-		android:verticalSpacing="@dimen/baseline_grid_unit_4dp"
 		/>
 </RelativeLayout>

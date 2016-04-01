@@ -87,6 +87,8 @@ dependencies {
     //float action button
     compile 'com.getbase:floatingactionbutton:1.10.1'
 
+    compile 'com.android.support:recyclerview-v7:23.1.1'
+
 }
 
 //retrolambda

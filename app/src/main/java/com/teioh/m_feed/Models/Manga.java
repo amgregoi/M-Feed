@@ -32,6 +32,22 @@ public class Manga implements Parcelable {
         this._id = null;
     }
 
+    public Manga(Manga in){
+        _id = in.get_id();
+        mTitle = in.getTitle();
+        mPicUrl = in.getPicUrl();
+        mMangaUrl = in.getMangaURL();
+        mDescription = in.getDescription();
+        mAuthor = in.getmAuthor();
+        mArtist = in.getmArtist();
+        mGenres = in.getmGenre();
+        mStatus = in.getmStatus();
+        mSource = in.getmSource();
+        mAlternate = in.getmAlternate();
+        mFollowing = in.getFollowing();
+        mIsInitialized = getmIsInitialized();
+    }
+
     protected Manga(Parcel in) {
         _id = in.readLong();
         mTitle = in.readString();

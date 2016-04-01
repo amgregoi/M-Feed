@@ -45,5 +45,7 @@ public interface MainPresenter {
 
     boolean genreFilterActive();
 
-    void toggleGenreFilterActive();
+    void getRecentManga();
+
+    void setRecentManga(long id);
 }
