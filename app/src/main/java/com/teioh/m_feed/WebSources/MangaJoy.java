@@ -144,7 +144,7 @@ public class MangaJoy {
             }
         }
         Log.i("Pull Recent Updates", "Finished pulling updates");
-        if(mangaList.size() == 0) return null;
+        if (mangaList.size() == 0) return null;
         return mangaList;
     }
 
@@ -157,12 +157,9 @@ public class MangaJoy {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .retry(10)
-                .onErrorReturn(new Func1<Throwable, List<Chapter>>() {
-                    @Override
-                    public List<Chapter> call(Throwable throwable) {
-                        Log.e("throwable", throwable.toString());
-                        return null;
-                    }
+                .onErrorReturn(throwable -> {
+                    Log.e("throwable", throwable.toString());
+                    return null;
                 }).doOnError(throwable -> throwable.printStackTrace());
     }
 
@@ -177,7 +174,7 @@ public class MangaJoy {
 
                     String unparsedHtml = null;
                     if (connect.execute().statusCode() == 200)
-                        unparsedHtml = connect.get().html().toString();
+                        unparsedHtml = connect.get().html();
 
                     subscriber.onNext(parseHtmlToChapters(unparsedHtml));
                     subscriber.onCompleted();
@@ -389,10 +386,8 @@ public class MangaJoy {
                 .getWritableDatabase())
                 .update(Manga.class, values, "mMangaUrl = ?", url);
 
-        Manga manga = cupboard().withDatabase(MangaFeedDbHelper.getInstance()
+        return cupboard().withDatabase(MangaFeedDbHelper.getInstance()
                 .getReadableDatabase()).query(Manga.class)
                 .withSelection("mMangaUrl = ? AND mSource = ?", url, SourceKey).get();
-
-        return manga;
     }
 }

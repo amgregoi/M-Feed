@@ -4,5 +4,6 @@ import com.teioh.m_feed.UI.Maps.BaseContextMap;
 
 public interface LoginActivityMapper extends BaseContextMap{
     void onLoginSuccess();
+
     void onLoginFail();
 }

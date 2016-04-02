@@ -44,10 +44,10 @@ public class ReaderPresenterImpl implements ReaderPresenter {
     }
 
     @Override
-    public void init(Intent intent) {
+    public void init(Bundle bundle) {
         if (mChapterList == null) {
-            mChapterList = new ArrayList<>(intent.getExtras().getParcelableArrayList(MangaPresenterImpl.CHAPTER_LIST_KEY));
-            mChapterPosition = intent.getExtras().getInt(MangaPresenterImpl.LIST_POSITION_KEY);
+            mChapterList = new ArrayList<>(bundle.getParcelableArrayList(MangaPresenterImpl.CHAPTER_LIST_KEY));
+            mChapterPosition = bundle.getInt(MangaPresenterImpl.LIST_POSITION_KEY);
         }
 
         mChapterPagerAdapter = new ChapterPageAdapter(((ReaderActivity) mReaderMap).getSupportFragmentManager(), mChapterList);

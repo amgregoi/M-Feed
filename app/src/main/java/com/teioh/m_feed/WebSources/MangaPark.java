@@ -36,8 +36,9 @@ public class MangaPark {
     final static String MangaParkUrl = "http://mangapark.me/latest/";
     final static String MangaParkBaseUrl = "http://mangapark.me";
 
-    /*
+    /**
      * builds list of manga for recently updated page
+     * @return
      */
     public static Observable<List<Manga>> getRecentUpdatesObservable() {
         return pullUpdatedMangaFromWebsite()
@@ -119,8 +120,9 @@ public class MangaPark {
     }
 
 
-    /*
+    /**
      * builds list of chapters for manga object
+     * @return
      */
     public static Observable<List<Chapter>> getChapterListObservable(final String url) {
         return pullChaptersFromWebsite(url)
@@ -208,19 +210,17 @@ public class MangaPark {
     }
 
 
-    /*
+    /**
     * ChapterFragment - takes a chapter url, and returns list of urls to chapter images
+     * return
     */
     public static Observable<List<String>> getChapterImageListObservable(final String url) {
         return parseListOfImageUrls(url)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .onErrorReturn(new Func1<Throwable, List<String>>() {
-                    @Override
-                    public List<String> call(Throwable throwable) {
-                        Log.e("throwable", throwable.toString());
-                        return null;
-                    }
+                .onErrorReturn(throwable -> {
+                    Log.e("throwable", throwable.toString());
+                    return null;
                 })
                 .doOnError(throwable -> throwable.printStackTrace());
     }
@@ -417,7 +417,6 @@ public class MangaPark {
         values.put("mSource", SourceKey);
 
         cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).update(Manga.class, values, "mMangaUrl = ?", url);
-        Manga manga = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase()).query(Manga.class).withSelection("mMangaUrl = ?", url).get();
-        return manga;
+        return cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase()).query(Manga.class).withSelection("mMangaUrl = ?", url).get();
     }
 }

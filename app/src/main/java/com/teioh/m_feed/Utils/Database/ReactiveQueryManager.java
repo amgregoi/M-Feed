@@ -20,19 +20,17 @@ import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 public class ReactiveQueryManager {
 
-    /*
+    /**
      * LibraryFragment gets whole library
+     * @return
      */
     public static Observable<List<Manga>> getMangaLibraryObservable() {
         return pullMangaFromDatabase()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .onErrorReturn(new Func1<Throwable, List<Manga>>() {
-                    @Override
-                    public List<Manga> call(Throwable throwable) {
-                        Log.e("throwable", throwable.toString());
-                        return null;
-                    }
+                .onErrorReturn(throwable -> {
+                    Log.e("throwable", throwable.toString());
+                    return null;
                 });
     }
 
@@ -66,19 +64,17 @@ public class ReactiveQueryManager {
     }
 
 
-    /*
+    /**
      * FollowedFragment gets manga in users library
+     * @return
      */
     public static Observable<List<Manga>> getFollowedMangaObservable() {
         return pullFollowedMangaFromDatabase()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .onErrorReturn(new Func1<Throwable, List<Manga>>() {
-                    @Override
-                    public List<Manga> call(Throwable throwable) {
-                        Log.e("throwable", throwable.toString());
-                        return null;
-                    }
+                .onErrorReturn(throwable -> {
+                    Log.e("throwable", throwable.toString());
+                    return null;
                 });
     }
 
@@ -112,12 +108,9 @@ public class ReactiveQueryManager {
         return updateRecentMangaList(list)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .onErrorReturn(new Func1<Throwable, List<Manga>>() {
-                    @Override
-                    public List<Manga> call(Throwable throwable) {
-                        Log.e("throwable", throwable.toString());
-                        return null;
-                    }
+                .onErrorReturn(throwable -> {
+                    Log.e("throwable", throwable.toString());
+                    return null;
                 });
     }
 

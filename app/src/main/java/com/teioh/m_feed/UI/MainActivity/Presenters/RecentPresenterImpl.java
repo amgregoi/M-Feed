@@ -6,7 +6,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.teioh.m_feed.Models.Manga;
-import com.teioh.m_feed.UI.MainActivity.Adapters.RecyclerSearchAdapater;
+import com.teioh.m_feed.UI.MainActivity.Adapters.RecycleSearchAdapter;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.RecentFragmentMapper;
 import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
 import com.teioh.m_feed.WebSources.WebSource;
@@ -17,22 +17,33 @@ import java.util.List;
 import rx.Subscription;
 
 
-public class RecentPresenterImpl implements RecentPresenter {
+public class RecentPresenterImpl implements HomePresenter {
     public final static String TAG = RecentPresenterImpl.class.getSimpleName();
     public final static String RECENT_MANGA_LIST_KEY = TAG + ":RECENT_MANGA_LIST";
     public final static String LATEST_SOURCE = TAG + ":SOURCE";
 
     private ArrayList<Manga> mRecentMangaList;
     private ArrayList<Manga> mGenreFilterList;
-    private RecyclerSearchAdapater mAdapter;
+    private RecycleSearchAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     private Subscription mMangaListSubscription;
     private RecentFragmentMapper mRecentFragmentMapper;
     private String mLastSourceQuery;
+    private boolean mNeedsItemDeocration;
 
     public RecentPresenterImpl(RecentFragmentMapper map) {
         mRecentFragmentMapper = map;
+    }
+
+
+    @Override
+    public void init(Bundle bundle) {
+        mRecentFragmentMapper.setupSwipeRefresh();
+        mNeedsItemDeocration = true;
+        mLayoutManager = new GridLayoutManager(mRecentFragmentMapper.getContext(), 3);
+        if (mRecentMangaList == null) updateMangaList();
+        else updateRecentGridView(mRecentMangaList);
     }
 
     @Override
@@ -56,16 +67,7 @@ public class RecentPresenterImpl implements RecentPresenter {
     }
 
     @Override
-    public void init() {
-        mRecentFragmentMapper.setupSwipeRefresh();
-
-        mLayoutManager = new GridLayoutManager(mRecentFragmentMapper.getContext(), 3);
-        if (mRecentMangaList == null) this.updateRecentMangaList();
-        else updateRecentGridView(mRecentMangaList);
-    }
-
-    @Override
-    public void updateRecentMangaList() {
+    public void updateMangaList() {
         if (mMangaListSubscription != null) {
             mMangaListSubscription.unsubscribe();
             mMangaListSubscription = null;
@@ -77,7 +79,7 @@ public class RecentPresenterImpl implements RecentPresenter {
 
     @Override
     public void onItemClick(Manga manga) {
-        mRecentFragmentMapper.updateRecentSelection(manga.get_id());
+        mRecentFragmentMapper.setRecentSelection(manga.get_id());
         Intent intent = new Intent(mRecentFragmentMapper.getContext(), MangaActivity.class);
         intent.putExtra(Manga.TAG, manga.getTitle());
         mRecentFragmentMapper.getContext().startActivity(intent);
@@ -90,7 +92,7 @@ public class RecentPresenterImpl implements RecentPresenter {
     }
 
     @Override
-    public void onDestroyView() {
+    public void onDestroy() {
         if (mMangaListSubscription != null) {
             mMangaListSubscription.unsubscribe();
             mMangaListSubscription = null;
@@ -99,21 +101,7 @@ public class RecentPresenterImpl implements RecentPresenter {
 
     @Override
     public void onResume() {
-        if (mRecentMangaList != null) {
-            mRecentFragmentMapper.refreshRecentSelection();
-//            mMangaListSubscription = ReactiveQueryManager.updateRecentMangaListObservable(mRecentMangaList)
-//                    .subscribe(manga -> {
-//                        if (mRecentFragmentMapper.getContext() != null) {
-//                            if (manga != null) {
-//                                mRecentMangaList.clear();
-//                                mRecentMangaList.addAll(manga);
-//                                mAdapter.setOriginalData(mRecentMangaList);
-//                                mMangaListSubscription = null;
-//                            }
-//                            mRecentFragmentMapper.stopRefresh();
-//                        }
-//                    });
-        }
+
     }
 
     @Override
@@ -126,7 +114,7 @@ public class RecentPresenterImpl implements RecentPresenter {
         mRecentFragmentMapper.startRefresh();
         if (mRecentFragmentMapper.getContext() != null) {
             mRecentFragmentMapper.startRefresh();
-            updateRecentMangaList();
+            updateMangaList();
         }
     }
 
@@ -138,9 +126,9 @@ public class RecentPresenterImpl implements RecentPresenter {
     }
 
     @Override
-    public void onGenreFilterSelected(ArrayList<String> keep, ArrayList<Manga> remove) {
-        if (remove != null) {
-            mGenreFilterList = new ArrayList<>(remove);
+    public void onGenreFilterSelected(ArrayList<Manga> list) {
+        if (list != null) {
+            mGenreFilterList = new ArrayList<>(list);
             mGenreFilterList.retainAll(mRecentMangaList);
             mAdapter.setOriginalData(mGenreFilterList);
         }
@@ -164,15 +152,15 @@ public class RecentPresenterImpl implements RecentPresenter {
         if (mRecentFragmentMapper.getContext() != null) {
             if (manga != null) {
                 mRecentMangaList = new ArrayList<>(manga);
-                mAdapter = new RecyclerSearchAdapater(mRecentFragmentMapper.getContext(), mRecentMangaList, (itemView, item) -> onItemClick(item));
+                mAdapter = new RecycleSearchAdapter(mRecentFragmentMapper.getContext(), mRecentMangaList, (itemView, item) -> onItemClick(item));
                 mMangaListSubscription = null;
             } else {
                 // failed to update list, show refresh view,
             }
-
-            mRecentFragmentMapper.registerAdapter(mAdapter, mLayoutManager);
-//            mRecentFragmentMapper.registerAdapter(mAdapter);
+            mRecentFragmentMapper.registerAdapter(mAdapter, mLayoutManager, mNeedsItemDeocration);
             mRecentFragmentMapper.stopRefresh();
+            mNeedsItemDeocration = false;
+
         }
     }
 

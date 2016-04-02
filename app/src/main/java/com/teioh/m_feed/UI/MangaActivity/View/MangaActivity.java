@@ -78,7 +78,7 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
         if (savedInstanceState != null) {
             mMangaPresenter.onRestoreState(savedInstanceState);
         }
-        mMangaPresenter.init(getIntent());
+        mMangaPresenter.init(getIntent().getExtras());
     }
 
     @Override

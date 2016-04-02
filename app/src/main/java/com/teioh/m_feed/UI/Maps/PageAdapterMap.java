@@ -4,5 +4,4 @@ import android.support.v4.view.PagerAdapter;
 
 public interface PageAdapterMap {
     void registerAdapter(PagerAdapter adapter);
-
 }

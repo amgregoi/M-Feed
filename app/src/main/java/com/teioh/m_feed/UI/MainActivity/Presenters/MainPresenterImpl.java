@@ -1,22 +1,20 @@
 package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.LoginActivity.View.LoginActivity;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
+import com.teioh.m_feed.UI.MainActivity.View.Fragments.FilterDialogFragment;
 import com.teioh.m_feed.UI.MainActivity.View.Fragments.FollowedFragment;
 import com.teioh.m_feed.UI.MainActivity.View.Fragments.LibraryFragment;
 import com.teioh.m_feed.UI.MainActivity.View.Fragments.RecentFragment;
@@ -36,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.ButterKnife;
-import nl.qbusict.cupboard.Cupboard;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
@@ -49,7 +46,6 @@ public class MainPresenterImpl implements MainPresenter {
     private MainActivityMapper mMainMapper;
     private Fragment settings;
     private boolean mGenreFilterActive;
-    private String resultTitle;
     private long mRecentMangaId;
 
     public MainPresenterImpl(MainActivityMapper main) {
@@ -57,17 +53,7 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Override
-    public void onSavedState(Bundle bundle) {
-
-    }
-
-    @Override
-    public void onRestoreState(Bundle bundle) {
-
-    }
-
-    @Override
-    public void init() {
+    public void init(Bundle bundle) {
         //setup base layout first
         mMainMapper.setupTabLayout();
         mViewPagerAdapterMain = new ViewPagerAdapterMain(((FragmentActivity) mMainMapper.getContext()).getSupportFragmentManager(), mTabTitles, 3);
@@ -78,29 +64,19 @@ public class MainPresenterImpl implements MainPresenter {
         mMainMapper.setupSearchView();
         mMainMapper.setupToolbar();
         mMainMapper.setupSourceFilterMenu();
+        mMainMapper.setDrawerLayoutListener();
 
         mGenreFilterActive = false;
     }
 
     @Override
-    public void setupDrawerLayoutListener(Toolbar mToolBar, DrawerLayout mDrawerLayout) {
-        mDrawerToggle = new ActionBarDrawerToggle(((Activity) mMainMapper.getContext()), mDrawerLayout,
-                mToolBar, R.string.app_name, R.string.Login) {
-            /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                //getActionBar().setTitle(R.string.app_name);
-                mMainMapper.onDrawerClose();
-            }
+    public void onSaveState(Bundle save) {
 
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                // getActionBar().setTitle(R.string.LoginBtn);
-                mMainMapper.onDrawerOpen();
-            }
-        };
-        mMainMapper.setDrawerLayoutListener(mDrawerToggle);
+    }
+
+    @Override
+    public void onRestoreState(Bundle restore) {
+
     }
 
     @Override
@@ -113,6 +89,8 @@ public class MainPresenterImpl implements MainPresenter {
     public void onResume() {
         mMainMapper.closeDrawer();
         setupDrawerLayouts();
+        if (mRecentMangaId >= 0)
+            getRecentManga();
     }
 
     @Override
@@ -135,16 +113,6 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Override
-    public void onPostCreate() {
-        mDrawerToggle.syncState();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    @Override
     public void onDrawerItemChosen(int position) {
         switch (position) {
             case (0):
@@ -153,16 +121,17 @@ public class MainPresenterImpl implements MainPresenter {
                     removeSettingsFragment();
                     mMainMapper.closeDrawer();
                     mMainMapper.toggleToolbarElements();
-                    if(mGenreFilterActive) mMainMapper.changeSourceTitle(resultTitle);
-                }
-                else mMainMapper.closeDrawer();
+                    if (mGenreFilterActive)
+                        mMainMapper.setActivityTitle(mMainMapper.getContext().getString(R.string.filter_active));
+                } else mMainMapper.closeDrawer();
                 return;
             case (1):
                 //advanced search fragment
                 mMainMapper.closeDrawer();
                 mMainMapper.setPageAdapterItem(2);
-                if(settings != null) removeSettingsFragment();
-                mMainMapper.filterDialogOpen();
+                if (settings != null) removeSettingsFragment();
+                DialogFragment dialog = FilterDialogFragment.getnewInstance();
+                dialog.show(((AppCompatActivity) mMainMapper).getSupportFragmentManager(), null);
                 return;
             case (3):
                 //setftings fragment
@@ -193,13 +162,13 @@ public class MainPresenterImpl implements MainPresenter {
             WebSource.setwCurrentSource(source);
             Toast.makeText(mMainMapper.getContext(), "Changing source to " + source, Toast.LENGTH_SHORT).show();
             if (mViewPagerAdapterMain.hasRegisteredFragments()) {
-                mMainMapper.resetFilterImage();
+                mMainMapper.setDefaultFilterImage();
                 mGenreFilterActive = false;
                 ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).updateSource();
                 ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).updateSource();
                 ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).updateSource();
             }
-            mMainMapper.changeSourceTitle(source);
+            mMainMapper.setActivityTitle(source);
         }
 
         if (settings != null) {
@@ -218,34 +187,15 @@ public class MainPresenterImpl implements MainPresenter {
         }
     }
 
-    @Override
-    public void onMALSignIn() {
-        //TODO need to do more research in MAL api options
-        if (SharedPrefsUtil.isSignedIn()) {
-            SharedPrefsUtil.setMALCredential(null, null);
-            setupDrawerLayouts();
-        } else {
-            onSignIn();
-        }
-    }
-
-    public String onGenreFilterSelected(Intent intent){
-        ArrayList<String> keep = intent.getStringArrayListExtra("KEEP");
-        ArrayList<Manga> thing = intent.getParcelableArrayListExtra("MANGA");
-        ArrayList<String> remove = intent.getStringArrayListExtra("REMOVE");
+    public void onGenreFilterSelected(Intent intent) {
+        ArrayList<Manga> list = intent.getParcelableArrayListExtra("MANGA");
 
         if (mViewPagerAdapterMain.hasRegisteredFragments()) {
             mGenreFilterActive = true;
-            ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).onGenreFilterSelected(keep, thing);
-            ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).onGenreFilterSelected(keep, remove);
-            ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).onGenreFilterSelected(keep, remove);
+            ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).onGenreFilterSelected(list);
+            ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).onGenreFilterSelected(list);
+            ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).onGenreFilterSelected(list);
         }
-
-        resultTitle = "Filters: ";
-        if(intent.hasExtra("KEEP") || intent.hasExtra("REMOVE")) resultTitle += "Genre(s) ";
-        if(intent.hasExtra("STATUS")) resultTitle += "Status ";
-
-        return resultTitle;
     }
 
     @Override
@@ -295,24 +245,38 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Override
-    public boolean genreFilterActive(){
+    public boolean genreFilterActive() {
         return mGenreFilterActive;
     }
 
     @Override
-    public void setRecentManga(long id){
+    public void setRecentManga(long id) {
         mRecentMangaId = id;
     }
 
     @Override
-    public void getRecentManga(){
-        Manga manga = cupboard().withDatabase(MangaFeedDbHelper.getInstance()
-                .getReadableDatabase()).query(Manga.class).withSelection("_id = ?", Long.toString(mRecentMangaId)).get();
+    public void getRecentManga() {
+        Manga manga = cupboard()
+                .withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase()).query(Manga.class)
+                .withSelection("_id = ?", Long.toString(mRecentMangaId))
+                .get();
 
-        if ( manga != null) {
-            ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).updateSelection(manga);
-            ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).updateSelection(manga);
-            ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).updateSelection(manga);
+        if (manga != null) {
+            ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).updateRecentSelection(manga);
+            ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).updateRecentSelection(manga);
+            ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).updateRecentSelection(manga);
+            mRecentMangaId = -1;
+        }
+    }
+
+    @Override
+    public void onMALSignIn() {
+        //TODO need to do more research in MAL api options
+        if (SharedPrefsUtil.isSignedIn()) {
+            SharedPrefsUtil.setMALCredential(null, null);
+            setupDrawerLayouts();
+        } else {
+            onSignIn();
         }
     }
 

@@ -45,7 +45,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderActivityM
         if (savedInstanceState != null) {
             mReaderPresenter.onRestoreState(savedInstanceState);
         }
-        mReaderPresenter.init(getIntent());
+        mReaderPresenter.init(getIntent().getExtras());
     }
 
     @Override

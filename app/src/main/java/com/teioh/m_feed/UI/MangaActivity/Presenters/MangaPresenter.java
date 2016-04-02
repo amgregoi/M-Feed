@@ -4,20 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.teioh.m_feed.Models.Chapter;
+import com.teioh.m_feed.UI.Maps.LifeCycleMap;
 
-public interface MangaPresenter {
-
-    void onSaveState(Bundle bundle);
-
-    void onRestoreState(Bundle bundle);
-
-    void init(Intent intent);
-
-    void onResume();
-
-    void onPause();
-
-    void onDestroy();
+public interface MangaPresenter extends LifeCycleMap {
 
     void chapterOrderButtonClick();
 

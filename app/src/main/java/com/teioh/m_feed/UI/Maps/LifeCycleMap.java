@@ -5,7 +5,7 @@ import android.os.Bundle;
 public interface LifeCycleMap {
     void init(Bundle bundle);
 
-    void onSavedState(Bundle save);
+    void onSaveState(Bundle save);
 
     void onRestoreState(Bundle restore);
 

@@ -71,9 +71,9 @@ public class MangaPresenterImpl implements MangaPresenter {
     }
 
     @Override
-    public void init(Intent intent) {
+    public void init(Bundle bundle) {
         if (mManga == null) {
-            String title = intent.getStringExtra(Manga.TAG);
+            String title = bundle.getString(Manga.TAG);
             mManga = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase())
                     .query(Manga.class)
                     .withSelection("mTitle = ? AND mSource = ?", title, WebSource.getCurrentSource())

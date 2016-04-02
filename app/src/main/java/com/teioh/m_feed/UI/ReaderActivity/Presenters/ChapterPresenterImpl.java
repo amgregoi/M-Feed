@@ -40,7 +40,7 @@ public class ChapterPresenterImpl implements ChapterPresenter {
     }
 
     @Override
-    public void init() {
+    public void init(Bundle bundle) {
         if (mChapterUrlList == null) this.getImageUrls();
         else updateImageUrlList(mChapterUrlList);
 
@@ -82,7 +82,7 @@ public class ChapterPresenterImpl implements ChapterPresenter {
     }
 
     @Override
-    public void onDestroyView() {
+    public void onDestroy() {
         if (mImageListSubscription != null) {
             mImageListSubscription.unsubscribe();
             mImageListSubscription = null;

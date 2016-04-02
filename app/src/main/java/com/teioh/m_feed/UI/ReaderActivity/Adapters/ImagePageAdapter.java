@@ -55,10 +55,10 @@ public class ImagePageAdapter extends PagerAdapter {
                     public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
                         super.onResourceReady(resource, animation);
                         mImage.initializeView();
-                        mImage.setScaleType(ImageView.ScaleType.FIT_XY);
                         mImage.setTag(TAG + ":" + position);
                     }
                 });
+
         (container).addView(viewLayout);
         views.put(position, viewLayout);
         return viewLayout;

@@ -1,23 +1,9 @@
 package com.teioh.m_feed.UI.ReaderActivity.Presenters;
 
-import android.content.Intent;
-import android.os.Bundle;
+import com.teioh.m_feed.UI.Maps.LifeCycleMap;
 
 
-
-public interface ReaderPresenter {
-
-    void onSaveState(Bundle bundle);
-
-    void onRestoreState(Bundle bundle);
-
-    void init(Intent intent);
-
-    void onPause();
-
-    void onResume();
-
-    void onDestroy();
+public interface ReaderPresenter extends LifeCycleMap {
 
     void updateToolbar(int position);
 

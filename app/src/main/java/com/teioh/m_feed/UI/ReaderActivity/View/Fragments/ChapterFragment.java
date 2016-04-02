@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.teioh.m_feed.R;
+import com.teioh.m_feed.UI.Maps.Listeners;
 import com.teioh.m_feed.UI.ReaderActivity.Presenters.ChapterPresenter;
 import com.teioh.m_feed.UI.ReaderActivity.Presenters.ChapterPresenterImpl;
 import com.teioh.m_feed.UI.ReaderActivity.View.Mappers.ChapterReaderMapper;
@@ -62,13 +63,13 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
             mChapterPresenter.onRestoreState(savedInstanceState);
         }
 
-        mChapterPresenter.init();
+        mChapterPresenter.init(getArguments());
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mChapterPresenter.onDestroyView();
+        mChapterPresenter.onDestroy();
     }
 
     @Override
@@ -141,26 +142,12 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
         }
     }
 
-    private ChapterCommunication listener;
-
-    public interface ChapterCommunication {
-        void incrementChapter();
-
-        void decrementChapter();
-
-        void hideToolbar(long delay);
-
-        void showToolbar();
-
-        void updateToolbar(String title, int size, int page);
-
-        void updateCurrentPage(int position);
-    }
+    private Listeners.ReaderListener listener;
 
     @Override
     public void onAttach(Context context){
         super.onAttach(context);
-        if (context instanceof ChapterCommunication) listener = (ChapterCommunication) context;
+        if (context instanceof Listeners.ReaderListener) listener = (Listeners.ReaderListener) context;
         else throw new ClassCastException(context.toString() + " must implement ChapterPresenterImpl.ChapterCommunication");
 
     }

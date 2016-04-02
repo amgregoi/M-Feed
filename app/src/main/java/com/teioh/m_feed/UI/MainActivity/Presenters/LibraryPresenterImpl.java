@@ -6,32 +6,27 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.teioh.m_feed.Models.Manga;
-import com.teioh.m_feed.UI.MainActivity.Adapters.RecyclerSearchAdapater;
+import com.teioh.m_feed.UI.MainActivity.Adapters.RecycleSearchAdapter;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.LibraryFragmentMapper;
 import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
-import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.Database.ReactiveQueryManager;
-import com.teioh.m_feed.WebSources.WebSource;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import nl.qbusict.cupboard.QueryResultIterable;
 import rx.Subscription;
 
-import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
-
-public class LibraryPresenterImpl implements LibraryPresenter {
+public class LibraryPresenterImpl implements HomePresenter {
     public final static String TAG = LibraryPresenterImpl.class.getSimpleName();
     public final static String LIBRARY_LIST_KEY = TAG + ":LIBRARY_LIST";
 
     private ArrayList<Manga> mLibraryMangaList;
     private ArrayList<Manga> mGenreFilterList;
-    private RecyclerSearchAdapater mAdapter;
+    private RecycleSearchAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-
+    private boolean mNeedsItemDeocration;
     private Subscription mMangaListSubscription;
 
     private LibraryFragmentMapper mLibraryFragmentMapper;
@@ -56,13 +51,14 @@ public class LibraryPresenterImpl implements LibraryPresenter {
     }
 
     @Override
-    public void init() {
+    public void init(Bundle bundle) {
         mLayoutManager = new GridLayoutManager(mLibraryFragmentMapper.getContext(), 3);
-        updateLibraryMangaList();
+        updateMangaList();
+        mNeedsItemDeocration = true;
     }
 
     @Override
-    public void updateLibraryMangaList() {
+    public void updateMangaList() {
         if (mMangaListSubscription != null) {
             mMangaListSubscription.unsubscribe();
             mMangaListSubscription = null;
@@ -73,7 +69,7 @@ public class LibraryPresenterImpl implements LibraryPresenter {
 
     @Override
     public void onItemClick(Manga manga) {
-        mLibraryFragmentMapper.updateRecentSelection(manga.get_id());
+        mLibraryFragmentMapper.setRecentSelection(manga.get_id());
         Intent intent = new Intent(mLibraryFragmentMapper.getContext(), MangaActivity.class);
         intent.putExtra(Manga.TAG, manga.getTitle());
         mLibraryFragmentMapper.getContext().startActivity(intent);
@@ -86,7 +82,7 @@ public class LibraryPresenterImpl implements LibraryPresenter {
     }
 
     @Override
-    public void onDestroyView() {
+    public void onDestroy() {
         if (mMangaListSubscription != null) {
             mMangaListSubscription.unsubscribe();
             mMangaListSubscription = null;
@@ -95,21 +91,7 @@ public class LibraryPresenterImpl implements LibraryPresenter {
 
     @Override
     public void onResume() {
-        if (mLibraryMangaList != null) {
-            mLibraryFragmentMapper.refreshRecentSelection();
 
-//            mMangaListSubscription = ReactiveQueryManager.getMangaLibraryObservable()
-//                    .subscribe(manga -> {
-//                        if (mLibraryFragmentMapper.getContext() != null) {
-//                            if (manga != null) {
-//                                mLibraryMangaList.clear();
-//                                mLibraryMangaList.addAll(manga);
-//                                mAdapter.setOriginalData(mLibraryMangaList);
-//                                mMangaListSubscription = null;
-//                            }
-//                        }
-//                    });
-        }
     }
 
     @Override
@@ -124,7 +106,7 @@ public class LibraryPresenterImpl implements LibraryPresenter {
                 mLibraryMangaList.clear();
                 mAdapter.notifyDataSetChanged();
             }
-            updateLibraryMangaList();
+            updateMangaList();
         }
     }
 
@@ -135,32 +117,12 @@ public class LibraryPresenterImpl implements LibraryPresenter {
     }
 
     @Override
-    public void onGenreFilterSelected(ArrayList<String> keep, ArrayList<String> remove) {
-        StringBuilder selection = new StringBuilder();
-        List<String> selectionArgs = new ArrayList<>();
-
-        selection.append("mSource" + " = ?");
-        selectionArgs.add(WebSource.getCurrentSource());
-
-        for (String s : keep) {
-            selection.append(" AND ");
-            selection.append("mGenres" + " LIKE ?");
-            selectionArgs.add("%" + s.replaceAll("\\s", "") + "%");
+    public void onGenreFilterSelected(ArrayList<Manga> list) {
+        if (list != null) {
+            mGenreFilterList = new ArrayList<>(list);
+            mGenreFilterList.retainAll(mLibraryMangaList);
+            mAdapter.setOriginalData(mGenreFilterList);
         }
-
-        for (String s : remove) {
-            selection.append(" AND ");
-            selection.append("mGenres" + " NOT LIKE ?");
-            selectionArgs.add("%" + s.replaceAll("\\s", "") + "%");
-        }
-
-        QueryResultIterable<Manga> filteredManga = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase()).query(Manga.class)
-                .withSelection(selection.toString(), selectionArgs.toArray(new String[selectionArgs.size()]))
-                .query();
-
-        mGenreFilterList = new ArrayList<>(filteredManga.list());
-        mGenreFilterList.retainAll(mLibraryMangaList);
-        mAdapter.setOriginalData(mGenreFilterList);
     }
 
     @Override
@@ -182,8 +144,11 @@ public class LibraryPresenterImpl implements LibraryPresenter {
             mLibraryMangaList = new ArrayList<>(mList);
             Collections.sort(mLibraryMangaList, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
 
-            mAdapter = new RecyclerSearchAdapater(mLibraryFragmentMapper.getContext(), mLibraryMangaList, (itemView, item) -> onItemClick(item));
-            mLibraryFragmentMapper.registerAdapter(mAdapter, mLayoutManager);
+            mAdapter = new RecycleSearchAdapter(mLibraryFragmentMapper.getContext(), mLibraryMangaList, (itemView, item) -> onItemClick(item));
+            mLibraryFragmentMapper.registerAdapter(mAdapter, mLayoutManager, mNeedsItemDeocration);
+            mNeedsItemDeocration = false;
+
+            mMangaListSubscription.unsubscribe();
             mMangaListSubscription = null;
         }
     }

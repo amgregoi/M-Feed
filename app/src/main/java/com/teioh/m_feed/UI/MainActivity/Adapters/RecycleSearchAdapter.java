@@ -1,13 +1,12 @@
 package com.teioh.m_feed.UI.MainActivity.Adapters;
 
 import android.content.Context;
-import android.support.v7.widget.CardView;
+import android.graphics.Rect;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,73 +19,64 @@ import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
-// The standard text view adapter only seems to search from the beginning of whole words
-// so we've had to write this whole class to make it possible to search
-// for parts of the arbitrary string we want
-public class SearchableAdapter extends BaseAdapter implements Filterable {
+
+public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdapter.ViewHolder> {
 
     private ArrayList<Manga> originalData = null;
     private ArrayList<Manga> filteredData = null;
     private LayoutInflater mInflater;
     private TextFilter mFilter = new TextFilter();
     private Context context;
+    private final ItemSelectedListener mListener;
 
-    public SearchableAdapter(Context context, ArrayList<Manga> data) {
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public TextView txt;
+        public ImageView img;
+        public LinearLayout footer;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            txt = (TextView) itemView.findViewById(R.id.itemTitleField);
+            img = (ImageView) itemView.findViewById(R.id.imageView);
+            footer = (LinearLayout) itemView.findViewById(R.id.footerLinearLayout);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            notifyItemChanged(getLayoutPosition());
+            mListener.onItemSelected(v, filteredData.get(getAdapterPosition()));
+        }
+    }
+
+    public interface ItemSelectedListener {
+        void onItemSelected(View itemView, Manga item);
+    }
+
+    public RecycleSearchAdapter(Context context, ArrayList<Manga> data, ItemSelectedListener listener) {
         this.context = context;
-        this.filteredData = data;
-        this.originalData = data;
-        mInflater = LayoutInflater.from(context);
-
+        this.filteredData = new ArrayList<>(data);
+        this.originalData = new ArrayList<>(data);
+        this.mInflater = LayoutInflater.from(context);
+        this.mListener = listener;
     }
 
-    public int getCount() {
-        return filteredData.size();
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.gridview_manga_item, parent, false);
+        return new ViewHolder(v);
     }
 
-    public Object getItem(int position) {
-        return filteredData.get(position);
-    }
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        Manga item = filteredData.get(position);
 
-    public long getItemId(int position) {
-        return position;
-    }
-
-    public void setOriginalData(ArrayList<Manga> data){
-        this.originalData = data;
-        this.filteredData = data;
-        notifyDataSetChanged();
-    }
-
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View row = convertView;
-        MangaHolder holder;
-
-        if (row == null) {
-            row = mInflater.inflate(R.layout.gridview_manga_item, null);
-
-            holder = new MangaHolder();
-            holder.txt = (TextView) row.findViewById(R.id.itemTitleField);
-            holder.img = (ImageView) row.findViewById(R.id.imageView);
-            holder.footer = (LinearLayout) row.findViewById(R.id.footerLinearLayout);
-            holder.card = (CardView) row.findViewById(R.id.card_view);
-            row.setTag(holder);
-        } else {
-            holder = (MangaHolder) row.getTag();
-        }
-
-        Manga tManga = filteredData.get(position);
-
-        if (tManga == null) {
-            return row;
-        }
-
-        if (tManga.getFollowing()) {
+        if (item.getFollowing()) {
             holder.footer.setBackgroundColor(context.getResources().getColor(R.color.ColorPrimary));
             holder.txt.setBackgroundColor(context.getResources().getColor(R.color.ColorPrimary));
             holder.txt.setTextColor(context.getResources().getColor(R.color.white));
-
         } else {
             holder.footer.setBackgroundColor(context.getResources().getColor(R.color.white));
             holder.txt.setBackgroundColor(context.getResources().getColor(R.color.white));
@@ -95,7 +85,7 @@ public class SearchableAdapter extends BaseAdapter implements Filterable {
 
         //Picasso.with(context).load(tManga.getPicUrl()).resize(139, 200).into(holder.img);
         Glide.with(context)
-                .load(tManga.getPicUrl())
+                .load(item.getPicUrl())
                 .animate(android.R.anim.fade_in)
                 .into(new GlideDrawableImageViewTarget(holder.img) {
                     @Override
@@ -104,16 +94,40 @@ public class SearchableAdapter extends BaseAdapter implements Filterable {
                         holder.img.setScaleType(ImageView.ScaleType.FIT_XY);
                     }
                 });
-        holder.txt.setText(tManga.toString());
-        return row;
+        holder.txt.setText(item.toString());
+
     }
 
-    static class MangaHolder {
-        TextView txt;
-        ImageView img;
-        LinearLayout footer;
-        CardView card;
+    public long getItemId(int position) {
+        return position;
     }
+
+    public void updateItem(int position, Manga manga){
+        int pos = filteredData.indexOf(manga);
+        filteredData.remove(pos);
+        filteredData.add(pos, manga);
+
+        notifyItemChanged(pos);
+
+        pos = originalData.indexOf(manga);
+        originalData.remove(pos);
+        originalData.add(pos, manga);
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return filteredData.size();
+    }
+
+    public void setOriginalData(ArrayList<Manga> data) {
+        this.originalData = new ArrayList<>(data);
+        this.filteredData = new ArrayList<>(data);
+        getFilter().filter(mFilter.lastQuery);
+
+        notifyDataSetChanged();
+    }
+
 
     public Filter getFilter() {
         return mFilter;
@@ -124,6 +138,7 @@ public class SearchableAdapter extends BaseAdapter implements Filterable {
     }
 
     public class TextFilter extends Filter {
+        public CharSequence lastQuery = "";
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
 
@@ -153,6 +168,7 @@ public class SearchableAdapter extends BaseAdapter implements Filterable {
             results.values = nlist;
             results.count = nlist.size();
 
+            lastQuery = constraint.toString();
             return results;
         }
 
@@ -181,5 +197,30 @@ public class SearchableAdapter extends BaseAdapter implements Filterable {
             notifyDataSetChanged();
         }
 
+
     }
+
+    public static class SpacesItemDecoration extends RecyclerView.ItemDecoration {
+
+        private int halfSpace;
+
+        public SpacesItemDecoration(int space) {
+            this.halfSpace = space / 2;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+
+            if (parent.getPaddingLeft() != halfSpace) {
+                parent.setPadding(halfSpace, halfSpace, halfSpace, halfSpace);
+                parent.setClipToPadding(false);
+            }
+
+            outRect.top = halfSpace;
+            outRect.bottom = halfSpace;
+            outRect.left = halfSpace;
+            outRect.right = halfSpace;
+        }
+    }
+
 }

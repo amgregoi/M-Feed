@@ -9,30 +9,24 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
 
+import com.teioh.m_feed.UI.Maps.Listeners;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
-import com.teioh.m_feed.UI.MainActivity.Adapters.RecyclerSearchAdapater;
-import com.teioh.m_feed.UI.MainActivity.Presenters.RecentPresenter;
+import com.teioh.m_feed.UI.MainActivity.Adapters.RecycleSearchAdapter;
+import com.teioh.m_feed.UI.MainActivity.Presenters.HomePresenter;
 import com.teioh.m_feed.UI.MainActivity.Presenters.RecentPresenterImpl;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.RecentFragmentMapper;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnItemClick;
-
 public class RecentFragment extends Fragment implements RecentFragmentMapper {
-    public final static String TAG =RecentFragment.class.getSimpleName();
+    public final static String TAG = RecentFragment.class.getSimpleName();
 
     RecyclerView mGridView;
     SwipeRefreshLayout swipeContainer;
 
-    private RecentPresenter mRecentPresenter;
+    private HomePresenter mRecentPresenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,19 +45,20 @@ public class RecentFragment extends Fragment implements RecentFragmentMapper {
         mRecentPresenter.onSaveState(outState);
     }
 
-    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             mRecentPresenter.onRestoreState(savedInstanceState);
         }
 
-        mRecentPresenter.init();
+        mRecentPresenter.init(getArguments());
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mRecentPresenter.onDestroyView();
+        mRecentPresenter.onDestroy();
 //        ButterKnife.unbind(this);
 
 
@@ -80,14 +75,6 @@ public class RecentFragment extends Fragment implements RecentFragmentMapper {
     public void onPause() {
         super.onPause();
         mRecentPresenter.onPause();
-    }
-
-    @Override
-    public void registerAdapter(BaseAdapter adapter) {
-        if (adapter != null) {
-//            mGridView.setAdapter(adapter);
-//            mGridView.setTextFilterEnabled(true);
-        }
     }
 
     @Override
@@ -117,7 +104,7 @@ public class RecentFragment extends Fragment implements RecentFragmentMapper {
     @Override
     public void setupSwipeRefresh() {
         swipeContainer.post(() -> swipeContainer.setRefreshing(true));
-        swipeContainer.setOnRefreshListener(() -> mRecentPresenter.updateRecentMangaList());
+        swipeContainer.setOnRefreshListener(() -> mRecentPresenter.updateMangaList());
     }
 
     @Override
@@ -131,9 +118,9 @@ public class RecentFragment extends Fragment implements RecentFragmentMapper {
     }
 
     @Override
-    public void onGenreFilterSelected(ArrayList<String> keep, ArrayList<Manga> remove) {
+    public void onGenreFilterSelected(ArrayList<Manga> list) {
         swipeContainer.setEnabled(false);
-        mRecentPresenter.onGenreFilterSelected(keep, remove);
+        mRecentPresenter.onGenreFilterSelected(list);
     }
 
     @Override
@@ -143,11 +130,12 @@ public class RecentFragment extends Fragment implements RecentFragmentMapper {
     }
 
     @Override
-    public void registerAdapter(RecyclerSearchAdapater mAdapter, RecyclerView.LayoutManager layout) {
+    public void registerAdapter(RecycleSearchAdapter mAdapter, RecyclerView.LayoutManager layout, boolean needItemDecoration) {
         if (mAdapter != null) {
             mGridView.setAdapter(mAdapter);
             mGridView.setLayoutManager(layout);
-            mGridView.addItemDecoration(new RecyclerSearchAdapater.SpacesItemDecoration(8));
+            if (needItemDecoration)
+                mGridView.addItemDecoration(new RecycleSearchAdapter.SpacesItemDecoration(20));
         }
     }
 
@@ -157,32 +145,26 @@ public class RecentFragment extends Fragment implements RecentFragmentMapper {
     }
 
 
-
-    private RecentFragmentListener listener;
+    private Listeners.MainFragmentListener listener;
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
 
-        if (context instanceof RecentFragmentListener) listener = (RecentFragmentListener) context;
-        else throw new ClassCastException(context.toString() + " must implement RecentFragment.RecentFragmentListener");
-    }
-
-    public interface RecentFragmentListener {
-        void updateRecentSelection(Long id); //sets id to track
-
-        void refreshRecentSelection(); //refreshes view
+        if (context instanceof Listeners.MainFragmentListener)
+            listener = (Listeners.MainFragmentListener) context;
+        else
+            throw new ClassCastException(context.toString() + " must implement Listeners.MainFragmentListener");
     }
 
     @Override
-    public void updateRecentSelection(Long id){
-        listener.updateRecentSelection(id);
+    public void setRecentSelection(Long id) {
+        listener.setRecentSelection(id);
     }
 
     @Override
-    public void refreshRecentSelection() {
-        listener.refreshRecentSelection();
+    public void updateRecentSelection(Manga manga) {
+        mRecentPresenter.updateSelection(manga);
     }
-
 
 }

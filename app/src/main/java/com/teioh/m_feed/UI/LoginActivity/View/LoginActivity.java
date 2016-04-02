@@ -39,8 +39,8 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityMap
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         username.clearFocus();
-        String user = username.getText().toString();
-        mLoginActivityPresenter.onSaveState(outState, user);
+        mLoginActivityPresenter.saveUsernameTransition(username.getText().toString());
+        mLoginActivityPresenter.onSaveState(outState);
     }
 
     @Override

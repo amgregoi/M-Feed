@@ -6,28 +6,13 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 
-public interface MainPresenter {
-    void onSavedState(Bundle bundle);
+import com.teioh.m_feed.UI.Maps.LifeCycleMap;
 
-    void onRestoreState(Bundle bundle);
-
-    void init();
-
-    void setupDrawerLayoutListener(Toolbar mToolBar, DrawerLayout mDrawerLayout);
+public interface MainPresenter extends LifeCycleMap {
 
     void onSignIn();
 
-    void onResume();
-
-    void onPause();
-
     void updateQueryChange(String newTest);
-
-    void onDestroy();
-
-    void onPostCreate();
-
-    void onConfigurationChanged(Configuration newConfig);
 
     void onDrawerItemChosen(int position);
 
@@ -39,7 +24,7 @@ public interface MainPresenter {
 
     void removeSettingsFragment();
 
-    String onGenreFilterSelected(Intent intent);
+    void onGenreFilterSelected(Intent intent);
 
     void onClearGenreFilter();
 

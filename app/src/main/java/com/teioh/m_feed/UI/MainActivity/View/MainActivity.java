@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ExpandableListAdapter;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
@@ -55,8 +56,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     @Bind(R.id.actionMenu) FloatingActionsMenu mMultiActionMenu;
 
     private View mDrawerHeader;
-    private Toast toast;
-
+    private Toast mToast;
+    private ActionBarDrawerToggle mDrawerToggle;
     private MainPresenter mMainPresenter;
 
     @Override
@@ -70,9 +71,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
             mMainPresenter.onRestoreState(savedInstanceState);
         }
 
-        mMainPresenter.init();
-        mMainPresenter.setupDrawerLayoutListener(mToolBar, mDrawerLayout);
-        toast = Toast.makeText(this, "Press back again to exit!", Toast.LENGTH_SHORT);
+        mMainPresenter.init(getIntent().getExtras());
+        mToast = Toast.makeText(this, "Press back again to exit!", Toast.LENGTH_SHORT);
 
         //start service in new thread, substantial slow down on main thread
         //startService(new Intent(this, RecentUpdateService.class));
@@ -81,19 +81,19 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mMainPresenter.onSavedState(outState);
+        mMainPresenter.onSaveState(outState);
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        mMainPresenter.onPostCreate();
+        mDrawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        mMainPresenter.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -150,7 +150,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
         super.onActivityReenter(resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (data != null) {
-                mActivityTitle.setText(mMainPresenter.onGenreFilterSelected(data));
+                mMainPresenter.onGenreFilterSelected(data);
+                mActivityTitle.setText(getString(R.string.filter_active));
                 mFilterView.setImageDrawable(getDrawable(R.drawable.filter_remove_outline_24dp));
 
             } else {
@@ -165,16 +166,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     }
 
     @Override
-    public void onDrawerOpen() {
-        invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-    }
-
-    @Override
-    public void onDrawerClose() {
-        invalidateOptionsMenu();  // creates call to onPrepareOptionsMenu()
-    }
-
-    @Override
     public void registerAdapter(ViewPagerAdapterMain adapter) {
         if (adapter != null) {
             mViewPager.setAdapter(adapter);
@@ -184,10 +175,23 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     }
 
     @Override
-    public void setDrawerLayoutListener(ActionBarDrawerToggle mDrawerToggle) {
+    public void setDrawerLayoutListener() {
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                mToolBar, R.string.app_name, R.string.Login) {
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                invalidateOptionsMenu();  // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
-
 
     @Override
     public void closeDrawer() {
@@ -200,8 +204,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     }
 
     @Override
-    public void changeSourceTitle(String source) {
-        mActivityTitle.setText(source);
+    public void setActivityTitle(String title) {
+        mActivityTitle.setText(title);
     }
 
     @Override
@@ -209,18 +213,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
         if (mSearchView.getVisibility() == View.GONE) {
             mSearchView.setVisibility(View.VISIBLE);
             mFilterView.setVisibility(View.VISIBLE);
-            changeSourceTitle(WebSource.getCurrentSource());
+            setActivityTitle(WebSource.getCurrentSource());
         } else {
             mSearchView.setVisibility(View.GONE);
             mFilterView.setVisibility(View.GONE);
-            changeSourceTitle("Settings");
+            setActivityTitle("Settings");
         }
-    }
-
-    @Override
-    public void filterDialogOpen() {
-        DialogFragment dialog = FilterDialogFragment.getnewInstance();
-        dialog.show(getSupportFragmentManager(), null);
     }
 
     @Override
@@ -269,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     }
 
     @Override
-    public void resetFilterImage(){
+    public void setDefaultFilterImage(){
         mFilterView.setImageDrawable(getDrawable(R.drawable.filter_outline_24dp));
     }
 
@@ -311,14 +309,17 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
 
         mDrawerList.addHeaderView(mDrawerHeader);
         mDrawerList.setAdapter(adapter);
+
         mDrawerList.setOnGroupClickListener((parent, v, groupPosition, id) -> {
             mMainPresenter.onDrawerItemChosen(groupPosition);
             return false;
         });
+
         mDrawerList.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
             mMainPresenter.onSourceItemChosen(childPosition);
             return true;
         });
+
         mDrawerHeader.setOnClickListener(v -> mMainPresenter.onMALSignIn());
     }
 
@@ -326,7 +327,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     public void onBackPressed() {
         if (mMultiActionMenu.isExpanded()) { //closes action menu
             mMultiActionMenu.collapse();
-        } else if (!toast.getView().isShown() && mDrawerLayout.isDrawerOpen(mDrawerList)) { //closes drawer, if exit toast isn't active
+        } else if (!mToast.getView().isShown() && mDrawerLayout.isDrawerOpen(mDrawerList)) { //closes drawer, if exit mToast isn't active
             mDrawerLayout.closeDrawer(mDrawerList);
         } else if (getSupportFragmentManager().findFragmentByTag(SettingsFragment.TAG) != null) {
             mMainPresenter.removeSettingsFragment();
@@ -336,22 +337,22 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
             mMainPresenter.onClearGenreFilter();
             mFilterView.setImageDrawable(getDrawable(R.drawable.filter_outline_24dp));
             mActivityTitle.setText(WebSource.getCurrentSource());
-        }else if (!toast.getView().isShown()) { //opens drawer, and shows exit toast to verify exit
+        }else if (!mToast.getView().isShown()) { //opens drawer, and shows exit mToast to verify exit
             mDrawerLayout.openDrawer(mDrawerList);
-            toast.show();
-        } else {    //user double back pressed to exit within time frame (toast length)
-            toast.cancel();
+            mToast.show();
+        } else {    //user double back pressed to exit within time frame (mToast length)
+            mToast.cancel();
             super.onBackPressed();
         }
     }
 
     @Override
-    public void updateRecentSelection(Long id) {
+    public void setRecentSelection(Long id) {
         mMainPresenter.setRecentManga(id);
     }
 
     @Override
-    public void refreshRecentSelection() {
+    public void updateRecentSelection(Manga manga) {
         mMainPresenter.getRecentManga();
     }
 }

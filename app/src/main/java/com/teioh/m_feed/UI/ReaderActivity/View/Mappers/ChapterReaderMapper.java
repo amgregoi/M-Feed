@@ -9,8 +9,6 @@ import com.teioh.m_feed.UI.ReaderActivity.View.Widgets.GestureViewPager;
 public interface ChapterReaderMapper extends BaseContextMap, PageAdapterMap, ViewPager.OnPageChangeListener, GestureViewPager.OnSingleTapListener{
     void setupOnSingleTapListener();
 
-//    void updateToolbar(String title, int size);
-//
     void updateToolbar();
 
     void incrementChapterPage();

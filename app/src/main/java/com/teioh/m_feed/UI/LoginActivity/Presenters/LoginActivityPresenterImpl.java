@@ -18,16 +18,24 @@ public class LoginActivityPresenterImpl implements LoginActivityPresenter {
     public final static String USERNAME_KEY = TAG + ":USERNAME";
 
     private LoginActivityMapper mLoginActivityMapper;
+    private String mUsername;
     MALService mMALService;
 
     public LoginActivityPresenterImpl(LoginActivityMapper map) {
         mLoginActivityMapper = map;
     }
 
+
+
     @Override
-    public void onSaveState(Bundle bundle, String username) {
-        if(username != null && !username.equals("")){
-            bundle.putString(USERNAME_KEY, username);
+    public void init(Bundle bundle) {
+
+    }
+
+    @Override
+    public void onSaveState(Bundle bundle) {
+        if(mUsername != null && !mUsername.equals("")){
+            bundle.putString(USERNAME_KEY, mUsername);
         }
     }
 
@@ -60,22 +68,20 @@ public class LoginActivityPresenterImpl implements LoginActivityPresenter {
         mMALService.verifyUserAccount(new Callback<verify_credentials>() {
             @Override
             public void success(verify_credentials credentials, Response response) {
-                //add to shared prefs
-//                Context context = MFeedApplication.getInstance();
-//                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-//                editor.putString("USER", mUserName);
-//                editor.putString("PASS", mPassword);
-//                editor.apply();
                 SharedPrefsUtil.setMALCredential(mUserName, mPassword);
                 mLoginActivityMapper.onLoginSuccess();
             }
 
             @Override
             public void failure(RetrofitError error) {
-                //fail toast try again
                 mLoginActivityMapper.onLoginFail();
             }
         });
+    }
+
+    @Override
+    public void saveUsernameTransition(String user) {
+        mUsername = user;
     }
 
 }

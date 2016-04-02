@@ -8,29 +8,25 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
 
+import com.teioh.m_feed.UI.MainActivity.Presenters.HomePresenter;
+import com.teioh.m_feed.UI.Maps.Listeners;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
-import com.teioh.m_feed.UI.MainActivity.Adapters.RecyclerSearchAdapater;
-import com.teioh.m_feed.UI.MainActivity.Presenters.FollowedPresenter;
+import com.teioh.m_feed.UI.MainActivity.Adapters.RecycleSearchAdapter;
 import com.teioh.m_feed.UI.MainActivity.Presenters.FollowedPresenterImpl;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.FollowFragmentMapper;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnItemClick;
 
 public class FollowedFragment extends Fragment implements FollowFragmentMapper {
     public final static String TAG = FollowedFragment.class.getSimpleName();
 
     RecyclerView mGridView;
 
-    private FollowedPresenter mFollowedPresenter;
+    private HomePresenter mFollowedPresenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -49,7 +45,7 @@ public class FollowedFragment extends Fragment implements FollowFragmentMapper {
             mFollowedPresenter.onRestoreState(savedInstanceState);
         }
 
-        mFollowedPresenter.init();
+        mFollowedPresenter.init(getArguments());
     }
 
     @Override
@@ -73,7 +69,7 @@ public class FollowedFragment extends Fragment implements FollowFragmentMapper {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mFollowedPresenter.onDestroyView();
+        mFollowedPresenter.onDestroy();
         ButterKnife.unbind(this);
     }
 
@@ -89,16 +85,8 @@ public class FollowedFragment extends Fragment implements FollowFragmentMapper {
     }
 
     @Override
-    public void registerAdapter(BaseAdapter adapter) {
-        if (adapter != null) {
-//            mGridView.setAdapter(adapter);
-//            registerForContextMenu(mGridView);
-        }
-    }
-
-    @Override
-    public void onGenreFilterSelected(ArrayList<String> keep, ArrayList<String> remove) {
-        mFollowedPresenter.onGenreFilterSelected(keep, remove);
+    public void onGenreFilterSelected(ArrayList<Manga> list) {
+        mFollowedPresenter.onGenreFilterSelected(list);
     }
 
     @Override
@@ -107,11 +95,12 @@ public class FollowedFragment extends Fragment implements FollowFragmentMapper {
     }
 
     @Override
-    public void registerAdapter(RecyclerSearchAdapater mAdapter, RecyclerView.LayoutManager layout) {
+    public void registerAdapter(RecycleSearchAdapter mAdapter, RecyclerView.LayoutManager layout, boolean needItemDecoration) {
         if(mAdapter != null){
             mGridView.setAdapter(mAdapter);
             mGridView.setLayoutManager(layout);
-            mGridView.addItemDecoration(new RecyclerSearchAdapater.SpacesItemDecoration(8));
+            if(needItemDecoration)
+                mGridView.addItemDecoration(new RecycleSearchAdapter.SpacesItemDecoration(20));
         }
     }
 
@@ -130,30 +119,26 @@ public class FollowedFragment extends Fragment implements FollowFragmentMapper {
         mFollowedPresenter.onFilterSelected(filter);
     }
 
-    private FollowedFragmentListener listener;
+
+
+
+    private Listeners.MainFragmentListener listener;
 
     @Override
     public void onAttach(Context context){
         super.onAttach(context);
 
-        if (context instanceof FollowedFragmentListener) listener = (FollowedFragmentListener) context;
+        if (context instanceof Listeners.MainFragmentListener) listener = (Listeners.MainFragmentListener) context;
         else throw new ClassCastException(context.toString() + " must implement LibraryFragment.RecentFragmentListener");
     }
 
-    public interface FollowedFragmentListener {
-        void updateRecentSelection(Long id);
-        void refreshRecentSelection();
-
+    @Override
+    public void setRecentSelection(Long id){
+        listener.setRecentSelection(id);
     }
 
     @Override
-    public void updateRecentSelection(Long id){
-        listener.updateRecentSelection(id);
+    public void updateRecentSelection(Manga manga) {
+        mFollowedPresenter.updateSelection(manga);
     }
-
-    @Override
-    public void refreshRecentSelection() {
-        listener.refreshRecentSelection();
-    }
-
 }

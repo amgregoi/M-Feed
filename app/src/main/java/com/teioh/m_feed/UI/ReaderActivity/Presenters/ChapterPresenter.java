@@ -2,21 +2,11 @@ package com.teioh.m_feed.UI.ReaderActivity.Presenters;
 
 import android.os.Bundle;
 
-public interface ChapterPresenter {
+import com.teioh.m_feed.UI.Maps.LifeCycleMap;
 
-    void onSaveState(Bundle bundle);
-
-    void onRestoreState(Bundle bundle);
-
-    void init();
+public interface ChapterPresenter extends LifeCycleMap {
 
     void getImageUrls();
-
-    void onPause();
-
-    void onResume();
-
-    void onDestroyView();
 
     void toggleToolbar();
 
