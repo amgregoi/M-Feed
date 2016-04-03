@@ -48,6 +48,7 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
 
     private ImageView mMangaImage;
     private TextView mDescriptionText;
+    private TextView mTitleText;
     private TextView mAuthorText;
     private TextView mArtistText;
     private TextView mGenresText;
@@ -180,6 +181,7 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
         if (manga != null && getContext() != null) {
             mDescriptionText.setText(manga.getDescription());
             mDescriptionText.setTypeface(Typeface.SERIF);
+            mTitleText.setText(manga.getTitle());
             mAuthorText.setText(manga.getmAuthor());
             mArtistText.setText(manga.getmArtist());
             mGenresText.setText(manga.getmGenre());
@@ -238,6 +240,7 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
 
         mMangaImage = (ImageView) mMangaInfoHeader.findViewById(R.id.manga_image);
         mDescriptionText = (TextView) mMangaInfoHeader.findViewById(R.id.mangaDescription);
+        mTitleText = (TextView) mMangaInfoHeader.findViewById(R.id.title);
         mAuthorText = (TextView) mMangaInfoHeader.findViewById(R.id.author);
         mArtistText = (TextView) mMangaInfoHeader.findViewById(R.id.artist);
         mGenresText = (TextView) mMangaInfoHeader.findViewById(R.id.genre);

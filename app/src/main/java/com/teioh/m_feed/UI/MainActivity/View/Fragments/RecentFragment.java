@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mopub.nativeads.MoPubAdAdapter;
+import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.teioh.m_feed.UI.Maps.Listeners;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
@@ -130,7 +132,7 @@ public class RecentFragment extends Fragment implements RecentFragmentMapper {
     }
 
     @Override
-    public void registerAdapter(RecycleSearchAdapter mAdapter, RecyclerView.LayoutManager layout, boolean needItemDecoration) {
+    public void registerAdapter(MoPubRecyclerAdapter mAdapter, RecyclerView.LayoutManager layout, boolean needItemDecoration) {
         if (mAdapter != null) {
             mGridView.setAdapter(mAdapter);
             mGridView.setLayoutManager(layout);

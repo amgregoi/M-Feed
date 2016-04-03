@@ -126,12 +126,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderActivityM
     public void setupToolbar() {
         setSupportActionBar(mToolbarHeader);
         mToolbarHeader.setNavigationIcon(getDrawable(R.drawable.ic_back));
-        mToolbarHeader.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        mToolbarHeader.setNavigationOnClickListener(v -> onBackPressed());
 
     }
 

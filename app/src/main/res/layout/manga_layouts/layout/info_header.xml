@@ -22,13 +22,13 @@
 				android:id="@+id/manga_image"
 				android:layout_width="wrap_content"
 				android:layout_height="200dp"
+				android:adjustViewBounds="true"
 				android:maxWidth="188dp"
 				android:minWidth="188dp"
-				android:adjustViewBounds="true"
 				android:paddingBottom="10dp"
 				android:paddingEnd="10dp"
 				android:paddingTop="5dp"
-			    android:scaleType="fitXY"
+				android:scaleType="fitXY"
 				/>
 
 			<LinearLayout
@@ -171,6 +171,19 @@
 				android:layout_marginTop="3dp"
 				android:background="@color/white"/>
 
+
+			<TextView
+				android:id="@+id/title"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:gravity="left"
+				android:paddingBottom="8dp"
+				android:textAlignment="gravity"
+				android:textColor="@color/white"
+				android:textSize="20dp"
+				android:textStyle="bold"
+				/>
+
 			<RelativeLayout
 				android:id="@+id/summary_layout"
 				android:layout_width="match_parent"
@@ -195,7 +208,6 @@
 					android:textColor="@color/grey"
 					/>
 			</RelativeLayout>
-
 
 			<RelativeLayout
 				android:id="@+id/author_layout"

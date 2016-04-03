@@ -88,6 +88,9 @@ dependencies {
     compile 'com.getbase:floatingactionbutton:1.10.1'
 
     compile 'com.android.support:recyclerview-v7:23.1.1'
+    compile('com.mopub.sdk.android:mopub:4.4.1@aar') {
+        transitive = true;
+    }
 
 }
 

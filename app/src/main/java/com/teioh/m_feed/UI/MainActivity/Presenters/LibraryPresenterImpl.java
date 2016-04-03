@@ -67,7 +67,6 @@ public class LibraryPresenterImpl implements HomePresenter {
                 .subscribe(manga -> updateLibraryGridView(manga));
     }
 
-    @Override
     public void onItemClick(Manga manga) {
         mLibraryFragmentMapper.setRecentSelection(manga.get_id());
         Intent intent = new Intent(mLibraryFragmentMapper.getContext(), MangaActivity.class);
@@ -144,7 +143,7 @@ public class LibraryPresenterImpl implements HomePresenter {
             mLibraryMangaList = new ArrayList<>(mList);
             Collections.sort(mLibraryMangaList, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
 
-            mAdapter = new RecycleSearchAdapter(mLibraryFragmentMapper.getContext(), mLibraryMangaList, (itemView, item) -> onItemClick(item));
+            mAdapter = new RecycleSearchAdapter(mLibraryFragmentMapper.getContext(), mLibraryMangaList, (pos, item) -> onItemClick(item));
             mLibraryFragmentMapper.registerAdapter(mAdapter, mLayoutManager, mNeedsItemDeocration);
             mNeedsItemDeocration = false;
 

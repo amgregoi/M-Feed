@@ -2,10 +2,16 @@ package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.mopub.nativeads.MoPubNativeAdPositioning;
+import com.mopub.nativeads.MoPubRecyclerAdapter;
+import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
+import com.mopub.nativeads.ViewBinder;
 import com.teioh.m_feed.Models.Manga;
+import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.Adapters.RecycleSearchAdapter;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.RecentFragmentMapper;
 import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
@@ -22,6 +28,8 @@ public class RecentPresenterImpl implements HomePresenter {
     public final static String RECENT_MANGA_LIST_KEY = TAG + ":RECENT_MANGA_LIST";
     public final static String LATEST_SOURCE = TAG + ":SOURCE";
 
+    public final String NATIVE_AD_1_UNIT_ID = null;
+
     private ArrayList<Manga> mRecentMangaList;
     private ArrayList<Manga> mGenreFilterList;
     private RecycleSearchAdapter mAdapter;
@@ -31,6 +39,10 @@ public class RecentPresenterImpl implements HomePresenter {
     private RecentFragmentMapper mRecentFragmentMapper;
     private String mLastSourceQuery;
     private boolean mNeedsItemDeocration;
+
+
+    private MoPubRecyclerAdapter mAdAdapter;
+
 
     public RecentPresenterImpl(RecentFragmentMapper map) {
         mRecentFragmentMapper = map;
@@ -42,6 +54,18 @@ public class RecentPresenterImpl implements HomePresenter {
         mRecentFragmentMapper.setupSwipeRefresh();
         mNeedsItemDeocration = true;
         mLayoutManager = new GridLayoutManager(mRecentFragmentMapper.getContext(), 3);
+        ((GridLayoutManager) mLayoutManager).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+//                if (position == 0) return 1;
+//                else if (position % 18 == 0) return 3;
+//                return 1;
+
+                if (mAdAdapter.isAd(position)) return 3;
+                else return 1;
+            }
+        });
+
         if (mRecentMangaList == null) updateMangaList();
         else updateRecentGridView(mRecentMangaList);
     }
@@ -77,8 +101,8 @@ public class RecentPresenterImpl implements HomePresenter {
                 .subscribe(manga -> updateRecentGridView(manga));
     }
 
-    @Override
-    public void onItemClick(Manga manga) {
+    public void onItemClick(int pos) {
+        Manga manga = mAdapter.getItemAt(mAdAdapter.getOriginalPosition(pos));
         mRecentFragmentMapper.setRecentSelection(manga.get_id());
         Intent intent = new Intent(mRecentFragmentMapper.getContext(), MangaActivity.class);
         intent.putExtra(Manga.TAG, manga.getTitle());
@@ -97,11 +121,11 @@ public class RecentPresenterImpl implements HomePresenter {
             mMangaListSubscription.unsubscribe();
             mMangaListSubscription = null;
         }
+        mAdAdapter.destroy();
     }
 
     @Override
     public void onResume() {
-
     }
 
     @Override
@@ -152,16 +176,35 @@ public class RecentPresenterImpl implements HomePresenter {
         if (mRecentFragmentMapper.getContext() != null) {
             if (manga != null) {
                 mRecentMangaList = new ArrayList<>(manga);
-                mAdapter = new RecycleSearchAdapter(mRecentFragmentMapper.getContext(), mRecentMangaList, (itemView, item) -> onItemClick(item));
+                mAdapter = new RecycleSearchAdapter(mRecentFragmentMapper.getContext(), mRecentMangaList, (position, item) -> onItemClick(position));
                 mMangaListSubscription = null;
             } else {
                 // failed to update list, show refresh view,
             }
-            mRecentFragmentMapper.registerAdapter(mAdapter, mLayoutManager, mNeedsItemDeocration);
+            setupAdapter();
             mRecentFragmentMapper.stopRefresh();
             mNeedsItemDeocration = false;
 
         }
+    }
+
+    private void setupAdapter() {
+        MoPubNativeAdPositioning.MoPubServerPositioning adPositioning = MoPubNativeAdPositioning.serverPositioning();
+        mAdAdapter = new MoPubRecyclerAdapter(((Fragment) mRecentFragmentMapper).getActivity(), mAdapter, adPositioning);
+        if (NATIVE_AD_1_UNIT_ID != null) {
+            MoPubStaticNativeAdRenderer myRenderer = new MoPubStaticNativeAdRenderer(new ViewBinder.Builder(R.layout.ad_layout)
+                    .titleId(R.id.native_ad_title)
+                    .textId(R.id.native_ad_text)
+                    .mainImageId(R.id.native_ad_main_image)
+                    .iconImageId(R.id.native_ad_icon_image)
+                    .build());
+
+
+            mAdAdapter.registerAdRenderer(myRenderer);
+            mAdAdapter.loadAds(NATIVE_AD_1_UNIT_ID);
+        }
+        mRecentFragmentMapper.registerAdapter(mAdAdapter, mLayoutManager, mNeedsItemDeocration);
+
     }
 
 }

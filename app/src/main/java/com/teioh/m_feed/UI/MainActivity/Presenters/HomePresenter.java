@@ -9,8 +9,6 @@ public interface HomePresenter extends LifeCycleMap {
 
     void updateMangaList();
 
-    void onItemClick(Manga manga);
-
     void onQueryTextChange(String newText);
 
     void updateSource();

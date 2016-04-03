@@ -1,6 +1,7 @@
 package com.teioh.m_feed.UI.MangaActivity.Adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,15 +57,17 @@ public class ChapterListAdapter extends ArrayAdapter {
             return row;
         }
 
-        //TODO UPDATE SELECTION TO INCLUDE CURRENT SOURCE, UPDATED THE DATABASE BUT DONT WANT TO WIPE IT YET
         Chapter viewedChapter = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase())
                 .query(Chapter.class)
                 .withSelection("mTitle = ? AND cNumber = ?", ch.getMangaTitle(), Integer.toString(ch.getChapterNumber()))
                 .get();
 
 
+
         if (viewedChapter != null) {
             row.setBackgroundColor(context.getResources().getColor(R.color.ColorPrimary));
+        }else{
+            row.setBackgroundColor(context.getResources().getColor(R.color.charcoal));
         }
 
         holder.mTitle.setText(ch.getMangaTitle());

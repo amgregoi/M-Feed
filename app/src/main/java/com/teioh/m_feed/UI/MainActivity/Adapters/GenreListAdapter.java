@@ -17,25 +17,24 @@ import java.util.List;
 
 public class GenreListAdapter extends BaseAdapter {
 
-    private ArrayList<String> data = null;
-    private int dataStatus[];
+    private ArrayList<String> mData = null;
+    private int mDataStatus[];
     private LayoutInflater mInflater;
-    private Context context;
+    private Context mContext;
 
     public GenreListAdapter(Context context, ArrayList<String> data) {
-        this.context = context;
-        this.data = data;
-        dataStatus = new int[data.size()];
+        mContext = context;
+        mData = data;
+        mDataStatus = new int[data.size()];
         mInflater = LayoutInflater.from(context);
-
     }
 
     public int getCount() {
-        return data.size();
+        return mData.size();
     }
 
     public Object getItem(int position) {
-        return data.get(position);
+        return mData.get(position);
     }
 
     public long getItemId(int position) {
@@ -46,31 +45,31 @@ public class GenreListAdapter extends BaseAdapter {
         if(position >= 0) {
             View row = convertView;
             GenreHolder holder = (GenreHolder) row.getTag();
-            dataStatus[position] = (dataStatus[position] + 1) % 3;
+            mDataStatus[position] = (mDataStatus[position] + 1) % 3;
 
-            if (dataStatus[position] == 0) {
+            if (mDataStatus[position] == 0) {
                 holder.symbol.setImageDrawable(null);
-                holder.content.setBackgroundColor(context.getResources().getColor(R.color.light_charcoal));
-            } else if (dataStatus[position] == 1) {
-                holder.symbol.setImageDrawable(context.getDrawable(R.drawable.ic_add_white_18dp));
-                holder.content.setBackgroundColor(context.getResources().getColor(R.color.green));
+                holder.content.setBackgroundColor(mContext.getResources().getColor(R.color.light_charcoal));
+            } else if (mDataStatus[position] == 1) {
+                holder.symbol.setImageDrawable(mContext.getDrawable(R.drawable.ic_add_white_18dp));
+                holder.content.setBackgroundColor(mContext.getResources().getColor(R.color.green));
             } else {
-                holder.symbol.setImageDrawable(context.getDrawable(R.drawable.ic_remove_white_18dp));
-                holder.content.setBackgroundColor(context.getResources().getColor(R.color.red));
+                holder.symbol.setImageDrawable(mContext.getDrawable(R.drawable.ic_remove_white_18dp));
+                holder.content.setBackgroundColor(mContext.getResources().getColor(R.color.red));
             }
             row.invalidate();
         }
     }
     public void resetGenreFilters(){
-        dataStatus = new int[data.size()];
+        mDataStatus = new int[mData.size()];
     }
 
     //returns list of genres with a certain status, so we know what to
     //look for (status = 1), filter out (status = 2), and ignore (status = 0)
     public List<String> getGenreListByStatus(int status) {
         List<String> result = new ArrayList<>();
-        for (int i = 0; i < data.size(); i++) {
-            if (dataStatus[i] == status) result.add(data.get(i));
+        for (int i = 0; i < mData.size(); i++) {
+            if (mDataStatus[i] == status) result.add(mData.get(i));
         }
         return result;
     }
@@ -92,21 +91,21 @@ public class GenreListAdapter extends BaseAdapter {
             holder = (GenreHolder) row.getTag();
         }
 
-        String curGenre = data.get(position);
+        String curGenre = mData.get(position);
 
         if (curGenre == null) {
             return row;
         }
 
-        if (dataStatus[position] == 0) {
+        if (mDataStatus[position] == 0) {
             holder.symbol.setImageDrawable(null);
-            holder.content.setBackgroundColor(context.getResources().getColor(R.color.light_charcoal));
-        } else if (dataStatus[position] == 1) {
-            holder.symbol.setImageDrawable(context.getDrawable(R.drawable.ic_add_white_18dp));
-            holder.content.setBackgroundColor(context.getResources().getColor(R.color.green));
+            holder.content.setBackgroundColor(mContext.getResources().getColor(R.color.light_charcoal));
+        } else if (mDataStatus[position] == 1) {
+            holder.symbol.setImageDrawable(mContext.getDrawable(R.drawable.ic_add_white_18dp));
+            holder.content.setBackgroundColor(mContext.getResources().getColor(R.color.green));
         } else {
-            holder.symbol.setImageDrawable(context.getDrawable(R.drawable.ic_remove_white_18dp));
-            holder.content.setBackgroundColor(context.getResources().getColor(R.color.red));
+            holder.symbol.setImageDrawable(mContext.getDrawable(R.drawable.ic_remove_white_18dp));
+            holder.content.setBackgroundColor(mContext.getResources().getColor(R.color.red));
         }
 
         holder.txt.setText(curGenre);

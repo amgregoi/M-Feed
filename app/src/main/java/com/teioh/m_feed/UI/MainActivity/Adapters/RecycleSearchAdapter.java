@@ -47,12 +47,14 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
         @Override
         public void onClick(View v) {
             notifyItemChanged(getLayoutPosition());
-            mListener.onItemSelected(v, filteredData.get(getAdapterPosition()));
+//            mListener.onItemSelected(v, filteredData.get(getAdapterPosition()));
+            mListener.onItemSelected(getAdapterPosition(), filteredData.get(getAdapterPosition()));
+
         }
     }
 
     public interface ItemSelectedListener {
-        void onItemSelected(View itemView, Manga item);
+        void onItemSelected(int pos, Manga item);
     }
 
     public RecycleSearchAdapter(Context context, ArrayList<Manga> data, ItemSelectedListener listener) {
@@ -95,12 +97,13 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
                     }
                 });
         holder.txt.setText(item.toString());
-
     }
 
     public long getItemId(int position) {
         return position;
     }
+
+    public Manga getItemAt(int pos){ return filteredData.get(pos);}
 
     public void updateItem(int position, Manga manga){
         int pos = filteredData.indexOf(manga);
@@ -112,7 +115,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
         pos = originalData.indexOf(manga);
         originalData.remove(pos);
         originalData.add(pos, manga);
-
+        notifyDataSetChanged();
     }
 
     @Override
@@ -124,7 +127,6 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
         this.originalData = new ArrayList<>(data);
         this.filteredData = new ArrayList<>(data);
         getFilter().filter(mFilter.lastQuery);
-
         notifyDataSetChanged();
     }
 

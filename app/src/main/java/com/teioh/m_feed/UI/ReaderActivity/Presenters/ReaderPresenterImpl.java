@@ -96,13 +96,5 @@ public class ReaderPresenterImpl implements ReaderPresenter {
         ((ChapterFragment) mChapterPagerAdapter.getItem(position)).onRefresh();
     }
 
-    //TODO possibly remove
-//    @Subscribe
-//    public void onChangeChapter(ChangeChapter newChapter) {
-//        if (newChapter.getIsNext()) {
-//            mReaderMap.setCurrentChapter(mChapterPosition + 1);
-//        } else {
-//            mReaderMap.setCurrentChapter(mChapterPosition - 1);
-//        }
-//    }
+
 }
