@@ -106,16 +106,18 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
     public Manga getItemAt(int pos){ return filteredData.get(pos);}
 
     public void updateItem(int position, Manga manga){
-        int pos = filteredData.indexOf(manga);
-        filteredData.remove(pos);
-        filteredData.add(pos, manga);
+        if(filteredData.size() > position) {
+            int pos = filteredData.indexOf(manga);
+            filteredData.remove(pos);
+            filteredData.add(pos, manga);
 
-        notifyItemChanged(pos);
+            notifyItemChanged(pos);
 
-        pos = originalData.indexOf(manga);
-        originalData.remove(pos);
-        originalData.add(pos, manga);
-        notifyDataSetChanged();
+            pos = originalData.indexOf(manga);
+            originalData.remove(pos);
+            originalData.add(pos, manga);
+            notifyDataSetChanged();
+        }
     }
 
     @Override

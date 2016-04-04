@@ -2,6 +2,7 @@ package com.teioh.m_feed.UI.MangaActivity.Presenters;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.teioh.m_feed.MAL_Models.MALMangaList;
 import com.teioh.m_feed.Models.Chapter;
@@ -29,8 +30,7 @@ public class MangaPresenterImpl implements MangaPresenter {
     public final static String ORDER_DESCENDING_KEY = TAG + ":DESCENDING";
     public final static String LIST_POSITION_KEY = TAG + ":POSITION";
 
-    private Subscription mChapterListSubscription;
-    private Subscription mObservableMangaSubscription;
+    private Subscription mChapterListSubscription, mObservableMangaSubscription;
     private ArrayList<Chapter> mChapterList;
     private ChapterListAdapter mAdapter;
     private boolean mChapterOrderDescending;
@@ -182,7 +182,9 @@ public class MangaPresenterImpl implements MangaPresenter {
     }
 
     private void getMangaViewInfo() {
-        mObservableMangaSubscription = WebSource.updateMangaObservable(mManga).subscribe(manga -> updateMangaView(manga));
+        mObservableMangaSubscription = WebSource.updateMangaObservable(mManga)
+                .doOnError(throwable -> Log.e(TAG, throwable.getMessage()))
+                .subscribe(manga -> updateMangaView(manga));
     }
 
     private void updateMangaView(Manga manga) {
@@ -200,7 +202,9 @@ public class MangaPresenterImpl implements MangaPresenter {
     }
 
     private void getChapterList() {
-        mChapterListSubscription = WebSource.getChapterListObservable(mManga.getMangaURL()).subscribe(chapters -> updateChapterList(chapters));
+        mChapterListSubscription = WebSource.getChapterListObservable(mManga.getMangaURL())
+                .doOnError(throwable -> Log.e(TAG, throwable.getMessage()))
+                .subscribe(chapters -> updateChapterList(chapters));
     }
 
     private void updateChapterList(List<Chapter> chapters) {

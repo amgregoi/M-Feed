@@ -60,6 +60,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     private ActionBarDrawerToggle mDrawerToggle;
     private MainPresenter mMainPresenter;
 
+    public static Intent getNewInstance(Context context){
+        Intent intent = new Intent(context, MainActivity.class);
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -329,6 +334,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
             mMultiActionMenu.collapse();
         } else if (!mToast.getView().isShown() && mDrawerLayout.isDrawerOpen(mDrawerList)) { //closes drawer, if exit mToast isn't active
             mDrawerLayout.closeDrawer(mDrawerList);
+            mToast.show();
         } else if (getSupportFragmentManager().findFragmentByTag(SettingsFragment.TAG) != null) {
             mMainPresenter.removeSettingsFragment();
             openDrawer();

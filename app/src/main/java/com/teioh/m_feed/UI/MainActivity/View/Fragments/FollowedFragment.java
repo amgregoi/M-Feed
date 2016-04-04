@@ -3,12 +3,14 @@ package com.teioh.m_feed.UI.MainActivity.View.Fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.teioh.m_feed.UI.MainActivity.Presenters.HomePresenter;
 import com.teioh.m_feed.UI.Maps.Listeners;
 import com.teioh.m_feed.Models.Manga;
@@ -19,20 +21,25 @@ import com.teioh.m_feed.UI.MainActivity.View.Mappers.FollowFragmentMapper;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class FollowedFragment extends Fragment implements FollowFragmentMapper {
     public final static String TAG = FollowedFragment.class.getSimpleName();
 
-    RecyclerView mGridView;
+    @Bind(R.id.follow_list_view) RecyclerView mGridView;
 
     private HomePresenter mFollowedPresenter;
+
+    public static Fragment getnewInstance(){
+        Fragment dialog = new FollowedFragment();
+        return dialog;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab2_followed_fragment, container, false);
-//        ButterKnife.bind(this, v);
-        mGridView = (RecyclerView) v.findViewById(R.id.library_list_view);
+        ButterKnife.bind(this, v);
 
         mFollowedPresenter = new FollowedPresenterImpl(this);
         return v;
@@ -95,7 +102,7 @@ public class FollowedFragment extends Fragment implements FollowFragmentMapper {
     }
 
     @Override
-    public void registerAdapter(RecycleSearchAdapter mAdapter, RecyclerView.LayoutManager layout, boolean needItemDecoration) {
+    public void registerAdapter(MoPubRecyclerAdapter mAdapter, RecyclerView.LayoutManager layout, boolean needItemDecoration) {
         if(mAdapter != null){
             mGridView.setAdapter(mAdapter);
             mGridView.setLayoutManager(layout);

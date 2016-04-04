@@ -7,9 +7,24 @@
         <item name="android:textColorHighlight">#99ff4081</item>
         <item name="android:windowAnimationStyle">@null</item>
         <item name="actionOverflowMenuStyle">@style/PopupMenu</item>
-	    <item name="android:windowBackground">@color/charcoal</item>
+        <item name="android:windowBackground">@color/charcoal</item>
     </style>
 
+
+    <style name="ReaderTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="colorPrimary">@color/ColorPrimary</item>
+        <item name="colorPrimaryDark">@color/ColorPrimaryDark</item>
+        <item name="colorAccent">@color/white</item>
+        <item name="searchViewStyle">@style/SearchViewStyle</item>
+        <item name="android:textColorHighlight">#99ff4081</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="actionOverflowMenuStyle">@style/PopupMenu</item>
+        <item name="android:windowBackground">@color/charcoal</item>
+    </style>
+
+    <!--<item name="android:windowTranslucentStatus">true</item>-->
 
     <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
 	    <item name="android:icon">@drawable/filter</item>

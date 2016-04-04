@@ -13,6 +13,12 @@ public class SettingsFragment extends Fragment {
     public final static String TAG = SettingsFragment.class.getSimpleName();
 
     //TODO implement settings with shared prefs
+
+    public static Fragment getnewInstance(){
+        Fragment dialog = new SettingsFragment();
+        return dialog;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.settings_fragment, container, false);

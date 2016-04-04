@@ -14,6 +14,12 @@ import android.widget.TextView;
 import com.teioh.m_feed.R;
 
 public class FProgressDialogFragment extends DialogFragment implements TextView.OnEditorActionListener {
+
+    public static DialogFragment getNewInstance(String url){
+        DialogFragment fragment = new FProgressDialogFragment();
+        return fragment;
+    }
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getDialog().getWindow().setBackgroundDrawableResource(R.drawable.rounded_dialog);

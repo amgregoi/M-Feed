@@ -68,6 +68,11 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
 
     private MangaPresenter mMangaPresenter;
 
+    public static Intent getNewInstance(Context context) {
+        Intent intent = new Intent(context, MangaActivity.class);
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,7 +125,7 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
         int id = item.getItemId();
         if (id == R.id.remove_list) {
             //popup dialog
-            DialogFragment newFragment = FRemoveDialogFragment.newInstance(R.string.DialogFragmentRemove);
+            DialogFragment newFragment = FRemoveDialogFragment.getNewInstance(R.string.DialogFragmentRemove);
             newFragment.show(getSupportFragmentManager(), "dialog");
             return true;
         }

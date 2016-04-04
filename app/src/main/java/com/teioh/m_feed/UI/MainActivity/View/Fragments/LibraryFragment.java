@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.teioh.m_feed.UI.MainActivity.Presenters.HomePresenter;
 import com.teioh.m_feed.UI.Maps.Listeners;
 import com.teioh.m_feed.Models.Manga;
@@ -19,19 +20,25 @@ import com.teioh.m_feed.UI.MainActivity.View.Mappers.LibraryFragmentMapper;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class LibraryFragment extends Fragment implements LibraryFragmentMapper {
     public final static String TAG = LibraryFragment.class.getSimpleName();
 
-    RecyclerView mGridView;
+    @Bind(R.id.library_list_view) RecyclerView mGridView;
 
     private HomePresenter mLibraryPresenter;
+
+    public static Fragment getnewInstance(){
+        Fragment dialog = new LibraryFragment();
+        return dialog;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab3_library_fragment, container, false);
-        mGridView = (RecyclerView) v.findViewById(R.id.all_list_view);
-//        ButterKnife.bind(this, v);
-
+        ButterKnife.bind(this, v);
 
         mLibraryPresenter = new LibraryPresenterImpl(this);
         return v;
@@ -68,6 +75,7 @@ public class LibraryFragment extends Fragment implements LibraryFragmentMapper {
     public void onDestroyView() {
         super.onDestroyView();
         mLibraryPresenter.onDestroy();
+        ButterKnife.unbind(this);
     }
 
     @Override
@@ -81,7 +89,7 @@ public class LibraryFragment extends Fragment implements LibraryFragmentMapper {
     }
 
     @Override
-    public void registerAdapter(RecycleSearchAdapter mAdapter, RecyclerView.LayoutManager layout, boolean needItemDecoration) {
+    public void registerAdapter(MoPubRecyclerAdapter mAdapter, RecyclerView.LayoutManager layout, boolean needItemDecoration) {
         if (mAdapter != null) {
             mGridView.setAdapter(mAdapter);
             mGridView.setLayoutManager(layout);

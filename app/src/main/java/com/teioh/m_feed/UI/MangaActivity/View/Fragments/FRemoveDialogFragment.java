@@ -8,18 +8,20 @@ import android.support.v7.app.AlertDialog;
 
 
 public class FRemoveDialogFragment extends DialogFragment {
+    public final static String TAG = FRemoveDialogFragment.class.getSimpleName();
+    public final static String TITLE_KEY = TAG + ":" + "TITLE";
 
-    public static FRemoveDialogFragment newInstance(int title) {
-        FRemoveDialogFragment frag = new FRemoveDialogFragment();
+    public static DialogFragment getNewInstance(int title) {
+        FRemoveDialogFragment fragment = new FRemoveDialogFragment();
         Bundle args = new Bundle();
-        args.putInt("title", title);
-        frag.setArguments(args);
-        return frag;
+        args.putInt(TITLE_KEY, title);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        int title = getArguments().getInt("title");
+        int title = getArguments().getInt(TITLE_KEY);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder

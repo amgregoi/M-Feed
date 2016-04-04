@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
@@ -35,15 +36,18 @@ public class ChapterPageAdapter extends FragmentStatePagerAdapter {
         WeakReference<Fragment> weakReference = mPageReferenceMap.get(position);
 
         if(weakReference != null) {
+            Log.e(TAG, "weakreference");
             return weakReference.get();
         }else{
+            Log.e(TAG, "new fragment");
             Fragment mChapterFragment = new ChapterFragment();
             Bundle bundle = new Bundle();
 
             bundle.putParcelable(Chapter.TAG + ":" + position, mChapterList.get(position));
             bundle.putInt(POSITION_KEY, position);
             mChapterFragment.setArguments(bundle);
-            mPageReferenceMap.put(Integer.valueOf(position), new WeakReference<Fragment>(mChapterFragment));
+            mPageReferenceMap.put(position, new WeakReference<>(mChapterFragment));
+
             return mChapterFragment;
         }
     }

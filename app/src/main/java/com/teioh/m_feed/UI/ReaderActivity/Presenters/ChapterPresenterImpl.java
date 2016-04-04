@@ -1,6 +1,7 @@
 package com.teioh.m_feed.UI.ReaderActivity.Presenters;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.UI.ReaderActivity.Adapters.ChapterPageAdapter;
@@ -18,8 +19,8 @@ import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 public class ChapterPresenterImpl implements ChapterPresenter {
     public static final String TAG = ChapterPresenterImpl.class.getSimpleName();
-    private static final String CURRENT_URL_LIST_PARCELABLE_KEY = TAG + ":CURRENT";
-    private static final String CHAPTER_POSITION_LIST_PARCELABLE_KEY = TAG + ":POSITION";
+    public static final String CURRENT_URL_LIST_PARCELABLE_KEY = TAG + ":CURRENT";
+    public static final String CHAPTER_POSITION_LIST_PARCELABLE_KEY = TAG + ":POSITION";
 
     private ChapterReaderMapper mChapterReaderMapper;
 
@@ -68,6 +69,7 @@ public class ChapterPresenterImpl implements ChapterPresenter {
     @Override
     public void getImageUrls() {
         mImageListSubscription = WebSource.getChapterImageListObservable(mChapter.getChapterUrl())
+                .doOnError(throwable -> Log.e(TAG, throwable.getMessage()))
                 .subscribe(urlList -> updateImageUrlList(urlList));
     }
 

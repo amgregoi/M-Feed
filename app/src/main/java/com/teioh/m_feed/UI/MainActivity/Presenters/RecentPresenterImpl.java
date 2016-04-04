@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.mopub.nativeads.MoPubNativeAdPositioning;
 import com.mopub.nativeads.MoPubRecyclerAdapter;
@@ -28,10 +29,11 @@ public class RecentPresenterImpl implements HomePresenter {
     public final static String RECENT_MANGA_LIST_KEY = TAG + ":RECENT_MANGA_LIST";
     public final static String LATEST_SOURCE = TAG + ":SOURCE";
 
-    public final String NATIVE_AD_1_UNIT_ID = null;
+    public final String NATIVE_AD_1_UNIT_ID = "f27ea659a1084329a656ab28ef29fb6a";
 
     private ArrayList<Manga> mRecentMangaList;
     private ArrayList<Manga> mGenreFilterList;
+    private MoPubRecyclerAdapter mAdAdapter;
     private RecycleSearchAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
@@ -39,9 +41,6 @@ public class RecentPresenterImpl implements HomePresenter {
     private RecentFragmentMapper mRecentFragmentMapper;
     private String mLastSourceQuery;
     private boolean mNeedsItemDeocration;
-
-
-    private MoPubRecyclerAdapter mAdAdapter;
 
 
     public RecentPresenterImpl(RecentFragmentMapper map) {
@@ -57,11 +56,7 @@ public class RecentPresenterImpl implements HomePresenter {
         ((GridLayoutManager) mLayoutManager).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-//                if (position == 0) return 1;
-//                else if (position % 18 == 0) return 3;
-//                return 1;
-
-                if (mAdAdapter.isAd(position)) return 3;
+                if (mAdAdapter.isAd(position)) return 3; // ads take up 3 columns
                 else return 1;
             }
         });
@@ -98,6 +93,7 @@ public class RecentPresenterImpl implements HomePresenter {
         }
         mLastSourceQuery = WebSource.getCurrentSource();
         mMangaListSubscription = WebSource.getRecentUpdatesObservable()
+                .doOnError(throwable -> Log.e(TAG, throwable.getMessage()))
                 .subscribe(manga -> updateRecentGridView(manga));
     }
 
@@ -144,7 +140,6 @@ public class RecentPresenterImpl implements HomePresenter {
 
     @Override
     public void onFilterSelected(int filter) {
-        //TODO
         if (mAdapter != null)
             mAdapter.filterByStatus(filter);
     }
@@ -176,35 +171,34 @@ public class RecentPresenterImpl implements HomePresenter {
         if (mRecentFragmentMapper.getContext() != null) {
             if (manga != null) {
                 mRecentMangaList = new ArrayList<>(manga);
-                mAdapter = new RecycleSearchAdapter(mRecentFragmentMapper.getContext(), mRecentMangaList, (position, item) -> onItemClick(position));
                 mMangaListSubscription = null;
             } else {
                 // failed to update list, show refresh view,
+                mRecentMangaList = new ArrayList<>();
             }
-            setupAdapter();
+            mAdapter = new RecycleSearchAdapter(mRecentFragmentMapper.getContext(), mRecentMangaList, (position, item) -> onItemClick(position));
+            setupMoPubAdapter();
             mRecentFragmentMapper.stopRefresh();
             mNeedsItemDeocration = false;
 
         }
     }
 
-    private void setupAdapter() {
+    private void setupMoPubAdapter() {
         MoPubNativeAdPositioning.MoPubServerPositioning adPositioning = MoPubNativeAdPositioning.serverPositioning();
         mAdAdapter = new MoPubRecyclerAdapter(((Fragment) mRecentFragmentMapper).getActivity(), mAdapter, adPositioning);
-        if (NATIVE_AD_1_UNIT_ID != null) {
-            MoPubStaticNativeAdRenderer myRenderer = new MoPubStaticNativeAdRenderer(new ViewBinder.Builder(R.layout.ad_layout)
-                    .titleId(R.id.native_ad_title)
-                    .textId(R.id.native_ad_text)
-                    .mainImageId(R.id.native_ad_main_image)
-                    .iconImageId(R.id.native_ad_icon_image)
-                    .build());
+        MoPubStaticNativeAdRenderer myRenderer = new MoPubStaticNativeAdRenderer(new ViewBinder.Builder(R.layout.ad_layout)
+                .titleId(R.id.native_ad_title)
+                .textId(R.id.native_ad_text)
+                .mainImageId(R.id.native_ad_main_image)
+                .iconImageId(R.id.native_ad_icon_image)
+                .build());
 
 
-            mAdAdapter.registerAdRenderer(myRenderer);
-            mAdAdapter.loadAds(NATIVE_AD_1_UNIT_ID);
-        }
+        mAdAdapter.registerAdRenderer(myRenderer);
+        if (NATIVE_AD_1_UNIT_ID != null) mAdAdapter.loadAds(NATIVE_AD_1_UNIT_ID);
+
         mRecentFragmentMapper.registerAdapter(mAdAdapter, mLayoutManager, mNeedsItemDeocration);
-
     }
 
 }

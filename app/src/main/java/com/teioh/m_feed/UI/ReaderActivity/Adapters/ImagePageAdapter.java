@@ -2,11 +2,14 @@ package com.teioh.m_feed.UI.ReaderActivity.Adapters;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.util.SparseArray;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
@@ -56,9 +59,9 @@ public class ImagePageAdapter extends PagerAdapter {
                         super.onResourceReady(resource, animation);
                         mImage.initializeView();
                         mImage.setTag(TAG + ":" + position);
+                        mImage.startFling(0, 10000f); //large fling to initialize the image to the top for long pages
                     }
                 });
-
         (container).addView(viewLayout);
         views.put(position, viewLayout);
         return viewLayout;
@@ -72,7 +75,4 @@ public class ImagePageAdapter extends PagerAdapter {
     public void refreshView(int position){
         views.get(position).invalidate();
     }
-
-
-
 }

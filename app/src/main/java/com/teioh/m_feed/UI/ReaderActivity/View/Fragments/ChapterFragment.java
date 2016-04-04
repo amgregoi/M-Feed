@@ -27,11 +27,15 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
     private ChapterPresenter mChapterPresenter;
 
 
+    public static Fragment getNewInstance() {
+        Fragment fragment = new ChapterFragment();
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mChapterPresenter = new ChapterPresenterImpl(this, getArguments());
-
     }
 
     @Override
@@ -79,6 +83,7 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
             mViewPager.clearOnPageChangeListeners();
             mViewPager.addOnPageChangeListener(this);
             mViewPager.setOffscreenPageLimit(5);
+            mViewPager.setPageMargin(128);
         }
     }
 
@@ -145,10 +150,12 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
     private Listeners.ReaderListener listener;
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof Listeners.ReaderListener) listener = (Listeners.ReaderListener) context;
-        else throw new ClassCastException(context.toString() + " must implement ChapterPresenterImpl.ChapterCommunication");
+        if (context instanceof Listeners.ReaderListener)
+            listener = (Listeners.ReaderListener) context;
+        else
+            throw new ClassCastException(context.toString() + " must implement ChapterPresenterImpl.ChapterCommunication");
 
     }
 

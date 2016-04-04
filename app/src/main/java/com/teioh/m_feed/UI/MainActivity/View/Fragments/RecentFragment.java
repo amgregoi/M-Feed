@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,21 +23,28 @@ import com.teioh.m_feed.UI.MainActivity.View.Mappers.RecentFragmentMapper;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class RecentFragment extends Fragment implements RecentFragmentMapper {
     public final static String TAG = RecentFragment.class.getSimpleName();
 
-    RecyclerView mGridView;
-    SwipeRefreshLayout swipeContainer;
+    @Bind(R.id.recent_list_view)RecyclerView mGridView;
+    @Bind(R.id.swipe_container)SwipeRefreshLayout swipeContainer;
 
     private HomePresenter mRecentPresenter;
+
+    public static Fragment getnewInstance(){
+        Fragment dialog = new RecentFragment();
+        return dialog;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab1_recent_fragment, container, false);
-        mGridView = (RecyclerView) v.findViewById(R.id.recent_list_view);
-        swipeContainer = (SwipeRefreshLayout) v.findViewById(R.id.swipe_container);
-//        ButterKnife.bind(this, v);  //TODO find out why butterknife broke when implementing recyclerview?
+        ButterKnife.bind(this, v);
 
+        mGridView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         mRecentPresenter = new RecentPresenterImpl(this);
         return v;
     }
@@ -61,9 +69,7 @@ public class RecentFragment extends Fragment implements RecentFragmentMapper {
     public void onDestroyView() {
         super.onDestroyView();
         mRecentPresenter.onDestroy();
-//        ButterKnife.unbind(this);
-
-
+        ButterKnife.unbind(this);
     }
 
     @Override

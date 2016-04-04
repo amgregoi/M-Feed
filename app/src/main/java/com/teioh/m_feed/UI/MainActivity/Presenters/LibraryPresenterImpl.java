@@ -2,10 +2,17 @@ package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
+import com.mopub.nativeads.MoPubNativeAdPositioning;
+import com.mopub.nativeads.MoPubRecyclerAdapter;
+import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
+import com.mopub.nativeads.ViewBinder;
 import com.teioh.m_feed.Models.Manga;
+import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.Adapters.RecycleSearchAdapter;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.LibraryFragmentMapper;
 import com.teioh.m_feed.UI.MangaActivity.View.MangaActivity;
@@ -21,9 +28,11 @@ import rx.Subscription;
 public class LibraryPresenterImpl implements HomePresenter {
     public final static String TAG = LibraryPresenterImpl.class.getSimpleName();
     public final static String LIBRARY_LIST_KEY = TAG + ":LIBRARY_LIST";
+    public final String NATIVE_AD_1_UNIT_ID = "f27ea659a1084329a656ab28ef29fb6a";
 
     private ArrayList<Manga> mLibraryMangaList;
     private ArrayList<Manga> mGenreFilterList;
+    private MoPubRecyclerAdapter mAdAdapter;
     private RecycleSearchAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private boolean mNeedsItemDeocration;
@@ -53,6 +62,13 @@ public class LibraryPresenterImpl implements HomePresenter {
     @Override
     public void init(Bundle bundle) {
         mLayoutManager = new GridLayoutManager(mLibraryFragmentMapper.getContext(), 3);
+//        ((GridLayoutManager) mLayoutManager).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+//            @Override
+//            public int getSpanSize(int position) {
+//                if (mAdAdapter.isAd(position)) return 3; // ads take up 3 columns
+//                else return 1;
+//            }
+//        });
         updateMangaList();
         mNeedsItemDeocration = true;
     }
@@ -64,6 +80,7 @@ public class LibraryPresenterImpl implements HomePresenter {
             mMangaListSubscription = null;
         }
         mMangaListSubscription = ReactiveQueryManager.getMangaLibraryObservable()
+                .doOnError(throwable -> Log.e(TAG, throwable.getMessage()))
                 .subscribe(manga -> updateLibraryGridView(manga));
     }
 
@@ -144,11 +161,28 @@ public class LibraryPresenterImpl implements HomePresenter {
             Collections.sort(mLibraryMangaList, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
 
             mAdapter = new RecycleSearchAdapter(mLibraryFragmentMapper.getContext(), mLibraryMangaList, (pos, item) -> onItemClick(item));
-            mLibraryFragmentMapper.registerAdapter(mAdapter, mLayoutManager, mNeedsItemDeocration);
+            setupMoPubAdapter();
             mNeedsItemDeocration = false;
 
             mMangaListSubscription.unsubscribe();
             mMangaListSubscription = null;
         }
+    }
+
+    private void setupMoPubAdapter() {
+        MoPubNativeAdPositioning.MoPubServerPositioning adPositioning = MoPubNativeAdPositioning.serverPositioning();
+        mAdAdapter = new MoPubRecyclerAdapter(((Fragment) mLibraryFragmentMapper).getActivity(), mAdapter, adPositioning);
+        MoPubStaticNativeAdRenderer myRenderer = new MoPubStaticNativeAdRenderer(new ViewBinder.Builder(R.layout.ad_layout)
+                .titleId(R.id.native_ad_title)
+                .textId(R.id.native_ad_text)
+                .mainImageId(R.id.native_ad_main_image)
+                .iconImageId(R.id.native_ad_icon_image)
+                .build());
+
+
+        mAdAdapter.registerAdRenderer(myRenderer);
+        if (NATIVE_AD_1_UNIT_ID != null) mAdAdapter.loadAds(NATIVE_AD_1_UNIT_ID);
+
+        mLibraryFragmentMapper.registerAdapter(mAdAdapter, mLayoutManager, mNeedsItemDeocration);
     }
 }

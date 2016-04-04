@@ -107,16 +107,4 @@ public class Chapter implements Parcelable {
         return this.mTitle;
     }
 
-
-    @Override
-    public boolean equals(Object object) {
-        boolean sameSame = false;
-        if (object != null && object instanceof Manga) {
-            String s1 = mTitle + ":" + cTitle;
-            String s2 = ((Chapter) object).getMangaTitle() + ":" + ((Chapter) object).getChapterTitle();
-            if (s1.equals(s2))
-                sameSame = true;
-        }
-        return sameSame;
-    }
 }

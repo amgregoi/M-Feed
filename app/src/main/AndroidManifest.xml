@@ -46,12 +46,7 @@
         <activity
             android:name=".UI.ReaderActivity.View.ReaderActivity"
             android:label="ReaderActivity"
-            android:theme="@style/AppTheme">
-        </activity>
-        <activity
-            android:name=".UI.MainActivity.View.Fragments.FilterDialogFragment"
-            android:label="ReaderActivity"
-            android:theme="@style/AppTheme">
+            android:theme="@style/ReaderTheme">
         </activity>
         <service android:name=".RecentUpdateService" ></service>
 
