@@ -27,7 +27,7 @@
 			android:src="@drawable/ic_order"
 			android:background="@drawable/clear_button_background"
 			android:gravity="end"
-			android:padding="@dimen/baseline_margin_unit_16dp"
+			android:padding="8dp"
 			/>
 
 		<TextView

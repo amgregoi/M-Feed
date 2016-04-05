@@ -338,8 +338,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
         } else if (getSupportFragmentManager().findFragmentByTag(SettingsFragment.TAG) != null) {
             mMainPresenter.removeSettingsFragment();
             openDrawer();
-        }
-        else if(mMainPresenter.genreFilterActive()){
+        } else if(mMainPresenter.genreFilterActive()){
             mMainPresenter.onClearGenreFilter();
             mFilterView.setImageDrawable(getDrawable(R.drawable.filter_outline_24dp));
             mActivityTitle.setText(WebSource.getCurrentSource());

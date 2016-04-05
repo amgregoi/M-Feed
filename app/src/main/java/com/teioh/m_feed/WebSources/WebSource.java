@@ -39,16 +39,16 @@ public class WebSource {
         }
     }
 
-    public static Observable<List<Chapter>> getChapterListObservable(final String url) {
+    public static Observable<List<Chapter>> getChapterListObservable(final String url, final String mangaTitle) {
         switch (wCurrentSource) {
             case (MangaJoy.SourceKey):
-                return MangaJoy.getChapterListObservable(url);
+                return MangaJoy.getChapterListObservable(url, mangaTitle);
             case (MangaPark.SourceKey):
                 return MangaPark.getChapterListObservable(url);
             case (MangaHere.SourceKey):
                 return MangaHere.getChapterListObservable(url);
             default:
-                return MangaJoy.getChapterListObservable(url);
+                return MangaJoy.getChapterListObservable(url, mangaTitle);
         }
     }
 

@@ -134,10 +134,10 @@ public class ReaderActivity extends AppCompatActivity implements ReaderActivityM
     }
 
     @Override
-    public void updateToolbar(String title, int size, int page) {
+    public void updateToolbar(String mTitle, String cTitle, int size, int page) {
         if (page == mViewPager.getCurrentItem()) {
-            mChapterTitle.setText(title);
-            mMangaTitle.setText(title); //TODO update with manga title
+            mChapterTitle.setText(cTitle);
+            mMangaTitle.setText(mTitle); //TODO update with manga title
             mEndPage.setText(String.valueOf(size));
             mReaderPresenter.updateChapterViewStatus(mViewPager.getCurrentItem());
         }

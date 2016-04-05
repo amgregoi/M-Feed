@@ -202,7 +202,7 @@ public class MangaPresenterImpl implements MangaPresenter {
     }
 
     private void getChapterList() {
-        mChapterListSubscription = WebSource.getChapterListObservable(mManga.getMangaURL())
+        mChapterListSubscription = WebSource.getChapterListObservable(mManga.getMangaURL(), mManga.getTitle())
                 .doOnError(throwable -> Log.e(TAG, throwable.getMessage()))
                 .subscribe(chapters -> updateChapterList(chapters));
     }

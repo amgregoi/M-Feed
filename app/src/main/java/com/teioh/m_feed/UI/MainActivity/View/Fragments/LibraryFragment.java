@@ -27,6 +27,7 @@ public class LibraryFragment extends Fragment implements LibraryFragmentMapper {
     public final static String TAG = LibraryFragment.class.getSimpleName();
 
     @Bind(R.id.library_list_view) RecyclerView mGridView;
+//    @Bind(R.id.fast_scroller) VerticalRecyclerViewFastScroller mFastScroller;
 
     private HomePresenter mLibraryPresenter;
 
@@ -93,6 +94,7 @@ public class LibraryFragment extends Fragment implements LibraryFragmentMapper {
         if (mAdapter != null) {
             mGridView.setAdapter(mAdapter);
             mGridView.setLayoutManager(layout);
+
             if (needItemDecoration)
                 mGridView.addItemDecoration(new RecycleSearchAdapter.SpacesItemDecoration(20));
         }

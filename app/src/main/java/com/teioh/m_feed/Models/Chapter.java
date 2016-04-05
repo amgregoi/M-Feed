@@ -45,6 +45,7 @@ public class Chapter implements Parcelable {
         dest.writeString(mUrl);
         dest.writeString(mDate);
         dest.writeString(mTitle);
+        dest.writeString(cTitle);
         dest.writeInt(cNumber);
     }
 
@@ -52,6 +53,7 @@ public class Chapter implements Parcelable {
         mUrl = in.readString();
         mDate = in.readString();
         mTitle = in.readString();
+        cTitle = in.readString();
         cNumber = in.readInt();
     }
 
@@ -100,7 +102,7 @@ public class Chapter implements Parcelable {
     }
 
     public String toString() {
-        return this.mTitle;
+        return this.cTitle;
     }
 
     public String getMangaTitle() {

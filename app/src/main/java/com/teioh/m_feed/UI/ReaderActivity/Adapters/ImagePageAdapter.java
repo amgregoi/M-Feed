@@ -2,15 +2,12 @@ package com.teioh.m_feed.UI.ReaderActivity.Adapters;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.util.SparseArray;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -47,7 +44,7 @@ public class ImagePageAdapter extends PagerAdapter {
 
     @Override public Object instantiateItem(ViewGroup container, int position) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View viewLayout = inflater.inflate(R.layout.chapter_reader_item, container, false);
+        View viewLayout = inflater.inflate(R.layout.reader_chapter_item, container, false);
 
         GestureImageView mImage = (GestureImageView) viewLayout.findViewById(R.id.chapterPageImageView);
         Glide.with(context)

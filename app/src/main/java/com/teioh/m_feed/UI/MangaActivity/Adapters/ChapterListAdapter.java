@@ -70,7 +70,7 @@ public class ChapterListAdapter extends ArrayAdapter {
             row.setBackgroundColor(context.getResources().getColor(R.color.charcoal));
         }
 
-        holder.mTitle.setText(ch.getMangaTitle());
+        holder.mTitle.setText(ch.getChapterTitle());
         holder.cDate.setText(ch.getChapterDate());
         return row;
     }

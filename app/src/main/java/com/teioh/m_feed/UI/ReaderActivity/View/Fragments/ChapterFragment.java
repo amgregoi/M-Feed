@@ -95,7 +95,7 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        mChapterPresenter.updateOffsetCounter(positionOffsetPixels, position);
+        mChapterPresenter.updateOffsetCounter(positionOffsetPixels, mViewPager.getCurrentItem());
     }
 
     @Override
@@ -180,8 +180,8 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
     }
 
     @Override
-    public void updateToolbar(String title, int size, int page) {
-        listener.updateToolbar(title, size, page);
+    public void updateToolbar(String mTitle, String cTitle, int size, int page) {
+        listener.updateToolbar(mTitle, cTitle, size, page);
     }
 
     @Override
@@ -192,6 +192,11 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
     @Override
     public void onRefresh() {
         mChapterPresenter.onRefresh(mViewPager.getCurrentItem());
+    }
+
+    @Override
+    public void failedLoadChapter(){
+        listener.onBackPressed();
     }
 
 

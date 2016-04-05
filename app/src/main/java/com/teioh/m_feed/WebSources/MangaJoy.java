@@ -152,8 +152,8 @@ public class MangaJoy {
      * builds list of chapters for manga object
      */
 
-    public static Observable<List<Chapter>> getChapterListObservable(final String url) {
-        return pullChaptersFromWebsite(url)
+    public static Observable<List<Chapter>> getChapterListObservable(final String url, final String title) {
+        return pullChaptersFromWebsite(url, title)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .retry(10)
@@ -163,7 +163,7 @@ public class MangaJoy {
                 }).doOnError(throwable -> throwable.printStackTrace());
     }
 
-    private static Observable<List<Chapter>> pullChaptersFromWebsite(final String url) {
+    private static Observable<List<Chapter>> pullChaptersFromWebsite(final String url, final String title) {
         return Observable.create(new Observable.OnSubscribe<List<Chapter>>() {
             @Override
             public void call(Subscriber<? super List<Chapter>> subscriber) {
@@ -176,7 +176,7 @@ public class MangaJoy {
                     if (connect.execute().statusCode() == 200)
                         unparsedHtml = connect.get().html();
 
-                    subscriber.onNext(parseHtmlToChapters(unparsedHtml));
+                    subscriber.onNext(parseHtmlToChapters(unparsedHtml, title));
                     subscriber.onCompleted();
                 } catch (Throwable e) {
                     subscriber.onError(e);
@@ -185,27 +185,29 @@ public class MangaJoy {
         });
     }
 
-    private static List<Chapter> parseHtmlToChapters(final String unparsedHtml) {
+    private static List<Chapter> parseHtmlToChapters(final String unparsedHtml, final String title) {
         int beginIndex = unparsedHtml.indexOf("<ul class=\"chp_lst\">");
         int endIndex = unparsedHtml.indexOf("</ul>", beginIndex);
         String chapterListHtml = unparsedHtml.substring(beginIndex, endIndex);
         Document parsedDocument = Jsoup.parse(chapterListHtml);
-        List<Chapter> chapterList = scrapeChaptersFromParsedDocument(parsedDocument);
+        List<Chapter> chapterList = scrapeChaptersFromParsedDocument(parsedDocument, title);
         return chapterList;
     }
 
-    private static List<Chapter> scrapeChaptersFromParsedDocument(final Document parsedDocument) {
+    private static List<Chapter> scrapeChaptersFromParsedDocument(final Document parsedDocument, final String title) {
         List<Chapter> chapterList = new ArrayList<>();
         Elements chapterElements = parsedDocument.getElementsByTag("li");
         int numChapters = chapterElements.size();
 
+
+
         for (Element chapterElement : chapterElements) {
             String chapterUrl = chapterElement.select("a").attr("href");
-            String[] titles = chapterElement.select("span").first().text().split(" : ");
+            String[] cTitle = chapterElement.select("span").first().text().split(":");
 
             String chapterDate = chapterElement.select("span").get(1).text();
 
-            Chapter curChapter = new Chapter(chapterUrl, titles[0], titles[1], chapterDate, numChapters);
+            Chapter curChapter = new Chapter(chapterUrl, title, cTitle[0].trim(), chapterDate, numChapters);
             numChapters--;
 
             chapterList.add(curChapter);

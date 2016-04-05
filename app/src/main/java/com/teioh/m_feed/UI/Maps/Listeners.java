@@ -24,9 +24,11 @@ public class Listeners {
 
         void showToolbar();
 
-        void updateToolbar(String title, int size, int page);
+        void updateToolbar(String mTitle, String cTitle, int size, int page);
 
         void updateCurrentPage(int position);
+
+        void onBackPressed();
     }
 
 }

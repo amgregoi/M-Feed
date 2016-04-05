@@ -2,6 +2,7 @@ package com.teioh.m_feed.UI.ReaderActivity.Presenters;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.UI.ReaderActivity.Adapters.ChapterPageAdapter;
@@ -47,6 +48,7 @@ public class ChapterPresenterImpl implements ChapterPresenter {
 
         mPageOffsetCount = 0;
         mChapterReaderMapper.setupOnSingleTapListener();
+        mChapterReaderMapper.updateToolbar(mChapter.getMangaTitle(), mChapter.getChapterTitle(), 1, 1);
     }
 
     @Override
@@ -115,18 +117,14 @@ public class ChapterPresenterImpl implements ChapterPresenter {
     @Override
     public void updateOffsetCounter(int offset, int position) {
         if (position == 0 || position == mChapterListSize - 1) {
-            if (offset == 0) {
-                mPageOffsetCount++;
-            } else mPageOffsetCount = 0;
-
-            if (position == 0) mIsNext = false;
-            else mIsNext = true;
+            mPageOffsetCount++;
+            mIsNext = position != 0;
         } else mPageOffsetCount = 0;
     }
 
     @Override
     public void updateState(int state) {
-        if (mPageOffsetCount > 50 && state == 0) {
+        if (mPageOffsetCount > 40 && state == 0) {
             if (mIsNext) setToNextChapter();
             else setToPreviousChapter();
         }
@@ -135,7 +133,7 @@ public class ChapterPresenterImpl implements ChapterPresenter {
 
     @Override
     public void updateToolbar() {
-        mChapterReaderMapper.updateToolbar(mChapter.toString(), mChapterListSize, mPosition);
+        mChapterReaderMapper.updateToolbar(mChapter.getMangaTitle(), mChapter.getChapterTitle(), mChapterListSize, mPosition);
     }
 
     @Override
@@ -161,11 +159,16 @@ public class ChapterPresenterImpl implements ChapterPresenter {
 
     private void updateImageUrlList(List<String> urlList) {
         if (mChapterReaderMapper.getContext() != null) {
-            mChapterUrlList = new ArrayList<>(urlList);
-            mChapterListSize = mChapterUrlList.size();
-            mChapterPageAdapter = new ImagePageAdapter(mChapterReaderMapper.getContext(), mChapterUrlList);
-            mChapterReaderMapper.registerAdapter(mChapterPageAdapter);
-            updateToolbar();
+            if(urlList == null){
+                Toast.makeText(mChapterReaderMapper.getContext(), "Failed to find chapter :'(", Toast.LENGTH_SHORT).show();
+                mChapterReaderMapper.failedLoadChapter();
+            }else {
+                mChapterUrlList = new ArrayList<>(urlList);
+                mChapterListSize = mChapterUrlList.size();
+                mChapterPageAdapter = new ImagePageAdapter(mChapterReaderMapper.getContext(), mChapterUrlList);
+                mChapterReaderMapper.registerAdapter(mChapterPageAdapter);
+                updateToolbar();
+            }
         }
     }
 }
