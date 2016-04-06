@@ -38,6 +38,7 @@ public class MangaPark {
 
     /**
      * builds list of manga for recently updated page
+     *
      * @return
      */
     public static Observable<List<Manga>> getRecentUpdatesObservable() {
@@ -82,13 +83,12 @@ public class MangaPark {
         Document parsedDocument = Jsoup.parse(unparsedHtml);
         Elements updates = parsedDocument.select("div.item");
         parsedDocument = Jsoup.parse(updates.toString());
-        List<Manga> chapterList = scrapeUpdatestoManga(parsedDocument);
-        return chapterList;
+        List<Manga> mangaList = scrapeUpdatestoManga(parsedDocument);
+        return mangaList;
     }
 
     private static List<Manga> scrapeUpdatestoManga(final Document parsedDocument) {
         List<Manga> mangaList = new ArrayList<>();
-        //Log.e("RAWR", parsedDocument.toString());
         Elements mangaElements = parsedDocument.select("div.item");
 
         SQLiteDatabase db = MangaFeedDbHelper.getInstance().getReadableDatabase();
@@ -115,31 +115,29 @@ public class MangaPark {
             }
         }
         Log.i("Pull Recent Updates", "Finished pulling updates");
-        if(mangaList.size() == 0) return null;
+        if (mangaList.size() == 0) return null;
         return mangaList;
     }
 
 
     /**
      * builds list of chapters for manga object
+     *
      * @return
      */
-    public static Observable<List<Chapter>> getChapterListObservable(final String url) {
-        return pullChaptersFromWebsite(url)
+    public static Observable<List<Chapter>> getChapterListObservable(final String url, final String title) {
+        return pullChaptersFromWebsite(url, title)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .retry(10)
                 .timeout(25, TimeUnit.SECONDS, Schedulers.io())
-                .onErrorReturn(new Func1<Throwable, List<Chapter>>() {
-                    @Override
-                    public List<Chapter> call(Throwable throwable) {
-                        Log.e("throwable", throwable.toString());
-                        return null;
-                    }
+                .onErrorReturn(throwable -> {
+                    Log.e("throwable", throwable.toString());
+                    return null;
                 }).doOnError(throwable -> throwable.printStackTrace());
     }
 
-    private static Observable<List<Chapter>> pullChaptersFromWebsite(final String url) {
+    private static Observable<List<Chapter>> pullChaptersFromWebsite(final String url, final String title) {
         return Observable.create(new Observable.OnSubscribe<List<Chapter>>() {
             @Override
             public void call(Subscriber<? super List<Chapter>> subscriber) {
@@ -152,7 +150,7 @@ public class MangaPark {
                     if (connect.execute().statusCode() == 200)
                         unparsedHtml = connect.get().html();
 
-                    subscriber.onNext(parseHtmlToChapters(unparsedHtml));
+                    subscriber.onNext(parseHtmlToChapters(unparsedHtml, title));
                     subscriber.onCompleted();
                 } catch (Throwable e) {
                     subscriber.onError(e);
@@ -161,7 +159,7 @@ public class MangaPark {
         });
     }
 
-    private static List<Chapter> parseHtmlToChapters(final String unparsedHtml) {
+    private static List<Chapter> parseHtmlToChapters(final String unparsedHtml, final String title) {
         int chosenIndex = 0, count = -1, i = 0;
         Document parsedDocument = Jsoup.parse(unparsedHtml);
         Elements updates = parsedDocument.select("div#list.book-list").select("div.stream");
@@ -174,13 +172,13 @@ public class MangaPark {
             i++;
         }
         parsedDocument = Jsoup.parse(updates.get(chosenIndex).toString());
-        List<Chapter> chapterList = scrapeChaptersFromParsedDocument(parsedDocument);
+        List<Chapter> chapterList = scrapeChaptersFromParsedDocument(parsedDocument, title);
         return chapterList;
 
 
     }
 
-    private static List<Chapter> scrapeChaptersFromParsedDocument(final Document parsedDocument) {
+    private static List<Chapter> scrapeChaptersFromParsedDocument(final Document parsedDocument, final String title) {
         List<Chapter> chapterList = new ArrayList<>();
         Elements chapterElements = parsedDocument.select("ul.chapter").select("li");
         Elements temp;
@@ -188,14 +186,10 @@ public class MangaPark {
         for (Element chapterElement : chapterElements) {
             temp = chapterElement.select("span");
             String chapterUrl = MangaParkBaseUrl + temp.select("a").attr("href");
-            String[] titles = temp.text().split(" : ");
+            String cTitle = temp.text().trim();
             String chapterDate = chapterElement.select("i").text();
             Chapter curChapter;
-            if (titles.length == 2) {
-                curChapter = new Chapter(chapterUrl, titles[0], titles[1], chapterDate);
-            } else {
-                curChapter = new Chapter(chapterUrl, titles[0], titles[0], chapterDate);
-            }
+            curChapter = new Chapter(chapterUrl, title, cTitle, chapterDate);
             chapterList.add(curChapter);
         }
 
@@ -211,9 +205,9 @@ public class MangaPark {
 
 
     /**
-    * ChapterFragment - takes a chapter url, and returns list of urls to chapter images
+     * ChapterFragment - takes a chapter url, and returns list of urls to chapter images
      * return
-    */
+     */
     public static Observable<List<String>> getChapterImageListObservable(final String url) {
         return parseListOfImageUrls(url)
                 .subscribeOn(Schedulers.io())

@@ -44,9 +44,9 @@ public class WebSource {
             case (MangaJoy.SourceKey):
                 return MangaJoy.getChapterListObservable(url, mangaTitle);
             case (MangaPark.SourceKey):
-                return MangaPark.getChapterListObservable(url);
+                return MangaPark.getChapterListObservable(url, mangaTitle);
             case (MangaHere.SourceKey):
-                return MangaHere.getChapterListObservable(url);
+                return MangaHere.getChapterListObservable(url, mangaTitle);
             default:
                 return MangaJoy.getChapterListObservable(url, mangaTitle);
         }

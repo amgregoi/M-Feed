@@ -62,13 +62,13 @@ public class LibraryPresenterImpl implements HomePresenter {
     @Override
     public void init(Bundle bundle) {
         mLayoutManager = new GridLayoutManager(mLibraryFragmentMapper.getContext(), 3);
-//        ((GridLayoutManager) mLayoutManager).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-//            @Override
-//            public int getSpanSize(int position) {
-//                if (mAdAdapter.isAd(position)) return 3; // ads take up 3 columns
-//                else return 1;
-//            }
-//        });
+        ((GridLayoutManager) mLayoutManager).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (mAdAdapter.isAd(position)) return 3; // ads take up 3 columns
+                else return 1;
+            }
+        });
         updateMangaList();
         mNeedsItemDeocration = true;
     }
@@ -84,7 +84,8 @@ public class LibraryPresenterImpl implements HomePresenter {
                 .subscribe(manga -> updateLibraryGridView(manga));
     }
 
-    public void onItemClick(Manga manga) {
+    public void onItemClick(int pos) {
+        Manga manga = mAdapter.getItemAt(mAdAdapter.getOriginalPosition(pos));
         mLibraryFragmentMapper.setRecentSelection(manga.get_id());
         Intent intent = new Intent(mLibraryFragmentMapper.getContext(), MangaActivity.class);
         intent.putExtra(Manga.TAG, manga.getTitle());
@@ -148,11 +149,7 @@ public class LibraryPresenterImpl implements HomePresenter {
 
     @Override
     public void updateSelection(Manga manga) {
-        for (int pos = 0; pos < mLibraryMangaList.size(); pos++) {
-            if (mLibraryMangaList.get(pos).equals(manga)) {
-                mAdapter.updateItem(pos, manga);
-            }
-        }
+        mAdapter.updateItem(manga);
     }
 
     private void updateLibraryGridView(List<Manga> mList) {
@@ -160,7 +157,7 @@ public class LibraryPresenterImpl implements HomePresenter {
             mLibraryMangaList = new ArrayList<>(mList);
             Collections.sort(mLibraryMangaList, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
 
-            mAdapter = new RecycleSearchAdapter(mLibraryFragmentMapper.getContext(), mLibraryMangaList, (pos, item) -> onItemClick(item));
+            mAdapter = new RecycleSearchAdapter(mLibraryFragmentMapper.getContext(), mLibraryMangaList, (pos) -> onItemClick(pos));
             setupMoPubAdapter();
             mNeedsItemDeocration = false;
 

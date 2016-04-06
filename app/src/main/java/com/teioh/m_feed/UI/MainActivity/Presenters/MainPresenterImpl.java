@@ -1,6 +1,7 @@
 package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -17,6 +18,7 @@ import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
 import com.teioh.m_feed.UI.MainActivity.View.Fragments.FilterDialogFragment;
 import com.teioh.m_feed.UI.MainActivity.View.Fragments.FollowedFragment;
 import com.teioh.m_feed.UI.MainActivity.View.Fragments.LibraryFragment;
+import com.teioh.m_feed.UI.MainActivity.View.Fragments.MALVerifyDialog;
 import com.teioh.m_feed.UI.MainActivity.View.Fragments.RecentFragment;
 import com.teioh.m_feed.UI.MainActivity.View.Fragments.SettingsFragment;
 import com.teioh.m_feed.UI.MainActivity.View.MainActivity;
@@ -80,12 +82,6 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Override
-    public void onSignIn() {
-        Intent intent = new Intent(mMainMapper.getContext(), LoginActivity.class);
-        mMainMapper.getContext().startActivity(intent);
-    }
-
-    @Override
     public void onResume() {
         mMainMapper.closeDrawer();
         setupDrawerLayouts();
@@ -129,16 +125,17 @@ public class MainPresenterImpl implements MainPresenter {
                 //advanced search fragment
                 mMainMapper.closeDrawer();
                 mMainMapper.setPageAdapterItem(2);
-                if (settings != null) removeSettingsFragment();
+                if (settings != null) {
+                    removeSettingsFragment();
+                    mMainMapper.toggleToolbarElements();
+                }
                 DialogFragment dialog = FilterDialogFragment.getnewInstance();
                 dialog.show(((AppCompatActivity) mMainMapper).getSupportFragmentManager(), null);
                 return;
             case (3):
                 //setftings fragment
-                if (settings == null) {
-                    addSettingsFragment();
-                    mMainMapper.closeDrawer();
-                }
+                if (settings == null) addSettingsFragment();
+                mMainMapper.closeDrawer();
                 return;
         }
     }
@@ -270,15 +267,23 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Override
-    public void onMALSignIn() {
+    public void onSignIn() {
         //TODO need to do more research in MAL api options
         if (SharedPrefsUtil.isSignedIn()) {
-            SharedPrefsUtil.setMALCredential(null, null);
-            setupDrawerLayouts();
+            new MALVerifyDialog().getNewInstance().show(((AppCompatActivity)mMainMapper).getSupportFragmentManager(), MALVerifyDialog.TAG);
         } else {
-            onSignIn();
+            Intent intent = new Intent(mMainMapper.getContext(), LoginActivity.class);
+            mMainMapper.getContext().startActivity(intent);
         }
     }
 
+    @Override
+    public void onSignOut(){
+        SharedPrefsUtil.setMALCredential(null, null);
+        setupDrawerLayouts();
+    }
 
+    @Override
+    public void onFilterViewSelected(){
+    }
 }

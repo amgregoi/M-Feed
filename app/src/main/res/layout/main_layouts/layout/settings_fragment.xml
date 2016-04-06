@@ -28,7 +28,7 @@
 			android:id="@+id/google_play_pref"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:background="@drawable/layout_selectors"
+			android:background="@drawable/selector_settings"
 			android:clickable="true"
 			android:orientation="vertical"
 			>
@@ -61,7 +61,7 @@
 			android:id="@+id/reset_followed_manga_pref"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:background="@drawable/layout_selectors"
+			android:background="@drawable/selector_settings"
 			android:clickable="true"
 			android:orientation="vertical"
 			>
@@ -95,7 +95,7 @@
 			android:id="@+id/reset_followed_manga"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:background="@drawable/layout_selectors"
+			android:background="@drawable/selector_settings"
 			android:clickable="true"
 			>
 

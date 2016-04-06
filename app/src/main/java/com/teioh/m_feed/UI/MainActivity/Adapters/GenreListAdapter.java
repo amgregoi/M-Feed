@@ -79,7 +79,7 @@ public class GenreListAdapter extends BaseAdapter {
         GenreHolder holder;
 
         if (row == null) {
-            row = mInflater.inflate(R.layout.search_genre_item, null);
+            row = mInflater.inflate(R.layout.main_genre_grid_item, null);
 
             holder = new GenreHolder();
             holder.txt = (TextView) row.findViewById(R.id.genre_title);

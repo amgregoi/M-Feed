@@ -19,6 +19,8 @@ import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
 public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdapter.ViewHolder> {
@@ -48,13 +50,13 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
         public void onClick(View v) {
             notifyItemChanged(getLayoutPosition());
 //            mListener.onItemSelected(v, filteredData.get(getAdapterPosition()));
-            mListener.onItemSelected(getAdapterPosition(), filteredData.get(getAdapterPosition()));
+            mListener.onItemSelected(getAdapterPosition());
 
         }
     }
 
     public interface ItemSelectedListener {
-        void onItemSelected(int pos, Manga item);
+        void onItemSelected(int pos);
     }
 
     public RecycleSearchAdapter(Context context, ArrayList<Manga> data, ItemSelectedListener listener) {
@@ -67,7 +69,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.gridview_manga_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.main_manga_grid_item, parent, false);
         return new ViewHolder(v);
     }
 
@@ -85,7 +87,6 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
             holder.txt.setTextColor(context.getResources().getColor(R.color.black));
         }
 
-        //Picasso.with(context).load(tManga.getPicUrl()).resize(139, 200).into(holder.img);
         Glide.with(context)
                 .load(item.getPicUrl())
                 .animate(android.R.anim.fade_in)
@@ -103,19 +104,48 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
         return position;
     }
 
-    public Manga getItemAt(int pos){ return filteredData.get(pos);}
+    public Manga getItemAt(int pos) {
+        return filteredData.get(pos);
+    }
 
-    public void updateItem(int position, Manga manga){
-        if(filteredData.size() > position) {
-            int pos = filteredData.indexOf(manga);
+    public void updateItem(Manga manga) {
+        int pos;
+        if ((pos = filteredData.indexOf(manga)) != -1) {
             filteredData.remove(pos);
             filteredData.add(pos, manga);
-
             notifyItemChanged(pos);
+        }
 
-            pos = originalData.indexOf(manga);
+        if ((pos = originalData.indexOf(manga)) != -1) {
             originalData.remove(pos);
             originalData.add(pos, manga);
+            notifyDataSetChanged();
+        }
+
+    }
+
+    public void updateFollowedItem(Manga manga) {
+
+        int pos;
+        //updates item, adds item if not in list and following
+        if ((pos = filteredData.indexOf(manga)) != -1) {
+            filteredData.remove(pos);
+            if (manga.getFollowing()) filteredData.add(pos, manga);
+            notifyItemChanged(pos);
+        }else if(manga.getFollowing()){
+            filteredData.add(manga);
+            Collections.sort(filteredData, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
+            notifyDataSetChanged();
+        }
+
+        //updates item, adds item if not in list and following
+        if ((pos = originalData.indexOf(manga)) != -1) {
+            originalData.remove(pos);
+            if (manga.getFollowing()) originalData.add(pos, manga);
+            notifyDataSetChanged();
+        }else if(manga.getFollowing()){
+            originalData.add(manga);
+            Collections.sort(originalData, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
             notifyDataSetChanged();
         }
     }
@@ -132,7 +162,15 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
         notifyDataSetChanged();
     }
 
+    public ArrayList<Manga> getData() {
+        return originalData;
+    }
 
+    /**
+     * Filter
+     *
+     * @return
+     */
     public Filter getFilter() {
         return mFilter;
     }
@@ -143,6 +181,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
 
     public class TextFilter extends Filter {
         public CharSequence lastQuery = "";
+
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
 

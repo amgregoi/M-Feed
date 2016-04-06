@@ -12,7 +12,7 @@ import com.teioh.m_feed.UI.Maps.SearchViewListenerMap;
 import java.util.List;
 import java.util.Map;
 
-public interface MainActivityMapper extends BaseContextMap, SearchViewListenerMap, Listeners.MainFragmentListener, DrawerLayoutMap {
+public interface MainActivityMapper extends BaseContextMap, Listeners.MALDialogListener, SearchViewListenerMap, Listeners.MainFragmentListener, DrawerLayoutMap {
 
     void registerAdapter(ViewPagerAdapterMain adapter);
 

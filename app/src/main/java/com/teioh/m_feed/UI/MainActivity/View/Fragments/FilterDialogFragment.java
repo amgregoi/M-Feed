@@ -49,7 +49,7 @@ public class FilterDialogFragment extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.search_fragment, container, false);
+        View v = inflater.inflate(R.layout.main_search_dialog, container, false);
         ButterKnife.bind(this, v);
 
         mAdapter = new GenreListAdapter(getContext(), new ArrayList<>(Arrays.asList(MangaJoy.genres)));

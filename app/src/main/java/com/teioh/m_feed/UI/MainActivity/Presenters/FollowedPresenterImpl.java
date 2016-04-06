@@ -86,7 +86,8 @@ public class FollowedPresenterImpl implements HomePresenter {
                 .subscribe(manga -> updateFollowedGridView(manga));
     }
 
-    public void onItemClick(Manga manga) {
+    public void onItemClick(int pos) {
+        Manga manga = mAdapter.getItemAt(mAdAdapter.getOriginalPosition(pos));
         mFollowFragmentMapper.setRecentSelection(manga.get_id());
         Intent intent = new Intent(mFollowFragmentMapper.getContext(), MangaActivity.class);
         intent.putExtra(Manga.TAG, manga.getTitle());
@@ -110,19 +111,20 @@ public class FollowedPresenterImpl implements HomePresenter {
     @Override
     public void onResume() {
         if (mFollowedMangaList != null) {
-            mMangaListSubscription = ReactiveQueryManager.getFollowedMangaObservable()
-                    .doOnError(throwable -> Log.e(TAG, throwable.getMessage()))
-                    .subscribe(manga -> {
-                        if (mFollowFragmentMapper.getContext() != null) {
-                            if (manga != null) {
-                                mFollowedMangaList.clear();
-                                mFollowedMangaList.addAll(manga);
-                                mAdapter.setOriginalData(mFollowedMangaList);
-                                mMangaListSubscription = null;
-                            }
-                        }
-                    });
+            mFollowedMangaList = new ArrayList<>(mAdapter.getData());
         }
+//            mMangaListSubscription = ReactiveQueryManager.getFollowedMangaObservable()
+//                    .doOnError(throwable -> Log.e(TAG, throwable.getMessage()))
+//                    .subscribe(manga -> {
+//                        if (mFollowFragmentMapper.getContext() != null) {
+//                            if (manga != null) {
+//                                mAdapter.addAllUnique(manga);
+//                                mFollowedMangaList = new ArrayList<>(mAdapter.getData());
+//                                mMangaListSubscription = null;
+//                            }
+//                        }
+//                    });
+//        }
     }
 
     @Override
@@ -163,18 +165,15 @@ public class FollowedPresenterImpl implements HomePresenter {
 
     @Override
     public void updateSelection(Manga manga) {
-        for (int pos = 0; pos < mFollowedMangaList.size(); pos++) {
-            if (mFollowedMangaList.get(pos).equals(manga)) {
-                mAdapter.updateItem(pos, manga);
-            }
-        }
+        mAdapter.updateFollowedItem(manga);
     }
+
 
     private void updateFollowedGridView(List<Manga> mangaList) {
         if (mFollowFragmentMapper.getContext() != null && mangaList != null) {
             mFollowedMangaList = new ArrayList<>(mangaList);
             Collections.sort(mFollowedMangaList, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
-            mAdapter = new RecycleSearchAdapter(mFollowFragmentMapper.getContext(), mFollowedMangaList, (pos, item) -> onItemClick(item));
+            mAdapter = new RecycleSearchAdapter(mFollowFragmentMapper.getContext(), mFollowedMangaList, (pos) -> onItemClick(pos));
             setupMoPubAdapter();
             mNeedsItemDeocration = false;
 

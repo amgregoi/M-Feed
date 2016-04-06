@@ -31,4 +31,8 @@ public class Listeners {
         void onBackPressed();
     }
 
+    public interface MALDialogListener{
+        void MALSignOut();
+    }
+
 }

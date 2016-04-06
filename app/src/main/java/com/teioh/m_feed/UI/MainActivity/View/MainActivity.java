@@ -325,7 +325,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
             return true;
         });
 
-        mDrawerHeader.setOnClickListener(v -> mMainPresenter.onMALSignIn());
+        mDrawerHeader.setOnClickListener(v -> mMainPresenter.onSignIn());
     }
 
     @Override
@@ -337,6 +337,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
             mToast.show();
         } else if (getSupportFragmentManager().findFragmentByTag(SettingsFragment.TAG) != null) {
             mMainPresenter.removeSettingsFragment();
+            toggleToolbarElements();
             openDrawer();
         } else if(mMainPresenter.genreFilterActive()){
             mMainPresenter.onClearGenreFilter();
@@ -359,5 +360,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     @Override
     public void updateRecentSelection(Manga manga) {
         mMainPresenter.getRecentManga();
+    }
+
+    @Override
+    public void MALSignOut() {
+        mMainPresenter.onSignOut();
     }
 }

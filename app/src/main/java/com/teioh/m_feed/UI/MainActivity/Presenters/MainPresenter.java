@@ -10,8 +10,6 @@ import com.teioh.m_feed.UI.Maps.LifeCycleMap;
 
 public interface MainPresenter extends LifeCycleMap {
 
-    void onSignIn();
-
     void updateQueryChange(String newTest);
 
     void onDrawerItemChosen(int position);
@@ -20,7 +18,6 @@ public interface MainPresenter extends LifeCycleMap {
 
     void onFilterSelected(int filter);
 
-    void onMALSignIn();
 
     void removeSettingsFragment();
 
@@ -33,4 +30,11 @@ public interface MainPresenter extends LifeCycleMap {
     void getRecentManga();
 
     void setRecentManga(long id);
+
+    void onFilterViewSelected();
+
+    void onSignOut();
+
+    void onSignIn();
+
 }

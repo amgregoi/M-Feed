@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mopub.nativeads.MoPubAdAdapter;
 import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.teioh.m_feed.UI.Maps.Listeners;
 import com.teioh.m_feed.Models.Manga;
@@ -41,7 +40,7 @@ public class RecentFragment extends Fragment implements RecentFragmentMapper {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.tab1_recent_fragment, container, false);
+        View v = inflater.inflate(R.layout.main_tab1_recent_fragment, container, false);
         ButterKnife.bind(this, v);
 
         mGridView.setLayoutManager(new GridLayoutManager(getContext(), 3));

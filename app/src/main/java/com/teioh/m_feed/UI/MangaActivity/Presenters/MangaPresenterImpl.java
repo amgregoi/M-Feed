@@ -210,7 +210,7 @@ public class MangaPresenterImpl implements MangaPresenter {
     private void updateChapterList(List<Chapter> chapters) {
         if (mMangaMapper.getContext() != null) {
             mChapterList = new ArrayList<>(chapters);
-            mAdapter = new ChapterListAdapter(mMangaMapper.getContext(), R.layout.chapter_list_item, mChapterList);
+            mAdapter = new ChapterListAdapter(mMangaMapper.getContext(), R.layout.manga_chapter_list_item, mChapterList);
             mMangaMapper.registerAdapter(mAdapter);
                 mMangaMapper.stopRefresh();
                 mMangaMapper.showCoverLayout();

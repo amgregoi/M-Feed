@@ -34,6 +34,7 @@ public class MangaHere {
 
     /**
      * builds list of manga for recently updated page
+     *
      * @return
      */
     public static Observable<List<Manga>> getRecentUpdatesObservable() {
@@ -75,8 +76,8 @@ public class MangaHere {
         Document parsedDocument = Jsoup.parse(unparsedHtml);
         Elements updates = parsedDocument.select("div.manga_updates");
         parsedDocument = Jsoup.parse(updates.toString());
-        List<Manga> chapterList = scrapeUpdatestoManga(parsedDocument);
-        return chapterList;
+        List<Manga> mangaList = scrapeUpdatestoManga(parsedDocument);
+        return mangaList;
     }
 
     private static List<Manga> scrapeUpdatestoManga(final Document parsedDocument) {
@@ -103,17 +104,18 @@ public class MangaHere {
             }
         }
         Log.i("Pull Recent Updates", "Finished pulling updates");
-        if(mangaList.size() == 0) return null;
+        if (mangaList.size() == 0) return null;
         return mangaList;
     }
 
     /**
      * builds list of chapters for manga object
+     *
      * @return
      */
 
-    public static Observable<List<Chapter>> getChapterListObservable(final String url) {
-        return pullChaptersFromWebsite(url)
+    public static Observable<List<Chapter>> getChapterListObservable(final String url, final String title) {
+        return pullChaptersFromWebsite(url, title)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .retry(10)
@@ -126,7 +128,7 @@ public class MangaHere {
                 }).doOnError(throwable -> throwable.printStackTrace());
     }
 
-    private static Observable<List<Chapter>> pullChaptersFromWebsite(final String url) {
+    private static Observable<List<Chapter>> pullChaptersFromWebsite(final String url, final String title) {
         return Observable.create(new Observable.OnSubscribe<List<Chapter>>() {
             @Override
             public void call(Subscriber<? super List<Chapter>> subscriber) {
@@ -139,7 +141,7 @@ public class MangaHere {
                     if (connect.execute().statusCode() == 200)
                         unparsedHtml = connect.get().html().toString();
 
-                    subscriber.onNext(parseHtmlToChapters(unparsedHtml));
+                    subscriber.onNext(parseHtmlToChapters(unparsedHtml, title));
                     subscriber.onCompleted();
                 } catch (Throwable e) {
                     subscriber.onError(e);
@@ -148,22 +150,22 @@ public class MangaHere {
         });
     }
 
-    private static List<Chapter> parseHtmlToChapters(final String unparsedHtml) {
+    private static List<Chapter> parseHtmlToChapters(final String unparsedHtml, final String title) {
         Document parsedDocument = Jsoup.parse(unparsedHtml);
         Elements updates = parsedDocument.select("div.detail_list").select("ul").not("ul.tab_comment.clearfix");
         parsedDocument = Jsoup.parse(updates.toString());
-        List<Chapter> chapterList = scrapeChaptersFromParsedDocument(parsedDocument);
+        List<Chapter> chapterList = scrapeChaptersFromParsedDocument(parsedDocument, title);
         return chapterList;
     }
 
-    private static List<Chapter> scrapeChaptersFromParsedDocument(final Document parsedDocument) {
+    private static List<Chapter> scrapeChaptersFromParsedDocument(final Document parsedDocument, final String title) {
         List<Chapter> chapterList = new ArrayList<>();
         Elements chapterElements = parsedDocument.getElementsByTag("li");
         int numChapters = chapterElements.size();
 
         for (Element chapterElement : chapterElements) {
             String chapterUrl = chapterElement.select("a").attr("href");
-            String title = chapterElement.select("a").text();
+//            String title = chapterElement.select("a").text();
             String cTitle = chapterElement.select("span.left").text();
             String chapterDate = chapterElement.select("span.right").text();
 
@@ -177,9 +179,10 @@ public class MangaHere {
 
 
     /**
-    * ChapterFragment - takes a chapter url, and returns list of urls to chapter images
+     * ChapterFragment - takes a chapter url, and returns list of urls to chapter images
+     *
      * @return
-    */
+     */
     public static Observable<List<String>> getChapterImageListObservable(final String url) {
         return parseListOfImageUrls(url)
                 .subscribeOn(Schedulers.io())
@@ -223,11 +226,11 @@ public class MangaHere {
         //get base url for images
         Document parsedDocumentForImage = Jsoup.parse(unparsedHtml);
         Elements imageUpdates = parsedDocumentForImage.select("select.wid60").first().select("option");
-        for(Element url: imageUpdates){
+        for (Element url : imageUpdates) {
             pageUrls.add(url.attr("value"));
         }
 
-        for(String url : pageUrls) {
+        for (String url : pageUrls) {
             try {
                 Connection connect = Jsoup.connect(url)
                         .userAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.21")
@@ -244,7 +247,7 @@ public class MangaHere {
 
     private static List<String> buildImageUrlList(final List<String> unparsedHtml) {
         List<String> imageUrls = new ArrayList<>();
-        for(String s : unparsedHtml){
+        for (String s : unparsedHtml) {
             Document parsedDocumentForImage = Jsoup.parse(s);
             Elements imageUpdate = parsedDocumentForImage.select("section#viewer.read_img");
             parsedDocumentForImage = Jsoup.parse(imageUpdate.toString());
@@ -254,10 +257,11 @@ public class MangaHere {
     }
 
     /**
-    * Adds new Manga and
-    * gets missing manga information and updates database
+     * Adds new Manga and
+     * gets missing manga information and updates database
+     *
      * @return
-    */
+     */
     public static Observable<Manga> updateMangaObservable(final Manga m) {
         return getUnparsedHtml(m)
                 .subscribeOn(Schedulers.newThread())
@@ -321,9 +325,9 @@ public class MangaHere {
                 artist = e.get(i).text().replace(e.get(i).select("label").text(), "");
             } else if (i == 3) {
                 genres = e.get(i).text().replace(e.get(i).select("label").text(), "");
-            } else if( i == 6) {
+            } else if (i == 6) {
                 status = e.get(i).text().replace(e.get(i).select("label").text(), "");
-            }else if (i == 8) {
+            } else if (i == 8) {
                 summary = e.get(i).text();
             }
         }

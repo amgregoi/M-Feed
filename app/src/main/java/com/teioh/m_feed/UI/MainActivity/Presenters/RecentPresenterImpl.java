@@ -160,11 +160,7 @@ public class RecentPresenterImpl implements HomePresenter {
 
     @Override
     public void updateSelection(Manga manga) {
-        for (int pos = 0; pos < mRecentMangaList.size(); pos++) {
-            if (mRecentMangaList.get(pos).equals(manga)) {
-                mAdapter.updateItem(pos, manga);
-            }
-        }
+        mAdapter.updateItem(manga);
     }
 
     private void updateRecentGridView(List<Manga> manga) {
@@ -176,7 +172,7 @@ public class RecentPresenterImpl implements HomePresenter {
                 // failed to update list, show refresh view,
                 mRecentMangaList = new ArrayList<>();
             }
-            mAdapter = new RecycleSearchAdapter(mRecentFragmentMapper.getContext(), mRecentMangaList, (position, item) -> onItemClick(position));
+            mAdapter = new RecycleSearchAdapter(mRecentFragmentMapper.getContext(), mRecentMangaList, (position) -> onItemClick(position));
             setupMoPubAdapter();
             mRecentFragmentMapper.stopRefresh();
             mNeedsItemDeocration = false;

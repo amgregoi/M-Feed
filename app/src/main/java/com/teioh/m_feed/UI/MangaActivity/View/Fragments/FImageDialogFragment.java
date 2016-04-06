@@ -34,7 +34,7 @@ public class FImageDialogFragment extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.info_image_dialog, null);
+        View view = inflater.inflate(R.layout.manga_info_image_dialog, null);
         ButterKnife.bind(this, view);
 
         if(getArguments().containsKey(IMAGE_URL_KEY))
