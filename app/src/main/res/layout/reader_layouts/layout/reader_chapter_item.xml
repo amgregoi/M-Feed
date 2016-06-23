@@ -3,27 +3,13 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="fill_parent"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	app:theme="@style/ReaderTheme"
+	android:theme="@style/ReaderTheme"
 	>
 
 	<com.teioh.m_feed.UI.ReaderActivity.View.Widgets.GestureImageView
 		android:id="@+id/chapterPageImageView"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
 		/>
-
-	<!--<TextView-->
-		<!--android:id="@+id/next_prev_text"-->
-		<!--android:layout_width="250dp"-->
-		<!--android:layout_height="wrap_content"-->
-	    <!--android:text="release to load previous chapter"-->
-	    <!--android:textColor="@color/white"-->
-	    <!--android:textSize="25sp"-->
-	    <!--android:layout_centerVertical="true"-->
-	    <!--android:layout_alignParentEnd="true"-->
-	    <!--android:gravity="center"-->
-	    <!--android:visibility="gone"-->
-		<!--/>-->
 
 </RelativeLayout>

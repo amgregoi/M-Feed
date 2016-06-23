@@ -59,7 +59,7 @@ public class ChapterListAdapter extends ArrayAdapter {
 
         Chapter viewedChapter = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase())
                 .query(Chapter.class)
-                .withSelection("mTitle = ? AND cNumber = ?", ch.getMangaTitle(), Integer.toString(ch.getChapterNumber()))
+                .withSelection("mangaTitle = ? AND chapterNumber = ?", ch.getMangaTitle(), Integer.toString(ch.getChapterNumber()))
                 .get();
 
 

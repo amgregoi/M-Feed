@@ -3,6 +3,7 @@ package com.teioh.m_feed.Utils.Database;
 import android.util.Log;
 
 import com.teioh.m_feed.Models.Manga;
+import com.teioh.m_feed.Utils.SharedPrefsUtil;
 import com.teioh.m_feed.WebSources.WebSource;
 
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class ReactiveQueryManager {
         ArrayList<Manga> mangaList = new ArrayList<>();
         QueryResultIterable<Manga> itr = cupboard().withDatabase(MangaFeedDbHelper.getInstance()
                 .getReadableDatabase()).query(Manga.class)
-                .withSelection("mSource = ?", WebSource.getCurrentSource())
+                .withSelection("source = ?", SharedPrefsUtil.getSavedSource())
                 .query();
 
         for (Manga manga : itr) {
@@ -95,7 +96,7 @@ public class ReactiveQueryManager {
     private static List<Manga> getFollowedManga() {
         ArrayList<Manga> mangaList = new ArrayList<>();
         QueryResultIterable<Manga> itr = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase())
-                .query(Manga.class).withSelection("mFollowing = ? AND mSource = ?", "1", WebSource.getCurrentSource()).query();
+                .query(Manga.class).withSelection("following = ? AND source = ?", "1", WebSource.getCurrentSource()).query();
         for (Manga manga : itr) {
             mangaList.add(manga);
         }

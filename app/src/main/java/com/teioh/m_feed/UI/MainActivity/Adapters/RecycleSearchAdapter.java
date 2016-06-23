@@ -20,7 +20,6 @@ import com.teioh.m_feed.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 
 public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdapter.ViewHolder> {
@@ -49,7 +48,6 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
         @Override
         public void onClick(View v) {
             notifyItemChanged(getLayoutPosition());
-//            mListener.onItemSelected(v, filteredData.get(getAdapterPosition()));
             mListener.onItemSelected(getAdapterPosition());
 
         }
@@ -200,8 +198,8 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
 
                 //filter by title & alternate titles
                 filterableString = manga.toString();
-                if (manga.getmAlternate() != null)
-                    filterableString += ", " + list.get(i).getmAlternate();
+                if (manga.getAlternate() != null)
+                    filterableString += ", " + list.get(i).getAlternate();
 
                 if (filterableString.toLowerCase().contains(filterString)) {
                     nlist.add(list.get(i));

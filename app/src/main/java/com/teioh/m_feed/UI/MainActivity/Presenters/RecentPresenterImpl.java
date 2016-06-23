@@ -93,7 +93,6 @@ public class RecentPresenterImpl implements HomePresenter {
         }
         mLastSourceQuery = WebSource.getCurrentSource();
         mMangaListSubscription = WebSource.getRecentUpdatesObservable()
-                .doOnError(throwable -> Log.e(TAG, throwable.getMessage()))
                 .subscribe(manga -> updateRecentGridView(manga));
     }
 
@@ -117,7 +116,7 @@ public class RecentPresenterImpl implements HomePresenter {
             mMangaListSubscription.unsubscribe();
             mMangaListSubscription = null;
         }
-        mAdAdapter.destroy();
+        if(mAdAdapter != null) mAdAdapter.destroy();
     }
 
     @Override
@@ -160,7 +159,8 @@ public class RecentPresenterImpl implements HomePresenter {
 
     @Override
     public void updateSelection(Manga manga) {
-        mAdapter.updateItem(manga);
+        if(mAdAdapter != null)
+            mAdapter.updateItem(manga);
     }
 
     private void updateRecentGridView(List<Manga> manga) {

@@ -6,33 +6,36 @@ import android.os.Parcelable;
 public class Chapter implements Parcelable {
     public final static String TAG = "CHAPTER";
 
-    private String mUrl;
-    private String mDate;
-    private String mTitle;
-    private String cTitle;
-    private int cNumber;
+    private String url;
+    private String date;
+    private String mangaTitle;
+    private String chapterTitle;
+    private int chapterNumber;
+
+    private int currentPage;
+    private int totalPages;
 
     public Chapter() {
     }
 
     public Chapter(String title) {
-        this.mTitle = title;
-        this.cTitle = title;
+        this.mangaTitle = title;
+        this.chapterTitle = title;
     }
 
     public Chapter(String url, String mTitle, String cTitle, String date, int num) {
-        this.mUrl = url;
-        this.mDate = date;
-        this.mTitle = mTitle;
-        this.cTitle = cTitle;
-        this.cNumber = num;
+        this.url = url;
+        this.date = date;
+        this.mangaTitle = mTitle;
+        this.chapterTitle = cTitle;
+        this.chapterNumber = num;
     }
 
     public Chapter(String url, String mTitle, String cTitle, String date) {
-        this.mUrl = url;
-        this.mDate = date;
-        this.mTitle = mTitle;
-        this.cTitle = cTitle;
+        this.url = url;
+        this.date = date;
+        this.mangaTitle = mTitle;
+        this.chapterTitle = cTitle;
     }
 
     @Override
@@ -42,19 +45,23 @@ public class Chapter implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mUrl);
-        dest.writeString(mDate);
-        dest.writeString(mTitle);
-        dest.writeString(cTitle);
-        dest.writeInt(cNumber);
+        dest.writeString(url);
+        dest.writeString(date);
+        dest.writeString(mangaTitle);
+        dest.writeString(chapterTitle);
+        dest.writeInt(chapterNumber);
+        dest.writeInt(currentPage);
+        dest.writeInt(totalPages);
     }
 
     protected Chapter(Parcel in) {
-        mUrl = in.readString();
-        mDate = in.readString();
-        mTitle = in.readString();
-        cTitle = in.readString();
-        cNumber = in.readInt();
+        url = in.readString();
+        date = in.readString();
+        mangaTitle = in.readString();
+        chapterTitle = in.readString();
+        chapterNumber = in.readInt();
+        currentPage = in.readInt();
+        totalPages = in.readInt();
     }
 
     public static final Creator<Chapter> CREATOR = new Creator<Chapter>() {
@@ -70,43 +77,62 @@ public class Chapter implements Parcelable {
     };
 
     public String getChapterUrl() {
-        return this.mUrl;
+        return this.url;
     }
 
     public void setChapterUrl(String url) {
-        this.mUrl = url;
+        this.url = url;
     }
 
     public String getChapterDate() {
-        return this.mDate;
+        return this.date;
     }
 
     public void setChapterDate(String date) {
-        this.mDate = date;
+        this.date = date;
     }
 
     public String getChapterTitle() {
-        return this.cTitle;
+        return this.chapterTitle;
     }
 
     public void setChapterTitle(String title) {
-        this.cTitle = title;
+        this.chapterTitle = title;
     }
 
     public int getChapterNumber() {
-        return this.cNumber;
+        return this.chapterNumber;
     }
 
     public void setChapterNumber(int num) {
-        this.cNumber = num;
+        this.chapterNumber = num;
     }
 
     public String toString() {
-        return this.cTitle;
+        return this.chapterTitle;
     }
 
     public String getMangaTitle() {
-        return this.mTitle;
+        return this.mangaTitle;
     }
+
+    public void setMangaTitle(String title) { this.mangaTitle = title; }
+
+    public int getCurrentPage() {
+        return currentPage;
+    }
+
+    public void setCurrentPage(int mCurrentPage) {
+        this.currentPage = mCurrentPage;
+    }
+
+    public int getTotalPages() {
+        return totalPages;
+    }
+
+    public void setTotalPages(int mTotalPages) {
+        this.totalPages = mTotalPages;
+    }
+
 
 }

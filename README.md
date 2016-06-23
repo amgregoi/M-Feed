@@ -2,10 +2,11 @@
 ==============
 
 __TODO:__
-* Research MAL Integration
-* Add more sources
-* Update Database for new source info
+* Update MangaHere/Park updateMangaObservable()
+* Fix Batoto chapter list/reader
+* Fix MangaHere/MangaPark chapter images not always loading
 * Editing some of the layouts (work in progress)
+* Research MAL Integration (on hold)
 
 __Intro__
        M-Feed is an android application that allows users to browse and read the library of multiple online sources.  You can 'follow' specific manga to keep track of what you read and get recent a list of daily updates in the front page. This side project is a work in progress and updated when I have free time.
@@ -23,14 +24,14 @@ __Libraries Used__
 --------------------------
 __Navigation__
 <br>
-![alt text](https://raw.githubusercontent.com/amgregoi/M-Feed/master/images/Nav.png "Navigation menu")
+<img src="https://raw.githubusercontent.com/amgregoi/M-Feed/master/images/Nav.png" height="500">
 <br><br>
 
 __Home Screen__
 <br>
-![alt text](https://raw.githubusercontent.com/amgregoi/M-Feed/master/images/Home.png "Home screen")
+<img src="https://raw.githubusercontent.com/amgregoi/M-Feed/master/images/Home.png" height="500">
 <br><br>
 
 __Manga information page__
 <br>
-![alt text](https://raw.githubusercontent.com/amgregoi/M-Feed/master/images/Manga.png "Manga information and chapter list")
+<img src="https://raw.githubusercontent.com/amgregoi/M-Feed/master/images/Manga.png" height="500">

@@ -149,7 +149,8 @@ public class LibraryPresenterImpl implements HomePresenter {
 
     @Override
     public void updateSelection(Manga manga) {
-        mAdapter.updateItem(manga);
+        if (mAdapter != null)
+            mAdapter.updateItem(manga);
     }
 
     private void updateLibraryGridView(List<Manga> mList) {
@@ -163,7 +164,10 @@ public class LibraryPresenterImpl implements HomePresenter {
 
             mMangaListSubscription.unsubscribe();
             mMangaListSubscription = null;
+
         }
+
+
     }
 
     private void setupMoPubAdapter() {

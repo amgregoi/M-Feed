@@ -165,7 +165,8 @@ public class FollowedPresenterImpl implements HomePresenter {
 
     @Override
     public void updateSelection(Manga manga) {
-        mAdapter.updateFollowedItem(manga);
+        if(mAdapter != null)
+            mAdapter.updateFollowedItem(manga);
     }
 
 

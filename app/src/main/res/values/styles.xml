@@ -32,7 +32,6 @@
 
 	<style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
 		<item name="android:popupBackground">@color/ColorPrimary</item>
-
 	</style>
 
 
@@ -42,7 +41,6 @@
         <item name="android:windowAnimationStyle">@style/MyAnimation.Window</item>
         <item name="android:windowBackground">@color/ColorPrimary</item>
         <item name="android:colorAccent">@color/ColorAccent</item>
-
     </style>
 
 	<!-- Dialog Fragment in Manga Activity -->

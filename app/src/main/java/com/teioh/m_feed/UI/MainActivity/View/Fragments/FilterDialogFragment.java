@@ -19,7 +19,7 @@ import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.Adapters.GenreListAdapter;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
-import com.teioh.m_feed.WebSources.MangaJoy;
+import com.teioh.m_feed.WebSources.Source.MangaJoy;
 import com.teioh.m_feed.WebSources.WebSource;
 
 import java.util.ArrayList;
@@ -89,7 +89,7 @@ public class FilterDialogFragment extends DialogFragment {
         StringBuilder selection = new StringBuilder();
         List<String> selectionArgs = new ArrayList<>();
 
-        selection.append("mSource" + " = ?");
+        selection.append("source" + " = ?");
         selectionArgs.add(WebSource.getCurrentSource());
 
         List<String> keepList = mAdapter.getGenreListByStatus(1);
@@ -105,13 +105,13 @@ public class FilterDialogFragment extends DialogFragment {
 
             for (String s : keepList) {
                 selection.append(" AND ");
-                selection.append("mGenres" + " LIKE ?");
+                selection.append("genres" + " LIKE ?");
                 selectionArgs.add("%" + s.replaceAll("\\s", "") + "%"); //genres have been stripped of spaces in the database
             }
 
             for (String s : removeList) {
                 selection.append(" AND ");
-                selection.append("mGenres" + " NOT LIKE ?");
+                selection.append("genres" + " NOT LIKE ?");
                 selectionArgs.add("%" + s.replaceAll("\\s", "") + "%"); //genres have been stripped of spaces in the database
             }
 
@@ -121,8 +121,6 @@ public class FilterDialogFragment extends DialogFragment {
 
             if (filteredManga.iterator().hasNext()) {
                 Intent intent = new Intent();
-                intent.putStringArrayListExtra("KEEP", new ArrayList<>(keepList));
-                intent.putStringArrayListExtra("REMOVE", new ArrayList<>(removeList));
                 intent.putParcelableArrayListExtra("MANGA", new ArrayList<>(filteredManga.list())); //TODO decide if i want to pass whole list or query contents
                 FilterDialogFragment.this.getActivity().onActivityReenter(Activity.RESULT_OK, intent);
                 getDialog().dismiss();

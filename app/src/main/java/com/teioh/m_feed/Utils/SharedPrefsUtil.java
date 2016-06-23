@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 
 import com.teioh.m_feed.MFeedApplication;
 import com.teioh.m_feed.R;
+import com.teioh.m_feed.WebSources.Source.MangaJoy;
 
 public class SharedPrefsUtil {
 
@@ -117,6 +118,18 @@ public class SharedPrefsUtil {
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.PREF_APP_THEME_IS_LIGHT), false);
     }
 
+
+    public static void setSavedSource(String source){
+        Context context = MFeedApplication.getInstance();
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putString(context.getString(R.string.PREF_USER_SOURCE), source);
+        editor.apply();
+    }
+
+    public static String getSavedSource(){
+        Context context = MFeedApplication.getInstance();
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.PREF_USER_SOURCE), MangaJoy.SourceKey);
+    }
 
 
 

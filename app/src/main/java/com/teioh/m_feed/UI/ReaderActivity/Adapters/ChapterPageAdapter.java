@@ -36,10 +36,8 @@ public class ChapterPageAdapter extends FragmentStatePagerAdapter {
         WeakReference<Fragment> weakReference = mPageReferenceMap.get(position);
 
         if(weakReference != null) {
-            Log.e(TAG, "weakreference");
             return weakReference.get();
         }else{
-            Log.e(TAG, "new fragment");
             Fragment mChapterFragment = new ChapterFragment();
             Bundle bundle = new Bundle();
 
@@ -61,8 +59,13 @@ public class ChapterPageAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        Fragment fragment = (ChapterFragment) super.instantiateItem(container, position);
-        mPageReferenceMap.put(position, new WeakReference<>(fragment));
+        Fragment fragment = null;
+        try {
+            fragment = (ChapterFragment) super.instantiateItem(container, position);
+            mPageReferenceMap.put(position, new WeakReference<>(fragment));
+        }catch (NullPointerException e){
+            Log.e(TAG, "Failed to insantiate fragment: " + e.getMessage());
+        }
         return fragment;
     }
 

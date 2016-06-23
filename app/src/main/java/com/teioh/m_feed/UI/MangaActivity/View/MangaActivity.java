@@ -186,12 +186,12 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
         if (manga != null && getContext() != null) {
             mDescriptionText.setText(manga.getDescription());
             mDescriptionText.setTypeface(Typeface.SERIF);
-            mTitleText.setText(manga.getTitle());
-            mAuthorText.setText(manga.getmAuthor());
-            mArtistText.setText(manga.getmArtist());
+            mTitleText.setText(manga.getTitle() + "\n" + manga.getSource());
+            mAuthorText.setText(manga.getAuthor());
+            mArtistText.setText(manga.getArtist());
             mGenresText.setText(manga.getmGenre());
-            mAlternateText.setText(manga.getmAlternate());
-            mStatusText.setText(manga.getmStatus());
+            mAlternateText.setText(manga.getAlternate());
+            mStatusText.setText(manga.getStatus());
             Glide.with(getContext()).load(manga.getPicUrl()).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(mMangaImage);
             mChapterList.addHeaderView(mMangaInfoHeader, null, false);
             mChapterList.addHeaderView(mChapterHeader, null, false);

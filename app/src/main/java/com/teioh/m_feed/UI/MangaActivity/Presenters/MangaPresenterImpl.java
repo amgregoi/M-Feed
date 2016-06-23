@@ -12,6 +12,7 @@ import com.teioh.m_feed.UI.MangaActivity.Adapters.ChapterListAdapter;
 import com.teioh.m_feed.UI.MangaActivity.View.Mappers.MangaActivityMapper;
 import com.teioh.m_feed.UI.ReaderActivity.View.ReaderActivity;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
+import com.teioh.m_feed.WebSources.RequestWrapper;
 import com.teioh.m_feed.WebSources.WebSource;
 
 import java.util.ArrayList;
@@ -20,6 +21,8 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
@@ -36,7 +39,7 @@ public class MangaPresenterImpl implements MangaPresenter {
     private boolean mChapterOrderDescending;
     private Manga mManga;
 
-//    MALService mMALService;
+    //    MALService mMALService;
     MALMangaList mMALMangaList;
 
     private MangaActivityMapper mMangaMapper;
@@ -76,7 +79,7 @@ public class MangaPresenterImpl implements MangaPresenter {
             String title = bundle.getString(Manga.TAG);
             mManga = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase())
                     .query(Manga.class)
-                    .withSelection("mTitle = ? AND mSource = ?", title, WebSource.getCurrentSource())
+                    .withSelection("title = ? AND source = ?", title, WebSource.getCurrentSource())
                     .get();
         }
         mChapterOrderDescending = true;
@@ -87,7 +90,7 @@ public class MangaPresenterImpl implements MangaPresenter {
         mMangaMapper.setupSwipeRefresh();
         mMangaMapper.hideCoverLayout();
 
-        if (mManga.getmIsInitialized() == 1) updateMangaView(mManga);
+        if (mManga.getInitialized() == 1) updateMangaView(mManga);
         else getMangaViewInfo();
 
         if (mChapterList == null) getChapterList();
@@ -101,7 +104,7 @@ public class MangaPresenterImpl implements MangaPresenter {
 
     @Override
     public void onResume() {
-        if(mAdapter != null)mAdapter.notifyDataSetChanged();
+        if (mAdapter != null) mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -166,8 +169,8 @@ public class MangaPresenterImpl implements MangaPresenter {
         }
     }
 
-    private void getMALSyncOptions(){
-//        mMALService.searchManga(mManga.getTitle(), new Callback<MALMangaList>() {
+    private void getMALSyncOptions() {
+//        mMALService.searchManga(mManga.getMangaTitle(), new Callback<MALMangaList>() {
 //            @Override
 //            public void success(MALMangaList list, Response response) {
 //                Log.e(TAG, list.toString());
@@ -183,7 +186,7 @@ public class MangaPresenterImpl implements MangaPresenter {
 
     private void getMangaViewInfo() {
         mObservableMangaSubscription = WebSource.updateMangaObservable(mManga)
-                .doOnError(throwable -> Log.e(TAG, throwable.getMessage()))
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(manga -> updateMangaView(manga));
     }
 
@@ -193,7 +196,7 @@ public class MangaPresenterImpl implements MangaPresenter {
             mMangaMapper.changeFollowButton(manga.getFollowing());
         }
         mManga = manga;
-        mManga.setmIsInitialized(1);
+        mManga.setInitialized(1);
         cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).put(manga);
         if (mChapterListSubscription != null) {
             mObservableMangaSubscription.unsubscribe();
@@ -202,7 +205,7 @@ public class MangaPresenterImpl implements MangaPresenter {
     }
 
     private void getChapterList() {
-        mChapterListSubscription = WebSource.getChapterListObservable(mManga.getMangaURL(), mManga.getTitle())
+        mChapterListSubscription = WebSource.getChapterListObservable(new RequestWrapper(mManga))
                 .doOnError(throwable -> Log.e(TAG, throwable.getMessage()))
                 .subscribe(chapters -> updateChapterList(chapters));
     }
@@ -212,8 +215,8 @@ public class MangaPresenterImpl implements MangaPresenter {
             mChapterList = new ArrayList<>(chapters);
             mAdapter = new ChapterListAdapter(mMangaMapper.getContext(), R.layout.manga_chapter_list_item, mChapterList);
             mMangaMapper.registerAdapter(mAdapter);
-                mMangaMapper.stopRefresh();
-                mMangaMapper.showCoverLayout();
+            mMangaMapper.stopRefresh();
+            mMangaMapper.showCoverLayout();
         }
     }
 

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.teioh.m_feed.UI.MainActivity.Presenters.HomePresenter;
 import com.teioh.m_feed.UI.Maps.Listeners;
@@ -146,5 +147,11 @@ public class FollowedFragment extends Fragment implements FollowFragmentMapper {
     @Override
     public void updateRecentSelection(Manga manga) {
         mFollowedPresenter.updateSelection(manga);
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        Glide.get(getContext()).clearMemory();
     }
 }

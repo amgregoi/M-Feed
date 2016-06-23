@@ -1,20 +1,25 @@
 package com.teioh.m_feed.UI.ReaderActivity.Presenters;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.teioh.m_feed.BuildConfig;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.UI.ReaderActivity.Adapters.ChapterPageAdapter;
 import com.teioh.m_feed.UI.ReaderActivity.Adapters.ImagePageAdapter;
 import com.teioh.m_feed.UI.ReaderActivity.View.Mappers.ChapterReaderMapper;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
+import com.teioh.m_feed.WebSources.RequestWrapper;
 import com.teioh.m_feed.WebSources.WebSource;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Observer;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
@@ -26,10 +31,10 @@ public class ChapterPresenterImpl implements ChapterPresenter {
     private ChapterReaderMapper mChapterReaderMapper;
 
     private ArrayList<String> mChapterUrlList;
-    private int mPosition, mPageOffsetCount, mChapterListSize;
-    private boolean mToolbarShowing, mIsNext;
+    private int mPosition, mPageOffsetCount;
+    private boolean mIsToolbarShowing, mIsForwardChapter, mIsLazyLoading;
     private Chapter mChapter;
-    private Subscription mImageListSubscription;
+    private Subscription mImageListSubscription, mLoadImageUrlSubscription;
     private ImagePageAdapter mChapterPageAdapter;
 
 
@@ -38,7 +43,7 @@ public class ChapterPresenterImpl implements ChapterPresenter {
 
         mPosition = bundle.getInt(ChapterPageAdapter.POSITION_KEY);
         mChapter = bundle.getParcelable(Chapter.TAG + ":" + mPosition);
-        mToolbarShowing = true;
+        mIsToolbarShowing = true;
     }
 
     @Override
@@ -48,7 +53,6 @@ public class ChapterPresenterImpl implements ChapterPresenter {
 
         mPageOffsetCount = 0;
         mChapterReaderMapper.setupOnSingleTapListener();
-        mChapterReaderMapper.updateToolbar(mChapter.getMangaTitle(), mChapter.getChapterTitle(), 1, 1);
     }
 
     @Override
@@ -70,9 +74,70 @@ public class ChapterPresenterImpl implements ChapterPresenter {
 
     @Override
     public void getImageUrls() {
-        mImageListSubscription = WebSource.getChapterImageListObservable(mChapter.getChapterUrl())
-                .doOnError(throwable -> Log.e(TAG, throwable.getMessage()))
-                .subscribe(urlList -> updateImageUrlList(urlList));
+        mChapterUrlList = new ArrayList<>();
+        updateToolbarLoading();
+        mImageListSubscription = WebSource.getChapterImageListObservable(new RequestWrapper(mChapter))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onCompleted() {
+                        preLoadImagesToCache();
+                        mChapterPageAdapter = new ImagePageAdapter(mChapterReaderMapper.getContext(), mChapterUrlList);
+                        mChapterReaderMapper.registerAdapter(mChapterPageAdapter);
+                        mChapter.setTotalPages(mChapterUrlList.size());
+                        updateToolbarComplete();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (BuildConfig.DEBUG) {
+                            e.printStackTrace();
+                        }
+                        updateToolbarFailed();
+                        Toast.makeText(mChapterReaderMapper.getContext(), "Failed, please try again.", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onNext(String imageUrl) {
+                        if (imageUrl != null) {
+                            mChapterUrlList.add(imageUrl);
+                            updateToolbarLoading();
+                        }
+                    }
+                });
+    }
+
+    private void preLoadImagesToCache() {
+        if (!mIsLazyLoading) {
+            if (mLoadImageUrlSubscription != null) {
+                mLoadImageUrlSubscription.unsubscribe();
+                mLoadImageUrlSubscription = null;
+            }
+
+            if (mChapterUrlList != null) {
+                mLoadImageUrlSubscription = WebSource
+                        .cacheFromImagesOfSize(mChapterUrlList)
+                        .subscribe(new Observer<GlideDrawable>() {
+                            @Override
+                            public void onCompleted() {
+                                mLoadImageUrlSubscription.unsubscribe();
+                                mLoadImageUrlSubscription = null;
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                if (BuildConfig.DEBUG) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void onNext(GlideDrawable glideDrawable) {
+                            }
+                        });
+            }
+        }
     }
 
     @Override
@@ -82,7 +147,8 @@ public class ChapterPresenterImpl implements ChapterPresenter {
 
     @Override
     public void onResume() {
-
+//        updateToolbarComplete();
+//        updateCurrentPage(mChapter.getCurrentPage());
     }
 
     @Override
@@ -91,15 +157,20 @@ public class ChapterPresenterImpl implements ChapterPresenter {
             mImageListSubscription.unsubscribe();
             mImageListSubscription = null;
         }
+
+        if (mLoadImageUrlSubscription != null) {
+            mLoadImageUrlSubscription.unsubscribe();
+            mLoadImageUrlSubscription = null;
+        }
     }
 
     @Override
     public void toggleToolbar() {
-        if (mToolbarShowing) {
-            mToolbarShowing = false;
+        if (mIsToolbarShowing) {
+            mIsToolbarShowing = false;
             mChapterReaderMapper.hideToolbar(0);
         } else {
-            mToolbarShowing = true;
+            mIsToolbarShowing = true;
             mChapterReaderMapper.showToolbar();
         }
     }
@@ -116,36 +187,46 @@ public class ChapterPresenterImpl implements ChapterPresenter {
 
     @Override
     public void updateOffsetCounter(int offset, int position) {
-        if (position == 0 || position == mChapterListSize - 1) {
+        if (position == 0 || position == mChapterUrlList.size() - 1) {
             mPageOffsetCount++;
-            mIsNext = position != 0;
+            mIsForwardChapter = position != 0;
         } else mPageOffsetCount = 0;
     }
 
     @Override
     public void updateState(int state) {
         if (mPageOffsetCount > 40 && state == 0) {
-            if (mIsNext) setToNextChapter();
+            if (mIsForwardChapter) setToNextChapter();
             else setToPreviousChapter();
         }
         mPageOffsetCount = 0;
     }
 
     @Override
-    public void updateToolbar() {
-        mChapterReaderMapper.updateToolbar(mChapter.getMangaTitle(), mChapter.getChapterTitle(), mChapterListSize, mPosition);
+    public void updateToolbarComplete() {
+        mChapterReaderMapper.updateToolbar(mChapter.getMangaTitle(), mChapter.getChapterTitle(), mChapterUrlList.size(), mPosition);
+    }
+
+    private void updateToolbarFailed() {
+        mChapterReaderMapper.updateToolbar(mChapter.getMangaTitle(), "Failed to load chapter, refresh", 1, mPosition);
+    }
+
+    private void updateToolbarLoading() {
+        mChapterReaderMapper.updateToolbar(mChapter.getMangaTitle(), "Pages loaded: " + mChapterUrlList.size(), 1, mPosition);
     }
 
     @Override
     public void updateCurrentPage(int position) {
-        mChapterReaderMapper.updateCurrentPage(position);
+        mPosition = position;
+        mChapterReaderMapper.updateCurrentPage(position + 1); //update page by 1
+        mChapter.setCurrentPage(position);
     }
 
     @Override
     public void updateChapterViewStatus() {
         Chapter viewedChapter = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase())
                 .query(Chapter.class)
-                .withSelection("mTitle = ? AND cNumber = ?", mChapter.getMangaTitle(), Integer.toString(mChapter.getChapterNumber()))
+                .withSelection("mangaTitle = ? AND chapterNumber = ?", mChapter.getMangaTitle(), Integer.toString(mChapter.getChapterNumber()))
                 .get();
 
         if (viewedChapter == null)
@@ -159,16 +240,11 @@ public class ChapterPresenterImpl implements ChapterPresenter {
 
     private void updateImageUrlList(List<String> urlList) {
         if (mChapterReaderMapper.getContext() != null) {
-            if(urlList == null){
-                Toast.makeText(mChapterReaderMapper.getContext(), "Failed to find chapter :'(", Toast.LENGTH_SHORT).show();
-                mChapterReaderMapper.failedLoadChapter();
-            }else {
-                mChapterUrlList = new ArrayList<>(urlList);
-                mChapterListSize = mChapterUrlList.size();
-                mChapterPageAdapter = new ImagePageAdapter(mChapterReaderMapper.getContext(), mChapterUrlList);
-                mChapterReaderMapper.registerAdapter(mChapterPageAdapter);
-                updateToolbar();
-            }
+            updateToolbarComplete();
+            mChapterUrlList = new ArrayList<>(urlList);
+            mChapterPageAdapter = new ImagePageAdapter(mChapterReaderMapper.getContext(), mChapterUrlList);
+            mChapterReaderMapper.registerAdapter(mChapterPageAdapter);
+            mChapterReaderMapper.setCurrentChapterPage(mChapter.getCurrentPage());
         }
     }
 }

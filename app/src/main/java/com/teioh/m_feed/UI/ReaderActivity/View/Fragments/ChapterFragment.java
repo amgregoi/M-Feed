@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.Maps.Listeners;
 import com.teioh.m_feed.UI.ReaderActivity.Presenters.ChapterPresenter;
@@ -25,6 +26,7 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
 
     @Bind(R.id.pager) GestureViewPager mViewPager;
     private ChapterPresenter mChapterPresenter;
+    private Listeners.ReaderListener listener;
 
 
     public static Fragment getNewInstance() {
@@ -47,6 +49,12 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
     }
 
     @Override
+    public void onStart() {
+        mChapterPresenter.init(getArguments());
+        super.onStart();
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mChapterPresenter != null) {
@@ -66,8 +74,6 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
         if (savedInstanceState != null) {
             mChapterPresenter.onRestoreState(savedInstanceState);
         }
-
-        mChapterPresenter.init(getArguments());
     }
 
     @Override
@@ -82,9 +88,14 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
             mViewPager.setAdapter(adapter);
             mViewPager.clearOnPageChangeListeners();
             mViewPager.addOnPageChangeListener(this);
-            mViewPager.setOffscreenPageLimit(5);
+            mViewPager.setOffscreenPageLimit(3);
             mViewPager.setPageMargin(128);
         }
+    }
+
+    @Override
+    public void setCurrentChapterPage(int pos){
+        mViewPager.setCurrentItem(pos);
     }
 
     @Override
@@ -100,7 +111,7 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
 
     @Override
     public void onPageSelected(int position) {
-        mChapterPresenter.updateCurrentPage(position + 1);
+        mChapterPresenter.updateCurrentPage(position);
     }
 
     @Override
@@ -121,7 +132,7 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
     @Override
     public void updateToolbar() {
         if (mChapterPresenter != null) {
-            mChapterPresenter.updateToolbar();
+            mChapterPresenter.updateToolbarComplete();
             mChapterPresenter.updateCurrentPage(mViewPager.getCurrentItem() + 1);
         }
     }
@@ -147,15 +158,13 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
         }
     }
 
-    private Listeners.ReaderListener listener;
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof Listeners.ReaderListener)
             listener = (Listeners.ReaderListener) context;
         else
-            throw new ClassCastException(context.toString() + " must implement ChapterPresenterImpl.ChapterCommunication");
+            throw new ClassCastException(context.toString() + " must implement Listeners.ReaderListener");
 
     }
 
@@ -195,9 +204,13 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
     }
 
     @Override
-    public void failedLoadChapter(){
+    public void failedLoadChapter() {
         listener.onBackPressed();
     }
 
-
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        Glide.get(getContext()).clearMemory();
+    }
 }

@@ -1,7 +1,6 @@
 package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -25,9 +24,6 @@ import com.teioh.m_feed.UI.MainActivity.View.MainActivity;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.MainActivityMapper;
 import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
 import com.teioh.m_feed.Utils.SharedPrefsUtil;
-import com.teioh.m_feed.WebSources.MangaHere;
-import com.teioh.m_feed.WebSources.MangaJoy;
-import com.teioh.m_feed.WebSources.MangaPark;
 import com.teioh.m_feed.WebSources.WebSource;
 
 import java.util.ArrayList;
@@ -69,6 +65,18 @@ public class MainPresenterImpl implements MainPresenter {
         mMainMapper.setDrawerLayoutListener();
 
         mGenreFilterActive = false;
+
+//        MALApi.createService("jailhouse", "rushanine90").searchManga("bleach", new Callback<MALMangaList>() {
+//            @Override
+//            public void success(MALMangaList list, Response response) {
+//                Log.e(TAG, "test");
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                Log.e(TAG, "test");
+//            }
+//        });
     }
 
     @Override
@@ -142,19 +150,7 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void onSourceItemChosen(int position) {
-        String source;
-        switch (position) {
-            case (0):
-                source = MangaHere.SourceKey;
-                break;
-            case (1):
-                source = MangaPark.SourceKey;
-                break;
-            default:
-                source = MangaJoy.SourceKey;
-                break;
-        }
-
+        String source = WebSource.getSourceByPosition(position);
         if (!source.equals(WebSource.getCurrentSource())) {
             WebSource.setwCurrentSource(source);
             Toast.makeText(mMainMapper.getContext(), "Changing source to " + source, Toast.LENGTH_SHORT).show();
@@ -184,6 +180,7 @@ public class MainPresenterImpl implements MainPresenter {
         }
     }
 
+    @Override
     public void onGenreFilterSelected(Intent intent) {
         ArrayList<Manga> list = intent.getParcelableArrayListExtra("MANGA");
 
@@ -205,40 +202,12 @@ public class MainPresenterImpl implements MainPresenter {
         }
     }
 
-    private void setupDrawerLayouts() {
-        List<String> mDrawerItems = new ArrayList<>();
-        mDrawerItems.add("Home");
-        mDrawerItems.add("Search");
-        mDrawerItems.add("Sources");
-        mDrawerItems.add("Settings");
-
-
-        Map<String, List<String>> mSourceCollections = new LinkedHashMap<>();
-        for (String item : mDrawerItems) {
-            List<String> mDrawerChildren = new ArrayList<>();
-            if (item.equals("Sources")) {
-                for (String model : WebSource.getSourceList())
-                    mDrawerChildren.add(model);
-            }
-            mSourceCollections.put(item, mDrawerChildren);
-        }
-        mMainMapper.setupDrawerLayout(mDrawerItems, mSourceCollections);
-    }
-
     @Override
     public void removeSettingsFragment() {
         ((MainActivity) mMainMapper.getContext()).getSupportFragmentManager().beginTransaction()
                 .remove(settings)
                 .commit();
         settings = null;
-    }
-
-    private void addSettingsFragment() {
-        mMainMapper.toggleToolbarElements();
-        settings = new SettingsFragment();
-        ((MainActivity) mMainMapper.getContext()).getSupportFragmentManager().beginTransaction()
-                .add(R.id.main_activity_content, settings, SettingsFragment.TAG)
-                .commit();
     }
 
     @Override
@@ -285,5 +254,33 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void onFilterViewSelected(){
+    }
+
+    private void setupDrawerLayouts() {
+        List<String> mDrawerItems = new ArrayList<>();
+        mDrawerItems.add("Home");
+        mDrawerItems.add("Search");
+        mDrawerItems.add("Sources");
+        mDrawerItems.add("Settings");
+
+
+        Map<String, List<String>> mSourceCollections = new LinkedHashMap<>();
+        for (String item : mDrawerItems) {
+            List<String> mDrawerChildren = new ArrayList<>();
+            if (item.equals("Sources")) {
+                for (String model : WebSource.getSourceList())
+                    mDrawerChildren.add(model);
+            }
+            mSourceCollections.put(item, mDrawerChildren);
+        }
+        mMainMapper.setupDrawerLayout(mDrawerItems, mSourceCollections);
+    }
+
+    private void addSettingsFragment() {
+        mMainMapper.toggleToolbarElements();
+        settings = new SettingsFragment();
+        ((MainActivity) mMainMapper.getContext()).getSupportFragmentManager().beginTransaction()
+                .add(R.id.main_activity_content, settings, SettingsFragment.TAG)
+                .commit();
     }
 }

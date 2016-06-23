@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="Email">E-Mail</string>
+	<string name="PREF_USER_SOURCE">SAVED_SOURCE</string>
 </resources>

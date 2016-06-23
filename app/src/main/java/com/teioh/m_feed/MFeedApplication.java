@@ -52,7 +52,6 @@ public class MFeedApplication extends Application {
         MangaFeedDbHelper.getInstance().updateMangaFollow("Blood and Steel");
         MangaFeedDbHelper.getInstance().updateMangaFollow("Change Guy");
         MangaFeedDbHelper.getInstance().updateMangaFollow("City of Dead Sorcerer");
-        MangaFeedDbHelper.getInstance().updateMangaFollow("Combat Continent II");
         MangaFeedDbHelper.getInstance().updateMangaFollow("Daiya no A - Act II");
         MangaFeedDbHelper.getInstance().updateMangaFollow("Dark Air");
         MangaFeedDbHelper.getInstance().updateMangaFollow("Days");
@@ -93,7 +92,6 @@ public class MFeedApplication extends Application {
         MangaFeedDbHelper.getInstance().updateMangaFollow("Marchen - The Embodiment of Tales");
         MangaFeedDbHelper.getInstance().updateMangaFollow("MIX");
         MangaFeedDbHelper.getInstance().updateMangaFollow("Monster x Monster");
-        MangaFeedDbHelper.getInstance().updateMangaFollow("Märchen - The Embodiment of Tales");
         MangaFeedDbHelper.getInstance().updateMangaFollow("Nejimaki Kagyu");
         MangaFeedDbHelper.getInstance().updateMangaFollow("New Prince of Tennis");
         MangaFeedDbHelper.getInstance().updateMangaFollow("Noblesse");
@@ -111,7 +109,6 @@ public class MFeedApplication extends Application {
         MangaFeedDbHelper.getInstance().updateMangaFollow("Silver Gravekeeper");
         MangaFeedDbHelper.getInstance().updateMangaFollow("Skill of Lure");
         MangaFeedDbHelper.getInstance().updateMangaFollow("Soul Cartel");
-        MangaFeedDbHelper.getInstance().updateMangaFollow("Soul Land - Legend of The Gods’ Realm");
         MangaFeedDbHelper.getInstance().updateMangaFollow("Soul Land II");
         MangaFeedDbHelper.getInstance().updateMangaFollow("Spirit Blade Mountain");
         MangaFeedDbHelper.getInstance().updateMangaFollow("SS Sisters");
@@ -135,11 +132,6 @@ public class MFeedApplication extends Application {
         MangaFeedDbHelper.getInstance().updateMangaFollow("UQ Holder!");
         MangaFeedDbHelper.getInstance().updateMangaFollow("Vinland Saga");
         MangaFeedDbHelper.getInstance().updateMangaFollow("Wang Pai Yu Shi");
-        MangaFeedDbHelper.getInstance().updateMangaFollow("Witch Hunter");
-        MangaFeedDbHelper.getInstance().updateMangaFollow("Wo Jia Dashi Xiong Naozi You Keng");
-        MangaFeedDbHelper.getInstance().updateMangaFollow("World Trigger");
-        MangaFeedDbHelper.getInstance().updateMangaFollow("Zui Wu Dao");
-
     }
 
     @Override

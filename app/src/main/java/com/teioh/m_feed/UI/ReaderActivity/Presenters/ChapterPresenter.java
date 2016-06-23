@@ -18,12 +18,13 @@ public interface ChapterPresenter extends LifeCycleMap {
 
     void updateState(int state);
 
-    void updateToolbar();
+    void updateToolbarComplete();
 
     void updateCurrentPage(int position);
 
     void updateChapterViewStatus();
 
     void onRefresh(int position);
+
 
 }

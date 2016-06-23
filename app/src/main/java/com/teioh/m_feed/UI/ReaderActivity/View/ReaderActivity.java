@@ -13,6 +13,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.ReaderActivity.Presenters.ReaderPresenter;
 import com.teioh.m_feed.UI.ReaderActivity.Presenters.ReaderPresenterImpl;
@@ -91,6 +92,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderActivityM
         if (adapter != null) {
             mViewPager.setAdapter(adapter);
             mViewPager.addOnPageChangeListener(this);
+            mViewPager.setOffscreenPageLimit(0);
         }
     }
 
@@ -120,7 +122,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderActivityM
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
         mToolbarHeader.animate().translationY(-mToolbarHeader.getHeight()).setInterpolator(new AccelerateInterpolator()).setStartDelay(10).start();
-        mToolbarHeader2.animate().translationY(-mToolbarHeader2.getHeight()-mToolbarHeader.getHeight()).setInterpolator(new AccelerateInterpolator()).setStartDelay(10).start();
+        mToolbarHeader2.animate().translationY(-mToolbarHeader2.getHeight() - mToolbarHeader.getHeight()).setInterpolator(new AccelerateInterpolator()).setStartDelay(10).start();
         mToolbarFooter.animate().translationY(mToolbarFooter.getHeight()).setInterpolator(new DecelerateInterpolator()).setStartDelay(20).start();
     }
 
@@ -128,7 +130,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderActivityM
     public void showToolbar() {
         getWindow().getDecorView().setSystemUiVisibility(0);
         mToolbarHeader.animate().translationY(mToolbarHeader.getScrollY()).setInterpolator(new DecelerateInterpolator()).setStartDelay(10).start();
-        mToolbarHeader2.animate().translationY(mToolbarHeader2.getScrollY()+mToolbarHeader.getScrollY()).setInterpolator(new DecelerateInterpolator()).setStartDelay(10).start();
+        mToolbarHeader2.animate().translationY(mToolbarHeader2.getScrollY() + mToolbarHeader.getScrollY()).setInterpolator(new DecelerateInterpolator()).setStartDelay(10).start();
         mToolbarFooter.animate().translationY(-mToolbarFooter.getScrollY()).setInterpolator(new AccelerateInterpolator()).setStartDelay(10).start();
 
     }
@@ -136,8 +138,8 @@ public class ReaderActivity extends AppCompatActivity implements ReaderActivityM
     @Override
     public void updateToolbar(String mTitle, String cTitle, int size, int page) {
         if (page == mViewPager.getCurrentItem()) {
+            mMangaTitle.setText(mTitle);
             mChapterTitle.setText(cTitle);
-            mMangaTitle.setText(mTitle); //TODO update with manga title
             mEndPage.setText(String.valueOf(size));
             mReaderPresenter.updateChapterViewStatus(mViewPager.getCurrentItem());
         }
@@ -149,7 +151,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderActivityM
         mToolbarHeader.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
         mToolbarHeader.setNavigationOnClickListener(v -> onBackPressed());
         mToolbarHeader.setPadding(0, getStatusBarHeight(), 0, 0);
-        mToolbarFooter.setPadding(0,0,0,getNavBarHeight());
+        mToolbarFooter.setPadding(0, 0, 0, getNavBarHeight());
     }
 
     // A method to find height of the status bar
@@ -217,6 +219,18 @@ public class ReaderActivity extends AppCompatActivity implements ReaderActivityM
     @OnClick(R.id.skipForwardButton)
     public void onSkipForwardClick() {
         mViewPager.incrementCurrentItem();
+    }
+
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+        Glide.get(this).trimMemory(level);
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        Glide.get(this).clearMemory();
     }
 
 

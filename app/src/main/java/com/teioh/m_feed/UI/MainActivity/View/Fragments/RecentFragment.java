@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.teioh.m_feed.UI.Maps.Listeners;
 import com.teioh.m_feed.Models.Manga;
@@ -174,4 +175,9 @@ public class RecentFragment extends Fragment implements RecentFragmentMapper {
         mRecentPresenter.updateSelection(manga);
     }
 
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        Glide.get(getContext()).clearMemory();
+    }
 }

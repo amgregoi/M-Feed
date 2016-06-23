@@ -99,13 +99,13 @@ public class MangaFeedDbHelper extends SQLiteOpenHelper {
 
     public void updateMangaFollow(String title) {
         ContentValues values = new ContentValues(1);
-        values.put("mFollowing", 1);
-        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, values, "mTitle = ?", title);
+        values.put("following", 1);
+        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, values, "title = ?", title);
     }
 
     public void updateMangaUnfollow(String title) {
         ContentValues values = new ContentValues(1);
-        values.put("mFollowing", 0);
-        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, values, "mTitle = ?", title);
+        values.put("following", 0);
+        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, values, "title = ?", title);
     }
 }
