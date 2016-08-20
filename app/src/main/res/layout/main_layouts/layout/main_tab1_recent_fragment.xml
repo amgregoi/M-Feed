@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout
+	android:id="@+id/swipe_container"
+	layout="@layout/toolbar_filter"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:layout_marginEnd="@dimen/baseline_grid_unit_4dp"
+	android:layout_marginStart="@dimen/baseline_grid_unit_4dp"
+	>
+
+	<android.support.v7.widget.RecyclerView
+		android:id="@+id/recent_list_view"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@color/charcoal"
+		android:drawSelectorOnTop="false"
+		android:fastScrollEnabled="true"
+		android:fadeScrollbars="false"
+		android:paddingTop="5dp"
+		android:stretchMode="columnWidth"
+		/>
+</android.support.v4.widget.SwipeRefreshLayout>
