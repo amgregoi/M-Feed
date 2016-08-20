@@ -35,6 +35,7 @@ public class LibraryPresenterImpl implements HomePresenter {
     private MoPubRecyclerAdapter mAdAdapter;
     private RecycleSearchAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+
     private boolean mNeedsItemDeocration;
     private Subscription mMangaListSubscription;
 
@@ -86,10 +87,11 @@ public class LibraryPresenterImpl implements HomePresenter {
 
     public void onItemClick(int pos) {
         Manga manga = mAdapter.getItemAt(mAdAdapter.getOriginalPosition(pos));
-        mLibraryFragmentMapper.setRecentSelection(manga.get_id());
-        Intent intent = new Intent(mLibraryFragmentMapper.getContext(), MangaActivity.class);
-        intent.putExtra(Manga.TAG, manga.getTitle());
-        mLibraryFragmentMapper.getContext().startActivity(intent);
+        if(mLibraryFragmentMapper.setRecentSelection(manga.get_id())) {
+            Intent intent = new Intent(mLibraryFragmentMapper.getContext(), MangaActivity.class);
+            intent.putExtra(Manga.TAG, manga.getTitle());
+            mLibraryFragmentMapper.getContext().startActivity(intent);
+        }
     }
 
     @Override

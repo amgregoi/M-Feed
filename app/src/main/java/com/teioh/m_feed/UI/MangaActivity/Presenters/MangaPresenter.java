@@ -10,7 +10,9 @@ public interface MangaPresenter extends LifeCycleMap {
 
     void chapterOrderButtonClick();
 
-    void onFollwButtonClick();
+    void onFollwButtonClick(int value);
+
+    void onUnfollowButtonClick();
 
     void onChapterClicked(Chapter chapter);
 

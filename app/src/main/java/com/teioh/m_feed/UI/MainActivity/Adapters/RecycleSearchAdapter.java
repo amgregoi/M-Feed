@@ -75,14 +75,26 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
     public void onBindViewHolder(ViewHolder holder, int position) {
         Manga item = filteredData.get(position);
 
-        if (item.getFollowing()) {
-            holder.footer.setBackgroundColor(context.getResources().getColor(R.color.ColorPrimary));
-            holder.txt.setBackgroundColor(context.getResources().getColor(R.color.ColorPrimary));
-            holder.txt.setTextColor(context.getResources().getColor(R.color.white));
-        } else {
-            holder.footer.setBackgroundColor(context.getResources().getColor(R.color.white));
-            holder.txt.setBackgroundColor(context.getResources().getColor(R.color.white));
-            holder.txt.setTextColor(context.getResources().getColor(R.color.black));
+        switch (item.getFollowingValue()){
+            case 1:
+                holder.footer.setBackgroundColor(context.getResources().getColor(R.color.ColorPrimary));
+                holder.txt.setBackgroundColor(context.getResources().getColor(R.color.ColorPrimary));
+                holder.txt.setTextColor(context.getResources().getColor(R.color.white));
+                break;
+            case 2:
+                holder.footer.setBackgroundColor(context.getResources().getColor(R.color.green));
+                holder.txt.setBackgroundColor(context.getResources().getColor(R.color.green));
+                holder.txt.setTextColor(context.getResources().getColor(R.color.white));
+                break;
+            case 3:
+                holder.footer.setBackgroundColor(context.getResources().getColor(R.color.red));
+                holder.txt.setBackgroundColor(context.getResources().getColor(R.color.red));
+                holder.txt.setTextColor(context.getResources().getColor(R.color.white));
+                break;
+            default:
+                holder.footer.setBackgroundColor(context.getResources().getColor(R.color.white));
+                holder.txt.setBackgroundColor(context.getResources().getColor(R.color.white));
+                holder.txt.setTextColor(context.getResources().getColor(R.color.black));
         }
 
         Glide.with(context)
@@ -226,9 +238,15 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
             //can later expand to plan to read, reading, on hold etc..
             if (filter == 0) {
                 result = originalData;
-            } else if (filter == 1) {
-                for (Manga m : filteredData) {
-                    if (m.getFollowing()) {
+            } else if (filter == 5) {
+                for (Manga m : originalData) {
+                    if (m.getFollowingValue() > 0) {
+                        result.add(m);
+                    }
+                }
+            }else{
+                for (Manga m : originalData) {
+                    if (m.getFollowingValue() == filter) {
                         result.add(m);
                     }
                 }

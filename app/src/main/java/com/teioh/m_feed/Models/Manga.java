@@ -18,7 +18,7 @@ public class Manga implements Parcelable {
     private String status;
     private String source;
     private String alternate;
-    private boolean following;
+    private int following;
     private int initialized;
 
     public Manga() {
@@ -44,7 +44,7 @@ public class Manga implements Parcelable {
         status = in.getStatus();
         source = in.getSource();
         alternate = in.getAlternate();
-        following = in.getFollowing();
+        following = in.getFollowingValue();
         initialized = getInitialized();
     }
 
@@ -61,7 +61,7 @@ public class Manga implements Parcelable {
         status = in.readString();
         source = in.readString();
         alternate = in.readString();
-        following = in.readByte() != 0;
+        following = in.readInt();
         initialized = in.readInt();
     }
 
@@ -84,7 +84,7 @@ public class Manga implements Parcelable {
         dest.writeString(status);
         dest.writeString(source);
         dest.writeString(alternate);
-        dest.writeByte((byte) (following ? 1 : 0));
+        dest.writeInt(following);
         dest.writeInt(initialized);
     }
 
@@ -185,10 +185,15 @@ public class Manga implements Parcelable {
     public void setAlternate(String alt) { this.alternate = alt; }
 
     public boolean getFollowing() {
-        return this.following;
+        if(this.following > 0) return true;
+        return false;
     }
 
-    public boolean setFollowing(boolean val) {
+    public int getFollowingValue(){
+        return following;
+    }
+
+    public int setFollowing(int val) {
         this.following = val;
         return this.following;
     }
@@ -209,5 +214,9 @@ public class Manga implements Parcelable {
                 sameSame = true;
         }
         return sameSame;
+    }
+
+    public enum FollowType {
+        Reading, Completed, On_Hold
     }
 }

@@ -18,7 +18,6 @@ public interface MainPresenter extends LifeCycleMap {
 
     void onFilterSelected(int filter);
 
-
     void removeSettingsFragment();
 
     void onGenreFilterSelected(Intent intent);

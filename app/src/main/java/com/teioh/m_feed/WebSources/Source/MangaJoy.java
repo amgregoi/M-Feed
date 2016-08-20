@@ -34,8 +34,8 @@ public class MangaJoy {
 
     final public static String SourceKey = "MangaJoy";
 
-    final static String mBaseUrl = "http://manga-joy.com/";
-    final static String mUpdatesUrl = "http://manga-joy.com/latest-chapters";
+    final static String mBaseUrl = "http://funmanga.com/";
+    final static String mUpdatesUrl = "http://funmanga.com/latest-chapters";
 
     final public static String genres[] = {
             "Action",
@@ -95,22 +95,22 @@ public class MangaJoy {
 
     private static List<Manga> parseRecentUpdatesToManga(final String unparsedHtml) {
         Document parsedDocument = Jsoup.parse(unparsedHtml);
-        Elements updates = parsedDocument.select("div.wpm_pag.mng_lts_chp.grp");
+        Elements updates = parsedDocument.select("div.manga_updates");
         parsedDocument = Jsoup.parse(updates.toString());
-        List<Manga> chapterList = scrapeUpdatestoManga(parsedDocument);
-        return chapterList;
+        List<Manga> mangaList = scrapeUpdatestoManga(parsedDocument);
+        return mangaList;
     }
 
     private static List<Manga> scrapeUpdatestoManga(final Document parsedDocument) {
         List<Manga> mangaList = new ArrayList<>();
-        Elements mangaElements = parsedDocument.select("div.row");
+        Elements mangaElements = parsedDocument.select("dl");
 
         SQLiteDatabase db = MangaFeedDbHelper.getInstance().getReadableDatabase();
         for (Element wholeElement : mangaElements) {
             Document parseSections = Jsoup.parse(wholeElement.toString());
-            Elements usefulElements = parseSections.select("div.det.sts_1");
+            Elements usefulElements = parseSections.select("dt");
             for (Element usefulElement : usefulElements) {
-                String mangaTitle = usefulElement.select("a").attr("Title");
+                String mangaTitle = usefulElement.select("a").attr("title");
                 String mangaUrl = usefulElement.select("a").attr("href");
                 Manga manga = cupboard().withDatabase(db).query(Manga.class).withSelection("title = ? AND source = ?", mangaTitle, SourceKey).get();
                 if (manga != null) {
@@ -145,27 +145,24 @@ public class MangaJoy {
     }
 
     private static List<Chapter> parseHtmlToChapters(final String unparsedHtml, final String title) {
-        int beginIndex = unparsedHtml.indexOf("<ul class=\"chp_lst\">");
-        int endIndex = unparsedHtml.indexOf("</ul>", beginIndex);
-        String chapterListHtml = unparsedHtml.substring(beginIndex, endIndex);
-        Document parsedDocument = Jsoup.parse(chapterListHtml);
+        Document parsedDocument = Jsoup.parse(unparsedHtml);
         List<Chapter> chapterList = scrapeChaptersFromParsedDocument(parsedDocument, title);
         return chapterList;
     }
 
     private static List<Chapter> scrapeChaptersFromParsedDocument(final Document parsedDocument, final String title) {
         List<Chapter> chapterList = new ArrayList<>();
-        Elements chapterElements = parsedDocument.getElementsByTag("li");
+        Elements chapterElements = parsedDocument.select("ul.chapter-list").select("li");
         int numChapters = chapterElements.size();
 
 
         for (Element chapterElement : chapterElements) {
             String chapterUrl = chapterElement.select("a").attr("href");
-            String[] cTitle = chapterElement.select("span").first().text().split(":");
+            String cTitle = chapterElement.select("span").first().text();
 
             String chapterDate = chapterElement.select("span").get(1).text();
 
-            Chapter curChapter = new Chapter(chapterUrl, title, cTitle[0].trim(), chapterDate, numChapters);
+            Chapter curChapter = new Chapter(chapterUrl, title, cTitle, chapterDate, numChapters);
             numChapters--;
 
             chapterList.add(curChapter);
@@ -211,7 +208,7 @@ public class MangaJoy {
 
     private static String parseHtmlToImageUrl(String html) {
         Document parsedDocument = Jsoup.parse(html);
-        String link = parsedDocument.select("div[class=prw]").first().select("img").attr("src");
+        String link = parsedDocument.select("img.img-responsive").attr("src");
         return link;
     }
 
@@ -221,22 +218,15 @@ public class MangaJoy {
         Document doc = Jsoup.parse(html);
 
         Elements nav = doc
-                .select("div[class=wpm_nav_rdr]")
-                .first()
-                .select("select[onchange^=location.href='" + url
-                        + "' + this.value + '/']").first().select("option");
+                .select("h5.widget-heading")
+                .select("select").select("option");
 
         int pages = nav.size();
 
-        String referrer = url;
-        for (int i = 1; i <= pages; i++) {
-            if (i != 1) {
-                referrer = url + (i) + "/";
-            }
+        for (int i = 1; i < pages; i++) {
+            String link = nav.get(i).attr("value");
 
-            String link = doc.select("div[class=prw]").first().select("img").attr("src");
-
-            images.add(referrer);
+            images.add(link);
         }
         return images;
     }
@@ -260,13 +250,13 @@ public class MangaJoy {
         Document html = Jsoup.parse(unparsedHtml);
 
         //image url
-        Element imageElement = html.body().select("img.cvr").first();
+        Element imageElement = html.body().select("img.img-responsive.mobile-img").first();
         //summary
-        Element summaryElement = html.body().select("p.summary").first();
+        Element summaryElement = html.body().select("div.note.note-default.margin-top-15").first();
 
-        Elements e = html.body().select("div.det").select("span");
+        Elements e = html.body().select("dl.dl-horizontal").select("dd");
         String img = imageElement.attr("src");
-        String summary = summaryElement.text().substring(7);
+        String summary = summaryElement.text();
         String alternate = null;
         String author = null;
         String artist = null;
@@ -275,13 +265,13 @@ public class MangaJoy {
         for (int i = 0; i < e.size(); i++) {
             if (i == 0) {
                 alternate = e.get(i).text();
-            } else if (i == 1) {
-                author = e.get(i).text();
-            } else if (i == 2) {
-                artist = e.get(i).text();
-            } else if (i == 3) {
-                genres = e.get(i).text();
             } else if (i == 5) {
+                author = e.get(i).text();
+            } else if (i == 6) {
+                artist = e.get(i).text();
+            } else if (i == 2) {
+                genres = e.get(i).text();
+            } else if (i == 1) {
                 status = e.get(i).text();
             }
         }

@@ -96,7 +96,7 @@ public class ReactiveQueryManager {
     private static List<Manga> getFollowedManga() {
         ArrayList<Manga> mangaList = new ArrayList<>();
         QueryResultIterable<Manga> itr = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase())
-                .query(Manga.class).withSelection("following = ? AND source = ?", "1", WebSource.getCurrentSource()).query();
+                .query(Manga.class).withSelection("NOT following = ? AND source = ?", "0", WebSource.getCurrentSource()).query();
         for (Manga manga : itr) {
             mangaList.add(manga);
         }

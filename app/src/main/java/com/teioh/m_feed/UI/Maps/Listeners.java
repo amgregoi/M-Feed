@@ -8,7 +8,7 @@ public class Listeners {
      * Home screen fragments communicate with activity
      */
     public interface MainFragmentListener {
-        void setRecentSelection(Long id);
+        boolean setRecentSelection(Long id);
         void updateRecentSelection(Manga manga);
     }
 

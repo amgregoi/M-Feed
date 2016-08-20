@@ -141,8 +141,8 @@ public class LibraryFragment extends Fragment implements LibraryFragmentMapper {
     }
 
     @Override
-    public void setRecentSelection(Long id) {
-        listener.setRecentSelection(id);
+    public boolean setRecentSelection(Long id) {
+        return listener.setRecentSelection(id);
     }
 
     @Override

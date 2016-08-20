@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -26,6 +28,7 @@ import com.teioh.m_feed.MAL_Models.MALMangaList;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
+import com.teioh.m_feed.UI.MainActivity.View.MainActivity;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.MangaPresenter;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.MangaPresenterImpl;
 import com.teioh.m_feed.UI.MangaActivity.View.Fragments.FImageDialogFragment;
@@ -141,7 +144,7 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
                 // After Ok code.
                 mSyncMALButton.setVisibility(View.GONE);
                 mFollowButton.setVisibility(View.VISIBLE);
-                mMangaPresenter.onFollwButtonClick();
+                mMangaPresenter.onUnfollowButtonClick();
                 invalidateOptionsMenu();
             }//else if(data.hasextra(etc...)
         } else if (resultCode == Activity.RESULT_CANCELED){
@@ -201,6 +204,8 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
                 //TODO update database (add MAL id column)
                 //TODO to check if sync set up, and make other buttons visible
                 mSyncMALButton.setVisibility(View.VISIBLE); //TODO uncomment when MAL implemented
+                mMALStatusButton.setVisibility(View.VISIBLE);
+                mMALStatusButton.setText(Manga.FollowType.values()[manga.getFollowingValue()-1].toString());
                 invalidateOptionsMenu();
             }
         }
@@ -278,14 +283,43 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
 
         //Follow Button
         mFollowButton.setOnClickListener(v -> {
-            mMangaPresenter.onFollwButtonClick();
+            mMangaPresenter.onFollwButtonClick(1);
             mFollowButton.setVisibility(View.GONE); //uncomment after menu remove is  put in
             mSyncMALButton.setVisibility(View.VISIBLE);   //TODO uncomment when MAL implemented
+            mMALStatusButton.setVisibility(View.VISIBLE);
             invalidateOptionsMenu();
         });
 
         //Change follow status (Reading, Plan to read, on hold, etc..) MAL
         mMALStatusButton.setOnClickListener(v -> {
+            //Creating the instance of PopupMenu
+            PopupMenu popup = new PopupMenu(MangaActivity.this, mMALStatusButton);
+            //Inflating the Popup using xml file
+            popup.getMenuInflater()
+                    .inflate(R.menu.menu_follow, popup.getMenu());
+
+            //registering popup with OnMenuItemClickListener
+            popup.setOnMenuItemClickListener(item -> {
+                Manga.FollowType lValues[] = Manga.FollowType.values();
+                switch(item.getItemId()) {
+                    case R.id.reading:
+                        mMangaPresenter.onFollwButtonClick(1);
+                        mMALStatusButton.setText(lValues[0].toString());
+                        break;
+                    case R.id.complete:
+                        mMangaPresenter.onFollwButtonClick(2);
+                        mMALStatusButton.setText(lValues[1].toString());
+                        break;
+                    case R.id.hold:
+                        mMangaPresenter.onFollwButtonClick(3);
+                        mMALStatusButton.setText(lValues[2].toString());
+                        break;
+                }
+                return true;
+            });
+
+            popup.show(); //showing popup menu
+
 
         });
 
@@ -297,10 +331,10 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
         //Find MAL equivalent of manga and link to it
         mSyncMALButton.setOnClickListener(v -> {
 //            mMangaPresenter.onMALSyncClicked();
-            //TODO temp remove button until MAL implemented
-            mMangaPresenter.onFollwButtonClick();
+            mMangaPresenter.onUnfollowButtonClick();
             mFollowButton.setVisibility(View.VISIBLE); //uncomment after menu remove is  put in
             mSyncMALButton.setVisibility(View.GONE);   //TODO uncomment when MAL implemented
+            mMALStatusButton.setVisibility(View.GONE);
             invalidateOptionsMenu();
 
         });

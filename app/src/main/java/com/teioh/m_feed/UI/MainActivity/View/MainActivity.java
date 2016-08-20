@@ -290,8 +290,18 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
 
     @Override
     public void setupSourceFilterMenu() {
+        FloatingActionButton A1 = new FloatingActionButton(getBaseContext());
+        A1.setTitle("Reading");
+        A1.setSize(FloatingActionButton.SIZE_MINI);
+        A1.setColorNormalResId(R.color.ColorAccent);
+        A1.setIcon(R.drawable.ic_favorite_white_18dp);
+        A1.setOnClickListener(v -> {
+            mMultiActionMenu.collapse();
+            mMainPresenter.onFilterSelected(1);
+        });
+
         FloatingActionButton A2 = new FloatingActionButton(getBaseContext());
-        A2.setTitle("Show All");
+        A2.setTitle("All");
         A2.setIcon(R.drawable.ic_favorite_border_white_18dp);
         A2.setSize(FloatingActionButton.SIZE_MINI);
         A2.setColorNormalResId(R.color.ColorAccent);
@@ -301,18 +311,42 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
             mMainPresenter.onFilterSelected(0);
         });
 
-        FloatingActionButton A1 = new FloatingActionButton(getBaseContext());
-        A1.setTitle("Favourites Only");
-        A1.setSize(FloatingActionButton.SIZE_MINI);
-        A1.setColorNormalResId(R.color.ColorAccent);
-        A1.setIcon(R.drawable.ic_favorite_white_18dp);
-        A1.setOnClickListener(v -> {
+        FloatingActionButton A3 = new FloatingActionButton(getBaseContext());
+        A3.setTitle("Completed");
+        A3.setSize(FloatingActionButton.SIZE_MINI);
+        A3.setColorNormalResId(R.color.ColorAccent);
+        A3.setIcon(R.drawable.ic_favorite_white_18dp);
+        A3.setOnClickListener(v -> {
             mMultiActionMenu.collapse();
-            mMainPresenter.onFilterSelected(1);
+            mMainPresenter.onFilterSelected(2);
         });
 
+        FloatingActionButton A4 = new FloatingActionButton(getBaseContext());
+        A4.setTitle("On Hold");
+        A4.setSize(FloatingActionButton.SIZE_MINI);
+        A4.setColorNormalResId(R.color.ColorAccent);
+        A4.setIcon(R.drawable.ic_favorite_white_18dp);
+        A4.setOnClickListener(v -> {
+            mMultiActionMenu.collapse();
+            mMainPresenter.onFilterSelected(3);
+        });
+
+        FloatingActionButton A5 = new FloatingActionButton(getBaseContext());
+        A5.setTitle("Followed");
+        A5.setSize(FloatingActionButton.SIZE_MINI);
+        A5.setColorNormalResId(R.color.ColorAccent);
+        A5.setIcon(R.drawable.ic_favorite_white_18dp);
+        A5.setOnClickListener(v -> {
+            mMultiActionMenu.collapse();
+            mMainPresenter.onFilterSelected(5);
+        });
+
+        mMultiActionMenu.addButton(A4);
+        mMultiActionMenu.addButton(A3);
         mMultiActionMenu.addButton(A1);
+        mMultiActionMenu.addButton(A5);
         mMultiActionMenu.addButton(A2);
+
     }
 
     @Override
@@ -365,8 +399,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     }
 
     @Override
-    public void setRecentSelection(Long id) {
+    public boolean setRecentSelection(Long id) {
+        if(mMultiActionMenu.isExpanded()) {
+            mMultiActionMenu.collapse();
+            return false;
+        }
         mMainPresenter.setRecentManga(id);
+        return true;
     }
 
     @Override

@@ -159,14 +159,14 @@ public class MangaPresenterImpl implements MangaPresenter {
     }
 
     @Override
-    public void onFollwButtonClick() {
-        boolean follow = mManga.setFollowing(!mManga.getFollowing());
+    public void onFollwButtonClick(int value) {
         mMangaMapper.changeFollowButton(mManga.getFollowing());
-        if (follow) {
-            MangaFeedDbHelper.getInstance().updateMangaFollow(mManga.getTitle());
-        } else {
-            MangaFeedDbHelper.getInstance().updateMangaUnfollow(mManga.getTitle());
-        }
+        MangaFeedDbHelper.getInstance().updateMangaFollow(mManga.getTitle(), value);
+    }
+
+    @Override
+    public void onUnfollowButtonClick(){
+        MangaFeedDbHelper.getInstance().updateMangaUnfollow(mManga.getTitle());
     }
 
     private void getMALSyncOptions() {

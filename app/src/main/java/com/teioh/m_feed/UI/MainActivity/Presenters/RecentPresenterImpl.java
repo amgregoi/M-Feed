@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import com.mopub.nativeads.MoPubNativeAdPositioning;
 import com.mopub.nativeads.MoPubRecyclerAdapter;
@@ -37,10 +36,11 @@ public class RecentPresenterImpl implements HomePresenter {
     private RecycleSearchAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private Subscription mMangaListSubscription;
-    private RecentFragmentMapper mRecentFragmentMapper;
-    private String mLastSourceQuery;
     private boolean mNeedsItemDeocration;
+    private Subscription mMangaListSubscription;
+    private String mLastSourceQuery;
+
+    private RecentFragmentMapper mRecentFragmentMapper;
 
 
     public RecentPresenterImpl(RecentFragmentMapper map) {
@@ -98,10 +98,11 @@ public class RecentPresenterImpl implements HomePresenter {
 
     public void onItemClick(int pos) {
         Manga manga = mAdapter.getItemAt(mAdAdapter.getOriginalPosition(pos));
-        mRecentFragmentMapper.setRecentSelection(manga.get_id());
-        Intent intent = new Intent(mRecentFragmentMapper.getContext(), MangaActivity.class);
-        intent.putExtra(Manga.TAG, manga.getTitle());
-        mRecentFragmentMapper.getContext().startActivity(intent);
+        if(mRecentFragmentMapper.setRecentSelection(manga.get_id())) {
+            Intent intent = new Intent(mRecentFragmentMapper.getContext(), MangaActivity.class);
+            intent.putExtra(Manga.TAG, manga.getTitle());
+            mRecentFragmentMapper.getContext().startActivity(intent);
+        }
     }
 
     @Override

@@ -88,10 +88,11 @@ public class FollowedPresenterImpl implements HomePresenter {
 
     public void onItemClick(int pos) {
         Manga manga = mAdapter.getItemAt(mAdAdapter.getOriginalPosition(pos));
-        mFollowFragmentMapper.setRecentSelection(manga.get_id());
-        Intent intent = new Intent(mFollowFragmentMapper.getContext(), MangaActivity.class);
-        intent.putExtra(Manga.TAG, manga.getTitle());
-        mFollowFragmentMapper.getContext().startActivity(intent);
+        if(mFollowFragmentMapper.setRecentSelection(manga.get_id())) {
+            Intent intent = new Intent(mFollowFragmentMapper.getContext(), MangaActivity.class);
+            intent.putExtra(Manga.TAG, manga.getTitle());
+            mFollowFragmentMapper.getContext().startActivity(intent);
+        }
     }
 
     @Override
@@ -113,18 +114,6 @@ public class FollowedPresenterImpl implements HomePresenter {
         if (mFollowedMangaList != null) {
             mFollowedMangaList = new ArrayList<>(mAdapter.getData());
         }
-//            mMangaListSubscription = ReactiveQueryManager.getFollowedMangaObservable()
-//                    .doOnError(throwable -> Log.e(TAG, throwable.getMessage()))
-//                    .subscribe(manga -> {
-//                        if (mFollowFragmentMapper.getContext() != null) {
-//                            if (manga != null) {
-//                                mAdapter.addAllUnique(manga);
-//                                mFollowedMangaList = new ArrayList<>(mAdapter.getData());
-//                                mMangaListSubscription = null;
-//                            }
-//                        }
-//                    });
-//        }
     }
 
     @Override
@@ -178,8 +167,8 @@ public class FollowedPresenterImpl implements HomePresenter {
             setupMoPubAdapter();
             mNeedsItemDeocration = false;
 
-            for (Manga m : mFollowedMangaList)
-                System.out.println("MangaFeedDbHelper.getInstance().updateMangaFollow(\"" + m.getTitle() + "\");");
+//            for (Manga m : mFollowedMangaList)
+//                System.out.println("MangaFeedDbHelper.getInstance().updateMangaFollow(\"" + m.getTitle() + "\");");
 
         }
     }

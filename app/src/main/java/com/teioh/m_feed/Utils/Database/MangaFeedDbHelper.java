@@ -97,9 +97,9 @@ public class MangaFeedDbHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void updateMangaFollow(String title) {
+    public void updateMangaFollow(String title, int value) {
         ContentValues values = new ContentValues(1);
-        values.put("following", 1);
+        values.put("following", value);
         cupboard().withDatabase(getWritableDatabase()).update(Manga.class, values, "title = ?", title);
     }
 
