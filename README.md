@@ -8,8 +8,8 @@ __TODO:__
 * Editing some of the layouts (work in progress)
 * Research MAL Integration (on hold)
 
-__Intro__
-       M-Feed is an android application that allows users to browse and read the library of multiple online sources.  You can 'follow' specific manga to keep track of what you read and get recent a list of daily updates in the front page. This side project is a work in progress and updated when I have free time.
+__Intro__<br>
+M-Feed is an android application that allows users to browse and read the library of multiple online sources.  You can 'follow' specific manga to keep track of what you read and get recent a list of daily updates in the front page. This side project is a work in progress and updated when I have free time.
 
 __Libraries Used__
 - **Cupboard**: https://bitbucket.org/qbusict/cupboard/
