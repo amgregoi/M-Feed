@@ -43,4 +43,9 @@ public class FollowedFragment extends MainFragmentBase {
     public void setupSwipeRefresh() {
         //do nothing
     }
+
+    @Override
+    public void removeFilters() {
+
+    }
 }

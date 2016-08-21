@@ -242,20 +242,27 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
             ArrayList<Manga> lResult = new ArrayList<>();
 
             //can later expand to plan to read, reading, on hold etc..
-            if (aFilterType == 0) {
-                lResult = mOriginalData;
-            } else if (aFilterType == 5) {
-                for (Manga m : mOriginalData) {
-                    if (m.getFollowingValue() > 0) {
-                        lResult.add(m);
+
+            switch (aFilterType) {
+                case 0:
+                    // Everything
+                    lResult = mOriginalData;
+                    break;
+                case 5:
+                    // All types of followed manga
+                    for (Manga m : mFilteredData) {
+                        if (m.getFollowingValue() > 0) {
+                            lResult.add(m);
+                        }
                     }
-                }
-            } else {
-                for (Manga m : mOriginalData) {
-                    if (m.getFollowingValue() == aFilterType) {
-                        lResult.add(m);
+                    break;
+                default:
+                    // Specific Follow type
+                    for (Manga m : mFilteredData) {
+                        if (m.getFollowingValue() == aFilterType) {
+                            lResult.add(m);
+                        }
                     }
-                }
             }
 
             mFilteredData = lResult;

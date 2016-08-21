@@ -1,4 +1,4 @@
-package com.teioh.m_feed.UI.MainActivity;
+package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +15,7 @@ import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.Adapters.RecycleSearchAdapter;
 import com.teioh.m_feed.UI.MainActivity.Fragments.FollowedFragment;
-import com.teioh.m_feed.UI.MainActivity.Presenters.RecentPresenter;
+import com.teioh.m_feed.UI.MainActivity.IMain;
 import com.teioh.m_feed.UI.MangaActivity.MangaActivity;
 
 import java.util.ArrayList;
@@ -45,7 +45,6 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
 
     /***
      * TODO...
-     *
      */
     @Override
     public abstract void updateMangaList();
@@ -63,7 +62,6 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
 
     /***
      * TODO...
-     *
      */
     @Override
     public void updateSource() {
@@ -85,8 +83,9 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
      */
     @Override
     public void onFilterSelected(int aFilter) {
-        if (mAdapter != null)
+        if (mAdapter != null) {
             mAdapter.filterByStatus(aFilter);
+        }
     }
 
     /***
@@ -105,7 +104,6 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
 
     /***
      * TODO...
-     *
      */
     @Override
     public void onClearGenreFilter() {
@@ -174,7 +172,6 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
 
     /***
      * TODO...
-     *
      */
     @Override
     public void onPause() {
@@ -183,7 +180,6 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
 
     /***
      * TODO...
-     *
      */
     @Override
     public void onResume() {
@@ -191,7 +187,6 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
 
     /***
      * TODO...
-     *
      */
     @Override
     public void onDestroy() {
@@ -252,7 +247,6 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
 
     /***
      * TODO...
-     *
      */
     protected void setupMoPubAdapter() {
         MoPubNativeAdPositioning.MoPubServerPositioning lAdPositioning = MoPubNativeAdPositioning.serverPositioning();

@@ -414,6 +414,18 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     }
 
     @Override
+    public void removeFilters(){
+        //reset genre filter and UI
+        mMainPresenter.onClearGenreFilter();
+        mFilterView.setImageDrawable(getDrawable(R.drawable.filter_outline_24dp));
+        mActivityTitle.setText(new SourceFactory().getSourceName());
+
+        //reset
+        mMainPresenter.onFilterSelected(0);
+        mSearchView.clearFocus();
+    }
+
+    @Override
     public void MALSignOut() {
         mMainPresenter.onSignOut();
     }

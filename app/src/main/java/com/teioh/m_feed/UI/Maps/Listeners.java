@@ -2,14 +2,18 @@ package com.teioh.m_feed.UI.Maps;
 
 import com.teioh.m_feed.Models.Manga;
 
-public class Listeners {
+public interface Listeners {
 
     /**
      * Home screen fragments communicate with activity
      */
-    public interface MainFragmentListener {
+    interface MainFragmentListener {
+
         boolean setRecentSelection(Long aId);
+
         void updateRecentSelection(Manga aManga);
+
+        void removeFilters();
     }
 
     /**

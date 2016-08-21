@@ -4,7 +4,6 @@ import android.widget.Toast;
 
 import com.teioh.m_feed.MFeedApplication;
 import com.teioh.m_feed.UI.MainActivity.IMain;
-import com.teioh.m_feed.UI.MainActivity.MainFragmentPresenterBase;
 import com.teioh.m_feed.Utils.MFDBHelper;
 
 import rx.android.schedulers.AndroidSchedulers;

@@ -18,9 +18,9 @@ import butterknife.ButterKnife;
 public class RecentFragment extends MainFragmentBase {
     public final static String TAG = RecentFragment.class.getSimpleName();
 
-    @Bind(R.id.swipe_container)SwipeRefreshLayout mSwipeContainer;
+    @Bind(R.id.swipe_container) SwipeRefreshLayout mSwipeContainer;
 
-    public static Fragment getnewInstance(){
+    public static Fragment getnewInstance() {
         Fragment dialog = new RecentFragment();
         return dialog;
     }
@@ -32,6 +32,7 @@ public class RecentFragment extends MainFragmentBase {
 
         mGridView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         mFragmentPresenter = new RecentPresenter(this);
+
         return lView;
     }
 
@@ -39,6 +40,7 @@ public class RecentFragment extends MainFragmentBase {
     public void startRefresh() {
         mGridView.setVisibility(View.GONE);
         mSwipeContainer.post(() -> mSwipeContainer.setRefreshing(true));
+
     }
 
     @Override
@@ -51,7 +53,16 @@ public class RecentFragment extends MainFragmentBase {
     @Override
     public void setupSwipeRefresh() {
         mSwipeContainer.post(() -> mSwipeContainer.setRefreshing(true));
-        mSwipeContainer.setOnRefreshListener(() -> mFragmentPresenter.updateMangaList());
+        mSwipeContainer.setOnRefreshListener(() -> {
+            mGridView.setVisibility(View.GONE);
+            mFragmentPresenter.updateMangaList();
+            mListener.removeFilters();
+
+        });
     }
 
+    @Override
+    public void removeFilters() {
+
+    }
 }

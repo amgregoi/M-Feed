@@ -43,4 +43,9 @@ public class LibraryFragment extends MainFragmentBase {
     public void setupSwipeRefresh() {
         //do nothing
     }
+
+    @Override
+    public void removeFilters() {
+
+    }
 }
