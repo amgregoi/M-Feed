@@ -6,7 +6,7 @@ import com.teioh.m_feed.MAL_Models.verify_credentials;
 import com.teioh.m_feed.UI.LoginActivity.View.Mappers.LoginActivityMapper;
 import com.teioh.m_feed.Utils.MAL.MALApi;
 import com.teioh.m_feed.Utils.MAL.MALService;
-import com.teioh.m_feed.Utils.SharedPrefsUtil;
+import com.teioh.m_feed.Utils.SharedPrefs;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -21,26 +21,26 @@ public class LoginActivityPresenterImpl implements LoginActivityPresenter {
     private String mUsername;
     MALService mMALService;
 
-    public LoginActivityPresenterImpl(LoginActivityMapper map) {
-        mLoginActivityMapper = map;
+    public LoginActivityPresenterImpl(LoginActivityMapper aMap) {
+        mLoginActivityMapper = aMap;
     }
 
 
 
     @Override
-    public void init(Bundle bundle) {
+    public void init(Bundle aBundle) {
 
     }
 
     @Override
-    public void onSaveState(Bundle bundle) {
+    public void onSaveState(Bundle aSave) {
         if(mUsername != null && !mUsername.equals("")){
-            bundle.putString(USERNAME_KEY, mUsername);
+            aSave.putString(USERNAME_KEY, mUsername);
         }
     }
 
     @Override
-    public void onRestoreState(Bundle bundle) {
+    public void onRestoreState(Bundle aRestore) {
 
     }
 
@@ -58,17 +58,17 @@ public class LoginActivityPresenterImpl implements LoginActivityPresenter {
     }
 
     @Override
-    public void onSignupButton(String mUserName, String mPassword) {
+    public void onSignupButton(String aUsername, String aPassword) {
 
     }
 
     @Override
-    public void onLoginbutton(String mUserName, String mPassword) {
-        mMALService = MALApi.createService(mUserName, mPassword);
+    public void onLoginbutton(String aUsername, String aPassword) {
+        mMALService = MALApi.createService(aUsername, aPassword);
         mMALService.verifyUserAccount(new Callback<verify_credentials>() {
             @Override
             public void success(verify_credentials credentials, Response response) {
-                SharedPrefsUtil.setMALCredential(mUserName, mPassword);
+                SharedPrefs.setMALCredential(aUsername, aPassword);
                 mLoginActivityMapper.onLoginSuccess();
             }
 
@@ -80,8 +80,8 @@ public class LoginActivityPresenterImpl implements LoginActivityPresenter {
     }
 
     @Override
-    public void saveUsernameTransition(String user) {
-        mUsername = user;
+    public void saveUsernameTransition(String aUsername) {
+        mUsername = aUsername;
     }
 
 }

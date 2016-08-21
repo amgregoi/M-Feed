@@ -15,20 +15,20 @@ import com.teioh.m_feed.R;
 
 public class FProgressDialogFragment extends DialogFragment implements TextView.OnEditorActionListener {
 
-    public static DialogFragment getNewInstance(String url){
-        DialogFragment fragment = new FProgressDialogFragment();
-        return fragment;
+    public static DialogFragment getNewInstance(String aUrl){
+        DialogFragment lFragment = new FProgressDialogFragment();
+        return lFragment;
     }
     
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater aInflater, ViewGroup aContainer, Bundle aSavedInstanceState) {
         getDialog().getWindow().setBackgroundDrawableResource(R.drawable.rounded_dialog);
 
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return super.onCreateView(aInflater, aContainer, aSavedInstanceState);
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public Dialog onCreateDialog(Bundle aSavedInstanceState) {
         // Set a theme on the dialog builder constructor!
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyCustomTheme);
 
@@ -40,7 +40,7 @@ public class FProgressDialogFragment extends DialogFragment implements TextView.
     }
 
     @Override
-    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+    public boolean onEditorAction(TextView lView, int aActionId, KeyEvent aEvent) {
         return false;
     }
 }

@@ -30,22 +30,22 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
 
 
     public static Fragment getNewInstance() {
-        Fragment fragment = new ChapterFragment();
-        return fragment;
+        Fragment lFragment = new ChapterFragment();
+        return lFragment;
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate(@Nullable Bundle aSavedInstanceState) {
+        super.onCreate(aSavedInstanceState);
         mChapterPresenter = new ChapterPresenterImpl(this, getArguments());
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.reader_fragment_item, container, false);
-        ButterKnife.bind(this, v);
+    public View onCreateView(LayoutInflater aInflater, ViewGroup aContainer, Bundle aSavedInstanceState) {
+        View lView = aInflater.inflate(R.layout.reader_fragment_item, aContainer, false);
+        ButterKnife.bind(this, lView);
 
-        return v;
+        return lView;
     }
 
     @Override
@@ -55,10 +55,10 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+    public void onSaveInstanceState(Bundle aSave) {
+        super.onSaveInstanceState(aSave);
         if (mChapterPresenter != null) {
-            mChapterPresenter.onSaveState(outState);
+            mChapterPresenter.onSaveState(aSave);
         }
     }
 
@@ -69,10 +69,10 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            mChapterPresenter.onRestoreState(savedInstanceState);
+    public void onActivityCreated(@Nullable Bundle aSavedInstanceState) {
+        super.onActivityCreated(aSavedInstanceState);
+        if (aSavedInstanceState != null) {
+            mChapterPresenter.onRestoreState(aSavedInstanceState);
         }
     }
 
@@ -83,9 +83,9 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
     }
 
     @Override
-    public void registerAdapter(PagerAdapter adapter) {
-        if (adapter != null && getContext() != null) {
-            mViewPager.setAdapter(adapter);
+    public void registerAdapter(PagerAdapter aAdapter) {
+        if (aAdapter != null && getContext() != null) {
+            mViewPager.setAdapter(aAdapter);
             mViewPager.clearOnPageChangeListeners();
             mViewPager.addOnPageChangeListener(this);
             mViewPager.setOffscreenPageLimit(3);
@@ -94,8 +94,8 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
     }
 
     @Override
-    public void setCurrentChapterPage(int pos){
-        mViewPager.setCurrentItem(pos);
+    public void setCurrentChapterPage(int aPosition){
+        mViewPager.setCurrentItem(aPosition);
     }
 
     @Override
@@ -105,18 +105,18 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
     }
 
     @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        mChapterPresenter.updateOffsetCounter(positionOffsetPixels, mViewPager.getCurrentItem());
+    public void onPageScrolled(int aPosition, float aPositionOffset, int aPositionOffsetPixels) {
+        mChapterPresenter.updateOffsetCounter(aPositionOffsetPixels, mViewPager.getCurrentItem());
     }
 
     @Override
-    public void onPageSelected(int position) {
-        mChapterPresenter.updateCurrentPage(position);
+    public void onPageSelected(int aPosition) {
+        mChapterPresenter.updateCurrentPage(aPosition);
     }
 
     @Override
-    public void onPageScrollStateChanged(int state) {
-        mChapterPresenter.updateState(state);
+    public void onPageScrollStateChanged(int aState) {
+        mChapterPresenter.updateState(aState);
     }
 
     @Override
@@ -159,12 +159,12 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof Listeners.ReaderListener)
-            listener = (Listeners.ReaderListener) context;
+    public void onAttach(Context aContext) {
+        super.onAttach(aContext);
+        if (aContext instanceof Listeners.ReaderListener)
+            listener = (Listeners.ReaderListener) aContext;
         else
-            throw new ClassCastException(context.toString() + " must implement Listeners.ReaderListener");
+            throw new ClassCastException(aContext.toString() + " must implement Listeners.ReaderListener");
 
     }
 
@@ -179,8 +179,8 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
     }
 
     @Override
-    public void hideToolbar(long delay) {
-        listener.hideToolbar(delay);
+    public void hideToolbar(long aDelay) {
+        listener.hideToolbar(aDelay);
     }
 
     @Override
@@ -189,13 +189,13 @@ public class ChapterFragment extends Fragment implements ChapterReaderMapper {
     }
 
     @Override
-    public void updateToolbar(String mTitle, String cTitle, int size, int page) {
-        listener.updateToolbar(mTitle, cTitle, size, page);
+    public void updateToolbar(String aMangaTitle, String aChapterTitle, int aSize, int aPage) {
+        listener.updateToolbar(aMangaTitle, aChapterTitle, aSize, aPage);
     }
 
     @Override
-    public void updateCurrentPage(int position) {
-        listener.updateCurrentPage(position);
+    public void updateCurrentPage(int aPosition) {
+        listener.updateCurrentPage(aPosition);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.teioh.m_feed.WebSources;
+package com.teioh.m_feed.Utils;
 
 
 import com.squareup.okhttp.Headers;
@@ -36,13 +36,19 @@ public class NetworkService {
         return new NetworkService();
     }
 
-    public Observable<Response> getResponse(final String url) {
+    /***
+     * TODO...
+     *
+     * @param aUrl
+     * @return
+     */
+    public Observable<Response> getResponse(final String aUrl) {
         return Observable.create(new Observable.OnSubscribe<Response>() {
             @Override
             public void call(Subscriber<? super Response> subscriber) {
                 try {
                     Request request = new Request.Builder()
-                            .url(url)
+                            .url(aUrl)
                             .header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.21")
                             .build();
 
@@ -55,14 +61,21 @@ public class NetworkService {
         }).subscribeOn(Schedulers.io());
     }
 
-    public Observable<Response> getResponseCustomHeaders(final String url, final Headers headers) {
+    /***
+     * TODO...
+     *
+     * @param aUrl
+     * @param aHeaders
+     * @return
+     */
+    public Observable<Response> getResponseCustomHeaders(final String aUrl, final Headers aHeaders) {
         return Observable.create(new Observable.OnSubscribe<Response>() {
             @Override
             public void call(Subscriber<? super Response> subscriber) {
                 try {
                     Request request = new Request.Builder()
-                            .url(url)
-                            .headers(headers)
+                            .url(aUrl)
+                            .headers(aHeaders)
                             .build();
 
                     subscriber.onNext(mClient.newCall(request).execute());
@@ -74,12 +87,18 @@ public class NetworkService {
         }).subscribeOn(Schedulers.io());
     }
 
-    public static Observable<String> mapResponseToString(final Response response) {
+    /***
+     * TODO...
+     *
+     * @param aResponse
+     * @return
+     */
+    public static Observable<String> mapResponseToString(final Response aResponse) {
         return Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {
                 try {
-                    subscriber.onNext(response.body().string());
+                    subscriber.onNext(aResponse.body().string());
                     subscriber.onCompleted();
                 } catch (Throwable e) {
                     subscriber.onError(e);

@@ -12,20 +12,20 @@ public class FRemoveDialogFragment extends DialogFragment {
     public final static String TITLE_KEY = TAG + ":" + "TITLE";
 
     public static DialogFragment getNewInstance(int title) {
-        FRemoveDialogFragment fragment = new FRemoveDialogFragment();
+        FRemoveDialogFragment lFragment = new FRemoveDialogFragment();
         Bundle args = new Bundle();
         args.putInt(TITLE_KEY, title);
-        fragment.setArguments(args);
-        return fragment;
+        lFragment.setArguments(args);
+        return lFragment;
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        int title = getArguments().getInt(TITLE_KEY);
+    public Dialog onCreateDialog(Bundle aSavedInstanceState) {
+        int lTitle = getArguments().getInt(TITLE_KEY);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        return builder
-                .setTitle(title)
+        AlertDialog.Builder lBuilder = new AlertDialog.Builder(getContext());
+        return lBuilder
+                .setTitle(lTitle)
                 .setMessage("Are you sure you want to remove this?")
                 .setNegativeButton("No", (arg0, arg1) -> {
                     getActivity().onActivityReenter(Activity.RESULT_CANCELED, null);

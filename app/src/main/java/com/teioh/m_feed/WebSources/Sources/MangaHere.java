@@ -1,16 +1,15 @@
-package com.teioh.m_feed.WebSources.Source;
+package com.teioh.m_feed.WebSources.Sources;
 
 import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
-import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
-import com.teioh.m_feed.WebSources.NetworkService;
+import com.teioh.m_feed.Utils.MFDBHelper;
+import com.teioh.m_feed.Utils.NetworkService;
 import com.teioh.m_feed.WebSources.RequestWrapper;
+import com.teioh.m_feed.WebSources.Source;
 
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -20,25 +19,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import static nl.qbusict.cupboard.CupboardFactory.cupboard;
+public class MangaHere extends Source {
 
-public class MangaHere {
+    final public String SourceKey = "MangaHere";
 
-    final public static String SourceKey = "MangaHere";
+    final String mBaseUrl = "http://mangahere.co/";
+    final String mUpdatesUrl = "http://mangahere.co/latest/";
 
-    final static String mBaseUrl = "http://mangahere.co/";
-    final static String mUpdatesUrl = "http://mangahere.co/latest/";
-
-    /**
+    /***
      * builds list of manga for recently updated page
      *
      * @return
      */
-    public static Observable<List<Manga>> getRecentUpdatesObservable() {
+    public Observable<List<Manga>> getRecentUpdatesObservable() {
         return NetworkService.getTemporaryInstance()
                 .getResponse(mUpdatesUrl)
                 .flatMap(response -> NetworkService.mapResponseToString(response))
@@ -49,8 +45,13 @@ public class MangaHere {
                 .doOnError(Throwable::printStackTrace);
     }
 
-
-    private static List<Manga> parseRecentUpdatesToManga(final String unparsedHtml) {
+    /***
+     * TODO...
+     *
+     * @param unparsedHtml
+     * @return
+     */
+    private List<Manga> parseRecentUpdatesToManga(final String unparsedHtml) {
         Document parsedDocument = Jsoup.parse(unparsedHtml);
         Elements updates = parsedDocument.select("div.manga_updates");
         parsedDocument = Jsoup.parse(updates.toString());
@@ -58,25 +59,30 @@ public class MangaHere {
         return mangaList;
     }
 
-    private static List<Manga> scrapeUpdatestoManga(final Document parsedDocument) {
+    /***
+     * TODO...
+     *
+     * @param parsedDocument
+     * @return
+     */
+    private List<Manga> scrapeUpdatestoManga(final Document parsedDocument) {
         List<Manga> mangaList = new ArrayList<>();
         Elements mangaElements = parsedDocument.select("dl");
 
-        SQLiteDatabase db = MangaFeedDbHelper.getInstance().getReadableDatabase();
         for (Element wholeElement : mangaElements) {
             Document parseSections = Jsoup.parse(wholeElement.toString());
             Elements usefulElements = parseSections.select("dt");
             for (Element usefulElement : usefulElements) {
                 String mangaTitle = usefulElement.select("a").attr("rel");
                 String mangaUrl = usefulElement.select("a").attr("href");
-                Manga manga = cupboard().withDatabase(db).query(Manga.class).withSelection("title = ? AND source = ?", mangaTitle, SourceKey).get();
+                Manga manga = MFDBHelper.getInstance().getManga(mangaTitle, SourceKey);
                 if (manga != null) {
                     mangaList.add(manga);
                 } else {
                     manga = new Manga(mangaTitle, mangaUrl, SourceKey);
                     mangaList.add(manga);
-                    cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).put(manga);
-                    Observable<Manga> observableManga = MangaHere.updateMangaObservable(manga);
+                    MFDBHelper.getInstance().putManga(manga);
+                    Observable<Manga> observableManga = updateMangaObservable(new RequestWrapper(manga));
                     observableManga.subscribe();
                 }
             }
@@ -86,51 +92,46 @@ public class MangaHere {
         return mangaList;
     }
 
-    /**
+    /***
      * builds list of chapters for manga object
      *
+     * @param request
      * @return
      */
+    public Observable<List<Chapter>> getChapterListObservable(RequestWrapper request) {
+        NetworkService currService = NetworkService.getTemporaryInstance();
 
-    public static Observable<List<Chapter>> getChapterListObservable(RequestWrapper request) {
-        return pullChaptersFromWebsite(request)
-                .subscribeOn(Schedulers.io())
+        return currService
+                .getResponse(request.getMangaUrl())
+                .flatMap(response -> NetworkService.mapResponseToString(response))
+                .flatMap(html -> Observable.just(parseHtmlToChapters(request, html)))
                 .observeOn(AndroidSchedulers.mainThread())
-                .retry(10)
                 .doOnError(throwable -> throwable.printStackTrace());
     }
 
-    private static Observable<List<Chapter>> pullChaptersFromWebsite(RequestWrapper request) {
-        return Observable.create(new Observable.OnSubscribe<List<Chapter>>() {
-            @Override
-            public void call(Subscriber<? super List<Chapter>> subscriber) {
-                try {
-                    Connection connect = Jsoup.connect(request.getMangaUrl().toLowerCase())
-                            .userAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.21")
-                            .timeout(10000);
-
-                    String unparsedHtml = null;
-                    if (connect.execute().statusCode() == 200)
-                        unparsedHtml = connect.get().html().toString();
-
-                    subscriber.onNext(parseHtmlToChapters(unparsedHtml, request.getMangaTitle()));
-                    subscriber.onCompleted();
-                } catch (Throwable e) {
-                    subscriber.onError(e);
-                }
-            }
-        });
-    }
-
-    private static List<Chapter> parseHtmlToChapters(final String unparsedHtml, final String title) {
+    /***
+     * TODO...
+     *
+     * @param aRequest
+     * @param unparsedHtml
+     * @return
+     */
+    private List<Chapter> parseHtmlToChapters(RequestWrapper aRequest, String unparsedHtml) {
         Document parsedDocument = Jsoup.parse(unparsedHtml);
         Elements updates = parsedDocument.select("div.detail_list").select("ul").not("ul.tab_comment.clearfix");
         parsedDocument = Jsoup.parse(updates.toString());
-        List<Chapter> chapterList = scrapeChaptersFromParsedDocument(parsedDocument, title);
+        List<Chapter> chapterList = scrapeChaptersFromParsedDocument(parsedDocument, aRequest.getMangaTitle());
         return chapterList;
     }
 
-    private static List<Chapter> scrapeChaptersFromParsedDocument(final Document parsedDocument, final String title) {
+    /***
+     * TODO...
+     *
+     * @param parsedDocument
+     * @param title
+     * @return
+     */
+    private List<Chapter> scrapeChaptersFromParsedDocument(final Document parsedDocument, final String title) {
         List<Chapter> chapterList = new ArrayList<>();
         Elements chapterElements = parsedDocument.getElementsByTag("li");
         int numChapters = chapterElements.size();
@@ -149,13 +150,12 @@ public class MangaHere {
         return chapterList;
     }
 
-
-    /**
-     * ChapterFragment - takes a chapter url, and returns list of urls to chapter images
-     *
+    /***
+     * TODO...
+     * @param request
      * @return
      */
-    public static Observable<String> getChapterImageList(final RequestWrapper request) {
+    public Observable<String> getChapterImageListObservable(final RequestWrapper request) {
         final List<String> temporaryCachedImageUrls = new ArrayList<>();
 
         final NetworkService currentService = NetworkService.getTemporaryInstance();
@@ -191,7 +191,13 @@ public class MangaHere {
 
     }
 
-    private static List<String> parseHtmlToPageUrls(String unparsedHtml) {
+    /***
+     * TODO...
+     *
+     * @param unparsedHtml
+     * @return
+     */
+    private List<String> parseHtmlToPageUrls(String unparsedHtml) {
         List<String> pageUrls = new ArrayList<>();
 
         //get base url for images
@@ -203,55 +209,46 @@ public class MangaHere {
         return pageUrls;
     }
 
-    private static String parseHtmlToImageUrl(String unparsedHtml) {
+    /***
+     * TODO...
+     *
+     * @param unparsedHtml
+     * @return
+     */
+    private String parseHtmlToImageUrl(String unparsedHtml) {
         Document parsedDocumentForImage = Jsoup.parse(unparsedHtml);
         String url = parsedDocumentForImage.select("section#viewer.read_img").select("img#image").attr("src");
 
         return url;
     }
 
-
-    /**
+    /***
      * Adds new Manga and
      * gets missing manga information and updates database
      *
+     * @param aRequest
      * @return
      */
-    public static Observable<Manga> updateMangaObservable(final Manga m) {
-        return getUnparsedHtml(m)
-                .subscribeOn(Schedulers.newThread())
+    public Observable<Manga> updateMangaObservable(RequestWrapper aRequest) {
+        NetworkService curService = NetworkService.getTemporaryInstance();
+
+        return curService.getResponse(aRequest.getMangaUrl())
+                .flatMap(response -> curService.mapResponseToString(response))
+                .flatMap(html -> Observable.just(scrapeAndUpdateManga(html, aRequest.getMangaUrl())))
+                .onErrorReturn(null)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .retry(10)
-                .onErrorReturn(throwable -> {
-                    Log.e("throwable", throwable.toString());
-                    return null;
-                })
                 .doOnError(throwable -> throwable.printStackTrace());
     }
 
-    private static Observable<Manga> getUnparsedHtml(final Manga m) {
-        return Observable.create(new Observable.OnSubscribe<Manga>() {
-            @Override
-            public void call(Subscriber<? super Manga> subscriber) {
-                try {
-                    Connection connect = Jsoup.connect(m.getMangaURL().toLowerCase())
-                            .userAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.21")
-                            .timeout(10000);
-
-                    String unparsedHtml = null;
-                    if (connect.execute().statusCode() == 200)
-                        unparsedHtml = connect.get().html();
-
-                    subscriber.onNext(scrapeAndUpdateManga(unparsedHtml, m.getMangaURL()));
-                    subscriber.onCompleted();
-                } catch (Throwable e) {
-                    subscriber.onError(e);
-                }
-            }
-        });
-    }
-
-    private static Manga scrapeAndUpdateManga(final String unparsedHtml, String url) {
+    /***
+     * TODO...
+     *
+     * @param unparsedHtml
+     * @param url
+     * @return
+     */
+    private Manga scrapeAndUpdateManga(final String unparsedHtml, String url) {
         Document html = Jsoup.parse(unparsedHtml);
         Elements usefulSection = html.select("div.manga_detail_top.clearfix");
 
@@ -295,12 +292,7 @@ public class MangaHere {
         values.put("status", status);
         values.put("source", SourceKey);
 
-        cupboard().withDatabase(MangaFeedDbHelper.getInstance()
-                .getWritableDatabase())
-                .update(Manga.class, values, "link = ?", url);
-
-        return cupboard().withDatabase(MangaFeedDbHelper.getInstance()
-                .getReadableDatabase()).query(Manga.class)
-                .withSelection("link = ? AND source = ?", url, SourceKey).get();
+        MFDBHelper.getInstance().updateManga(values, url);
+        return MFDBHelper.getInstance().getManga(url, SourceKey);
     }
 }

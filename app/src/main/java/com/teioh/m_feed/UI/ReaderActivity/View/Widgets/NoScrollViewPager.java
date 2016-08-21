@@ -7,41 +7,41 @@ import android.view.MotionEvent;
 
 public class NoScrollViewPager extends ViewPager {
 
-    private boolean isPagingEnabled = false;
+    private boolean mPagingEnabled = false;
 
-    public NoScrollViewPager(Context context) {
-        super(context);
+    public NoScrollViewPager(Context aContext) {
+        super(aContext);
     }
 
-    public NoScrollViewPager(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return this.isPagingEnabled && super.onTouchEvent(event);
+    public NoScrollViewPager(Context aContext, AttributeSet aAttributeSet) {
+        super(aContext, aAttributeSet);
     }
 
     @Override
-    public boolean onInterceptTouchEvent(MotionEvent event) {
-        return this.isPagingEnabled && super.onInterceptTouchEvent(event);
+    public boolean onTouchEvent(MotionEvent aEvent) {
+        return this.mPagingEnabled && super.onTouchEvent(aEvent);
     }
 
-    public void setPagingEnabled(boolean b) {
-        this.isPagingEnabled = b;
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent aEvent) {
+        return this.mPagingEnabled && super.onInterceptTouchEvent(aEvent);
+    }
+
+    public void setPagingEnabled(boolean aPagingEnabled) {
+        this.mPagingEnabled = aPagingEnabled;
     }
 
     public void incrementCurrentItem(){
-        int position = getCurrentItem();
-        if (position != getAdapter().getCount() - 1) {
-            setCurrentItem(position + 1, true);
+        int lPosition = getCurrentItem();
+        if (lPosition != getAdapter().getCount() - 1) {
+            setCurrentItem(lPosition + 1, true);
         }
     }
 
     public void decrememntCurrentItem(){
-        int position = getCurrentItem();
-        if (position != 0) {
-            setCurrentItem(position - 1, true);
+        int lPosition = getCurrentItem();
+        if (lPosition != 0) {
+            setCurrentItem(lPosition - 1, true);
         }
     }
 }

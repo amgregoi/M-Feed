@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public interface MangaFilterMap {
     void updateSource();
-    void onFilterSelected(int filter);
-    void onGenreFilterSelected(ArrayList<Manga> list);
+    void onFilterSelected(int aFilter);
+    void onGenreFilterSelected(ArrayList<Manga> aMangaList);
     void onClearGenreFilter();
 }

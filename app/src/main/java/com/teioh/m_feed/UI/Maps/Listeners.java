@@ -8,8 +8,8 @@ public class Listeners {
      * Home screen fragments communicate with activity
      */
     public interface MainFragmentListener {
-        boolean setRecentSelection(Long id);
-        void updateRecentSelection(Manga manga);
+        boolean setRecentSelection(Long aId);
+        void updateRecentSelection(Manga aManga);
     }
 
     /**
@@ -20,13 +20,13 @@ public class Listeners {
 
         void decrementChapter();
 
-        void hideToolbar(long delay);
+        void hideToolbar(long aDelay);
 
         void showToolbar();
 
-        void updateToolbar(String mTitle, String cTitle, int size, int page);
+        void updateToolbar(String aTitle, String aChapterTitle, int aSize, int aPage);
 
-        void updateCurrentPage(int position);
+        void updateCurrentPage(int aPosition);
 
         void onBackPressed();
     }

@@ -30,12 +30,12 @@ import com.teioh.m_feed.UI.MainActivity.Adapters.ExpandableListAdapter;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
 import com.teioh.m_feed.UI.MainActivity.Presenters.MainPresenter;
 import com.teioh.m_feed.UI.MainActivity.Presenters.MainPresenterImpl;
+import com.teioh.m_feed.UI.MainActivity.View.Fragments.FilterDialogFragment;
 import com.teioh.m_feed.UI.MainActivity.View.Fragments.SettingsFragment;
 import com.teioh.m_feed.UI.MainActivity.View.Mappers.MainActivityMapper;
 import com.teioh.m_feed.UI.MainActivity.View.Widgets.SlidingTabLayout;
-import com.teioh.m_feed.UI.MainActivity.View.Fragments.FilterDialogFragment;
-import com.teioh.m_feed.Utils.SharedPrefsUtil;
-import com.teioh.m_feed.WebSources.WebSource;
+import com.teioh.m_feed.Utils.SharedPrefs;
+import com.teioh.m_feed.WebSources.SourceFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     @Bind(R.id.filter_view) ImageView mFilterView;
     @Bind(R.id.activityTitle) TextView mActivityTitle;
     @Bind(R.id.pager) ViewPager mViewPager;
-    @Bind(R.id.tabs) SlidingTabLayout tabs;
+    @Bind(R.id.tabs) SlidingTabLayout mTabLayout;
     @Bind(R.id.tool_bar) Toolbar mToolBar;
     @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @Bind(R.id.drawerLayoutListView) ExpandableListView mDrawerList;
@@ -61,20 +61,20 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     private ActionBarDrawerToggle mDrawerToggle;
     private MainPresenter mMainPresenter;
 
-    public static Intent getNewInstance(Context context){
-        Intent intent = new Intent(context, MainActivity.class);
-        return intent;
+    public static Intent getNewInstance(Context aContext){
+        Intent lIntent = new Intent(aContext, MainActivity.class);
+        return lIntent;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle aSavedInstanceState) {
+        super.onCreate(aSavedInstanceState);
         setContentView(R.layout.main_activity_layout);
         ButterKnife.bind(this);
         mMainPresenter = new MainPresenterImpl(this);
 
-        if (savedInstanceState != null) {
-            mMainPresenter.onRestoreState(savedInstanceState);
+        if (aSavedInstanceState != null) {
+            mMainPresenter.onRestoreState(aSavedInstanceState);
         }
 
         mMainPresenter.init(getIntent().getExtras());
@@ -85,21 +85,21 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mMainPresenter.onSaveState(outState);
+    protected void onSaveInstanceState(Bundle aSave) {
+        super.onSaveInstanceState(aSave);
+        mMainPresenter.onSaveState(aSave);
     }
 
     @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
+    protected void onPostCreate(Bundle aSavedInstanceState) {
+        super.onPostCreate(aSavedInstanceState);
         mDrawerToggle.syncState();
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
+    public void onConfigurationChanged(Configuration aNewConfig) {
+        super.onConfigurationChanged(aNewConfig);
+        mDrawerToggle.onConfigurationChanged(aNewConfig);
     }
 
     @Override
@@ -121,9 +121,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     }
 
     @Override
-    public void onTrimMemory(int level) {
-        super.onTrimMemory(level);
-        Glide.get(this).trimMemory(level);
+    public void onTrimMemory(int aLevel) {
+        super.onTrimMemory(aLevel);
+        Glide.get(this).trimMemory(aLevel);
     }
 
     @Override
@@ -133,41 +133,43 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu aMenu) {
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.settings) {
+    public boolean onOptionsItemSelected(MenuItem aItem) {
+        int lId = aItem.getItemId();
+
+        if (lId == R.id.settings) {
             return true;
-        } else if (id == R.id.refresh) {
+        } else if (lId == R.id.refresh) {
             return true;
-        } else if (id == R.id.views) {
+        } else if (lId == R.id.views) {
             return true;
         }
 
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(aItem);
     }
 
     @Override
-    public boolean onQueryTextSubmit(String query) {
+    public boolean onQueryTextSubmit(String aQueryText) {
         return false;
     }
 
     @Override
-    public boolean onQueryTextChange(String newText) {
-        mMainPresenter.updateQueryChange(newText);
+    public boolean onQueryTextChange(String aQueryText) {
+        mMainPresenter.updateQueryChange(aQueryText);
         return false;
     }
 
     @Override
-    public void onActivityReenter(int resultCode, Intent data) {
-        super.onActivityReenter(resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            if (data != null) {
-                mMainPresenter.onGenreFilterSelected(data);
+    public void onActivityReenter(int aResultCode, Intent aData) {
+        super.onActivityReenter(aResultCode, aData);
+
+        if (aResultCode == Activity.RESULT_OK) {
+            if (aData != null) {
+                mMainPresenter.onGenreFilterSelected(aData);
                 mActivityTitle.setText(getString(R.string.filter_active));
                 mFilterView.setImageDrawable(getDrawable(R.drawable.filter_remove_outline_24dp));
 
@@ -183,11 +185,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     }
 
     @Override
-    public void registerAdapter(ViewPagerAdapterMain adapter) {
-        if (adapter != null) {
-            mViewPager.setAdapter(adapter);
+    public void registerAdapter(ViewPagerAdapterMain aAdapter) {
+        if (aAdapter != null) {
+            mViewPager.setAdapter(aAdapter);
             mViewPager.setOffscreenPageLimit(3);
-            tabs.setViewPager(mViewPager);
+            mTabLayout.setViewPager(mViewPager);
         }
     }
 
@@ -221,8 +223,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     }
 
     @Override
-    public void setActivityTitle(String title) {
-        mActivityTitle.setText(title);
+    public void setActivityTitle(String aTitle) {
+        mActivityTitle.setText(aTitle);
     }
 
     @Override
@@ -230,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
         if (mSearchView.getVisibility() == View.GONE) {
             mSearchView.setVisibility(View.VISIBLE);
             mFilterView.setVisibility(View.VISIBLE);
-            setActivityTitle(WebSource.getCurrentSource());
+            setActivityTitle(new SourceFactory().getSourceName());
         } else {
             mSearchView.setVisibility(View.GONE);
             mFilterView.setVisibility(View.GONE);
@@ -241,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     @Override
     public void setupToolbar() {
         setSupportActionBar(mToolBar);
-        mActivityTitle.setText(WebSource.getCurrentSource());
+        mActivityTitle.setText(new SourceFactory().getSourceName());
 
         mFilterView.setOnClickListener(v -> {
             if (!mMainPresenter.genreFilterActive()) {
@@ -250,7 +252,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
             } else {
                 mMainPresenter.onClearGenreFilter();
                 mFilterView.setImageDrawable(getDrawable(R.drawable.filter_outline_24dp));
-                mActivityTitle.setText(WebSource.getCurrentSource());
+                mActivityTitle.setText(new SourceFactory().getSourceName());
             }
         });
     }
@@ -274,13 +276,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
 
     @Override
     public void setupTabLayout() {
-        tabs.setDistributeEvenly(true); // To make the Tabs Fixed set this true, This makes the tabs Space Evenly in Available width
-        tabs.setCustomTabColorizer(position -> getResources().getColor(R.color.tabsScrollColor));
+        mTabLayout.setDistributeEvenly(true); // To make the Tabs Fixed set this true, This makes the mTabLayout Space Evenly in Available width
+        mTabLayout.setCustomTabColorizer(position -> getResources().getColor(R.color.tabsScrollColor));
     }
 
     @Override
-    public void setPageAdapterItem(int position){
-        mViewPager.setCurrentItem(position);
+    public void setPageAdapterItem(int aPosition){
+        mViewPager.setCurrentItem(aPosition);
     }
 
     @Override
@@ -290,84 +292,84 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
 
     @Override
     public void setupSourceFilterMenu() {
-        FloatingActionButton A1 = new FloatingActionButton(getBaseContext());
-        A1.setTitle("Reading");
-        A1.setSize(FloatingActionButton.SIZE_MINI);
-        A1.setColorNormalResId(R.color.ColorAccent);
-        A1.setIcon(R.drawable.ic_favorite_white_18dp);
-        A1.setOnClickListener(v -> {
+        FloatingActionButton lFAB1 = new FloatingActionButton(getBaseContext());
+        lFAB1.setTitle("Reading");
+        lFAB1.setSize(FloatingActionButton.SIZE_MINI);
+        lFAB1.setColorNormalResId(R.color.ColorAccent);
+        lFAB1.setIcon(R.drawable.ic_favorite_white_18dp);
+        lFAB1.setOnClickListener(v -> {
             mMultiActionMenu.collapse();
             mMainPresenter.onFilterSelected(1);
         });
 
-        FloatingActionButton A2 = new FloatingActionButton(getBaseContext());
-        A2.setTitle("All");
-        A2.setIcon(R.drawable.ic_favorite_border_white_18dp);
-        A2.setSize(FloatingActionButton.SIZE_MINI);
-        A2.setColorNormalResId(R.color.ColorAccent);
-        A2.setOnClickListener(v -> {
+        FloatingActionButton lFAB2 = new FloatingActionButton(getBaseContext());
+        lFAB2.setTitle("All");
+        lFAB2.setIcon(R.drawable.ic_favorite_border_white_18dp);
+        lFAB2.setSize(FloatingActionButton.SIZE_MINI);
+        lFAB2.setColorNormalResId(R.color.ColorAccent);
+        lFAB2.setOnClickListener(v -> {
             mSearchView.clearFocus();
             mMultiActionMenu.collapse();
             mMainPresenter.onFilterSelected(0);
         });
 
-        FloatingActionButton A3 = new FloatingActionButton(getBaseContext());
-        A3.setTitle("Completed");
-        A3.setSize(FloatingActionButton.SIZE_MINI);
-        A3.setColorNormalResId(R.color.ColorAccent);
-        A3.setIcon(R.drawable.ic_favorite_white_18dp);
-        A3.setOnClickListener(v -> {
+        FloatingActionButton lFAB3 = new FloatingActionButton(getBaseContext());
+        lFAB3.setTitle("Completed");
+        lFAB3.setSize(FloatingActionButton.SIZE_MINI);
+        lFAB3.setColorNormalResId(R.color.ColorAccent);
+        lFAB3.setIcon(R.drawable.ic_favorite_white_18dp);
+        lFAB3.setOnClickListener(v -> {
             mMultiActionMenu.collapse();
             mMainPresenter.onFilterSelected(2);
         });
 
-        FloatingActionButton A4 = new FloatingActionButton(getBaseContext());
-        A4.setTitle("On Hold");
-        A4.setSize(FloatingActionButton.SIZE_MINI);
-        A4.setColorNormalResId(R.color.ColorAccent);
-        A4.setIcon(R.drawable.ic_favorite_white_18dp);
-        A4.setOnClickListener(v -> {
+        FloatingActionButton lFAB4 = new FloatingActionButton(getBaseContext());
+        lFAB4.setTitle("On Hold");
+        lFAB4.setSize(FloatingActionButton.SIZE_MINI);
+        lFAB4.setColorNormalResId(R.color.ColorAccent);
+        lFAB4.setIcon(R.drawable.ic_favorite_white_18dp);
+        lFAB4.setOnClickListener(v -> {
             mMultiActionMenu.collapse();
             mMainPresenter.onFilterSelected(3);
         });
 
-        FloatingActionButton A5 = new FloatingActionButton(getBaseContext());
-        A5.setTitle("Followed");
-        A5.setSize(FloatingActionButton.SIZE_MINI);
-        A5.setColorNormalResId(R.color.ColorAccent);
-        A5.setIcon(R.drawable.ic_favorite_white_18dp);
-        A5.setOnClickListener(v -> {
+        FloatingActionButton lFAB5 = new FloatingActionButton(getBaseContext());
+        lFAB5.setTitle("Followed");
+        lFAB5.setSize(FloatingActionButton.SIZE_MINI);
+        lFAB5.setColorNormalResId(R.color.ColorAccent);
+        lFAB5.setIcon(R.drawable.ic_favorite_white_18dp);
+        lFAB5.setOnClickListener(v -> {
             mMultiActionMenu.collapse();
             mMainPresenter.onFilterSelected(5);
         });
 
-        mMultiActionMenu.addButton(A4);
-        mMultiActionMenu.addButton(A3);
-        mMultiActionMenu.addButton(A1);
-        mMultiActionMenu.addButton(A5);
-        mMultiActionMenu.addButton(A2);
+        mMultiActionMenu.addButton(lFAB4);
+        mMultiActionMenu.addButton(lFAB3);
+        mMultiActionMenu.addButton(lFAB1);
+        mMultiActionMenu.addButton(lFAB5);
+        mMultiActionMenu.addButton(lFAB2);
 
     }
 
     @Override
-    public void setupDrawerLayout(List<String> mDrawerItems, Map<String, List<String>> mSourceCollections) {
-        final ExpandableListAdapter adapter = new ExpandableListAdapter(this, mDrawerItems, mSourceCollections);
+    public void setupDrawerLayout(List<String> aDrawerItems, Map<String, List<String>> aSourceCollections) {
+        final ExpandableListAdapter adapter = new ExpandableListAdapter(this, aDrawerItems, aSourceCollections);
         if (mDrawerHeader != null) mDrawerList.removeHeaderView(mDrawerHeader);
 
         mDrawerHeader = LayoutInflater.from(getContext()).inflate(R.layout.drawer_header, null);
-        TextView username = (TextView) mDrawerHeader.findViewById(R.id.drawer_username);
-        username.setText(SharedPrefsUtil.getMALUsername());
+        TextView lUsernameTextView = (TextView) mDrawerHeader.findViewById(R.id.drawer_username);
+        lUsernameTextView.setText(SharedPrefs.getMALUsername());
 
         mDrawerList.addHeaderView(mDrawerHeader);
         mDrawerList.setAdapter(adapter);
 
-        mDrawerList.setOnGroupClickListener((parent, v, groupPosition, id) -> {
-            mMainPresenter.onDrawerItemChosen(groupPosition);
+        mDrawerList.setOnGroupClickListener((aParent, aView, aGroupPosition, aId) -> {
+            mMainPresenter.onDrawerItemChosen(aGroupPosition);
             return false;
         });
 
-        mDrawerList.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
-            mMainPresenter.onSourceItemChosen(childPosition);
+        mDrawerList.setOnChildClickListener((aParent, aView, aGroupPosition, aChildPosition, aId) -> {
+            mMainPresenter.onSourceItemChosen(aChildPosition);
             return true;
         });
 
@@ -388,7 +390,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
         } else if(mMainPresenter.genreFilterActive()){
             mMainPresenter.onClearGenreFilter();
             mFilterView.setImageDrawable(getDrawable(R.drawable.filter_outline_24dp));
-            mActivityTitle.setText(WebSource.getCurrentSource());
+            mActivityTitle.setText(new SourceFactory().getSourceName());
         }else if (!mToast.getView().isShown()) { //opens drawer, and shows exit mToast to verify exit
             mDrawerLayout.openDrawer(mDrawerList);
             mToast.show();
@@ -399,17 +401,17 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     }
 
     @Override
-    public boolean setRecentSelection(Long id) {
+    public boolean setRecentSelection(Long aId) {
         if(mMultiActionMenu.isExpanded()) {
             mMultiActionMenu.collapse();
             return false;
         }
-        mMainPresenter.setRecentManga(id);
+        mMainPresenter.setRecentManga(aId);
         return true;
     }
 
     @Override
-    public void updateRecentSelection(Manga manga) {
+    public void updateRecentSelection(Manga aManga) {
         mMainPresenter.getRecentManga();
     }
 
@@ -417,4 +419,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityMappe
     public void MALSignOut() {
         mMainPresenter.onSignOut();
     }
+
+
 }

@@ -18,9 +18,8 @@ import android.widget.Toast;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.Adapters.GenreListAdapter;
-import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
-import com.teioh.m_feed.WebSources.Source.MangaJoy;
-import com.teioh.m_feed.WebSources.WebSource;
+import com.teioh.m_feed.Utils.MFDBHelper;
+import com.teioh.m_feed.WebSources.SourceFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,21 +47,17 @@ public class FilterDialogFragment extends DialogFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.main_search_dialog, container, false);
-        ButterKnife.bind(this, v);
+    public View onCreateView(LayoutInflater aInflater, @Nullable ViewGroup aContainer, @Nullable Bundle aSavedInstanceState) {
+        View lView = aInflater.inflate(R.layout.main_search_dialog, aContainer, false);
+        ButterKnife.bind(this, lView);
 
-        mAdapter = new GenreListAdapter(getContext(), new ArrayList<>(Arrays.asList(MangaJoy.genres)));
+        mAdapter = new GenreListAdapter(getContext(), new ArrayList<>(Arrays.asList(new SourceFactory().getSource().genres)));
         registerAdapter(mAdapter);
-
-//        mSearchButton.setBackgroundColor(getResources().getColor(R.color.charcoal));
-//        mCancelButton.setBackgroundColor(getResources().getColor(R.color.charcoal));
-//        mClearButton.setBackgroundColor(getResources().getColor(R.color.charcoal));
 
         getDialog().setCanceledOnTouchOutside(true);
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().requestFeature(Window.FEATURE_SWIPE_TO_DISMISS);
-        return v;
+        return lView;
     }
 
     @Override
@@ -71,58 +66,58 @@ public class FilterDialogFragment extends DialogFragment {
         ButterKnife.unbind(this);
     }
 
-    private void registerAdapter(BaseAdapter adapter) {
-        mGenreGridView.setAdapter(adapter);
-        mGenreGridView.setOnItemClickListener((parent, view, position, id) -> ((GenreListAdapter) adapter).updateItem(position, view));
-        mSearchButton.setOnClickListener(v -> performSearch());
-        mCancelButton.setOnClickListener(v -> {
+    private void registerAdapter(BaseAdapter aAdapter) {
+        mGenreGridView.setAdapter(aAdapter);
+        mGenreGridView.setOnItemClickListener((aParent, aView, aPosition, aId) -> ((GenreListAdapter) aAdapter).updateItem(aPosition, aView));
+        mSearchButton.setOnClickListener(aView -> performSearch());
+        mCancelButton.setOnClickListener(aView -> {
             FilterDialogFragment.this.getActivity().onActivityReenter(Activity.RESULT_CANCELED, null);
             getDialog().dismiss();
         });
-        mClearButton.setOnClickListener(v -> {
-            mAdapter = new GenreListAdapter(getContext(), new ArrayList<>(Arrays.asList(MangaJoy.genres)));
+        mClearButton.setOnClickListener(aView -> {
+            mAdapter = new GenreListAdapter(getContext(), new ArrayList<>(Arrays.asList(new SourceFactory().getSource().genres)));
             registerAdapter(mAdapter);
         });
     }
 
     private void performSearch() {
-        StringBuilder selection = new StringBuilder();
-        List<String> selectionArgs = new ArrayList<>();
+        StringBuilder lSelection = new StringBuilder();
+        List<String> lSelectionArgs = new ArrayList<>();
 
-        selection.append("source" + " = ?");
-        selectionArgs.add(WebSource.getCurrentSource());
+        lSelection.append("source" + " = ?");
+        lSelectionArgs.add(new SourceFactory().getSourceName());
 
-        List<String> keepList = mAdapter.getGenreListByStatus(1);
-        List<String> removeList = mAdapter.getGenreListByStatus(2);
+        List<String> lKeepList = mAdapter.getGenreListByStatus(1);
+        List<String> lRemoveList = mAdapter.getGenreListByStatus(2);
 
         //search with no parameters selected, reset to original data
-        if(keepList.size() == 0 && removeList.size() == 0) {
+        if(lKeepList.size() == 0 && lRemoveList.size() == 0) {
             FilterDialogFragment.this.getActivity().onActivityReenter(Activity.RESULT_OK, null);
             getDialog().dismiss();
         }
         else {
             Log.e(TAG, "starting setup");
 
-            for (String s : keepList) {
-                selection.append(" AND ");
-                selection.append("genres" + " LIKE ?");
-                selectionArgs.add("%" + s.replaceAll("\\s", "") + "%"); //genres have been stripped of spaces in the database
+            for (String iString : lKeepList) {
+                lSelection.append(" AND ");
+                lSelection.append("genres" + " LIKE ?");
+                lSelectionArgs.add("%" + iString.replaceAll("\\s", "") + "%"); //genres have been stripped of spaces in the database
             }
 
-            for (String s : removeList) {
-                selection.append(" AND ");
-                selection.append("genres" + " NOT LIKE ?");
-                selectionArgs.add("%" + s.replaceAll("\\s", "") + "%"); //genres have been stripped of spaces in the database
+            for (String iString : lRemoveList) {
+                lSelection.append(" AND ");
+                lSelection.append("genres" + " NOT LIKE ?");
+                lSelectionArgs.add("%" + iString.replaceAll("\\s", "") + "%"); //genres have been stripped of spaces in the database
             }
 
-            QueryResultIterable<Manga> filteredManga = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase()).query(Manga.class)
-                    .withSelection(selection.toString(), selectionArgs.toArray(new String[selectionArgs.size()]))
+            QueryResultIterable<Manga> iFilteredManga = cupboard().withDatabase(MFDBHelper.getInstance().getReadableDatabase()).query(Manga.class)
+                    .withSelection(lSelection.toString(), lSelectionArgs.toArray(new String[lSelectionArgs.size()]))
                     .query();
 
-            if (filteredManga.iterator().hasNext()) {
-                Intent intent = new Intent();
-                intent.putParcelableArrayListExtra("MANGA", new ArrayList<>(filteredManga.list())); //TODO decide if i want to pass whole list or query contents
-                FilterDialogFragment.this.getActivity().onActivityReenter(Activity.RESULT_OK, intent);
+            if (iFilteredManga.iterator().hasNext()) {
+                Intent lIntent = new Intent();
+                lIntent.putParcelableArrayListExtra("MANGA", new ArrayList<>(iFilteredManga.list())); //TODO decide if i want to pass whole list or query contents
+                FilterDialogFragment.this.getActivity().onActivityReenter(Activity.RESULT_OK, lIntent);
                 getDialog().dismiss();
             } else {
                 Toast.makeText(getContext(), "Search result empty", Toast.LENGTH_SHORT).show();

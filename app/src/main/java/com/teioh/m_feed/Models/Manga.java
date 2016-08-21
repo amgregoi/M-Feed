@@ -24,45 +24,45 @@ public class Manga implements Parcelable {
     public Manga() {
     }
 
-    public Manga(String title, String url, String source){
-        this.title = title;
-        this.link = url;
-        this.source = source;
-        this.initialized = 0;
-        this._id = null;
+    public Manga(String aTitle, String aUrl, String aSource){
+        title = aTitle;
+        link = aUrl;
+        source = aSource;
+        initialized = 0;
+        _id = null;
     }
 
-    public Manga(Manga in){
-        _id = in.get_id();
-        title = in.getTitle();
-        image = in.getPicUrl();
-        link = in.getMangaURL();
-        description = in.getDescription();
-        author = in.getAuthor();
-        artist = in.getArtist();
-        genres = in.getmGenre();
-        status = in.getStatus();
-        source = in.getSource();
-        alternate = in.getAlternate();
-        following = in.getFollowingValue();
+    public Manga(Manga aIn){
+        _id = aIn.get_id();
+        title = aIn.getTitle();
+        image = aIn.getPicUrl();
+        link = aIn.getMangaURL();
+        description = aIn.getDescription();
+        author = aIn.getAuthor();
+        artist = aIn.getArtist();
+        genres = aIn.getmGenre();
+        status = aIn.getStatus();
+        source = aIn.getSource();
+        alternate = aIn.getAlternate();
+        following = aIn.getFollowingValue();
         initialized = getInitialized();
     }
 
-    protected Manga(Parcel in) {
-        _id = in.readLong();
-        title = in.readString();
-        image = in.readString();
-        link = in.readString();
-        description = in.readString();
+    protected Manga(Parcel aIn) {
+        _id = aIn.readLong();
+        title = aIn.readString();
+        image = aIn.readString();
+        link = aIn.readString();
+        description = aIn.readString();
 
-        author = in.readString();
-        artist = in.readString();
-        genres = in.readString();
-        status = in.readString();
-        source = in.readString();
-        alternate = in.readString();
-        following = in.readInt();
-        initialized = in.readInt();
+        author = aIn.readString();
+        artist = aIn.readString();
+        genres = aIn.readString();
+        status = aIn.readString();
+        source = aIn.readString();
+        alternate = aIn.readString();
+        following = aIn.readInt();
+        initialized = aIn.readInt();
     }
 
     @Override
@@ -71,32 +71,32 @@ public class Manga implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(_id);
-        dest.writeString(title);
-        dest.writeString(image);
-        dest.writeString(link);
-        dest.writeString(description);
+    public void writeToParcel(Parcel aDest, int aFlags) {
+        aDest.writeLong(_id);
+        aDest.writeString(title);
+        aDest.writeString(image);
+        aDest.writeString(link);
+        aDest.writeString(description);
 
-        dest.writeString(author);
-        dest.writeString(artist);
-        dest.writeString(genres);
-        dest.writeString(status);
-        dest.writeString(source);
-        dest.writeString(alternate);
-        dest.writeInt(following);
-        dest.writeInt(initialized);
+        aDest.writeString(author);
+        aDest.writeString(artist);
+        aDest.writeString(genres);
+        aDest.writeString(status);
+        aDest.writeString(source);
+        aDest.writeString(alternate);
+        aDest.writeInt(following);
+        aDest.writeInt(initialized);
     }
 
     public static final Creator<Manga> CREATOR = new Creator<Manga>() {
         @Override
-        public Manga createFromParcel(Parcel in) {
-            return new Manga(in);
+        public Manga createFromParcel(Parcel aIn) {
+            return new Manga(aIn);
         }
 
         @Override
-        public Manga[] newArray(int size) {
-            return new Manga[size];
+        public Manga[] newArray(int aSize) {
+            return new Manga[aSize];
         }
     };
 
@@ -104,8 +104,8 @@ public class Manga implements Parcelable {
         return _id;
     }
 
-    public void set_id(Long _id) {
-        this._id = _id;
+    public void set_id(Long aId) {
+        _id = aId;
     }
 
     public String toString() {
@@ -116,76 +116,76 @@ public class Manga implements Parcelable {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setTitle(String aTitle) {
+        title = aTitle;
     }
 
-    public String getDescription(){ return this.description;}
+    public String getDescription(){ return description;}
 
-    public void setDescription(String desc){this.description = desc;}
+    public void setDescription(String aDesc){description = aDesc;}
 
     public String getPicUrl() {
         return image;
     }
 
-    public void setPicUrl(String picUrl) {
-        this.image = picUrl;
+    public void setPicUrl(String aPicUrl) {
+        image = aPicUrl;
     }
 
     public String getMangaURL() {
         return link;
     }
 
-    public void setMangaUrl(String url) {
-        this.link = url;
+    public void setMangaUrl(String aUrl) {
+        link = aUrl;
     }
 
     public String getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setAuthor(String aAuthor) {
+        author = aAuthor;
     }
 
     public String getArtist() {
         return artist;
     }
 
-    public void setArtist(String artist) {
-        this.artist = artist;
+    public void setArtist(String aArtist) {
+        artist = aArtist;
     }
 
     public String getmGenre() {
         return genres;
     }
 
-    public void setmGenre(String mGenre) {
-        this.genres = mGenre;
+    public void setmGenre(String aGenres) {
+        genres = aGenres;
     }
 
     public String getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setStatus(String aStatus) {
+        status = aStatus;
     }
 
     public String getSource() {
         return source;
     }
 
-    public void setSource(String source) {
-        this.source = source;
+    public void setSource(String aSource) {
+        source = aSource;
     }
 
     public String getAlternate() { return alternate; }
 
-    public void setAlternate(String alt) { this.alternate = alt; }
+    public void setAlternate(String aAlternate) { alternate = aAlternate; }
 
     public boolean getFollowing() {
-        if(this.following > 0) return true;
+        if(following > 0) return true;
         return false;
     }
 
@@ -193,27 +193,27 @@ public class Manga implements Parcelable {
         return following;
     }
 
-    public int setFollowing(int val) {
-        this.following = val;
-        return this.following;
+    public int setFollowing(int lVal) {
+        following = lVal;
+        return following;
     }
 
     public int getInitialized() {
         return initialized;
     }
 
-    public void setInitialized(int initialized) {
-        this.initialized = initialized;
+    public void setInitialized(int aInitialized) {
+        initialized = aInitialized;
     }
 
-    @Override public boolean equals(Object object) {
-        boolean sameSame = false;
-        if (object != null && object instanceof Manga)
+    @Override public boolean equals(Object aObject) {
+        boolean lCompare = false;
+        if (aObject != null && aObject instanceof Manga)
         {
-            if(this.getTitle().equals(((Manga)object).getTitle()))
-                sameSame = true;
+            if(getTitle().equals(((Manga)aObject).getTitle()))
+                lCompare = true;
         }
-        return sameSame;
+        return lCompare;
     }
 
     public enum FollowType {

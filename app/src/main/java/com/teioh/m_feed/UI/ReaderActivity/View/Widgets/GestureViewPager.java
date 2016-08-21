@@ -19,42 +19,32 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
         mGestureDetector = new GestureDetector(getContext(), this);
     }
 
-    public GestureViewPager(Context context, AttributeSet attributeSet) {
-        super(context, attributeSet);
+    public GestureViewPager(Context aContext, AttributeSet aAttributeSet) {
+        super(aContext, aAttributeSet);
         mGestureDetector = new GestureDetector(getContext(), this);
     }
 
     @Override
-    public boolean onInterceptTouchEvent(MotionEvent event) {
+    public boolean onInterceptTouchEvent(MotionEvent aEvent) {
             fetchGestureImageViewByTag();
-            mGestureDetector.onTouchEvent(event);
+            mGestureDetector.onTouchEvent(aEvent);
 
             if (mGestureImageView != null) {
                 if (!mGestureImageView.canScrollParent()) {
                     return false;
                 }
             }
-            return super.onInterceptTouchEvent(event);
+            return super.onInterceptTouchEvent(aEvent);
     }
-
-    private void fetchGestureImageViewByTag() {
-        mGestureImageView = (GestureImageView) findViewWithTag(ImagePageAdapter.TAG + ":" + getCurrentItem());
-    }
-
-
-    public void setOnSingleTapListener(OnSingleTapListener singleTapListener) {
-        mSingleTapListener = singleTapListener;
-    }
-
 
     @Override
-    public boolean onDoubleTap(MotionEvent event) {
+    public boolean onDoubleTap(MotionEvent aEvent) {
         if (mGestureImageView != null) {
             if (mGestureImageView.isInitialized()) {
                 if (mGestureImageView.getScale() > mGestureImageView.MIN_SCALE) {
                     mGestureImageView.zoomToPoint(mGestureImageView.MIN_SCALE, getWidth() / 2, getHeight() / 2);
                 } else if (mGestureImageView.getScale() < mGestureImageView.MED_SCALE) {
-                    mGestureImageView.zoomToPoint(mGestureImageView.MED_SCALE, event.getX(), event.getY());
+                    mGestureImageView.zoomToPoint(mGestureImageView.MED_SCALE, aEvent.getX(), aEvent.getY());
                 }
             }
         }
@@ -62,7 +52,7 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
     }
 
     @Override
-    public boolean onDown(MotionEvent event) {
+    public boolean onDown(MotionEvent aEvent) {
         if (mGestureImageView != null) {
             if (mGestureImageView.isInitialized()) {
                 mGestureImageView.cancelFling();
@@ -72,27 +62,27 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
     }
 
     @Override
-    public boolean onScroll(MotionEvent event, MotionEvent event2, float v, float v2) {
+    public boolean onScroll(MotionEvent aEvent, MotionEvent aEvent2, float aXDistance, float aYDistance) {
         if (mGestureImageView != null) {
             if (mGestureImageView.isInitialized()) {
-                mGestureImageView.postTranslate(-v, -v2);
+                mGestureImageView.postTranslate(-aXDistance, -aYDistance);
             }
         }
         return true;
     }
 
     @Override
-    public boolean onFling(MotionEvent event, MotionEvent event2, float v, float v2) {
+    public boolean onFling(MotionEvent aEvent, MotionEvent aEvent2, float aXDistance, float aYDistance) {
         if (mGestureImageView != null) {
             if (mGestureImageView.isInitialized()) {
-                mGestureImageView.startFling(v, v2);
+                mGestureImageView.startFling(aXDistance, aYDistance);
             }
         }
         return true;
     }
     @Override
-    public boolean onSingleTapConfirmed(MotionEvent event) {
-        final float positionX = event.getX();
+    public boolean onSingleTapConfirmed(MotionEvent aEvent) {
+        final float positionX = aEvent.getX();
 
         if (positionX < getWidth() * 0.2f) {
             decrememntCurrentItem();
@@ -105,6 +95,32 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
         }
 
         return true;
+    }
+
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent aEvent) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent aEvent) {
+    }
+
+    @Override
+    public void onShowPress(MotionEvent aEvent) {
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent aEvent) {
+        return false;
+    }
+
+    private void fetchGestureImageViewByTag() {
+        mGestureImageView = (GestureImageView) findViewWithTag(ImagePageAdapter.TAG + ":" + getCurrentItem());
+    }
+
+    public void setOnSingleTapListener(OnSingleTapListener singleTapListener) {
+        mSingleTapListener = singleTapListener;
     }
 
     public void incrementCurrentItem(){
@@ -121,24 +137,6 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
         if (position != 0) {
             setCurrentItem(position - 1, true);
         }
-    }
-
-    @Override
-    public boolean onDoubleTapEvent(MotionEvent event) {
-        return false;
-    }
-
-    @Override
-    public void onLongPress(MotionEvent event) {
-    }
-
-    @Override
-    public void onShowPress(MotionEvent event) {
-    }
-
-    @Override
-    public boolean onSingleTapUp(MotionEvent event) {
-        return false;
     }
 
     public interface OnSingleTapListener {

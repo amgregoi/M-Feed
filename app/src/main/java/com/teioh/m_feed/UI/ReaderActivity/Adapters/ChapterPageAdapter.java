@@ -25,48 +25,48 @@ public class ChapterPageAdapter extends FragmentStatePagerAdapter {
 
     private SparseArray<WeakReference<Fragment>> mPageReferenceMap = new SparseArray<WeakReference<Fragment>>();
 
-    public ChapterPageAdapter(FragmentManager fm, ArrayList<Chapter> chapters) {
-        super(fm);
-        mChapterList = new ArrayList<>(chapters);
+    public ChapterPageAdapter(FragmentManager aFragmentManager, ArrayList<Chapter> aChapterList) {
+        super(aFragmentManager);
+        mChapterList = new ArrayList<>(aChapterList);
     }
 
     @Override
-    public Fragment getItem(int position) {
+    public Fragment getItem(int aPosition) {
 
-        WeakReference<Fragment> weakReference = mPageReferenceMap.get(position);
+        WeakReference<Fragment> lWeakReference = mPageReferenceMap.get(aPosition);
 
-        if(weakReference != null) {
-            return weakReference.get();
+        if(lWeakReference != null) {
+            return lWeakReference.get();
         }else{
             Fragment mChapterFragment = new ChapterFragment();
-            Bundle bundle = new Bundle();
+            Bundle lBundle = new Bundle();
 
-            bundle.putParcelable(Chapter.TAG + ":" + position, mChapterList.get(position));
-            bundle.putInt(POSITION_KEY, position);
-            mChapterFragment.setArguments(bundle);
-            mPageReferenceMap.put(position, new WeakReference<>(mChapterFragment));
+            lBundle.putParcelable(Chapter.TAG + ":" + aPosition, mChapterList.get(aPosition));
+            lBundle.putInt(POSITION_KEY, aPosition);
+            mChapterFragment.setArguments(lBundle);
+            mPageReferenceMap.put(aPosition, new WeakReference<>(mChapterFragment));
 
             return mChapterFragment;
         }
     }
 
     @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
-        super.destroyItem(container, position, object);
-        mPageReferenceMap.remove(position);
+    public void destroyItem(ViewGroup aContainer, int aPosition, Object aObject) {
+        super.destroyItem(aContainer, aPosition, aObject);
+        mPageReferenceMap.remove(aPosition);
     }
 
 
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        Fragment fragment = null;
+    public Object instantiateItem(ViewGroup aContainer, int aPosition) {
+        Fragment lFragment = null;
         try {
-            fragment = (ChapterFragment) super.instantiateItem(container, position);
-            mPageReferenceMap.put(position, new WeakReference<>(fragment));
+            lFragment = (ChapterFragment) super.instantiateItem(aContainer, aPosition);
+            mPageReferenceMap.put(aPosition, new WeakReference<>(lFragment));
         }catch (NullPointerException e){
             Log.e(TAG, "Failed to insantiate fragment: " + e.getMessage());
         }
-        return fragment;
+        return lFragment;
     }
 
     @Override

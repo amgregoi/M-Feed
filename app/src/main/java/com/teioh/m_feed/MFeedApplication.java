@@ -6,8 +6,8 @@ import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
-import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
-import com.teioh.m_feed.Utils.SharedPrefsUtil;
+import com.teioh.m_feed.Utils.MFDBHelper;
+import com.teioh.m_feed.Utils.SharedPrefs;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -33,9 +33,8 @@ public class MFeedApplication extends Application {
         Fabric.with(this, new Crashlytics());
 
         //creates database if fresh install
-        MangaFeedDbHelper.getInstance().createDatabase();
-        SharedPrefsUtil.initializePreferences();
-
+        MFDBHelper.getInstance().createDatabase();
+        SharedPrefs.initializePreferences();
     }
 
     @Override
@@ -45,9 +44,9 @@ public class MFeedApplication extends Application {
     }
 
     @Override
-    public void onTrimMemory(int level) {
-        super.onTrimMemory(level);
-        Glide.get(this).trimMemory(level);
+    public void onTrimMemory(int aLevel) {
+        super.onTrimMemory(aLevel);
+        Glide.get(this).trimMemory(aLevel);
     }
 
     public static synchronized MFeedApplication getInstance() {

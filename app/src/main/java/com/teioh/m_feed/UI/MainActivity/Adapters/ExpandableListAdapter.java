@@ -17,75 +17,73 @@ import java.util.Map;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
-    private Activity context;
-    private Map<String, List<String>> sourceCollections;
-    private List<String> drawerItems;
+    private Activity mContext;
+    private Map<String, List<String>> mSourceCollection;
+    private List<String> mDrawerItems;
 
-    public ExpandableListAdapter(Activity context, List<String> drawerItems,
-                                 Map<String, List<String>> laptopCollections) {
-        this.context = context;
-        this.sourceCollections = laptopCollections;
-        this.drawerItems = drawerItems;
+    public ExpandableListAdapter(Activity aContext, List<String> aDrawerItems, Map<String, List<String>> aSourceCollection) {
+        mContext = aContext;
+        mSourceCollection = aSourceCollection;
+        mDrawerItems = aDrawerItems;
     }
 
-    public Object getChild(int groupPosition, int childPosition) {
-        return sourceCollections.get(drawerItems.get(groupPosition)).get(childPosition);
+    public Object getChild(int aGroupPosition, int aChildPosition) {
+        return mSourceCollection.get(mDrawerItems.get(aGroupPosition)).get(aChildPosition);
     }
 
-    public long getChildId(int groupPosition, int childPosition) {
-        return childPosition;
+    public long getChildId(int aGroupPosition, int aChildPosition) {
+        return aChildPosition;
     }
 
 
-    public View getChildView(final int groupPosition, final int childPosition,
-                             boolean isLastChild, View convertView, ViewGroup parent) {
-        final String laptop = (String) getChild(groupPosition, childPosition);
-        LayoutInflater inflater = context.getLayoutInflater();
+    public View getChildView(final int aGroupPosition, final int aChildPosition, boolean aLastChild, View aConvertView, ViewGroup aParent) {
+        final String lSource = (String) getChild(aGroupPosition, aChildPosition);
+        LayoutInflater lInflater = mContext.getLayoutInflater();
 
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.drawer_source_list_item, null);
+        if (aConvertView == null) {
+            aConvertView = lInflater.inflate(R.layout.drawer_source_list_item, null);
         }
 
-        TextView item = (TextView) convertView.findViewById(R.id.sourceTitle);
-        item.setText(laptop);
-        return convertView;
+        TextView lSourceTextView = (TextView) aConvertView.findViewById(R.id.sourceTitle);
+        lSourceTextView.setText(lSource);
+        return aConvertView;
     }
 
-    public int getChildrenCount(int groupPosition) {
-        return sourceCollections.get(drawerItems.get(groupPosition)).size();
+    public int getChildrenCount(int aGroupPosition) {
+        return mSourceCollection.get(mDrawerItems.get(aGroupPosition)).size();
     }
 
-    public Object getGroup(int groupPosition) {
-        return drawerItems.get(groupPosition);
+    public Object getGroup(int aGroupPosition) {
+        return mDrawerItems.get(aGroupPosition);
     }
 
     public int getGroupCount() {
-        return drawerItems.size();
+        return mDrawerItems.size();
     }
 
-    public long getGroupId(int groupPosition) {
-        return groupPosition;
+    public long getGroupId(int aGroupPosition) {
+        return aGroupPosition;
     }
 
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        String source = (String) getGroup(groupPosition);
+    public View getGroupView(int aGroupPosition, boolean aExpanded, View aConvertView, ViewGroup aParent) {
+        String lSource = (String) getGroup(aGroupPosition);
 
-        if (convertView == null) {
-            LayoutInflater infalInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = infalInflater.inflate(R.layout.drawer_list_item, null);
+        if (aConvertView == null) {
+            LayoutInflater lInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            aConvertView = lInflater.inflate(R.layout.drawer_list_item, null);
         }
 
-        TextView item = (TextView) convertView.findViewById(R.id.sourceTitle);
-        item.setTypeface(null, Typeface.BOLD);
-        item.setText(source);
-        return convertView;
+        TextView lSourceTextView = (TextView) aConvertView.findViewById(R.id.sourceTitle);
+        lSourceTextView.setTypeface(null, Typeface.BOLD);
+        lSourceTextView.setText(lSource);
+        return aConvertView;
     }
 
     public boolean hasStableIds() {
         return true;
     }
 
-    public boolean isChildSelectable(int groupPosition, int childPosition) {
+    public boolean isChildSelectable(int aGroupPosition, int aChildPosition) {
         return true;
     }
 }

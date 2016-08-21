@@ -20,7 +20,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -28,7 +27,6 @@ import com.teioh.m_feed.MAL_Models.MALMangaList;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
-import com.teioh.m_feed.UI.MainActivity.View.MainActivity;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.MangaPresenter;
 import com.teioh.m_feed.UI.MangaActivity.Presenters.MangaPresenterImpl;
 import com.teioh.m_feed.UI.MangaActivity.View.Fragments.FImageDialogFragment;
@@ -71,29 +69,30 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
 
     private MangaPresenter mMangaPresenter;
 
-    public static Intent getNewInstance(Context context) {
-        Intent intent = new Intent(context, MangaActivity.class);
+    public static Intent getNewInstance(Context aContext, String aTitle) {
+        Intent intent = new Intent(aContext, MangaActivity.class);
+        intent.putExtra(Manga.TAG, aTitle);
         return intent;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle aSavedInstanceState) {
+        super.onCreate(aSavedInstanceState);
         setContentView(R.layout.manga_activity);
         ButterKnife.bind(this);
 
         mMangaPresenter = new MangaPresenterImpl(this);
 
-        if (savedInstanceState != null) {
-            mMangaPresenter.onRestoreState(savedInstanceState);
+        if (aSavedInstanceState != null) {
+            mMangaPresenter.onRestoreState(aSavedInstanceState);
         }
         mMangaPresenter.init(getIntent().getExtras());
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mMangaPresenter.onSaveState(outState);
+    protected void onSaveInstanceState(Bundle aOutState) {
+        super.onSaveInstanceState(aOutState);
+        mMangaPresenter.onSaveState(aOutState);
     }
 
     @Override
@@ -115,46 +114,46 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu aMenu) {
         if(mFollowButton.getVisibility() == View.GONE) {
-            getMenuInflater().inflate(R.menu.menu_chapter, menu);
+            getMenuInflater().inflate(R.menu.menu_chapter, aMenu);
             return true;
         }
         return false;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.remove_list) {
+    public boolean onOptionsItemSelected(MenuItem aMenuItem) {
+        int lId = aMenuItem.getItemId();
+        if (lId == R.id.remove_list) {
             //popup dialog
             DialogFragment newFragment = FRemoveDialogFragment.getNewInstance(R.string.DialogFragmentRemove);
             newFragment.show(getSupportFragmentManager(), "dialog");
             return true;
         }
 
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(aMenuItem);
     }
 
     @Override
-    public void onActivityReenter(int resultCode, Intent data) {
-        super.onActivityReenter(resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            if(data == null) {
+    public void onActivityReenter(int aResultCode, Intent aData) {
+        super.onActivityReenter(aResultCode, aData);
+        if (aResultCode == Activity.RESULT_OK) {
+            if(aData == null) {
                 // After Ok code.
                 mSyncMALButton.setVisibility(View.GONE);
                 mFollowButton.setVisibility(View.VISIBLE);
                 mMangaPresenter.onUnfollowButtonClick();
                 invalidateOptionsMenu();
             }//else if(data.hasextra(etc...)
-        } else if (resultCode == Activity.RESULT_CANCELED){
+        } else if (aResultCode == Activity.RESULT_CANCELED){
             // After Cancel code.
         }
     }
 
     @Override
-    public void setActivityTitle(String title) {
-        mActivityTitle.setText(title);
+    public void setActivityTitle(String aTitle) {
+        mActivityTitle.setText(aTitle);
     }
 
     @Override
@@ -175,7 +174,7 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
     }
 
     @Override
-    public void changeFollowButton(boolean following) {
+    public void changeFollowButton(boolean aFollowing) {
 //        if (following) {
 //            mFollowButton.setText("Remove from list");
 //            //dialog fragment
@@ -185,27 +184,31 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
     }
 
     @Override
-    public void setMangaViews(Manga manga) {
-        if (manga != null && getContext() != null) {
-            mDescriptionText.setText(manga.getDescription());
+    public void setMangaViews(Manga aManga) {
+        if (aManga != null && getContext() != null) {
+            mDescriptionText.setText(aManga.getDescription());
             mDescriptionText.setTypeface(Typeface.SERIF);
-            mTitleText.setText(manga.getTitle() + "\n" + manga.getSource());
-            mAuthorText.setText(manga.getAuthor());
-            mArtistText.setText(manga.getArtist());
-            mGenresText.setText(manga.getmGenre());
-            mAlternateText.setText(manga.getAlternate());
-            mStatusText.setText(manga.getStatus());
-            Glide.with(getContext()).load(manga.getPicUrl()).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(mMangaImage);
+            mTitleText.setText(aManga.getTitle() + "\n" + aManga.getSource());
+            mAuthorText.setText(aManga.getAuthor());
+            mArtistText.setText(aManga.getArtist());
+            mGenresText.setText(aManga.getmGenre());
+            mAlternateText.setText(aManga.getAlternate());
+            mStatusText.setText(aManga.getStatus());
+            Glide.with(getContext())
+                    .load(aManga.getPicUrl())
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .into(mMangaImage);
             mChapterList.addHeaderView(mMangaInfoHeader, null, false);
             mChapterList.addHeaderView(mChapterHeader, null, false);
 
-            if(manga.getFollowing()){
+            if(aManga.getFollowing()){
                 mFollowButton.setVisibility(View.GONE);
                 //TODO update database (add MAL id column)
                 //TODO to check if sync set up, and make other buttons visible
                 mSyncMALButton.setVisibility(View.VISIBLE); //TODO uncomment when MAL implemented
                 mMALStatusButton.setVisibility(View.VISIBLE);
-                mMALStatusButton.setText(Manga.FollowType.values()[manga.getFollowingValue()-1].toString());
+                mMALStatusButton.setText(Manga.FollowType.values()[aManga.getFollowingValue()-1].toString());
                 invalidateOptionsMenu();
             }
         }
@@ -239,8 +242,8 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
     }
 
     @Override
-    public void registerAdapter(BaseAdapter adapter) {
-        mChapterList.setAdapter(adapter);
+    public void registerAdapter(BaseAdapter aAdapter) {
+        mChapterList.setAdapter(aAdapter);
     }
 
     @Override
@@ -268,7 +271,7 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
     }
 
     @Override
-    public void onMALSyncClicked(MALMangaList list) {
+    public void onMALSyncClicked(MALMangaList aList) {
         //start fragment or activity
     }
 
@@ -358,14 +361,26 @@ public class MangaActivity extends AppCompatActivity implements MangaActivityMap
     }
 
     @OnItemClick(R.id.chapter_list)
-    void onItemClick(AdapterView<?> adapter, View view, int pos) {
-        mMangaPresenter.onChapterClicked((Chapter) adapter.getItemAtPosition(pos));
+    void onItemClick(AdapterView<?> aAdapter, View aView, int aPosition) {
+        mMangaPresenter.onChapterClicked((Chapter) aAdapter.getItemAtPosition(aPosition));
     }
 
     @OnClick(R.id.orderButton)
-    public void orderButton(View view) {
+    public void orderButton(View aView) {
         mMangaPresenter.chapterOrderButtonClick();
         mChapterList.setSelection(1);
+    }
+
+    @Override
+    public void onTrimMemory(int aLevel) {
+        super.onTrimMemory(aLevel);
+        Glide.get(this).trimMemory(aLevel);
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        Glide.get(this).clearMemory();
     }
 
 }

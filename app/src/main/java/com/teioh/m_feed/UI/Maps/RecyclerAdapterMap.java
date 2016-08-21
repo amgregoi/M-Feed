@@ -6,6 +6,6 @@ import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.UI.MainActivity.Adapters.RecycleSearchAdapter;
 
 public interface RecyclerAdapterMap extends Listeners.MainFragmentListener{
-    void registerAdapter(RecycleSearchAdapter mAdapter, RecyclerView.LayoutManager layout, boolean needItemDecoration);
-    void updateSelection(Manga manga);
+    void registerAdapter(RecycleSearchAdapter aAdapter, RecyclerView.LayoutManager aLayout, boolean aNeedsDecoration);
+    void updateSelection(Manga aManga);
 }

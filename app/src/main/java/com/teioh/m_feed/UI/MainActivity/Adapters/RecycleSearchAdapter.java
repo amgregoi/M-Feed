@@ -21,159 +21,165 @@ import com.teioh.m_feed.R;
 import java.util.ArrayList;
 import java.util.Collections;
 
-
 public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdapter.ViewHolder> {
 
-    private ArrayList<Manga> originalData = null;
-    private ArrayList<Manga> filteredData = null;
-    private LayoutInflater mInflater;
+    private ArrayList<Manga> mOriginalData = null;
+    private ArrayList<Manga> mFilteredData = null;
     private TextFilter mFilter = new TextFilter();
-    private Context context;
+
     private final ItemSelectedListener mListener;
 
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView txt;
-        public ImageView img;
-        public LinearLayout footer;
+        public TextView mTextView;
+        public ImageView mImageView;
+        public LinearLayout mLayoutFooter;
 
-        public ViewHolder(View itemView) {
-            super(itemView);
-            txt = (TextView) itemView.findViewById(R.id.itemTitleField);
-            img = (ImageView) itemView.findViewById(R.id.imageView);
-            footer = (LinearLayout) itemView.findViewById(R.id.footerLinearLayout);
-            itemView.setOnClickListener(this);
+        public ViewHolder(View aView) {
+            super(aView);
+            mTextView = (TextView) aView.findViewById(R.id.itemTitleField);
+            mImageView = (ImageView) aView.findViewById(R.id.imageView);
+            mLayoutFooter = (LinearLayout) aView.findViewById(R.id.footerLinearLayout);
+            aView.setOnClickListener(this);
         }
 
         @Override
-        public void onClick(View v) {
+        public void onClick(View aView) {
             notifyItemChanged(getLayoutPosition());
             mListener.onItemSelected(getAdapterPosition());
-
         }
+
     }
 
     public interface ItemSelectedListener {
-        void onItemSelected(int pos);
+        void onItemSelected(int aPosition);
     }
 
-    public RecycleSearchAdapter(Context context, ArrayList<Manga> data, ItemSelectedListener listener) {
-        this.context = context;
-        this.filteredData = new ArrayList<>(data);
-        this.originalData = new ArrayList<>(data);
-        this.mInflater = LayoutInflater.from(context);
-        this.mListener = listener;
+    public RecycleSearchAdapter(ArrayList<Manga> aData, ItemSelectedListener aListener) {
+        mFilteredData = new ArrayList<>(aData);
+        mOriginalData = new ArrayList<>(aData);
+        mListener = aListener;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.main_manga_grid_item, parent, false);
+    public ViewHolder onCreateViewHolder(ViewGroup aParent, int aViewType) {
+        View v = LayoutInflater.from(aParent.getContext()).inflate(R.layout.main_manga_grid_item, aParent, false);
         return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        Manga item = filteredData.get(position);
+    public void onViewRecycled(ViewHolder aHolder) {
+        super.onViewRecycled(aHolder);
+        Glide.clear(aHolder.mImageView);
+    }
 
-        switch (item.getFollowingValue()){
+    @Override
+    public void onBindViewHolder(ViewHolder aHolder, int aPosition) {
+        Context lContext = aHolder.itemView.getContext();
+        Manga lMangaItem = mFilteredData.get(aPosition);
+
+        switch (lMangaItem.getFollowingValue()) {
             case 1:
-                holder.footer.setBackgroundColor(context.getResources().getColor(R.color.ColorPrimary));
-                holder.txt.setBackgroundColor(context.getResources().getColor(R.color.ColorPrimary));
-                holder.txt.setTextColor(context.getResources().getColor(R.color.white));
+                aHolder.mLayoutFooter.setBackgroundColor(lContext.getResources().getColor(R.color.ColorPrimary));
+                aHolder.mTextView.setBackgroundColor(lContext.getResources().getColor(R.color.ColorPrimary));
+                aHolder.mTextView.setTextColor(lContext.getResources().getColor(R.color.white));
                 break;
             case 2:
-                holder.footer.setBackgroundColor(context.getResources().getColor(R.color.green));
-                holder.txt.setBackgroundColor(context.getResources().getColor(R.color.green));
-                holder.txt.setTextColor(context.getResources().getColor(R.color.white));
+                aHolder.mLayoutFooter.setBackgroundColor(lContext.getResources().getColor(R.color.green));
+                aHolder.mTextView.setBackgroundColor(lContext.getResources().getColor(R.color.green));
+                aHolder.mTextView.setTextColor(lContext.getResources().getColor(R.color.white));
                 break;
             case 3:
-                holder.footer.setBackgroundColor(context.getResources().getColor(R.color.red));
-                holder.txt.setBackgroundColor(context.getResources().getColor(R.color.red));
-                holder.txt.setTextColor(context.getResources().getColor(R.color.white));
+                aHolder.mLayoutFooter.setBackgroundColor(lContext.getResources().getColor(R.color.red));
+                aHolder.mTextView.setBackgroundColor(lContext.getResources().getColor(R.color.red));
+                aHolder.mTextView.setTextColor(lContext.getResources().getColor(R.color.white));
                 break;
             default:
-                holder.footer.setBackgroundColor(context.getResources().getColor(R.color.white));
-                holder.txt.setBackgroundColor(context.getResources().getColor(R.color.white));
-                holder.txt.setTextColor(context.getResources().getColor(R.color.black));
+                aHolder.mLayoutFooter.setBackgroundColor(lContext.getResources().getColor(R.color.white));
+                aHolder.mTextView.setBackgroundColor(lContext.getResources().getColor(R.color.white));
+                aHolder.mTextView.setTextColor(lContext.getResources().getColor(R.color.black));
         }
 
-        Glide.with(context)
-                .load(item.getPicUrl())
+        Glide.with(lContext)
+                .load(lMangaItem.getPicUrl())
                 .animate(android.R.anim.fade_in)
-                .into(new GlideDrawableImageViewTarget(holder.img) {
+                .skipMemoryCache(true)
+                .into(new GlideDrawableImageViewTarget(aHolder.mImageView) {
                     @Override
                     public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
                         super.onResourceReady(resource, animation);
-                        holder.img.setScaleType(ImageView.ScaleType.FIT_XY);
+                        aHolder.mImageView.setScaleType(ImageView.ScaleType.FIT_XY);
+
                     }
                 });
-        holder.txt.setText(item.toString());
+
+        aHolder.mTextView.setText(lMangaItem.toString());
     }
 
-    public long getItemId(int position) {
-        return position;
+    public long getItemId(int aPosition) {
+        return aPosition;
     }
 
-    public Manga getItemAt(int pos) {
-        return filteredData.get(pos);
+    public Manga getItemAt(int aPosition) {
+        return mFilteredData.get(aPosition);
     }
 
-    public void updateItem(Manga manga) {
-        int pos;
-        if ((pos = filteredData.indexOf(manga)) != -1) {
-            filteredData.remove(pos);
-            filteredData.add(pos, manga);
-            notifyItemChanged(pos);
+    public void updateItem(Manga aManga) {
+        int lPosition;
+
+        if ((lPosition = mFilteredData.indexOf(aManga)) != -1) {
+            mFilteredData.remove(lPosition);
+            mFilteredData.add(lPosition, aManga);
+            notifyItemChanged(lPosition);
         }
 
-        if ((pos = originalData.indexOf(manga)) != -1) {
-            originalData.remove(pos);
-            originalData.add(pos, manga);
-            notifyDataSetChanged();
+        if ((lPosition = mOriginalData.indexOf(aManga)) != -1) {
+            mOriginalData.remove(lPosition);
+            mOriginalData.add(lPosition, aManga);
+            notifyItemChanged(lPosition);
         }
-
     }
 
-    public void updateFollowedItem(Manga manga) {
+    public void updateFollowedItem(Manga aManga) {
 
-        int pos;
+        int lPosition;
         //updates item, adds item if not in list and following
-        if ((pos = filteredData.indexOf(manga)) != -1) {
-            filteredData.remove(pos);
-            if (manga.getFollowing()) filteredData.add(pos, manga);
-            notifyItemChanged(pos);
-        }else if(manga.getFollowing()){
-            filteredData.add(manga);
-            Collections.sort(filteredData, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
+        if ((lPosition = mFilteredData.indexOf(aManga)) != -1) {
+            mFilteredData.remove(lPosition);
+            if (aManga.getFollowing()) mFilteredData.add(lPosition, aManga);
+            notifyItemChanged(lPosition);
+        } else if (aManga.getFollowing()) {
+            mFilteredData.add(aManga);
+            Collections.sort(mFilteredData, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
             notifyDataSetChanged();
         }
 
         //updates item, adds item if not in list and following
-        if ((pos = originalData.indexOf(manga)) != -1) {
-            originalData.remove(pos);
-            if (manga.getFollowing()) originalData.add(pos, manga);
+        if ((lPosition = mOriginalData.indexOf(aManga)) != -1) {
+            mOriginalData.remove(lPosition);
+            if (aManga.getFollowing()) mOriginalData.add(lPosition, aManga);
             notifyDataSetChanged();
-        }else if(manga.getFollowing()){
-            originalData.add(manga);
-            Collections.sort(originalData, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
+        } else if (aManga.getFollowing()) {
+            mOriginalData.add(aManga);
+            Collections.sort(mOriginalData, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
             notifyDataSetChanged();
         }
     }
 
     @Override
     public int getItemCount() {
-        return filteredData.size();
+        return mFilteredData.size();
     }
 
-    public void setOriginalData(ArrayList<Manga> data) {
-        this.originalData = new ArrayList<>(data);
-        this.filteredData = new ArrayList<>(data);
+    public void setmOriginalData(ArrayList<Manga> aData) {
+        this.mOriginalData = new ArrayList<>(aData);
+        this.mFilteredData = new ArrayList<>(aData);
         getFilter().filter(mFilter.lastQuery);
         notifyDataSetChanged();
     }
 
     public ArrayList<Manga> getData() {
-        return originalData;
+        return mOriginalData;
     }
 
     /**
@@ -185,74 +191,74 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
         return mFilter;
     }
 
-    public void filterByStatus(int filter) {
-        mFilter.filterByStatus(filter);
+    public void filterByStatus(int aFilterType) {
+        mFilter.filterByStatus(aFilterType);
     }
 
     public class TextFilter extends Filter {
         public CharSequence lastQuery = "";
 
         @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
+        protected FilterResults performFiltering(CharSequence aFilterText) {
 
-            String filterString = constraint.toString().toLowerCase();
-            FilterResults results = new FilterResults();
+            String lFilterString = aFilterText.toString().toLowerCase();
+            FilterResults lResult = new FilterResults();
 
-            final ArrayList<Manga> list = originalData;
+            final ArrayList<Manga> lBaseData = mOriginalData;
 
-            int count = list.size();
-            final ArrayList<Manga> nlist = new ArrayList<>(count);
+            int lCount = lBaseData.size();
+            final ArrayList<Manga> lFilteredList = new ArrayList<>(lCount);
 
             String filterableString;
             Manga manga;
-            for (int i = 0; i < count; i++) {
-                manga = list.get(i);
+            for (int i = 0; i < lCount; i++) {
+                manga = lBaseData.get(i);
 
                 //filter by title & alternate titles
                 filterableString = manga.toString();
                 if (manga.getAlternate() != null)
-                    filterableString += ", " + list.get(i).getAlternate();
+                    filterableString += ", " + lBaseData.get(i).getAlternate();
 
-                if (filterableString.toLowerCase().contains(filterString)) {
-                    nlist.add(list.get(i));
+                if (filterableString.toLowerCase().contains(lFilterString)) {
+                    lFilteredList.add(lBaseData.get(i));
                 }
             }
 
-            results.values = nlist;
-            results.count = nlist.size();
+            lResult.values = lFilteredList;
+            lResult.count = lFilteredList.size();
 
-            lastQuery = constraint.toString();
-            return results;
+            lastQuery = aFilterText.toString();
+            return lResult;
         }
 
         @SuppressWarnings("unchecked")
         @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            filteredData = (ArrayList<Manga>) results.values;
+        protected void publishResults(CharSequence aFilterText, FilterResults aFilterResult) {
+            mFilteredData = (ArrayList<Manga>) aFilterResult.values;
             notifyDataSetChanged();
         }
 
-        public void filterByStatus(int filter) {
-            ArrayList<Manga> result = new ArrayList<>();
+        public void filterByStatus(int aFilterType) {
+            ArrayList<Manga> lResult = new ArrayList<>();
 
             //can later expand to plan to read, reading, on hold etc..
-            if (filter == 0) {
-                result = originalData;
-            } else if (filter == 5) {
-                for (Manga m : originalData) {
+            if (aFilterType == 0) {
+                lResult = mOriginalData;
+            } else if (aFilterType == 5) {
+                for (Manga m : mOriginalData) {
                     if (m.getFollowingValue() > 0) {
-                        result.add(m);
+                        lResult.add(m);
                     }
                 }
-            }else{
-                for (Manga m : originalData) {
-                    if (m.getFollowingValue() == filter) {
-                        result.add(m);
+            } else {
+                for (Manga m : mOriginalData) {
+                    if (m.getFollowingValue() == aFilterType) {
+                        lResult.add(m);
                     }
                 }
             }
 
-            filteredData = result;
+            mFilteredData = lResult;
             notifyDataSetChanged();
         }
 
@@ -261,24 +267,24 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
 
     public static class SpacesItemDecoration extends RecyclerView.ItemDecoration {
 
-        private int halfSpace;
+        private int lHalfSpace;
 
         public SpacesItemDecoration(int space) {
-            this.halfSpace = space / 2;
+            this.lHalfSpace = space / 2;
         }
 
         @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+        public void getItemOffsets(Rect aOutRect, View aView, RecyclerView aParent, RecyclerView.State aState) {
 
-            if (parent.getPaddingLeft() != halfSpace) {
-                parent.setPadding(halfSpace, halfSpace, halfSpace, halfSpace);
-                parent.setClipToPadding(false);
+            if (aParent.getPaddingLeft() != lHalfSpace) {
+                aParent.setPadding(lHalfSpace, lHalfSpace, lHalfSpace, lHalfSpace);
+                aParent.setClipToPadding(false);
             }
 
-            outRect.top = halfSpace;
-            outRect.bottom = halfSpace;
-            outRect.left = halfSpace;
-            outRect.right = halfSpace;
+            aOutRect.top = lHalfSpace;
+            aOutRect.bottom = lHalfSpace;
+            aOutRect.left = lHalfSpace;
+            aOutRect.right = lHalfSpace;
         }
     }
 

@@ -3,11 +3,11 @@ package com.teioh.m_feed.UI.Maps;
 import android.os.Bundle;
 
 public interface LifeCycleMap {
-    void init(Bundle bundle);
+    void init(Bundle aBundle);
 
-    void onSaveState(Bundle save);
+    void onSaveState(Bundle aSave);
 
-    void onRestoreState(Bundle restore);
+    void onRestoreState(Bundle aRestore);
 
     void onPause();
 

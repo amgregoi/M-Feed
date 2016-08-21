@@ -1,26 +1,22 @@
 package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.Toolbar;
 
 import com.teioh.m_feed.UI.Maps.LifeCycleMap;
 
 public interface MainPresenter extends LifeCycleMap {
 
-    void updateQueryChange(String newTest);
+    void updateQueryChange(String aNewTest);
 
-    void onDrawerItemChosen(int position);
+    void onDrawerItemChosen(int aPosition);
 
-    void onSourceItemChosen(int position);
+    void onSourceItemChosen(int aPosition);
 
-    void onFilterSelected(int filter);
+    void onFilterSelected(int aFilter);
 
     void removeSettingsFragment();
 
-    void onGenreFilterSelected(Intent intent);
+    void onGenreFilterSelected(Intent aIntent);
 
     void onClearGenreFilter();
 
@@ -28,9 +24,7 @@ public interface MainPresenter extends LifeCycleMap {
 
     void getRecentManga();
 
-    void setRecentManga(long id);
-
-    void onFilterViewSelected();
+    void setRecentManga(long aMangaId);
 
     void onSignOut();
 

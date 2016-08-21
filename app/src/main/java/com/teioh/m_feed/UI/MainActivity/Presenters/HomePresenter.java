@@ -9,16 +9,16 @@ public interface HomePresenter extends LifeCycleMap {
 
     void updateMangaList();
 
-    void onQueryTextChange(String newText);
+    void onQueryTextChange(String aQueryText);
 
     void updateSource();
 
-    void onFilterSelected(int filter);
+    void onFilterSelected(int aFilter);
 
-    void onGenreFilterSelected(ArrayList<Manga> list);
+    void onGenreFilterSelected(ArrayList<Manga> aMangaList);
 
     void onClearGenreFilter();
 
-    void updateSelection(Manga manga);
+    void updateSelection(Manga aManga);
 
 }

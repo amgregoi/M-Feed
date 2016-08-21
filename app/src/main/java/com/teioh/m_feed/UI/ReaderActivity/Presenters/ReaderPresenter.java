@@ -5,13 +5,13 @@ import com.teioh.m_feed.UI.Maps.LifeCycleMap;
 
 public interface ReaderPresenter extends LifeCycleMap {
 
-    void updateToolbar(int position);
+    void updateToolbar(int aPosition);
 
-    void incrementChapterPage(int position);
+    void incrementChapterPage(int aPosition);
 
-    void decrementChapterPage(int position);
+    void decrementChapterPage(int aPosition);
 
-    void updateChapterViewStatus(int position);
+    void updateChapterViewStatus(int aPosition);
 
-    void onRefreshButton(int position);
+    void onRefreshButton(int aPosition);
 }

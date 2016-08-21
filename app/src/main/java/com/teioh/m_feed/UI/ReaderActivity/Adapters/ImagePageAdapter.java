@@ -1,15 +1,12 @@
 package com.teioh.m_feed.UI.ReaderActivity.Adapters;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -25,64 +22,65 @@ import java.util.List;
 public class ImagePageAdapter extends PagerAdapter {
     final public static String TAG = ImagePageAdapter.class.getSimpleName();
 
-    private Context context;
-    private List<String> imageUrls;
-    private LayoutInflater inflater;
+    private Context mContext;
+    private List<String> mImageUrlList;
+    private LayoutInflater mInflater;
 
-    SparseArray<View> views = new SparseArray<View>();
+    SparseArray<View> lViews = new SparseArray<View>();
 
 
-    public ImagePageAdapter(Context c, List<String> imagePaths) {
-        this.context = c;
-        this.imageUrls = imagePaths;
+    public ImagePageAdapter(Context aContext, List<String> aImageUrls) {
+        this.mContext = aContext;
+        this.mImageUrlList = aImageUrls;
     }
 
     @Override
     public int getCount() {
-        return this.imageUrls.size();
+        return this.mImageUrlList.size();
     }
 
     @Override
-    public boolean isViewFromObject(View view, Object object) {
-        return view == (object);
+    public boolean isViewFromObject(View aView, Object aObject) {
+        return aView == (aObject);
     }
 
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View viewLayout = inflater.inflate(R.layout.reader_chapter_item, container, false);
+    public Object instantiateItem(ViewGroup aContainer, int aPosition) {
+        mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View lView = mInflater.inflate(R.layout.reader_chapter_item, aContainer, false);
 
-        GestureImageView mImage = (GestureImageView) viewLayout.findViewById(R.id.chapterPageImageView);
-        Glide.with(context)
-                .load(imageUrls.get(position))
+        GestureImageView mImage = (GestureImageView) lView.findViewById(R.id.chapterPageImageView);
+        Glide.with(mContext)
+                .load(mImageUrlList.get(aPosition))
                 .animate(android.R.anim.fade_in)
+                .skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(new GlideDrawableImageViewTarget(mImage) {
                     @Override
                     public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
                         super.onResourceReady(resource, animation);
                         mImage.initializeView();
-                        mImage.setTag(TAG + ":" + position);
+                        mImage.setTag(TAG + ":" + aPosition);
                         mImage.startFling(0, 10000f); //large fling to initialize the image to the top for long pages
                     }
                 });
-        (container).addView(viewLayout);
-        views.put(position, viewLayout);
-        return viewLayout;
+        (aContainer).addView(lView);
+        lViews.put(aPosition, lView);
+        return lView;
     }
 
     @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
-        (container).removeView((RelativeLayout) object);
-        views.remove(position);
+    public void destroyItem(ViewGroup aContainer, int aPosition, Object aObject) {
+        (aContainer).removeView((RelativeLayout) aObject);
+        lViews.remove(aPosition);
     }
 
-    public void refreshView(int position) {
-        views.get(position).invalidate();
+    public void refreshView(int aPosition) {
+        lViews.get(aPosition).invalidate();
     }
 
-    public void addItem(String image){
-        imageUrls.add(image);
+    public void addItem(String aImage){
+        mImageUrlList.add(aImage);
         notifyDataSetChanged();
     }
 }

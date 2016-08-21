@@ -15,102 +15,101 @@ public class Anime implements Parcelable {
     private String mGenres;
     private String mStatus;
     private String mSummary;
+    private boolean mFollowing;
+    private String mSource;
 
 
     public boolean ismFollowing() {
         return mFollowing;
     }
 
-    public void setmFollowing(boolean mFollowing) {
-        this.mFollowing = mFollowing;
+    public void setmFollowing(boolean aFollowing) {
+        mFollowing = aFollowing;
     }
-
-    private boolean mFollowing;
 
     public String getmSource() {
         return mSource;
     }
 
-    public void setmSource(String mSource) {
-        this.mSource = mSource;
+    public void setmSource(String aSource) {
+        aSource = aSource;
     }
 
     public String getmPictureUrl() {
         return mPictureUrl;
     }
 
-    public void setmPictureUrl(String mPictureUrl) {
-        this.mPictureUrl = mPictureUrl;
+    public void setmPictureUrl(String aPictureUrl) {
+        mPictureUrl = aPictureUrl;
     }
 
     public String getmTitle() {
         return mTitle;
     }
 
-    public void setmTitle(String mTitle) {
-        this.mTitle = mTitle;
+    public void setmTitle(String aTitle) {
+        mTitle = aTitle;
     }
 
     public String getmAlternateNames() {
         return mAlternateNames;
     }
 
-    public void setmAlternateNames(String mAlternateNames) {
-        this.mAlternateNames = mAlternateNames;
+    public void setmAlternateNames(String aAlternateNames) {
+        mAlternateNames = aAlternateNames;
     }
 
     public String getmGenres() {
         return mGenres;
     }
 
-    public void setmGenres(String mGenres) {
-        this.mGenres = mGenres;
+    public void setmGenres(String aGenres) {
+        mGenres = aGenres;
     }
 
     public String getmStatus() {
         return mStatus;
     }
 
-    public void setmStatus(String mStatus) {
-        this.mStatus = mStatus;
+    public void setmStatus(String aStatus) {
+        mStatus = aStatus;
     }
 
     public String getmSummary() {
         return mSummary;
     }
 
-    public void setmSummary(String mSummary) {
-        this.mSummary = mSummary;
+    public void setmSummary(String aSummary) {
+        mSummary = aSummary;
     }
 
     public String getmAnimeUrl() {
         return mAnimeUrl;
     }
 
-    public void setmAnimeUrl(String mAnimeUrl) {
-        this.mAnimeUrl = mAnimeUrl;
+    public void setmAnimeUrl(String aAnimeUrl) {
+        mAnimeUrl = aAnimeUrl;
     }
-
-    private String mSource;
 
     public Anime(){}
-    public Anime(String animeUrl, String title){
-        this.mAnimeUrl = animeUrl;
-        this.mTitle = title;
+
+    public Anime(String aUrl, String aTitle){
+        mAnimeUrl = aUrl;
+        mTitle = aTitle;
     }
 
 
 
-    protected Anime(Parcel in) {
-        mAnimeUrl = in.readString();
-        mPictureUrl = in.readString();
-        mTitle = in.readString();
-        mAlternateNames = in.readString();
-        mGenres = in.readString();
-        mStatus = in.readString();
-        mSummary = in.readString();
-        mSource = in.readString();
-        mFollowing = in.readByte() != 0;
+    protected Anime(Parcel aIn) {
+        mAnimeUrl = aIn.readString();
+        mPictureUrl = aIn.readString();
+        mTitle = aIn.readString();
+        mAlternateNames = aIn.readString();
+        mGenres = aIn.readString();
+        mStatus = aIn.readString();
+        mSummary = aIn.readString();
+        mSource = aIn.readString();
+        mFollowing = aIn.readByte() != 0;
 
     }
 
@@ -130,16 +129,16 @@ public class Anime implements Parcelable {
         return 0;
     }
 
-    @Override public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mAnimeUrl);
-        dest.writeString(mPictureUrl);
-        dest.writeString(mTitle);
-        dest.writeString(mAlternateNames);
-        dest.writeString(mGenres);
-        dest.writeString(mStatus);
-        dest.writeString(mSummary);
-        dest.writeString(mSource);
-        dest.writeByte((byte) (mFollowing ? 1 : 0));
+    @Override public void writeToParcel(Parcel aDest, int aFlags) {
+        aDest.writeString(mAnimeUrl);
+        aDest.writeString(mPictureUrl);
+        aDest.writeString(mTitle);
+        aDest.writeString(mAlternateNames);
+        aDest.writeString(mGenres);
+        aDest.writeString(mStatus);
+        aDest.writeString(mSummary);
+        aDest.writeString(mSource);
+        aDest.writeByte((byte) (mFollowing ? 1 : 0));
 
     }
 

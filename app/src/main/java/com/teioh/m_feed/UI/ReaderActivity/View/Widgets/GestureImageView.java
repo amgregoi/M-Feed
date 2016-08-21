@@ -18,7 +18,7 @@ import android.view.ScaleGestureDetector;
 import android.widget.ImageView;
 import android.widget.OverScroller;
 
-public class GestureImageView extends ImageView implements ScaleGestureDetector.OnScaleGestureListener{
+public class GestureImageView extends ImageView implements ScaleGestureDetector.OnScaleGestureListener {
     public static final float MIN_SCALE = 1.00f;
     public static final float MED_SCALE = 2.00f;
     public static final float MAX_SCALE = 3.00f;
@@ -40,63 +40,63 @@ public class GestureImageView extends ImageView implements ScaleGestureDetector.
 
     private boolean mInitialized;
 
-    public GestureImageView(Context context) {
-        super(context);
+    public GestureImageView(Context aContext) {
+        super(aContext);
         mScaleGestureDetector = new ScaleGestureDetector(getContext(), this);
     }
 
-    public GestureImageView(Context context, AttributeSet attributeSet) {
-        super(context, attributeSet);
+    public GestureImageView(Context aContext, AttributeSet aAttributeSet) {
+        super(aContext, aAttributeSet);
         mScaleGestureDetector = new ScaleGestureDetector(getContext(), this);
     }
 
-    public GestureImageView(Context context, AttributeSet attributeSet, int definitionStyle) {
-        super(context, attributeSet, definitionStyle);
+    public GestureImageView(Context aContext, AttributeSet aAttributeSet, int aDefinitionStyle) {
+        super(aContext, aAttributeSet, aDefinitionStyle);
         mScaleGestureDetector = new ScaleGestureDetector(getContext(), this);
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        mScaleGestureDetector.onTouchEvent(event);
+    public boolean onTouchEvent(MotionEvent aEvent) {
+        mScaleGestureDetector.onTouchEvent(aEvent);
         return true;
     }
 
     @Override
-    public void setImageBitmap(Bitmap bitmap) {
-        super.setImageBitmap(bitmap);
+    public void setImageBitmap(Bitmap aBitmap) {
+        super.setImageBitmap(aBitmap);
 
-        if (bitmap != null) {
-            mBitmapWidth = bitmap.getWidth();
-            mBitmapHeight = bitmap.getHeight();
+        if (aBitmap != null) {
+            mBitmapWidth = aBitmap.getWidth();
+            mBitmapHeight = aBitmap.getHeight();
         }
     }
 
     @Override
-    public void setImageDrawable(Drawable drawable) {
-        super.setImageDrawable(drawable);
+    public void setImageDrawable(Drawable aDrawable) {
+        super.setImageDrawable(aDrawable);
 
-        if (drawable != null) {
-            mBitmapWidth = drawable.getIntrinsicWidth();
-            mBitmapHeight = drawable.getIntrinsicHeight();
+        if (aDrawable != null) {
+            mBitmapWidth = aDrawable.getIntrinsicWidth();
+            mBitmapHeight = aDrawable.getIntrinsicHeight();
         }
     }
 
     @Override
-    public boolean onScale(ScaleGestureDetector scaleGestureDetector) {
+    public boolean onScale(ScaleGestureDetector aScaleGestureDetector) {
         if (mInitialized) {
-            float scale = getScale() * scaleGestureDetector.getScaleFactor();
-            zoomTo(scale, scaleGestureDetector.getFocusX(), scaleGestureDetector.getFocusY());
+            float lScale = getScale() * aScaleGestureDetector.getScaleFactor();
+            zoomTo(lScale, aScaleGestureDetector.getFocusX(), aScaleGestureDetector.getFocusY());
         }
         return true;
     }
 
     @Override
-    public boolean onScaleBegin(ScaleGestureDetector scaleGestureDetector) {
+    public boolean onScaleBegin(ScaleGestureDetector aScaleGestureDetector) {
         return true;
     }
 
     @Override
-    public void onScaleEnd(ScaleGestureDetector scaleGestureDetector) {
+    public void onScaleEnd(ScaleGestureDetector aScaleGestureDetector) {
     }
 
 
@@ -111,10 +111,10 @@ public class GestureImageView extends ImageView implements ScaleGestureDetector.
 
     private void initializeBaseMatrix() {
         mBaseMatrix.reset();
-        float widthScale = Math.min(getWidth() / mBitmapWidth, 2.00f);
+        float lWidthScale = Math.min(getWidth() / mBitmapWidth, 2.00f);
 
-        mBaseMatrix.postScale(widthScale, widthScale);
-        mBaseMatrix.postTranslate((getWidth() - mBitmapWidth * widthScale) / 2.00f, (getHeight() - mBitmapHeight * widthScale) / 2.00f);
+        mBaseMatrix.postScale(lWidthScale, lWidthScale);
+        mBaseMatrix.postTranslate((getWidth() - mBitmapWidth * lWidthScale) / 2.00f, (getHeight() - mBitmapHeight * lWidthScale) / 2.00f);
         mInitialized = true;
     }
 
@@ -122,23 +122,23 @@ public class GestureImageView extends ImageView implements ScaleGestureDetector.
         return mInitialized;
     }
 
-    private float getTransitionX(Matrix matrix) {
-        matrix.getValues(mMatrixValues);
+    private float getTransitionX(Matrix aMatrix) {
+        aMatrix.getValues(mMatrixValues);
         return mMatrixValues[Matrix.MTRANS_X];
     }
 
-    private float getTransitionY(Matrix matrix) {
-        matrix.getValues(mMatrixValues);
+    private float getTransitionY(Matrix aMatrix) {
+        aMatrix.getValues(mMatrixValues);
         return mMatrixValues[Matrix.MTRANS_Y];
     }
 
-    private float getScaleX(Matrix matrix) {
-        matrix.getValues(mMatrixValues);
+    private float getScaleX(Matrix aMatrix) {
+        aMatrix.getValues(mMatrixValues);
         return mMatrixValues[Matrix.MSCALE_X];
     }
 
-    private float getScaleY(Matrix matrix) {
-        matrix.getValues(mMatrixValues);
+    private float getScaleY(Matrix aMatrix) {
+        aMatrix.getValues(mMatrixValues);
         return mMatrixValues[Matrix.MSCALE_Y];
     }
 
@@ -152,49 +152,43 @@ public class GestureImageView extends ImageView implements ScaleGestureDetector.
         return mDisplayMatrix;
     }
 
-    private void center(boolean centerHorizontal, boolean centerVertical) {
-        Matrix currentImageViewMatrix = getImageViewMatrix();
+    private void center(boolean aCenterHorizontal, boolean aCenterVertical) {
+        Matrix lCurrentImageViewMatrix = getImageViewMatrix();
 
-        RectF drawableRectangle = new RectF(0.00f, 0.00f, mBitmapWidth, mBitmapHeight);
-        currentImageViewMatrix.mapRect(drawableRectangle);
+        RectF lDrawableRectangle = new RectF(0.00f, 0.00f, mBitmapWidth, mBitmapHeight);
+        lCurrentImageViewMatrix.mapRect(lDrawableRectangle);
 
-        float height = drawableRectangle.height();
-        float width = drawableRectangle.width();
+        float lHeight = lDrawableRectangle.height();
+        float lWidth = lDrawableRectangle.width();
 
-        float deltaX = 0, deltaY = 0;
+        float lDeltaX = 0, lDeltaY = 0;
 
-        if (centerHorizontal) {
-            int viewWidth = getWidth();
-            if (width < viewWidth) {
-                deltaX = (viewWidth - width) / 2 - drawableRectangle.left;
-            } else if (drawableRectangle.left > 0) {
-                deltaX = -drawableRectangle.left;
-            } else if (drawableRectangle.right < viewWidth) {
-                deltaX = viewWidth - drawableRectangle.right;
-            }
+        if (aCenterHorizontal) {
+            int lViewWidth = getWidth();
+
+            if (lWidth < lViewWidth) lDeltaX = (lViewWidth - lWidth) / 2 - lDrawableRectangle.left;
+            else if (lDrawableRectangle.left > 0) lDeltaX = -lDrawableRectangle.left;
+            else if (lDrawableRectangle.right < lViewWidth) lDeltaX = lViewWidth - lDrawableRectangle.right;
         }
 
-        if (centerVertical) {
+        if (aCenterVertical) {
             int viewHeight = getHeight();
-            if (height < viewHeight) {
-                deltaY = (viewHeight - height) / 2 - drawableRectangle.top;
-            } else if (drawableRectangle.top > 0) {
-                deltaY = -drawableRectangle.top;
-            } else if (drawableRectangle.bottom < viewHeight) {
-                deltaY = getHeight() - drawableRectangle.bottom;
-            }
+
+            if (lHeight < viewHeight) lDeltaY = (viewHeight - lHeight) / 2 - lDrawableRectangle.top;
+            else if (lDrawableRectangle.top > 0) lDeltaY = -lDrawableRectangle.top;
+            else if (lDrawableRectangle.bottom < viewHeight) lDeltaY = getHeight() - lDrawableRectangle.bottom;
         }
 
-        mSupplementaryMatrix.postTranslate(deltaX, deltaY);
+        mSupplementaryMatrix.postTranslate(lDeltaX, lDeltaY);
         setImageMatrix(getImageViewMatrix());
     }
 
-    public void startFling(float velocityX, float velocityY) {
+    public void startFling(float aVelocityX, float aVelocityY) {
         if (mFlingable != null) {
             mFlingable.cancel();
         }
 
-        mFlingable = new Flingable(velocityX, velocityY);
+        mFlingable = new Flingable(aVelocityX, aVelocityY);
         postDelayed(mFlingable, RUNNABLE_DELAY_MS);
     }
 
@@ -204,34 +198,34 @@ public class GestureImageView extends ImageView implements ScaleGestureDetector.
         }
     }
 
-    public void postTranslate(float deltaX, float deltaY) {
-        mSupplementaryMatrix.postTranslate(deltaX, deltaY);
+    public void postTranslate(float aDeltaX, float aDeltaY) {
+        mSupplementaryMatrix.postTranslate(aDeltaX, aDeltaY);
         center(true, true);
     }
 
-    public void zoomTo(float scale, float centerX, float centerY) {
-        if (scale > MAX_SCALE) {
-            scale = MAX_SCALE;
+    public void zoomTo(float aScale, float aCenterX, float aCenterY) {
+        if (aScale > MAX_SCALE) {
+            aScale = MAX_SCALE;
         }
-        if (scale < MIN_SCALE) {
-            scale = MIN_SCALE;
+        if (aScale < MIN_SCALE) {
+            aScale = MIN_SCALE;
         }
 
-        float oldScale = getScaleX(mSupplementaryMatrix);
-        float deltaScale = scale / oldScale;
+        float lOldScale = getScaleX(mSupplementaryMatrix);
+        float lDeltaScale = aScale / lOldScale;
 
-        mSupplementaryMatrix.postScale(deltaScale, deltaScale, centerX, centerY);
+        mSupplementaryMatrix.postScale(lDeltaScale, lDeltaScale, aCenterX, aCenterY);
         setImageMatrix(getImageViewMatrix());
         center(true, true);
     }
 
-    private void zoomTo(float scale, float centerX, float centerY, float durationMs) {
-        mZoomable = new Zoomable(scale, centerX, centerY, durationMs);
+    private void zoomTo(float aScale, float aCenterX, float aCenterY, float aDurationMs) {
+        mZoomable = new Zoomable(aScale, aCenterX, aCenterY, aDurationMs);
         postDelayed(mZoomable, RUNNABLE_DELAY_MS);
     }
 
-    public void zoomToPoint(float scale, float pointX, float pointY) {
-        zoomTo(scale, pointX, pointY, ZOOM_DURATION);
+    public void zoomToPoint(float aScale, float aPointX, float aPointY) {
+        zoomTo(aScale, aPointX, aPointY, ZOOM_DURATION);
     }
 
     public boolean canScrollParent() {
@@ -252,52 +246,52 @@ public class GestureImageView extends ImageView implements ScaleGestureDetector.
         private int mCurrentX;
         private int mCurrentY;
 
-        public Flingable(float inputVelocityX, float inputVelocityY) {
+        public Flingable(float aInputVelocityX, float aInputVelocityY) {
             mOverScroller = new OverScroller(getContext());
 
-            int startX = (int) getTransitionX(mDisplayMatrix);
-            int startY = (int) getTransitionY(mDisplayMatrix);
+            int lStartX = (int) getTransitionX(mDisplayMatrix);
+            int lStartY = (int) getTransitionY(mDisplayMatrix);
 
-            int velocityX = (int) inputVelocityX;
-            int velocityY = (int) inputVelocityY;
+            int lVelocityX = (int) aInputVelocityX;
+            int lVelocityY = (int) aInputVelocityY;
 
-            int viewWidth = getMeasuredWidth();
-            int viewHeight = getMeasuredHeight();
+            int lViewWidth = getMeasuredWidth();
+            int lViewHeight = getMeasuredHeight();
 
-            int minX, maxX, minY, maxY;
+            int lMinX, lMaxX, lMinY, lMaxY;
 
-            float widthScale = Math.min(getWidth() / mBitmapWidth, 2.00f);
-            float heightScale = Math.min(getHeight() / mBitmapHeight, 2.00f);
-            float actualScale = Math.min(widthScale, heightScale);
+            float lWidthScale = Math.min(getWidth() / mBitmapWidth, 2.00f);
+            float lHeightScale = Math.min(getHeight() / mBitmapHeight, 2.00f);
+            float lActualScale = Math.min(lWidthScale, lHeightScale);
 
-            float redundantSpaceX = viewWidth - (actualScale * mBitmapWidth);
-            float redundantSpaceY = viewHeight - (actualScale * mBitmapHeight);
+            float lRedundantSpaceX = lViewWidth - (lActualScale * mBitmapWidth);
+            float lRedundantSpaceY = lViewHeight - (lActualScale * mBitmapHeight);
 
-            Rect drawableRectangle = new Rect(0, 0, (int) (mBitmapWidth * getScaleX(mDisplayMatrix)), (int) (mBitmapHeight * getScaleY(mDisplayMatrix)));
-            int drawableWidth = drawableRectangle.width();
-            int drawableHeight = drawableRectangle.height();
+            Rect lDrawableRectangle = new Rect(0, 0, (int) (mBitmapWidth * getScaleX(mDisplayMatrix)), (int) (mBitmapHeight * getScaleY(mDisplayMatrix)));
+            int lDrawableWidth = lDrawableRectangle.width();
+            int lDrawableHeight = lDrawableRectangle.height();
 
 
-            if (drawableWidth > viewWidth) {
-                minX = viewWidth - (int) redundantSpaceX - drawableWidth;
-                maxX = 0;
+            if (lDrawableWidth > lViewWidth) {
+                lMinX = lViewWidth - (int) lRedundantSpaceX - lDrawableWidth;
+                lMaxX = 0;
             } else {
-                minX = startX;
-                maxX = startX;
+                lMinX = lStartX;
+                lMaxX = lStartX;
             }
 
-            if (drawableHeight > viewHeight) {
-                minY = viewHeight - (int) redundantSpaceY - drawableHeight;
-                maxY = 0;
+            if (lDrawableHeight > lViewHeight) {
+                lMinY = lViewHeight - (int) lRedundantSpaceY - lDrawableHeight;
+                lMaxY = 0;
             } else {
-                minY = startY;
-                maxY = startY;
+                lMinY = lStartY;
+                lMaxY = lStartY;
             }
 
-            mCurrentX = startX;
-            mCurrentY = startY;
+            mCurrentX = lStartX;
+            mCurrentY = lStartY;
 
-            mOverScroller.fling(startX, startY, velocityX, velocityY, minX, maxX, minY, maxY);
+            mOverScroller.fling(lStartX, lStartY, lVelocityX, lVelocityY, lMinX, lMaxX, lMinY, lMaxY);
         }
 
         @Override
@@ -307,16 +301,16 @@ public class GestureImageView extends ImageView implements ScaleGestureDetector.
             }
 
             if (mOverScroller.computeScrollOffset()) {
-                int newX = mOverScroller.getCurrX();
-                int newY = mOverScroller.getCurrY();
+                int lNewX = mOverScroller.getCurrX();
+                int lNewY = mOverScroller.getCurrY();
 
-                int transX = newX - mCurrentX;
-                int transY = newY - mCurrentY;
+                int lTransX = lNewX - mCurrentX;
+                int lTransY = lNewY - mCurrentY;
 
-                mCurrentX = newX;
-                mCurrentY = newY;
+                mCurrentX = lNewX;
+                mCurrentY = lNewY;
 
-                postTranslate(transX, transY);
+                postTranslate(lTransX, lTransY);
                 postDelayed(this, RUNNABLE_DELAY_MS);
             }
         }
@@ -336,25 +330,25 @@ public class GestureImageView extends ImageView implements ScaleGestureDetector.
 
         private long mStartTime;
 
-        public Zoomable(float scale, float centerX, float centerY, float duration) {
+        public Zoomable(float aScale, float aCenterX, float aCentery, float aDurationMs) {
             mOldScale = getScaleX(mSupplementaryMatrix);
 
-            mCenterX = centerX;
-            mCenterY = centerY;
+            mCenterX = aCenterX;
+            mCenterY = aCentery;
 
-            mZoomDuration = duration;
-            mZoomRate = (scale - mOldScale) / mZoomDuration;
+            mZoomDuration = aDurationMs;
+            mZoomRate = (aScale - mOldScale) / mZoomDuration;
 
             mStartTime = System.currentTimeMillis();
         }
 
         @Override
         public void run() {
-            float currentMs = Math.min(mZoomDuration, System.currentTimeMillis() - mStartTime);
-            float targetScale = mOldScale + (mZoomRate * currentMs);
-            zoomTo(targetScale, mCenterX, mCenterY);
+            float lCurrentMs = Math.min(mZoomDuration, System.currentTimeMillis() - mStartTime);
+            float lTargetScale = mOldScale + (mZoomRate * lCurrentMs);
+            zoomTo(lTargetScale, mCenterX, mCenterY);
 
-            if (currentMs < mZoomDuration) {
+            if (lCurrentMs < mZoomDuration) {
                 postDelayed(this, RUNNABLE_DELAY_MS);
             }
         }

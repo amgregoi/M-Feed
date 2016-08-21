@@ -1,7 +1,6 @@
 package com.teioh.m_feed.UI.MangaActivity.Adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,7 @@ import android.widget.TextView;
 
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.R;
-import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
+import com.teioh.m_feed.Utils.MFDBHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,66 +21,66 @@ public class ChapterListAdapter extends ArrayAdapter {
 
     public final static String TAG = ChapterListAdapter.class.getSimpleName();
 
-    private ArrayList<Chapter> chapters;
+    private ArrayList<Chapter> mChapterList;
     private LayoutInflater mInflater;
-    private Context context;
-    private int layoutResource;
+    private Context mContext;
+    private int mLayoutResource;
 
-    public ChapterListAdapter(Context context, int resource, List<Chapter> objects) {
-        super(context, resource, objects);
-        this.context = context;
-        this.chapters = new ArrayList<>(objects);
-        this.mInflater = LayoutInflater.from(context);
-        this.layoutResource = resource;
+    public ChapterListAdapter(Context aContext, int aResource, List<Chapter> aChapterList) {
+        super(aContext, aResource, aChapterList);
+        mContext = aContext;
+        mChapterList = new ArrayList<>(aChapterList);
+        mInflater = LayoutInflater.from(aContext);
+        mLayoutResource = aResource;
     }
 
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View row = convertView;
-        ChapterHolder holder;
+    public View getView(int aPosition, View aConvertView, ViewGroup aParent) {
+        View lRowView = aConvertView;
+        ChapterHolder lHolder;
 
-        if (row == null) {
-            row = mInflater.inflate(layoutResource, null);
+        if (lRowView == null) {
+            lRowView = mInflater.inflate(mLayoutResource, null);
 
-            holder = new ChapterHolder();
-            holder.mTitle = (TextView) row.findViewById(R.id.mangaTitle);
-            holder.cDate = (TextView) row.findViewById(R.id.chapterDate);
-            row.setTag(R.string.ChapterListAdapterHolder, holder);
-            row.setTag(R.string.ChapterListAdapterTAG, TAG + ":" + position);
+            lHolder = new ChapterHolder();
+            lHolder.lMangaTitle = (TextView) lRowView.findViewById(R.id.mangaTitle);
+            lHolder.lChapterDate = (TextView) lRowView.findViewById(R.id.chapterDate);
+            lRowView.setTag(R.string.ChapterListAdapterHolder, lHolder);
+            lRowView.setTag(R.string.ChapterListAdapterTAG, TAG + ":" + aPosition);
         } else {
-            holder = (ChapterHolder) row.getTag(R.string.ChapterListAdapterHolder);
+            lHolder = (ChapterHolder) lRowView.getTag(R.string.ChapterListAdapterHolder);
         }
 
-        Chapter ch = chapters.get(position);
+        Chapter lChapter = mChapterList.get(aPosition);
 
-        if (ch == null) {
-            return row;
+        if (lChapter == null) {
+            return lRowView;
         }
 
-        Chapter viewedChapter = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase())
+        Chapter lViewedChapter = cupboard().withDatabase(MFDBHelper.getInstance().getReadableDatabase())
                 .query(Chapter.class)
-                .withSelection("mangaTitle = ? AND chapterNumber = ?", ch.getMangaTitle(), Integer.toString(ch.getChapterNumber()))
+                .withSelection("mangaTitle = ? AND chapterNumber = ?", lChapter.getMangaTitle(), Integer.toString(lChapter.getChapterNumber()))
                 .get();
 
 
 
-        if (viewedChapter != null) {
-            row.setBackgroundColor(context.getResources().getColor(R.color.ColorPrimary));
+        if (lViewedChapter != null) {
+            lRowView.setBackgroundColor(mContext.getResources().getColor(R.color.ColorPrimary));
         }else{
-            row.setBackgroundColor(context.getResources().getColor(R.color.charcoal));
+            lRowView.setBackgroundColor(mContext.getResources().getColor(R.color.charcoal));
         }
 
-        holder.mTitle.setText(ch.getChapterTitle());
-        holder.cDate.setText(ch.getChapterDate());
-        return row;
+        lHolder.lMangaTitle.setText(lChapter.getChapterTitle());
+        lHolder.lChapterDate.setText(lChapter.getChapterDate());
+        return lRowView;
     }
 
     static class ChapterHolder {
-        TextView mTitle;
-        TextView cDate;
+        TextView lMangaTitle;
+        TextView lChapterDate;
     }
 
     public void reverseChapterListOrder(){
-        Collections.reverse(chapters);
+        Collections.reverse(mChapterList);
         notifyDataSetChanged();
     }
 }

@@ -1,6 +1,5 @@
 package com.teioh.m_feed.UI.ReaderActivity.Presenters;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import com.teioh.m_feed.Models.Chapter;
@@ -30,24 +29,24 @@ public class ReaderPresenterImpl implements ReaderPresenter {
     }
 
     @Override
-    public void onSaveState(Bundle bundle) {
-        if (mChapterList != null) bundle.putParcelableArrayList(CHAPTER_LIST_KEY, mChapterList);
-        bundle.putInt(CHAPTER_POSITION, mChapterPosition);
+    public void onSaveState(Bundle aSave) {
+        if (mChapterList != null) aSave.putParcelableArrayList(CHAPTER_LIST_KEY, mChapterList);
+        aSave.putInt(CHAPTER_POSITION, mChapterPosition);
     }
 
     @Override
-    public void onRestoreState(Bundle bundle) {
-        if (bundle.containsKey(CHAPTER_LIST_KEY))
-            mChapterList = new ArrayList<>(bundle.getParcelableArrayList(CHAPTER_LIST_KEY));
-        if (bundle.containsKey(CHAPTER_POSITION))
-            mChapterPosition = bundle.getInt(CHAPTER_POSITION);
+    public void onRestoreState(Bundle aRestore) {
+        if (aRestore.containsKey(CHAPTER_LIST_KEY))
+            mChapterList = new ArrayList<>(aRestore.getParcelableArrayList(CHAPTER_LIST_KEY));
+        if (aRestore.containsKey(CHAPTER_POSITION))
+            mChapterPosition = aRestore.getInt(CHAPTER_POSITION);
     }
 
     @Override
-    public void init(Bundle bundle) {
+    public void init(Bundle aBundle) {
         if (mChapterList == null) {
-            mChapterList = new ArrayList<>(bundle.getParcelableArrayList(MangaPresenterImpl.CHAPTER_LIST_KEY));
-            mChapterPosition = bundle.getInt(MangaPresenterImpl.LIST_POSITION_KEY);
+            mChapterList = new ArrayList<>(aBundle.getParcelableArrayList(MangaPresenterImpl.CHAPTER_LIST_KEY));
+            mChapterPosition = aBundle.getInt(MangaPresenterImpl.LIST_POSITION_KEY);
         }
 
         mChapterPagerAdapter = new ChapterPageAdapter(((ReaderActivity) mReaderMap).getSupportFragmentManager(), mChapterList);
@@ -68,32 +67,33 @@ public class ReaderPresenterImpl implements ReaderPresenter {
 
     @Override
     public void onDestroy() {
-        ButterKnife.unbind(this);
+        ButterKnife.unbind(mReaderMap.getContext());
+        mReaderMap = null;
     }
 
     @Override
-    public void updateToolbar(int position) {
-        ((ChapterFragment) mChapterPagerAdapter.getItem(position)).updateToolbar();
+    public void updateToolbar(int aPosition) {
+        ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition)).updateToolbar();
     }
 
     @Override
-    public void incrementChapterPage(int position) {
-        ((ChapterFragment) mChapterPagerAdapter.getItem(position)).incrementChapterPage();
+    public void incrementChapterPage(int aPosition) {
+        ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition)).incrementChapterPage();
     }
 
     @Override
-    public void decrementChapterPage(int position) {
-        ((ChapterFragment) mChapterPagerAdapter.getItem(position)).decrementChapterPage();
+    public void decrementChapterPage(int aPosition) {
+        ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition)).decrementChapterPage();
     }
 
     @Override
-    public void updateChapterViewStatus(int position){
-        ((ChapterFragment) mChapterPagerAdapter.getItem(position)).updateChapterViewStatus();
+    public void updateChapterViewStatus(int aPosition){
+        ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition)).updateChapterViewStatus();
     }
 
     @Override
-    public void onRefreshButton(int position) {
-        ((ChapterFragment) mChapterPagerAdapter.getItem(position)).onRefresh();
+    public void onRefreshButton(int aPosition) {
+        ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition)).onRefresh();
     }
 
 

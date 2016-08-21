@@ -37,7 +37,7 @@ public class RecentUpdateService extends Service {
                 //and make our service update the list periodically
                 //Thread.sleep(1000 * 60 * 10);       //sleep for ~ 10 mins
                 Thread.sleep(5000);
-                this.stopSelf();
+                stopSelf();
             } catch (InterruptedException e) {
                 Log.e("RecentUpdateService", "Thread interrupted");
             }

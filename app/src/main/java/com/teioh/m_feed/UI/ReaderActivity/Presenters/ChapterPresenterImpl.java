@@ -3,15 +3,16 @@ package com.teioh.m_feed.UI.ReaderActivity.Presenters;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.teioh.m_feed.BuildConfig;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.UI.ReaderActivity.Adapters.ChapterPageAdapter;
 import com.teioh.m_feed.UI.ReaderActivity.Adapters.ImagePageAdapter;
 import com.teioh.m_feed.UI.ReaderActivity.View.Mappers.ChapterReaderMapper;
-import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
+import com.teioh.m_feed.Utils.MFDBHelper;
 import com.teioh.m_feed.WebSources.RequestWrapper;
-import com.teioh.m_feed.WebSources.WebSource;
+import com.teioh.m_feed.WebSources.SourceFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,16 +39,18 @@ public class ChapterPresenterImpl implements ChapterPresenter {
     private ImagePageAdapter mChapterPageAdapter;
 
 
-    public ChapterPresenterImpl(ChapterReaderMapper map, Bundle bundle) {
-        mChapterReaderMapper = map;
+    public ChapterPresenterImpl(ChapterReaderMapper aMap, Bundle aBundle) {
+        mChapterReaderMapper = aMap;
 
-        mPosition = bundle.getInt(ChapterPageAdapter.POSITION_KEY);
-        mChapter = bundle.getParcelable(Chapter.TAG + ":" + mPosition);
+        mPosition = aBundle.getInt(ChapterPageAdapter.POSITION_KEY);
+        mChapter = aBundle.getParcelable(Chapter.TAG + ":" + mPosition);
         mIsToolbarShowing = true;
     }
 
     @Override
-    public void init(Bundle bundle) {
+    public void init(Bundle aBundle) {
+        mIsLazyLoading = true;
+
         if (mChapterUrlList == null) this.getImageUrls();
         else updateImageUrlList(mChapterUrlList);
 
@@ -56,27 +59,28 @@ public class ChapterPresenterImpl implements ChapterPresenter {
     }
 
     @Override
-    public void onSaveState(Bundle bundle) {
+    public void onSaveState(Bundle aSave) {
         if (mChapterUrlList != null) {
-            bundle.putStringArrayList(CURRENT_URL_LIST_PARCELABLE_KEY, mChapterUrlList);
+            aSave.putStringArrayList(CURRENT_URL_LIST_PARCELABLE_KEY, mChapterUrlList);
         }
-        bundle.putInt(CHAPTER_POSITION_LIST_PARCELABLE_KEY, mPosition);
+        aSave.putInt(CHAPTER_POSITION_LIST_PARCELABLE_KEY, mPosition);
     }
 
     @Override
-    public void onRestoreState(Bundle bundle) {
-        if (bundle.containsKey(CURRENT_URL_LIST_PARCELABLE_KEY)) {
-            mChapterUrlList = bundle.getStringArrayList(CURRENT_URL_LIST_PARCELABLE_KEY);
+    public void onRestoreState(Bundle aRestore) {
+        if (aRestore.containsKey(CURRENT_URL_LIST_PARCELABLE_KEY)) {
+            mChapterUrlList = aRestore.getStringArrayList(CURRENT_URL_LIST_PARCELABLE_KEY);
         }
 
-        mPosition = bundle.getInt(CHAPTER_POSITION_LIST_PARCELABLE_KEY);
+        mPosition = aRestore.getInt(CHAPTER_POSITION_LIST_PARCELABLE_KEY);
     }
 
     @Override
     public void getImageUrls() {
         mChapterUrlList = new ArrayList<>();
         updateToolbarLoading();
-        mImageListSubscription = WebSource.getChapterImageListObservable(new RequestWrapper(mChapter))
+
+        mImageListSubscription = new SourceFactory().getSource().getChapterImageListObservable(new RequestWrapper(mChapter))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<String>() {
@@ -116,7 +120,7 @@ public class ChapterPresenterImpl implements ChapterPresenter {
             }
 
             if (mChapterUrlList != null) {
-                mLoadImageUrlSubscription = WebSource
+                mLoadImageUrlSubscription = new SourceFactory().getSource()
                         .cacheFromImagesOfSize(mChapterUrlList)
                         .subscribe(new Observer<GlideDrawable>() {
                             @Override
@@ -142,7 +146,7 @@ public class ChapterPresenterImpl implements ChapterPresenter {
 
     @Override
     public void onPause() {
-
+        Glide.get(mChapterReaderMapper.getContext()).clearMemory();
     }
 
     @Override
@@ -162,6 +166,8 @@ public class ChapterPresenterImpl implements ChapterPresenter {
             mLoadImageUrlSubscription.unsubscribe();
             mLoadImageUrlSubscription = null;
         }
+
+        mChapterReaderMapper = null;
     }
 
     @Override
@@ -186,16 +192,16 @@ public class ChapterPresenterImpl implements ChapterPresenter {
     }
 
     @Override
-    public void updateOffsetCounter(int offset, int position) {
-        if (position == 0 || position == mChapterUrlList.size() - 1) {
+    public void updateOffsetCounter(int aOffset, int aPosition) {
+        if (aPosition == 0 || aPosition == mChapterUrlList.size() - 1) {
             mPageOffsetCount++;
-            mIsForwardChapter = position != 0;
+            mIsForwardChapter = aPosition != 0;
         } else mPageOffsetCount = 0;
     }
 
     @Override
-    public void updateState(int state) {
-        if (mPageOffsetCount > 40 && state == 0) {
+    public void updateState(int aState) {
+        if (mPageOffsetCount > 40 && aState == 0) {
             if (mIsForwardChapter) setToNextChapter();
             else setToPreviousChapter();
         }
@@ -216,32 +222,32 @@ public class ChapterPresenterImpl implements ChapterPresenter {
     }
 
     @Override
-    public void updateCurrentPage(int position) {
-        mPosition = position;
-        mChapterReaderMapper.updateCurrentPage(position + 1); //update page by 1
-        mChapter.setCurrentPage(position);
+    public void updateCurrentPage(int aPosition) {
+        mPosition = aPosition;
+        mChapterReaderMapper.updateCurrentPage(aPosition + 1); //update page by 1
+        mChapter.setCurrentPage(aPosition);
     }
 
     @Override
     public void updateChapterViewStatus() {
-        Chapter viewedChapter = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase())
+        Chapter viewedChapter = cupboard().withDatabase(MFDBHelper.getInstance().getReadableDatabase())
                 .query(Chapter.class)
                 .withSelection("mangaTitle = ? AND chapterNumber = ?", mChapter.getMangaTitle(), Integer.toString(mChapter.getChapterNumber()))
                 .get();
 
         if (viewedChapter == null)
-            cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).put(mChapter);
+            cupboard().withDatabase(MFDBHelper.getInstance().getWritableDatabase()).put(mChapter);
     }
 
     @Override
-    public void onRefresh(int position) {
-        mChapterPageAdapter.refreshView(position);
+    public void onRefresh(int aPosition) {
+        mChapterPageAdapter.refreshView(aPosition);
     }
 
-    private void updateImageUrlList(List<String> urlList) {
+    private void updateImageUrlList(List<String> aUrlList) {
         if (mChapterReaderMapper.getContext() != null) {
             updateToolbarComplete();
-            mChapterUrlList = new ArrayList<>(urlList);
+            mChapterUrlList = new ArrayList<>(aUrlList);
             mChapterPageAdapter = new ImagePageAdapter(mChapterReaderMapper.getContext(), mChapterUrlList);
             mChapterReaderMapper.registerAdapter(mChapterPageAdapter);
             mChapterReaderMapper.setCurrentChapterPage(mChapter.getCurrentPage());

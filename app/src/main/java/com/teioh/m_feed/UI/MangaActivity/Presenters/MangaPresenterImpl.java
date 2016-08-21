@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.bumptech.glide.Glide;
 import com.teioh.m_feed.MAL_Models.MALMangaList;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
@@ -11,9 +12,9 @@ import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MangaActivity.Adapters.ChapterListAdapter;
 import com.teioh.m_feed.UI.MangaActivity.View.Mappers.MangaActivityMapper;
 import com.teioh.m_feed.UI.ReaderActivity.View.ReaderActivity;
-import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
+import com.teioh.m_feed.Utils.MFDBHelper;
 import com.teioh.m_feed.WebSources.RequestWrapper;
-import com.teioh.m_feed.WebSources.WebSource;
+import com.teioh.m_feed.WebSources.SourceFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,7 +23,6 @@ import java.util.List;
 import butterknife.ButterKnife;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
@@ -45,41 +45,58 @@ public class MangaPresenterImpl implements MangaPresenter {
     private MangaActivityMapper mMangaMapper;
 
 
-    public MangaPresenterImpl(MangaActivityMapper map) {
-        mMangaMapper = map;
+    public MangaPresenterImpl(MangaActivityMapper aMap) {
+        mMangaMapper = aMap;
     }
 
+    /***
+     * TODO...
+     *
+     * @param aSave
+     */
     @Override
-    public void onSaveState(Bundle bundle) {
-        if (mManga != null) bundle.putParcelable(MANGA_KEY, mManga);
-        if (mChapterList != null) bundle.putParcelableArrayList(CHAPTER_LIST_KEY, mChapterList);
-        bundle.putBoolean(ORDER_DESCENDING_KEY, mChapterOrderDescending);
-
-    }
-
-    @Override
-    public void onRestoreState(Bundle bundle) {
-        if (bundle.containsKey(MANGA_KEY))
-            mManga = bundle.getParcelable(MANGA_KEY);
-
-        if (bundle.containsKey(CHAPTER_LIST_KEY))
-            mChapterList = new ArrayList<>(bundle.getParcelableArrayList(CHAPTER_LIST_KEY));
-
-        if (bundle.containsKey(MANGA_KEY))
-            mManga = bundle.getParcelable(MANGA_KEY);
-
-        if (bundle.containsKey(ORDER_DESCENDING_KEY))
-            mChapterOrderDescending = bundle.getBoolean(ORDER_DESCENDING_KEY);
+    public void onSaveState(Bundle aSave) {
+        if (mManga != null) aSave.putParcelable(MANGA_KEY, mManga);
+        if (mChapterList != null) aSave.putParcelableArrayList(CHAPTER_LIST_KEY, mChapterList);
+        aSave.putBoolean(ORDER_DESCENDING_KEY, mChapterOrderDescending);
 
     }
 
+    /***
+     * TODO...
+     *
+     * @param aRestore
+     */
     @Override
-    public void init(Bundle bundle) {
+    public void onRestoreState(Bundle aRestore) {
+        if (aRestore.containsKey(MANGA_KEY))
+            mManga = aRestore.getParcelable(MANGA_KEY);
+
+        if (aRestore.containsKey(CHAPTER_LIST_KEY))
+            mChapterList = new ArrayList<>(aRestore.getParcelableArrayList(CHAPTER_LIST_KEY));
+
+        if (aRestore.containsKey(MANGA_KEY))
+            mManga = aRestore.getParcelable(MANGA_KEY);
+
+        if (aRestore.containsKey(ORDER_DESCENDING_KEY))
+            mChapterOrderDescending = aRestore.getBoolean(ORDER_DESCENDING_KEY);
+
+    }
+
+    /***
+     * TODO...
+     *
+     * @param aBundle
+     */
+    @Override
+    public void init(Bundle aBundle) {
         if (mManga == null) {
-            String title = bundle.getString(Manga.TAG);
-            mManga = cupboard().withDatabase(MangaFeedDbHelper.getInstance().getReadableDatabase())
+            String lTitle = aBundle.getString(Manga.TAG);
+
+            //TODO > bundle url instead of title and use MFDBHelper
+            mManga = cupboard().withDatabase(MFDBHelper.getInstance().getReadableDatabase())
                     .query(Manga.class)
-                    .withSelection("title = ? AND source = ?", title, WebSource.getCurrentSource())
+                    .withSelection("title = ? AND source = ?", lTitle, new SourceFactory().getSourceName())
                     .get();
         }
         mChapterOrderDescending = true;
@@ -102,11 +119,19 @@ public class MangaPresenterImpl implements MangaPresenter {
 //        getMALSyncOptions();
     }
 
+    /***
+     * TODO...
+     *
+     */
     @Override
     public void onResume() {
         if (mAdapter != null) mAdapter.notifyDataSetChanged();
     }
 
+    /***
+     * TODO...
+     *
+     */
     @Override
     public void onPause() {
         if (mObservableMangaSubscription != null) {
@@ -120,11 +145,21 @@ public class MangaPresenterImpl implements MangaPresenter {
         }
     }
 
+    /***
+     * TODO...
+     *
+     */
     @Override
     public void onDestroy() {
         ButterKnife.unbind(mMangaMapper);
+        Glide.get(mMangaMapper.getContext()).clearMemory();
+        mMangaMapper = null;
     }
 
+    /***
+     * TODO...
+     *
+     */
     @Override
     public void chapterOrderButtonClick() {
         if (mChapterList != null) {
@@ -134,41 +169,70 @@ public class MangaPresenterImpl implements MangaPresenter {
         }
     }
 
+    /***
+     * TODO...
+     *
+     * @param aChapter
+     */
     @Override
-    public void onChapterClicked(Chapter chapter) {
+    public void onChapterClicked(Chapter aChapter) {
         ArrayList<Chapter> newChapterList = new ArrayList<>(mChapterList);
 
         if (mChapterOrderDescending)
             Collections.reverse(newChapterList);
 
-        int position = newChapterList.indexOf(chapter);
-        Intent intent = new Intent(mMangaMapper.getContext(), ReaderActivity.class);
-        intent.putParcelableArrayListExtra(CHAPTER_LIST_KEY, newChapterList);
-        intent.putExtra(LIST_POSITION_KEY, position);
-        mMangaMapper.getContext().startActivity(intent);
+        int lPosition = newChapterList.indexOf(aChapter);
+
+        //TODO > update ReaderActivity.getInstance()
+        Intent lIntent = new Intent(mMangaMapper.getContext(), ReaderActivity.class);
+        lIntent.putParcelableArrayListExtra(CHAPTER_LIST_KEY, newChapterList);
+        lIntent.putExtra(LIST_POSITION_KEY, lPosition);
+        mMangaMapper.getContext().startActivity(lIntent);
     }
 
+    /***
+     * TODO...
+     *
+     */
     @Override
     public void onMALSyncClicked() {
         mMangaMapper.onMALSyncClicked(mMALMangaList);
     }
 
+    /***
+     * TODO...
+     *
+     * @return
+     */
     @Override
     public String getImageUrl() {
         return mManga.getPicUrl();
     }
 
+    /***
+     * TODO...
+     *
+     * @param aValue
+     */
     @Override
-    public void onFollwButtonClick(int value) {
+    public void onFollwButtonClick(int aValue) {
         mMangaMapper.changeFollowButton(mManga.getFollowing());
-        MangaFeedDbHelper.getInstance().updateMangaFollow(mManga.getTitle(), value);
+        MFDBHelper.getInstance().updateMangaFollow(mManga.getTitle(), aValue);
     }
 
+    /***
+     * TODO...
+     *
+     */
     @Override
     public void onUnfollowButtonClick(){
-        MangaFeedDbHelper.getInstance().updateMangaUnfollow(mManga.getTitle());
+        MFDBHelper.getInstance().updateMangaUnfollow(mManga.getTitle());
     }
 
+    /***
+     * TODO...
+     *
+     */
     private void getMALSyncOptions() {
 //        mMALService.searchManga(mManga.getMangaTitle(), new Callback<MALMangaList>() {
 //            @Override
@@ -184,35 +248,56 @@ public class MangaPresenterImpl implements MangaPresenter {
 //        });
     }
 
+    /***
+     * TODO...
+     *
+     */
     private void getMangaViewInfo() {
-        mObservableMangaSubscription = WebSource.updateMangaObservable(mManga)
+        mObservableMangaSubscription = new SourceFactory().getSource().updateMangaObservable(new RequestWrapper(mManga))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(manga -> updateMangaView(manga));
     }
 
-    private void updateMangaView(Manga manga) {
-        if (mMangaMapper.getContext() != null) {
-            mMangaMapper.setMangaViews(manga);
-            mMangaMapper.changeFollowButton(manga.getFollowing());
-        }
-        mManga = manga;
-        mManga.setInitialized(1);
-        cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).put(manga);
-        if (mChapterListSubscription != null) {
-            mObservableMangaSubscription.unsubscribe();
-            mObservableMangaSubscription = null;
+    /***
+     * TODO...
+     *
+     * @param aManga
+     */
+    private void updateMangaView(Manga aManga) {
+        if(aManga != null) {
+            if (mMangaMapper.getContext() != null) {
+                mMangaMapper.setMangaViews(aManga);
+                mMangaMapper.changeFollowButton(aManga.getFollowing());
+            }
+            mManga = aManga;
+            mManga.setInitialized(1);
+
+            MFDBHelper.getInstance().putManga(aManga);
+            if (mChapterListSubscription != null) {
+                mObservableMangaSubscription.unsubscribe();
+                mObservableMangaSubscription = null;
+            }
         }
     }
 
+    /***
+     * TODO...
+     *
+     */
     private void getChapterList() {
-        mChapterListSubscription = WebSource.getChapterListObservable(new RequestWrapper(mManga))
+        mChapterListSubscription = new SourceFactory().getSource().getChapterListObservable(new RequestWrapper(mManga))
                 .doOnError(throwable -> Log.e(TAG, throwable.getMessage()))
                 .subscribe(chapters -> updateChapterList(chapters));
     }
 
-    private void updateChapterList(List<Chapter> chapters) {
+    /***
+     * TODO...
+     *
+     * @param aChapterList
+     */
+    private void updateChapterList(List<Chapter> aChapterList) {
         if (mMangaMapper.getContext() != null) {
-            mChapterList = new ArrayList<>(chapters);
+            mChapterList = new ArrayList<>(aChapterList);
             mAdapter = new ChapterListAdapter(mMangaMapper.getContext(), R.layout.manga_chapter_list_item, mChapterList);
             mMangaMapper.registerAdapter(mAdapter);
             mMangaMapper.stopRefresh();

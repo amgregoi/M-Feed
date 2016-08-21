@@ -22,9 +22,9 @@ public class FImageDialogFragment extends DialogFragment {
 
     public static DialogFragment getNewInstance(String url){
         DialogFragment fragment = new FImageDialogFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(IMAGE_URL_KEY, url);
-        fragment.setArguments(bundle);
+        Bundle lBundle = new Bundle();
+        lBundle.putString(IMAGE_URL_KEY, url);
+        fragment.setArguments(lBundle);
         return fragment;
     }
 
@@ -33,9 +33,9 @@ public class FImageDialogFragment extends DialogFragment {
     private String mImageUrl;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.manga_info_image_dialog, null);
-        ButterKnife.bind(this, view);
+    public View onCreateView(LayoutInflater aInflater, ViewGroup aContainer, Bundle aSavedInstanceState) {
+        View lView = aInflater.inflate(R.layout.manga_info_image_dialog, null);
+        ButterKnife.bind(this, lView);
 
         if(getArguments().containsKey(IMAGE_URL_KEY))
             mImageUrl = getArguments().getString(IMAGE_URL_KEY);
@@ -45,7 +45,7 @@ public class FImageDialogFragment extends DialogFragment {
         //Set dialog features
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().requestFeature(Window.FEATURE_SWIPE_TO_DISMISS);
-        return view;
+        return lView;
     }
 
     @Override
@@ -54,6 +54,7 @@ public class FImageDialogFragment extends DialogFragment {
             Glide.with(getActivity()).load(mImageUrl)
                     .animate(android.R.anim.fade_in)
                     .fitCenter()
+                    .skipMemoryCache(true)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(mImage);
         }

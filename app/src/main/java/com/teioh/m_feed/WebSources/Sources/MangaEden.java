@@ -1,13 +1,13 @@
-package com.teioh.m_feed.WebSources.Source;
+package com.teioh.m_feed.WebSources.Sources;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
-import com.teioh.m_feed.Utils.Database.MangaFeedDbHelper;
-import com.teioh.m_feed.WebSources.NetworkService;
+import com.teioh.m_feed.Utils.MFDBHelper;
+import com.teioh.m_feed.Utils.NetworkService;
 import com.teioh.m_feed.WebSources.RequestWrapper;
+import com.teioh.m_feed.WebSources.Source;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,21 +27,17 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import static nl.qbusict.cupboard.CupboardFactory.cupboard;
+public class MangaEden extends Source {
 
-public class MangaEden {
+    final public String SourceKey = "MangaEden";
 
-    final public static String SourceKey = "MangaEden";
-
-    final static String mBaseUrl = "http://www.mangaeden.com";
-    final static String mUpdatesUrl = "http://www.mangaeden.com/ajax/news/1/0/";
+    final String mBaseUrl = "http://www.mangaeden.com";
+    final String mUpdatesUrl = "http://www.mangaeden.com/ajax/news/1/0/";
 
     /**
      * builds list of manga for recently updated page
-     *
-     * @return
      */
-    public static Observable<List<Manga>> getRecentUpdatesObservable() {
+    public Observable<List<Manga>> getRecentUpdatesObservable() {
         return NetworkService.getTemporaryInstance()
                 .getResponse(mUpdatesUrl)
                 .flatMap(response -> NetworkService.mapResponseToString(response))
@@ -52,8 +48,13 @@ public class MangaEden {
                 .doOnError(Throwable::printStackTrace);
     }
 
-    private static List<Manga> scrapeUpdatestoManga(final Document parsedDocument) {
-        SQLiteDatabase db = MangaFeedDbHelper.getInstance().getReadableDatabase();
+    /***
+     * TODO...
+     *
+     * @param parsedDocument
+     * @return
+     */
+    private List<Manga> scrapeUpdatestoManga(final Document parsedDocument) {
         List<Manga> mangaList = new ArrayList<>();
         Elements mangaElements = parsedDocument.select("body > li");
 
@@ -64,14 +65,14 @@ public class MangaEden {
             String mangaTitle = nameElement.text();
             String mangaUrl = "https://www.mangaeden.com/api/manga/" + urlElement.id().substring(0, 24) + "/";
 
-            Manga manga = cupboard().withDatabase(db).query(Manga.class).withSelection("title = ? AND source = ?", mangaTitle, SourceKey).get();
+            Manga manga = MFDBHelper.getInstance().getManga(mangaUrl, SourceKey);
             if (manga != null) {
                 mangaList.add(manga);
             } else {
                 manga = new Manga(mangaTitle, mangaUrl, SourceKey);
                 mangaList.add(manga);
-                cupboard().withDatabase(MangaFeedDbHelper.getInstance().getWritableDatabase()).put(manga);
-                Observable<Manga> observableManga = MangaEden.updateMangaObservable(new RequestWrapper(manga));
+                MFDBHelper.getInstance().putManga(manga);
+                Observable<Manga> observableManga = updateMangaObservable(new RequestWrapper(manga));
                 observableManga.subscribe();
             }
         }
@@ -82,7 +83,13 @@ public class MangaEden {
     }
 
 
-    public static Observable<List<Chapter>> getChapterListObservable(final RequestWrapper request) {
+    /***
+     * TODO...
+     *
+     * @param request
+     * @return
+     */
+    public Observable<List<Chapter>> getChapterListObservable(final RequestWrapper request) {
         return NetworkService.getPermanentInstance()
                 .getResponse(request.getMangaUrl())
                 .flatMap(response -> NetworkService.mapResponseToString(response))
@@ -100,7 +107,15 @@ public class MangaEden {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    private static List<Chapter> parseJsonToChapters(RequestWrapper request, String unparsedJson) throws JSONException {
+    /***
+     * TODO...
+     *
+     * @param request
+     * @param unparsedJson
+     * @return
+     * @throws JSONException
+     */
+    private List<Chapter> parseJsonToChapters(RequestWrapper request, String unparsedJson) throws JSONException {
         JSONObject parsedJsonObject = new JSONObject(unparsedJson);
 
         List<Chapter> chapterList = scrapeChaptersFromParsedJson(parsedJsonObject);
@@ -109,7 +124,14 @@ public class MangaEden {
         return chapterList;
     }
 
-    private static List<Chapter> scrapeChaptersFromParsedJson(JSONObject parsedJsonObject) throws JSONException {
+    /***
+     * TODO...
+     *
+     * @param parsedJsonObject
+     * @return
+     * @throws JSONException
+     */
+    private List<Chapter> scrapeChaptersFromParsedJson(JSONObject parsedJsonObject) throws JSONException {
         List<Chapter> chapterList = new ArrayList<>();
 
         String mangaName = parsedJsonObject.getString("title");
@@ -126,7 +148,15 @@ public class MangaEden {
         return chapterList;
     }
 
-    private static Chapter constructChapterFromJSONArray(JSONArray chapterNode, String mangaName) throws JSONException {
+    /***
+     * TODO...
+     *
+     * @param chapterNode
+     * @param mangaName
+     * @return
+     * @throws JSONException
+     */
+    private Chapter constructChapterFromJSONArray(JSONArray chapterNode, String mangaName) throws JSONException {
         Chapter newChapter = new Chapter(mangaName);
 
         newChapter.setChapterUrl("https://www.mangaeden.com/api/chapter/" + chapterNode.getString(3) + "/");
@@ -137,7 +167,13 @@ public class MangaEden {
         return newChapter;
     }
 
-    private static List<Chapter> setNumberForChapterList(List<Chapter> chapterList) {
+    /***
+     * TODO...
+     *
+     * @param chapterList
+     * @return
+     */
+    private List<Chapter> setNumberForChapterList(List<Chapter> chapterList) {
         Collections.reverse(chapterList);
         for (int index = 0; index < chapterList.size(); index++) {
             chapterList.get(index).setChapterNumber(index + 1);
@@ -157,12 +193,13 @@ public class MangaEden {
      *
      */
 
-    /**
+    /***
      * ChapterFragment - takes a chapter url, and returns list of urls to chapter images
      *
+     * @param request
      * @return
      */
-    public static Observable<String> getChapterImageList(final RequestWrapper request) {
+    public Observable<String> getChapterImageListObservable(final RequestWrapper request) {
         return NetworkService.getPermanentInstance()
                 .getResponse(request.getChapterUrl())
                 .subscribeOn(Schedulers.computation())
@@ -182,7 +219,14 @@ public class MangaEden {
                 .flatMap(imageUrls -> Observable.from(imageUrls.toArray(new String[imageUrls.size()])));
     }
 
-    private static List<String> parseJsonToImageUrls(String unparsedJson) throws JSONException {
+    /***
+     * TODO...
+     *
+     * @param unparsedJson
+     * @return
+     * @throws JSONException
+     */
+    private List<String> parseJsonToImageUrls(String unparsedJson) throws JSONException {
         JSONObject parsedJson = new JSONObject(unparsedJson);
         List<String> imageUrlList = new ArrayList<>();
 
@@ -197,13 +241,15 @@ public class MangaEden {
         return imageUrlList;
     }
 
-    /**
+
+    /***
      * Adds new Manga and
      * gets missing manga information and updates database
      *
+     * @param request
      * @return
      */
-    public static Observable<Manga> updateMangaObservable(final RequestWrapper request) {
+    public Observable<Manga> updateMangaObservable(final RequestWrapper request) {
         NetworkService currService = NetworkService.getTemporaryInstance();
         return currService
                 .getResponse(request.getMangaUrl())
@@ -218,10 +264,20 @@ public class MangaEden {
                             subscriber.onError(e);
                         }
                     }
-                }));
+                }))
+                .onErrorReturn(null)
+                .doOnError(throwable -> throwable.printStackTrace());
     }
 
-    private static Manga parseJsonToManga(RequestWrapper request, String unparsedJson) throws JSONException {
+    /***
+     * TODO...
+     *
+     * @param request
+     * @param unparsedJson
+     * @return
+     * @throws JSONException
+     */
+    private Manga parseJsonToManga(RequestWrapper request, String unparsedJson) throws JSONException {
         JSONObject parsedJsonObject = new JSONObject(unparsedJson);
 
         String fieldGenre = "";
@@ -234,19 +290,7 @@ public class MangaEden {
             }
         }
 
-        SQLiteDatabase sqLiteDatabase = MangaFeedDbHelper.getInstance().getWritableDatabase();
-        StringBuilder selection = new StringBuilder();
-        List<String> selectionArgs = new ArrayList<>();
-
-        selection.append("source = ?");
-        selectionArgs.add(SourceKey);
-        selection.append(" AND ").append("link = ?");
-        selectionArgs.add(request.getMangaUrl());
-
-        Manga newManga = cupboard().withDatabase(sqLiteDatabase).query(Manga.class)
-                .withSelection(selection.toString(), selectionArgs.toArray(new String[selectionArgs.size()]))
-                .limit(1)
-                .get();
+        Manga newManga = MFDBHelper.getInstance().getManga(request.getMangaUrl(), SourceKey);
 
         newManga.setArtist(parsedJsonObject.getString("artist"));
         newManga.setAuthor(parsedJsonObject.getString("author"));
@@ -257,8 +301,7 @@ public class MangaEden {
 
 
         Log.e("MANGAEDEN", newManga.getTitle() + ": updated");
-        cupboard().withDatabase(sqLiteDatabase).put(newManga);
-
+        MFDBHelper.getInstance().putManga(newManga);
         return newManga;
     }
 }

@@ -10,17 +10,17 @@ import com.teioh.m_feed.UI.Maps.Listeners;
 
 public class MALVerifyDialog extends DialogFragment {
     public final static String TAG = MALVerifyDialog.class.getSimpleName();
-    private Listeners.MALDialogListener listener;
+    private Listeners.MALDialogListener mListener;
 
     public static DialogFragment getNewInstance() {
-        MALVerifyDialog fragment = new MALVerifyDialog();
-        return fragment;
+        MALVerifyDialog lFragment = new MALVerifyDialog();
+        return lFragment;
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        return builder
+    public Dialog onCreateDialog(Bundle aSavedInstanceState) {
+        AlertDialog.Builder lBuilder = new AlertDialog.Builder(getActivity());
+        return lBuilder
                 .setTitle("MAL")
                 .setMessage("Sign out of My Anime List?")
                 .setNegativeButton("No", (arg0, arg1) -> {
@@ -28,16 +28,16 @@ public class MALVerifyDialog extends DialogFragment {
                 })
 
                 .setPositiveButton("Yes", (arg0, arg1) -> {
-                    listener.MALSignOut();
+                    mListener.MALSignOut();
                     getDialog().dismiss();
                 })
                 .create();
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        if (activity instanceof Listeners.MALDialogListener)
-            listener = (Listeners.MALDialogListener) activity;
-        super.onAttach(activity);
+    public void onAttach(Activity aActivity) {
+        if (aActivity instanceof Listeners.MALDialogListener)
+            mListener = (Listeners.MALDialogListener) aActivity;
+        super.onAttach(aActivity);
     }
 }

@@ -49,17 +49,17 @@ public class MALApi {
         return createService(null, null);
     }
 
-    public static MALService createService(String username, String password) {
-        if (username != null && password != null) {
+    public static MALService createService(String aUserName, String aPassword) {
+        if (aUserName != null && aPassword != null) {
             // concatenate username and password with colon for authentication
-            String credentials = username + ":" + password;
-            // create Base64 encodet string
-            final String basic = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+            String lCredentials = aUserName + ":" + aPassword;
+            // create Base64 encoded string
+            final String lBasic = "Basic " + Base64.encodeToString(lCredentials.getBytes(), Base64.NO_WRAP);
 
             builder.setRequestInterceptor(new RequestInterceptor() {
                 @Override
                 public void intercept(RequestInterceptor.RequestFacade request) {
-                    request.addHeader("Authorization", basic);
+                    request.addHeader("Authorization", lBasic);
                     request.addHeader("Accept", "application/json");
                 }
             });

@@ -18,8 +18,8 @@ import butterknife.OnClick;
 public class LoginActivity extends AppCompatActivity implements LoginActivityMapper {
     public final static String TAG = LoginActivity.class.getSimpleName();
 
-    @Bind(R.id.password) EditText password;
-    @Bind(R.id.username) EditText username;
+    @Bind(R.id.password) EditText mPasswordTextView;
+    @Bind(R.id.username) EditText mUsernameTextView;
 
     private LoginActivityPresenter mLoginActivityPresenter;
 
@@ -38,8 +38,8 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityMap
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        username.clearFocus();
-        mLoginActivityPresenter.saveUsernameTransition(username.getText().toString());
+        mUsernameTextView.clearFocus();
+        mLoginActivityPresenter.saveUsernameTransition(mUsernameTextView.getText().toString());
         mLoginActivityPresenter.onSaveState(outState);
     }
 
@@ -51,11 +51,11 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityMap
     }
 
     @OnClick(R.id.signup) void onSignupButton() {
-        mLoginActivityPresenter.onSignupButton(username.getText().toString(), password.getText().toString());
+        mLoginActivityPresenter.onSignupButton(mUsernameTextView.getText().toString(), mPasswordTextView.getText().toString());
     }
 
     @OnClick(R.id.login) void onLoginButton() {
-        mLoginActivityPresenter.onLoginbutton(username.getText().toString(), password.getText().toString());
+        mLoginActivityPresenter.onLoginbutton(mUsernameTextView.getText().toString(), mPasswordTextView.getText().toString());
     }
 
     @Override

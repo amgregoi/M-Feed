@@ -1,7 +1,5 @@
 package com.teioh.m_feed.UI.ReaderActivity.Presenters;
 
-import android.os.Bundle;
-
 import com.teioh.m_feed.UI.Maps.LifeCycleMap;
 
 public interface ChapterPresenter extends LifeCycleMap {
@@ -14,17 +12,17 @@ public interface ChapterPresenter extends LifeCycleMap {
 
     void setToPreviousChapter();
 
-    void updateOffsetCounter(int offset, int position);
+    void updateOffsetCounter(int aOffset, int aPosition);
 
-    void updateState(int state);
+    void updateState(int aState);
 
     void updateToolbarComplete();
 
-    void updateCurrentPage(int position);
+    void updateCurrentPage(int aPosition);
 
     void updateChapterViewStatus();
 
-    void onRefresh(int position);
+    void onRefresh(int aPosition);
 
 
 }

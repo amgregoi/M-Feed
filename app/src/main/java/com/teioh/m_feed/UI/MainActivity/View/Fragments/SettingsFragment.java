@@ -15,19 +15,19 @@ public class SettingsFragment extends Fragment {
     //TODO implement settings with shared prefs
 
     public static Fragment getnewInstance(){
-        Fragment dialog = new SettingsFragment();
-        return dialog;
+        Fragment lDialog = new SettingsFragment();
+        return lDialog;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.settings_fragment, container, false);
-        return v;
+    public View onCreateView(LayoutInflater aInflater, @Nullable ViewGroup aContainer, @Nullable Bundle aSavedInstanceState) {
+        View lView = aInflater.inflate(R.layout.settings_fragment, aContainer, false);
+        return lView;
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onActivityCreated(@Nullable Bundle aSave) {
+        super.onActivityCreated(aSave);
     }
 
     @Override

@@ -10,6 +10,6 @@ public interface DrawerLayoutMap {
 
     void openDrawer();
 
-    void setupDrawerLayout(List<String> mDrawerItems, Map<String, List<String>> mSourceCollections);
+    void setupDrawerLayout(List<String> aDrawerItems, Map<String, List<String>> aSourceCollections);
 
 }

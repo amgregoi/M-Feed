@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -39,29 +38,29 @@ public class ReaderActivity extends AppCompatActivity implements ReaderActivityM
 
     private ReaderPresenter mReaderPresenter;
 
-    public static Intent getNewInstance(Context context) {
-        Intent intent = new Intent(context, ReaderActivity.class);
+    public static Intent getNewInstance(Context aContext) {
+        Intent intent = new Intent(aContext, ReaderActivity.class);
         return intent;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle aSavedInstanceState) {
+        super.onCreate(aSavedInstanceState);
         setContentView(R.layout.reader_activity);
         ButterKnife.bind(this);
 
         mReaderPresenter = new ReaderPresenterImpl(this);
 
-        if (savedInstanceState != null) {
-            mReaderPresenter.onRestoreState(savedInstanceState);
+        if (aSavedInstanceState != null) {
+            mReaderPresenter.onRestoreState(aSavedInstanceState);
         }
         mReaderPresenter.init(getIntent().getExtras());
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (mReaderPresenter != null) mReaderPresenter.onSaveState(outState);
+    protected void onSaveInstanceState(Bundle aSave) {
+        super.onSaveInstanceState(aSave);
+        if (mReaderPresenter != null) mReaderPresenter.onSaveState(aSave);
     }
 
     @Override
@@ -88,17 +87,17 @@ public class ReaderActivity extends AppCompatActivity implements ReaderActivityM
     }
 
     @Override
-    public void registerAdapter(PagerAdapter adapter) {
-        if (adapter != null) {
-            mViewPager.setAdapter(adapter);
+    public void registerAdapter(PagerAdapter aAdapter) {
+        if (aAdapter != null) {
+            mViewPager.setAdapter(aAdapter);
             mViewPager.addOnPageChangeListener(this);
             mViewPager.setOffscreenPageLimit(0);
         }
     }
 
     @Override
-    public void setCurrentChapter(int position) {
-        mViewPager.setCurrentItem(position);
+    public void setCurrentChapter(int aPosition) {
+        mViewPager.setCurrentItem(aPosition);
     }
 
     @Override
@@ -112,7 +111,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderActivityM
     }
 
     @Override
-    public void hideToolbar(long delay) {
+    public void hideToolbar(long aDelay) {
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -136,11 +135,11 @@ public class ReaderActivity extends AppCompatActivity implements ReaderActivityM
     }
 
     @Override
-    public void updateToolbar(String mTitle, String cTitle, int size, int page) {
-        if (page == mViewPager.getCurrentItem()) {
-            mMangaTitle.setText(mTitle);
-            mChapterTitle.setText(cTitle);
-            mEndPage.setText(String.valueOf(size));
+    public void updateToolbar(String aTitle, String aChapterTitle, int aSize, int aPage) {
+        if (aPage == mViewPager.getCurrentItem()) {
+            mMangaTitle.setText(aTitle);
+            mChapterTitle.setText(aChapterTitle);
+            mEndPage.setText(String.valueOf(aSize));
             mReaderPresenter.updateChapterViewStatus(mViewPager.getCurrentItem());
         }
     }
@@ -156,43 +155,43 @@ public class ReaderActivity extends AppCompatActivity implements ReaderActivityM
 
     // A method to find height of the status bar
     public int getStatusBarHeight() {
-        int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
+        int lResult = 0;
+        int lResourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (lResourceId > 0) {
+            lResult = getResources().getDimensionPixelSize(lResourceId);
         }
 
-        return result;
+        return lResult;
     }
 
     public int getNavBarHeight() {
-        int result = 0;
-        int resourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
+        int lResult = 0;
+        int lResourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+        if (lResourceId > 0) {
+            lResult = getResources().getDimensionPixelSize(lResourceId);
         }
 
-        return result;
+        return lResult;
     }
 
     @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+    public void onPageScrolled(int aPosition, float aPositionOffset, int aPositionOffsetPixels) {
+        //do nothing
     }
 
     @Override
-    public void onPageSelected(int position) {
-        mReaderPresenter.updateToolbar(position);
+    public void onPageSelected(int aPosition) {
+        mReaderPresenter.updateToolbar(aPosition);
     }
 
     @Override
-    public void onPageScrollStateChanged(int state) {
-
+    public void onPageScrollStateChanged(int aState) {
+        //do nothing
     }
 
     @Override
-    public void updateCurrentPage(int position) {
-        mCurrentPage.setText(String.valueOf(position));
+    public void updateCurrentPage(int aPosition) {
+        mCurrentPage.setText(String.valueOf(aPosition));
     }
 
     @OnClick(R.id.skipPreviousButton)
@@ -222,9 +221,9 @@ public class ReaderActivity extends AppCompatActivity implements ReaderActivityM
     }
 
     @Override
-    public void onTrimMemory(int level) {
-        super.onTrimMemory(level);
-        Glide.get(this).trimMemory(level);
+    public void onTrimMemory(int aLevel) {
+        super.onTrimMemory(aLevel);
+        Glide.get(this).trimMemory(aLevel);
     }
 
     @Override

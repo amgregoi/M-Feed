@@ -12,42 +12,75 @@ public class RequestWrapper implements Parcelable {
     private Manga mManga;
     private Chapter mChapter;
 
-    public RequestWrapper(Manga manga) {
-        mManga = manga;
+    /***
+     * Request Wrapper Constructor
+     *
+     * @param aManga
+     */
+    public RequestWrapper(Manga aManga) {
+        mManga = aManga;
     }
-    public RequestWrapper(Chapter chapter) {
-        mChapter = chapter;
+
+    /***
+     * Request Wrapper Constructor
+     *
+     * @param aChapter
+     */
+    public RequestWrapper(Chapter aChapter) {
+        mChapter = aChapter;
     }
 
     public static final Parcelable.Creator<RequestWrapper> CREATOR = new Parcelable.Creator<RequestWrapper>() {
         @Override
-        public RequestWrapper createFromParcel(Parcel inputParcel) {
-            return new RequestWrapper(inputParcel);
+        public RequestWrapper createFromParcel(Parcel aInputParcel) {
+            return new RequestWrapper(aInputParcel);
         }
 
         @Override
-        public RequestWrapper[] newArray(int size) {
-            return new RequestWrapper[size];
+        public RequestWrapper[] newArray(int aSize) {
+            return new RequestWrapper[aSize];
         }
     };
 
-    private RequestWrapper(Parcel in) {
-        mManga = in.readParcelable(ClassLoader.getSystemClassLoader());
+    private RequestWrapper(Parcel aIn) {
+        mManga = aIn.readParcelable(ClassLoader.getSystemClassLoader());
     }
 
+    /***
+     * TODO...
+     *
+     * @return
+     */
     public String getSource() {
         return mManga.getSource();
     }
 
+    /***
+     * TODO...
+     *
+     * @return
+     */
     public String getMangaUrl() {
         return mManga.getMangaURL();
     }
 
+    /***
+     * TODO...
+     *
+     * @return
+     */
     public String getMangaTitle() {
         return mManga.getTitle();
     }
 
-    public String getChapterUrl(){ return mChapter.getChapterUrl(); }
+    /***
+     * TODO...
+     *
+     * @return
+     */
+    public String getChapterUrl(){
+        return mChapter.getChapterUrl();
+    }
 
     @Override
     public int describeContents() {
@@ -55,7 +88,7 @@ public class RequestWrapper implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel out, int flags) {
-        out.writeParcelable(mManga, 0);
+    public void writeToParcel(Parcel aOut, int aFlags) {
+        aOut.writeParcelable(mManga, 0);
     }
 }

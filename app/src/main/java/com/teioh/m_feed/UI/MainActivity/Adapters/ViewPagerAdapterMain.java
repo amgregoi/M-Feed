@@ -11,56 +11,57 @@ import com.teioh.m_feed.UI.MainActivity.View.Fragments.RecentFragment;
 
 public class ViewPagerAdapterMain extends FragmentStatePagerAdapter {
 
-    CharSequence Titles[];
-    int NumbOfTabs;
-    SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
+    private CharSequence mTabTitles[];
+    private int mTabCount;
+    private SparseArray<Fragment> mRegisteredFragments = new SparseArray<Fragment>();
 
 
-    public ViewPagerAdapterMain(FragmentManager fm, CharSequence mTitles[], int mNumbOfTabsumb) {
-        super(fm);
+    public ViewPagerAdapterMain(FragmentManager aFragmentManager, CharSequence aTabTitles[], int aTabCount) {
+        super(aFragmentManager);
 
-        this.Titles = mTitles;
-        this.NumbOfTabs = mNumbOfTabsumb;
+        this.mTabTitles = aTabTitles;
+        this.mTabCount = aTabCount;
 
     }
 
     //This method return the fragment for the every position in the View Pager
     @Override
-    public Fragment getItem(int position) {
+    public Fragment getItem(int aPosition) {
 
-        if (position == 0) // if the position is 0 we are returning the First tab
-        {
-            Fragment recent = new RecentFragment();
-            registeredFragments.put(0, recent);
-            return recent;
-        } else if (position == 1) {
-            Fragment follwed = new FollowedFragment();
-            registeredFragments.put(1, follwed);
-            return follwed;
-        } else {
-            Fragment library = new LibraryFragment();
-            registeredFragments.put(2, library);
-            return library;
+        Fragment lFragment;
+        switch (aPosition) {
+            case 0:
+                lFragment = new RecentFragment();
+                mRegisteredFragments.put(0, lFragment);
+                break;
+            case 1:
+                lFragment = new FollowedFragment();
+                mRegisteredFragments.put(1, lFragment);
+                break;
+            default:
+                lFragment = new LibraryFragment();
+                mRegisteredFragments.put(2, lFragment);
         }
+        return lFragment;
     }
 
     // This method return the titles for the Tabs in the Tab Strip
     @Override
-    public CharSequence getPageTitle(int position) {
-        return Titles[position];
+    public CharSequence getPageTitle(int aPosition) {
+        return mTabTitles[aPosition];
     }
 
     // This method return the Number of tabs for the tabs Strip
     @Override
     public int getCount() {
-        return NumbOfTabs;
+        return mTabCount;
     }
 
-    public Fragment getRegisteredFragment(int position) {
-        return registeredFragments.get(position);
+    public Fragment getRegisteredFragment(int aPosition) {
+        return mRegisteredFragments.get(aPosition);
     }
 
-    public boolean hasRegisteredFragments(){
-        return registeredFragments.get(0) != null;
+    public boolean hasRegisteredFragments() {
+        return mRegisteredFragments.get(0) != null;
     }
 }
