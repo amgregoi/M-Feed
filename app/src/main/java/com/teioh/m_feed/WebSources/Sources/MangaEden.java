@@ -1,7 +1,9 @@
 package com.teioh.m_feed.WebSources.Sources;
 
 import android.util.Log;
+import android.widget.Toast;
 
+import com.teioh.m_feed.MFeedApplication;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.Utils.MFDBHelper;
@@ -65,15 +67,17 @@ public class MangaEden extends Source {
             String mangaTitle = nameElement.text();
             String mangaUrl = "https://www.mangaeden.com/api/manga/" + urlElement.id().substring(0, 24) + "/";
 
-            Manga manga = MFDBHelper.getInstance().getManga(mangaUrl, SourceKey);
-            if (manga != null) {
-                mangaList.add(manga);
+            Manga lManga = MFDBHelper.getInstance().getManga(mangaUrl, SourceKey);
+            if (lManga != null) {
+                mangaList.add(lManga);
             } else {
-                manga = new Manga(mangaTitle, mangaUrl, SourceKey);
-                mangaList.add(manga);
-                MFDBHelper.getInstance().putManga(manga);
-                Observable<Manga> observableManga = updateMangaObservable(new RequestWrapper(manga));
-                observableManga.subscribe();
+                lManga = new Manga(mangaTitle, mangaUrl, SourceKey);
+                mangaList.add(lManga);
+                MFDBHelper.getInstance().putManga(lManga);
+                updateMangaObservable(new RequestWrapper(lManga))
+                        .subscribeOn(Schedulers.computation())
+                        .doOnError(throwable -> Toast.makeText(MFeedApplication.getInstance(), throwable.getMessage(), Toast.LENGTH_SHORT))
+                        .subscribe();
             }
         }
 

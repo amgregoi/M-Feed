@@ -1,8 +1,10 @@
 package com.teioh.m_feed.WebSources.Sources;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.squareup.okhttp.Headers;
+import com.teioh.m_feed.MFeedApplication;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.Utils.MFDBHelper;
@@ -79,8 +81,10 @@ public class Batoto extends Source {
                     lManga = new Manga(lMangaTitle, lMangaUrl, SourceKey);
                     aList.add(lManga);
                     MFDBHelper.getInstance().putManga(lManga);
-                    Observable<Manga> observableManga = updateMangaObservable(new RequestWrapper(lManga));
-                    observableManga.subscribe();
+                    updateMangaObservable(new RequestWrapper(lManga))
+                            .subscribeOn(Schedulers.computation())
+                            .doOnError(throwable -> Toast.makeText(MFeedApplication.getInstance(), throwable.getMessage(), Toast.LENGTH_SHORT))
+                            .subscribe();
                 }
             }
         }
@@ -94,6 +98,7 @@ public class Batoto extends Source {
      * @param request
      * @return
      */
+    @Override
     public Observable<List<Chapter>> getChapterListObservable(final RequestWrapper request) {
         return NetworkService.getPermanentInstance()
                 .getResponseCustomHeaders(request.getMangaUrl(), constructRequestHeaders())
@@ -202,7 +207,7 @@ public class Batoto extends Source {
      * @param unparsedHtml
      * @return
      */
-    public List<String> parseHtmlToPageUrls(String unparsedHtml) {
+    private List<String> parseHtmlToPageUrls(String unparsedHtml) {
         Document parsedDocument = Jsoup.parse(unparsedHtml);
 
         List<String> pageUrlList = new ArrayList<>();
@@ -221,7 +226,7 @@ public class Batoto extends Source {
      * @param unparsedHtml
      * @return
      */
-    public String parseHtmlToImageUrl(String unparsedHtml) {
+    private String parseHtmlToImageUrl(String unparsedHtml) {
         int beginIndex = unparsedHtml.indexOf("<img id=\"comic_page\"");
         int endIndex = unparsedHtml.indexOf("</a>", beginIndex);
         String trimmedHtml = unparsedHtml.substring(beginIndex, endIndex);
@@ -234,9 +239,6 @@ public class Batoto extends Source {
     }
 
 
-    /**
-     */
-
     /***
      * Adds new Manga and
      * gets missing manga information and updates database
@@ -244,6 +246,7 @@ public class Batoto extends Source {
      * @param request
      * @return
      */
+    @Override
     public Observable<Manga> updateMangaObservable(final RequestWrapper request) {
         String mangaId = request.getMangaUrl().substring(request.getMangaUrl().lastIndexOf("r") + 1);
         return NetworkService.getPermanentInstance()

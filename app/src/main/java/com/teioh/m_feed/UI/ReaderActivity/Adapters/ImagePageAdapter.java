@@ -14,7 +14,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.teioh.m_feed.R;
-import com.teioh.m_feed.UI.ReaderActivity.View.Widgets.GestureImageView;
+import com.teioh.m_feed.UI.ReaderActivity.Widgets.GestureImageView;
 
 import java.util.List;
 

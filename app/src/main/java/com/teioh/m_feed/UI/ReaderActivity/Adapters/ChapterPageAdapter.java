@@ -9,7 +9,7 @@ import android.util.SparseArray;
 import android.view.ViewGroup;
 
 import com.teioh.m_feed.Models.Chapter;
-import com.teioh.m_feed.UI.ReaderActivity.View.Fragments.ChapterFragment;
+import com.teioh.m_feed.UI.ReaderActivity.ChapterFragment;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

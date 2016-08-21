@@ -84,7 +84,8 @@ public class NetworkService {
                     subscriber.onError(e);
                 }
             }
-        }).subscribeOn(Schedulers.io());
+        })
+                .subscribeOn(Schedulers.io());
     }
 
     /***

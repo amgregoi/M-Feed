@@ -7,7 +7,7 @@
 	android:background="@android:color/white"
 	android:clickable="true">
 
-	<com.teioh.m_feed.UI.ReaderActivity.View.Widgets.GestureViewPager
+	<com.teioh.m_feed.UI.ReaderActivity.Widgets.GestureViewPager
 		android:id="@id/pager"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"

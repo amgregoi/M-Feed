@@ -2,7 +2,9 @@ package com.teioh.m_feed.WebSources.Sources;
 
 import android.content.ContentValues;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.teioh.m_feed.MFeedApplication;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.Utils.MFDBHelper;
@@ -113,8 +115,10 @@ public class MangaJoy extends Source {
                     lManga = new Manga(lMangaTitle, lMangaUrl, SourceKey);
                     lMangaList.add(lManga);
                     MFDBHelper.getInstance().putManga(lManga);
-                    Observable<Manga> observableManga = updateMangaObservable(new RequestWrapper(lManga));
-                    observableManga.subscribe();
+                    updateMangaObservable(new RequestWrapper(lManga))
+                            .subscribeOn(Schedulers.computation())
+                            .doOnError(throwable -> Toast.makeText(MFeedApplication.getInstance(), throwable.getMessage(), Toast.LENGTH_SHORT))
+                            .subscribe();
                 }
             }
         }
