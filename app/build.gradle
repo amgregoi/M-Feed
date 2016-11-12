@@ -84,7 +84,7 @@ dependencies {
 
     compile 'com.android.support:cardview-v7:23.1.1'
 
-    //float action button
+    //float action buttonf
     compile 'com.getbase:floatingactionbutton:1.10.1'
 
     //Recyclerview
@@ -94,6 +94,8 @@ dependencies {
     compile('com.mopub.sdk.android:mopub:4.4.1@aar') {
         transitive = true;
     }
+
+    compile 'com.futuremind.recyclerfastscroll:fastscroll:0.2.4'
 
 }
 

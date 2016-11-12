@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.futuremind.recyclerviewfastscroll.FastScroller;
 import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
@@ -27,6 +28,7 @@ import butterknife.ButterKnife;
  */
 public abstract class MainFragmentBase extends Fragment implements IMain.FragmentView{
     @Bind(R.id.manga_recycle_view) RecyclerView mGridView;
+    @Bind(R.id.fastscroll) FastScroller mFastSCroller;
 
     protected IMain.FragmentPresenter mFragmentPresenter;
     protected Listeners.MainFragmentListener mListener;
@@ -45,6 +47,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
             mFragmentPresenter.onRestoreState(aSave);
         }
         mFragmentPresenter.init(getArguments());
+        mFastSCroller.setRecyclerView(mGridView);
     }
 
     /***

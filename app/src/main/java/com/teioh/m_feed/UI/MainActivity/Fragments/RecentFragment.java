@@ -27,7 +27,7 @@ public class RecentFragment extends MainFragmentBase {
 
     @Override
     public View onCreateView(LayoutInflater aInflater, @Nullable ViewGroup aContainer, @Nullable Bundle aSavedInstanceState) {
-        View lView = aInflater.inflate(R.layout.main_tab1_recent_fragment, aContainer, false);
+        View lView = aInflater.inflate(R.layout.main_tab_swipe, aContainer, false);
         ButterKnife.bind(this, lView);
 
         mGridView.setLayoutManager(new GridLayoutManager(getContext(), 3));

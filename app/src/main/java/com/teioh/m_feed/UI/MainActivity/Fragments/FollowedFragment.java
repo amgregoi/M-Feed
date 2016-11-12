@@ -22,7 +22,7 @@ public class FollowedFragment extends MainFragmentBase {
 
     @Override
     public View onCreateView(LayoutInflater aInflater, @Nullable ViewGroup aContainer, @Nullable Bundle aSavedInstanceState) {
-        View lView = aInflater.inflate(R.layout.main_tab2_followed_fragment, aContainer, false);
+        View lView = aInflater.inflate(R.layout.main_tab_relative, aContainer, false);
         ButterKnife.bind(this, lView);
 
         mFragmentPresenter = new FollowedPresenter(this);

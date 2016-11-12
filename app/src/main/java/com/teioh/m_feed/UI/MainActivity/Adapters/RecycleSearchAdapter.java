@@ -15,19 +15,25 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.futuremind.recyclerviewfastscroll.SectionTitleProvider;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdapter.ViewHolder> {
+public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdapter.ViewHolder> implements SectionTitleProvider{
 
     private ArrayList<Manga> mOriginalData = null;
     private ArrayList<Manga> mFilteredData = null;
     private TextFilter mFilter = new TextFilter();
 
     private final ItemSelectedListener mListener;
+
+    @Override
+    public String getSectionTitle(int position) {
+        return mFilteredData.get(position).toString().substring(0, 1);
+    }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

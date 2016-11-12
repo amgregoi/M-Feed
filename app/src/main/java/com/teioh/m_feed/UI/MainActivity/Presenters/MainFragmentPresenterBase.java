@@ -35,7 +35,7 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     protected RecycleSearchAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
 
-    protected boolean mNeedsItemDeocration;
+    protected boolean mNeedsItemDecoration;
     protected Subscription mMangaListSubscription;
     protected IMain.FragmentView mViewMapper;
 
@@ -143,7 +143,7 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
         });
 
         updateMangaList();
-        mNeedsItemDeocration = true;
+        mNeedsItemDecoration = true;
     }
 
     /***
@@ -236,7 +236,7 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
             }
 
             mViewMapper.stopRefresh();
-            mNeedsItemDeocration = false;
+            mNeedsItemDecoration = false;
 
             mMangaListSubscription.unsubscribe();
             mMangaListSubscription = null;
@@ -260,10 +260,9 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
                 .iconImageId(R.id.native_ad_icon_image)
                 .build());
 
-
         mAdAdapter.registerAdRenderer(lRenderer);
         if (NATIVE_AD_1_UNIT_ID != null) mAdAdapter.loadAds(NATIVE_AD_1_UNIT_ID);
 
-        mViewMapper.registerAdapter(mAdAdapter, mLayoutManager, mNeedsItemDeocration);
+        mViewMapper.registerAdapter(mAdAdapter, mLayoutManager, mNeedsItemDecoration);
     }
 }
