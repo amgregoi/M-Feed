@@ -64,7 +64,7 @@ public class ChapterPageAdapter extends FragmentStatePagerAdapter {
             lFragment = (ChapterFragment) super.instantiateItem(aContainer, aPosition);
             mPageReferenceMap.put(aPosition, new WeakReference<>(lFragment));
         }catch (NullPointerException e){
-            Log.e(TAG, "Failed to insantiate fragment: " + e.getMessage());
+            Log.e(TAG, "Failed to instantiate fragment: " + e.getMessage());
         }
         return lFragment;
     }

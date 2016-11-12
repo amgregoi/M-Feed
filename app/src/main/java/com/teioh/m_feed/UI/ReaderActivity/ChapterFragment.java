@@ -130,7 +130,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView {
     @Override
     public void updateToolbar() {
         if (mChapterPresenter != null) {
-            mChapterPresenter.updateToolbarComplete();
+            mChapterPresenter.updateActiveChapter();
             mChapterPresenter.updateCurrentPage(mViewPager.getCurrentItem());
         }
     }
@@ -169,6 +169,11 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView {
     @Override
     public void incrementChapter() {
         listener.incrementChapter();
+    }
+
+    @Override
+    public boolean checkActiveChapter(int aChapter){
+        return listener.checkActiveChapter(aChapter);
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -136,14 +137,10 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
 
     @Override
     public void updateToolbar(String aTitle, String aChapterTitle, int aSize, int aChapter) {
-        if (aChapter == mViewPager.getCurrentItem()) {
             mMangaTitle.setText(aTitle);
             mChapterTitle.setText(aChapterTitle);
             mEndPage.setText(String.valueOf(aSize));
             mReaderPresenter.updateChapterViewStatus(mViewPager.getCurrentItem());
-        }else{
-            Log.e("Chapter toolbar: ", "skipping - " + aChapterTitle + " ( " + aChapter + " ) " );
-        }
     }
 
     @Override
@@ -194,6 +191,12 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     @Override
     public void updateCurrentPage(int aPosition) {
         mCurrentPage.setText(String.valueOf(aPosition));
+    }
+
+    @Override
+    public boolean checkActiveChapter(int aChapter) {
+        if(aChapter == mViewPager.getCurrentItem()) return true;
+        return false;
     }
 
     @OnClick(R.id.skipPreviousButton)

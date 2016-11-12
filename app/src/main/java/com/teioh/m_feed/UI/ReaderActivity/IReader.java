@@ -64,6 +64,8 @@ public interface IReader {
 
         void failedLoadChapter();
 
+        boolean checkActiveChapter(int aChapter);
+
         void setCurrentChapterPage(int aPosition);
 
     }
@@ -89,6 +91,8 @@ public interface IReader {
         void updateToolbarComplete();
 
         void updateCurrentPage(int aPosition);
+
+        void updateActiveChapter();
 
         void updateChapterViewStatus();
 

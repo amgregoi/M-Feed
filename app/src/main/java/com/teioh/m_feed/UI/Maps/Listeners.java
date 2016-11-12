@@ -33,6 +33,8 @@ public interface Listeners {
         void updateCurrentPage(int aPosition);
 
         void onBackPressed();
+
+        boolean checkActiveChapter(int aChapter);
     }
 
     public interface MALDialogListener{

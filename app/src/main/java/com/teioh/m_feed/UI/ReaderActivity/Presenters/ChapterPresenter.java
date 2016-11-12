@@ -38,13 +38,18 @@ public class ChapterPresenter implements IReader.FragmentPresenter {
     private Subscription mImageListSubscription, mLoadImageUrlSubscription;
     private ImagePageAdapter mChapterPageAdapter;
 
+    private boolean mActiveChapter;
+    private boolean mFinishedLoading;
+
 
     public ChapterPresenter(IReader.FragmentView aMap, Bundle aBundle) {
         mChapterReaderMapper = aMap;
 
         mPosition = aBundle.getInt(ChapterPageAdapter.POSITION_KEY);
         mChapter = aBundle.getParcelable(Chapter.TAG + ":" + mPosition);
+        mActiveChapter = mChapterReaderMapper.checkActiveChapter(mPosition);
         mIsToolbarShowing = true;
+        mFinishedLoading = false;
     }
 
     @Override
@@ -91,6 +96,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter {
                         mChapterReaderMapper.registerAdapter(mChapterPageAdapter);
                         mChapter.setTotalPages(mChapterUrlList.size());
                         updateToolbarComplete();
+                        mFinishedLoading = true;
                     }
 
                     @Override
@@ -209,16 +215,26 @@ public class ChapterPresenter implements IReader.FragmentPresenter {
     }
 
     @Override
+    public void updateActiveChapter(){
+        mActiveChapter = true;
+        if(mFinishedLoading) updateToolbarComplete();
+        else updateToolbarLoading();
+    }
+
+    @Override
     public void updateToolbarComplete() {
-        mChapterReaderMapper.updateToolbar(mChapter.getMangaTitle(), mChapter.getChapterTitle(), mChapterUrlList.size(), mPosition);
+        if(mActiveChapter)
+            mChapterReaderMapper.updateToolbar(mChapter.getMangaTitle(), mChapter.getChapterTitle(), mChapterUrlList.size(), mPosition);
     }
 
     private void updateToolbarFailed() {
-        mChapterReaderMapper.updateToolbar(mChapter.getMangaTitle(), "Failed to load chapter, refresh", 1, mPosition);
+        if(mActiveChapter)
+            mChapterReaderMapper.updateToolbar(mChapter.getMangaTitle(), "Failed to load chapter, refresh", 1, mPosition);
     }
 
     private void updateToolbarLoading() {
-        mChapterReaderMapper.updateToolbar(mChapter.getMangaTitle(), "Pages loaded: " + mChapterUrlList.size(), 1, mPosition);
+        if(mActiveChapter)
+            mChapterReaderMapper.updateToolbar(mChapter.getMangaTitle(), "Pages loaded: " + mChapterUrlList.size(), 1, mPosition);
     }
 
     @Override
