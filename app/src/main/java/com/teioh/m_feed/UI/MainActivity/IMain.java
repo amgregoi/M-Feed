@@ -38,7 +38,7 @@ public interface IMain {
     }
 
     interface ActivityModel {
-
+        //Nothing?
     }
 
     interface ActivityPresenter extends LifeCycleMap {

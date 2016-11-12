@@ -121,7 +121,8 @@ public class Chapter implements Parcelable {
     }
 
     public int getCurrentPage() {
-        return currentPage;
+        if(currentPage > 0) return currentPage;
+        else return 1;
     }
 
     public void setCurrentPage(int aCurrentPage) {

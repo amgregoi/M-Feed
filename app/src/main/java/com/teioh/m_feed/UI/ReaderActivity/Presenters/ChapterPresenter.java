@@ -224,7 +224,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter {
     @Override
     public void updateCurrentPage(int aPosition) {
         mPosition = aPosition;
-        mChapterReaderMapper.updateCurrentPage(aPosition + 1); //update page by 1
+        mChapterReaderMapper.updateCurrentPage(aPosition  + 1); //update page by 1
         mChapter.setCurrentPage(aPosition);
     }
 

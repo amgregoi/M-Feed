@@ -131,7 +131,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView {
     public void updateToolbar() {
         if (mChapterPresenter != null) {
             mChapterPresenter.updateToolbarComplete();
-            mChapterPresenter.updateCurrentPage(mViewPager.getCurrentItem() + 1);
+            mChapterPresenter.updateCurrentPage(mViewPager.getCurrentItem());
         }
     }
 

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -118,6 +119,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
+
         mToolbarHeader.animate().translationY(-mToolbarHeader.getHeight()).setInterpolator(new AccelerateInterpolator()).setStartDelay(10).start();
         mToolbarHeader2.animate().translationY(-mToolbarHeader2.getHeight() - mToolbarHeader.getHeight()).setInterpolator(new AccelerateInterpolator()).setStartDelay(10).start();
         mToolbarFooter.animate().translationY(mToolbarFooter.getHeight()).setInterpolator(new DecelerateInterpolator()).setStartDelay(20).start();
@@ -133,12 +135,14 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     @Override
-    public void updateToolbar(String aTitle, String aChapterTitle, int aSize, int aPage) {
-        if (aPage == mViewPager.getCurrentItem()) {
+    public void updateToolbar(String aTitle, String aChapterTitle, int aSize, int aChapter) {
+        if (aChapter == mViewPager.getCurrentItem()) {
             mMangaTitle.setText(aTitle);
             mChapterTitle.setText(aChapterTitle);
             mEndPage.setText(String.valueOf(aSize));
             mReaderPresenter.updateChapterViewStatus(mViewPager.getCurrentItem());
+        }else{
+            Log.e("Chapter toolbar: ", "skipping - " + aChapterTitle + " ( " + aChapter + " ) " );
         }
     }
 
@@ -152,7 +156,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     // A method to find height of the status bar
-    public int getStatusBarHeight() {
+    private int getStatusBarHeight() {
         int lResult = 0;
         int lResourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (lResourceId > 0) {
@@ -162,7 +166,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
         return lResult;
     }
 
-    public int getNavBarHeight() {
+    private int getNavBarHeight() {
         int lResult = 0;
         int lResourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
         if (lResourceId > 0) {
@@ -174,7 +178,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
 
     @Override
     public void onPageScrolled(int aPosition, float aPositionOffset, int aPositionOffsetPixels) {
-        //do nothing
+        //Do Nothing
     }
 
     @Override
@@ -184,7 +188,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
 
     @Override
     public void onPageScrollStateChanged(int aState) {
-        //do nothing
+        //Do Nothing
     }
 
     @Override
