@@ -228,14 +228,24 @@ public class GestureImageView extends ImageView implements ScaleGestureDetector.
         zoomTo(aScale, aPointX, aPointY, ZOOM_DURATION);
     }
 
-    public boolean canScrollParent() {
+    public boolean canScrollParent(boolean aVertical) {
         if (mInitialized) {
-            if (getTransitionX(mDisplayMatrix) == 0) {
-                return true;
-            } else if (mBitmapWidth * getScaleX(mDisplayMatrix) + getTransitionX(mDisplayMatrix) <= getWidth()) {
-                return true;
+            if(!aVertical) {
+                if (getTransitionX(mDisplayMatrix) == 0) {
+                    return true;
+                } else if (mBitmapWidth * getScaleX(mDisplayMatrix) + getTransitionX(mDisplayMatrix) <= getWidth()) {
+                    return true;
+                }
+                return false;
+            }else{
+                if (getTransitionY(mDisplayMatrix) == 0) {
+                    return true;
+                } else if (mBitmapHeight * getScaleY(mDisplayMatrix) + getTransitionY(mDisplayMatrix) <= getHeight()) {
+                    return true;
+                }
+                return false;
+
             }
-            return false;
         }
         return true;
     }

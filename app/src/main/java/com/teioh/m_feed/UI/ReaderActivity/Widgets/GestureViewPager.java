@@ -5,6 +5,7 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 
 import com.teioh.m_feed.UI.ReaderActivity.Adapters.ImagePageAdapter;
 
@@ -14,27 +15,37 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
     private GestureDetector mGestureDetector;
     private OnSingleTapListener mSingleTapListener;
 
+    private boolean aVertical = false;
+
     public GestureViewPager(Context context) {
         super(context);
         mGestureDetector = new GestureDetector(getContext(), this);
+        setScrollerType();
     }
 
     public GestureViewPager(Context aContext, AttributeSet aAttributeSet) {
         super(aContext, aAttributeSet);
         mGestureDetector = new GestureDetector(getContext(), this);
+        setScrollerType();
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent aEvent) {
-            fetchGestureImageViewByTag();
-            mGestureDetector.onTouchEvent(aEvent);
+        fetchGestureImageViewByTag();
+        mGestureDetector.onTouchEvent(aEvent);
 
-            if (mGestureImageView != null) {
-                if (!mGestureImageView.canScrollParent()) {
-                    return false;
-                }
+        if (mGestureImageView != null) {
+            if (!mGestureImageView.canScrollParent(aVertical)) {
+                return false;
             }
+        }
+        if (aVertical) {
+            boolean lResult = super.onInterceptTouchEvent(swapXY(aEvent));
+            swapXY(aEvent); // return touch coordinates to original reference frame for any child views
+            return lResult;
+        } else {
             return super.onInterceptTouchEvent(aEvent);
+        }
     }
 
     @Override
@@ -141,5 +152,75 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
 
     public interface OnSingleTapListener {
         void onSingleTap();
+    }
+
+    /**
+     * Swaps the X and Y coordinates of your touch event.
+     */
+    private MotionEvent swapXY(MotionEvent ev) {
+        float width = getWidth();
+        float height = getHeight();
+
+        float newX = (ev.getY() / height) * width;
+        float newY = (ev.getX() / width) * height;
+
+        ev.setLocation(newX, newY);
+
+        return ev;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        if(aVertical)
+            return super.onTouchEvent(swapXY(ev));
+        else return super.onTouchEvent(ev);
+    }
+
+    public boolean toggleVerticalScroller() {
+        aVertical = !aVertical;
+        return setScrollerType();
+    }
+
+    public boolean setScrollerType(){
+        if (aVertical) {
+            // The majority of the magic happens here
+            setPageTransformer(true, new VerticalPageTransformer());
+            // The easiest way to get rid of the overscroll drawing that happens on the left and right
+            setOverScrollMode(OVER_SCROLL_IF_CONTENT_SCROLLS);
+            return true;
+        } else {
+            setPageTransformer(true, null);
+            return false;
+        }
+    }
+
+    public boolean getVerticalScrollingStatus(){
+        return aVertical;
+    }
+}
+
+class VerticalPageTransformer implements ViewPager.PageTransformer {
+
+    @Override
+    public void transformPage(View view, float position) {
+
+        if (position < -1) { // [-Infinity,-1)
+            // This page is way off-screen to the left.
+            view.setAlpha(0);
+
+        } else if (position <= 1) { // [-1,1]
+            view.setAlpha(1);
+
+            // Counteract the default slide transition
+            view.setTranslationX(view.getWidth() * -position);
+
+            //set Y position to swipe in from top
+            float yPosition = position * view.getHeight();
+            view.setTranslationY(yPosition);
+
+        } else { // (1,+Infinity]
+            // This page is way off-screen to the right.
+            view.setAlpha(0);
+        }
     }
 }

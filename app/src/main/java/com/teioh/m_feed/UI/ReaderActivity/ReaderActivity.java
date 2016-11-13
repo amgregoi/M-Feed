@@ -3,6 +3,7 @@ package com.teioh.m_feed.UI.ReaderActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
@@ -114,13 +115,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
 
     @Override
     public void hideToolbar(long aDelay) {
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
 
         mToolbarHeader.animate().translationY(-mToolbarHeader.getHeight()).setInterpolator(new AccelerateInterpolator()).setStartDelay(10).start();
@@ -139,10 +134,10 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
 
     @Override
     public void updateToolbar(String aTitle, String aChapterTitle, int aSize, int aChapter) {
-            mMangaTitle.setText(aTitle);
-            mChapterTitle.setText(aChapterTitle);
-            mEndPage.setText(String.valueOf(aSize));
-            mReaderPresenter.updateChapterViewStatus(mViewPager.getCurrentItem());
+        mMangaTitle.setText(aTitle);
+        mChapterTitle.setText(aChapterTitle);
+        mEndPage.setText(String.valueOf(aSize));
+        mReaderPresenter.updateChapterViewStatus(mViewPager.getCurrentItem());
     }
 
     @Override
@@ -197,7 +192,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
 
     @Override
     public boolean checkActiveChapter(int aChapter) {
-        if(aChapter == mViewPager.getCurrentItem()) return true;
+        if (mViewPager != null && aChapter == mViewPager.getCurrentItem()) return true;
         return false;
     }
 
@@ -211,7 +206,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
         mReaderPresenter.decrementChapterPage(mViewPager.getCurrentItem());
     }
 
-//    refresh button
+    //    refresh button
     @OnClick(R.id.refresh_button)
     public void onRefreshClicked() {
         mReaderPresenter.onRefreshButton(mViewPager.getCurrentItem());
@@ -225,6 +220,25 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     @OnClick(R.id.skipForwardButton)
     public void onSkipForwardClick() {
         mViewPager.incrementCurrentItem();
+    }
+
+    @OnClick(R.id.screen_orient_button)
+    public void onScreenOrientClick() {
+        mReaderPresenter.toggleOrientation();
+        setScreenOrientation(mReaderPresenter.getOrientation());
+    }
+
+    @OnClick(R.id.vertical_scroll_toggle)
+    public void onVerticalScrollToggle(){
+        mReaderPresenter.toggleVerticalScrollSettings(mViewPager.getCurrentItem());
+    }
+
+    public void setScreenOrientation(boolean isLandscape){
+        if (isLandscape) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
     }
 
     @Override

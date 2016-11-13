@@ -17,6 +17,8 @@ public interface IReader {
         void setCurrentChapter(int aPosition);
 
         void setupToolbar();
+
+        void setScreenOrientation(boolean aLandscape);
     }
 
     interface ActivityModel{
@@ -34,6 +36,12 @@ public interface IReader {
         void updateChapterViewStatus(int aPosition);
 
         void onRefreshButton(int aPosition);
+
+        boolean getOrientation();
+
+        void toggleOrientation();
+
+        void toggleVerticalScrollSettings(int aPosition);
     }
 
     interface FragmentView extends BaseContextMap, PageAdapterMap, ViewPager.OnPageChangeListener, GestureViewPager.OnSingleTapListener{
@@ -67,6 +75,10 @@ public interface IReader {
         boolean checkActiveChapter(int aChapter);
 
         void setCurrentChapterPage(int aPosition);
+
+        void setChapterPage(int aPage);
+
+        void toggleVerticalScrollSettings();
 
     }
 

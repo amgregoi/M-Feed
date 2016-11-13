@@ -17,12 +17,15 @@ public class ReaderPresenter implements IReader.ActivityPresenter {
     public final static String TAG = ReaderPresenter.class.getSimpleName();
     public final static String CHAPTER_LIST_KEY = TAG + ":CHAPTER_LIST";
     public final static String CHAPTER_POSITION = TAG + ":POSITION";
+    public final static String SCREEN_ORIENTATION = TAG + ":SCREEN";
 
 
     private IReader.ActivityView mReaderMap;
     private ChapterPageAdapter mChapterPagerAdapter;
     private ArrayList<Chapter> mChapterList;
     private int mChapterPosition;
+
+    private boolean mLandscapeOrientationLocked = false;
 
     public ReaderPresenter(IReader.ActivityView aMap) {
         mReaderMap = aMap;
@@ -32,6 +35,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter {
     public void onSaveState(Bundle aSave) {
         if (mChapterList != null) aSave.putParcelableArrayList(CHAPTER_LIST_KEY, mChapterList);
         aSave.putInt(CHAPTER_POSITION, mChapterPosition);
+        aSave.putBoolean(SCREEN_ORIENTATION, mLandscapeOrientationLocked);
     }
 
     @Override
@@ -40,6 +44,8 @@ public class ReaderPresenter implements IReader.ActivityPresenter {
             mChapterList = new ArrayList<>(aRestore.getParcelableArrayList(CHAPTER_LIST_KEY));
         if (aRestore.containsKey(CHAPTER_POSITION))
             mChapterPosition = aRestore.getInt(CHAPTER_POSITION);
+        if(aRestore.containsKey(SCREEN_ORIENTATION))
+            mLandscapeOrientationLocked = aRestore.getBoolean(SCREEN_ORIENTATION);
     }
 
     @Override
@@ -53,6 +59,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter {
         mReaderMap.registerAdapter(mChapterPagerAdapter);
         mReaderMap.setCurrentChapter(mChapterPosition);
         mReaderMap.setupToolbar();
+        mReaderMap.setScreenOrientation(mLandscapeOrientationLocked);
     }
 
     @Override
@@ -96,5 +103,18 @@ public class ReaderPresenter implements IReader.ActivityPresenter {
         ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition)).onRefresh();
     }
 
+    @Override
+    public void toggleVerticalScrollSettings(int aPosition){
+        ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition)).toggleVerticalScrollSettings();
+    }
 
+    @Override
+    public void toggleOrientation(){
+        mLandscapeOrientationLocked = !mLandscapeOrientationLocked;
+    }
+
+    @Override
+    public boolean getOrientation(){
+        return mLandscapeOrientationLocked;
+    }
 }

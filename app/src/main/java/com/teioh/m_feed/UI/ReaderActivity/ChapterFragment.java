@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.teioh.m_feed.R;
@@ -89,6 +90,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView {
             mViewPager.addOnPageChangeListener(this);
             mViewPager.setOffscreenPageLimit(3);
             mViewPager.setPageMargin(128);
+            mViewPager.setScrollerType();
         }
     }
 
@@ -151,6 +153,13 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView {
     }
 
     @Override
+    public void setChapterPage(int aPage){
+        if(getContext() != null){
+            mViewPager.setCurrentItem(aPage);
+        }
+    }
+
+    @Override
     public void updateChapterViewStatus() {
         if (mChapterPresenter != null) {
             mChapterPresenter.updateChapterViewStatus();
@@ -200,6 +209,15 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView {
     @Override
     public void updateCurrentPage(int aPosition) {
         listener.updateCurrentPage(aPosition);
+    }
+
+    @Override
+    public void toggleVerticalScrollSettings(){
+        if(mViewPager.toggleVerticalScroller()){
+            Toast.makeText(getActivity(), "Vertical scroll enabled", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(getActivity(), "Horizontal scroll enabled", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

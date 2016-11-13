@@ -16,6 +16,8 @@ public class Chapter implements Parcelable {
     private int totalPages;
 
     public Chapter() {
+        currentPage = 0;
+        totalPages = 1;
     }
 
     public Chapter(String aTitle) {
@@ -121,7 +123,8 @@ public class Chapter implements Parcelable {
     }
 
     public int getCurrentPage() {
-        if(currentPage > 0) return currentPage;
+        if(currentPage >= 0)
+            return currentPage;
         else return 1;
     }
 

@@ -28,6 +28,8 @@ public class ChapterPresenter implements IReader.FragmentPresenter {
     public static final String TAG = ChapterPresenter.class.getSimpleName();
     public static final String CURRENT_URL_LIST_PARCELABLE_KEY = TAG + ":CURRENT";
     public static final String CHAPTER_POSITION_LIST_PARCELABLE_KEY = TAG + ":POSITION";
+    public static final String ACTIVE_CHAPTER = TAG + ":ACTIVE_CHAPTER";
+    public static final String CHAPTER = TAG + ":CHAPTER";
 
     private IReader.FragmentView mChapterReaderMapper;
 
@@ -40,6 +42,8 @@ public class ChapterPresenter implements IReader.FragmentPresenter {
 
     private boolean mActiveChapter;
     private boolean mFinishedLoading;
+
+    public boolean mVerticalScroll = false;
 
 
     public ChapterPresenter(IReader.FragmentView aMap, Bundle aBundle) {
@@ -61,6 +65,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter {
 
         mPageOffsetCount = 0;
         mChapterReaderMapper.setupOnSingleTapListener();
+        mChapterReaderMapper.setCurrentChapterPage(mPosition);
     }
 
     @Override
@@ -68,7 +73,11 @@ public class ChapterPresenter implements IReader.FragmentPresenter {
         if (mChapterUrlList != null) {
             aSave.putStringArrayList(CURRENT_URL_LIST_PARCELABLE_KEY, mChapterUrlList);
         }
+        if (mChapter != null) {
+            aSave.putParcelable(CHAPTER, mChapter);
+        }
         aSave.putInt(CHAPTER_POSITION_LIST_PARCELABLE_KEY, mPosition);
+        aSave.putBoolean(ACTIVE_CHAPTER, mActiveChapter);
     }
 
     @Override
@@ -76,8 +85,15 @@ public class ChapterPresenter implements IReader.FragmentPresenter {
         if (aRestore.containsKey(CURRENT_URL_LIST_PARCELABLE_KEY)) {
             mChapterUrlList = aRestore.getStringArrayList(CURRENT_URL_LIST_PARCELABLE_KEY);
         }
-
-        mPosition = aRestore.getInt(CHAPTER_POSITION_LIST_PARCELABLE_KEY);
+        if (aRestore.containsKey(CHAPTER)) {
+            mChapter = aRestore.getParcelable(CHAPTER);
+        }
+        if (aRestore.containsKey(CHAPTER_POSITION_LIST_PARCELABLE_KEY)) {
+            mPosition = aRestore.getInt(CHAPTER_POSITION_LIST_PARCELABLE_KEY);
+        }
+        if (aRestore.containsKey(ACTIVE_CHAPTER)) {
+            mActiveChapter = aRestore.getBoolean(ACTIVE_CHAPTER);
+        }
     }
 
     @Override
@@ -85,37 +101,34 @@ public class ChapterPresenter implements IReader.FragmentPresenter {
         mChapterUrlList = new ArrayList<>();
         updateToolbarLoading();
 
-        mImageListSubscription = new SourceFactory().getSource().getChapterImageListObservable(new RequestWrapper(mChapter))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<String>() {
-                    @Override
-                    public void onCompleted() {
-                        preLoadImagesToCache();
-                        mChapterPageAdapter = new ImagePageAdapter(mChapterReaderMapper.getContext(), mChapterUrlList);
-                        mChapterReaderMapper.registerAdapter(mChapterPageAdapter);
-                        mChapter.setTotalPages(mChapterUrlList.size());
-                        updateToolbarComplete();
-                        mFinishedLoading = true;
-                    }
+        mImageListSubscription = new SourceFactory().getSource().getChapterImageListObservable(new RequestWrapper(mChapter)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
+            @Override
+            public void onCompleted() {
+                preLoadImagesToCache();
+                mChapterPageAdapter = new ImagePageAdapter(mChapterReaderMapper.getContext(), mChapterUrlList);
+                mChapterReaderMapper.registerAdapter(mChapterPageAdapter);
+                mChapter.setTotalPages(mChapterUrlList.size());
+                updateToolbarComplete();
+                mFinishedLoading = true;
+            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        if (BuildConfig.DEBUG) {
-                            e.printStackTrace();
-                        }
-                        updateToolbarFailed();
-                        Toast.makeText(mChapterReaderMapper.getContext(), "Failed, please try again.", Toast.LENGTH_SHORT).show();
-                    }
+            @Override
+            public void onError(Throwable e) {
+                if (BuildConfig.DEBUG) {
+                    e.printStackTrace();
+                }
+                updateToolbarFailed();
+                Toast.makeText(mChapterReaderMapper.getContext(), "Failed, please try again.", Toast.LENGTH_SHORT).show();
+            }
 
-                    @Override
-                    public void onNext(String imageUrl) {
-                        if (imageUrl != null) {
-                            mChapterUrlList.add(imageUrl);
-                            updateToolbarLoading();
-                        }
-                    }
-                });
+            @Override
+            public void onNext(String imageUrl) {
+                if (imageUrl != null) {
+                    mChapterUrlList.add(imageUrl);
+                    updateToolbarLoading();
+                }
+            }
+        });
     }
 
     private void preLoadImagesToCache() {
@@ -126,26 +139,24 @@ public class ChapterPresenter implements IReader.FragmentPresenter {
             }
 
             if (mChapterUrlList != null) {
-                mLoadImageUrlSubscription = new SourceFactory().getSource()
-                        .cacheFromImagesOfSize(mChapterUrlList)
-                        .subscribe(new Observer<GlideDrawable>() {
-                            @Override
-                            public void onCompleted() {
-                                mLoadImageUrlSubscription.unsubscribe();
-                                mLoadImageUrlSubscription = null;
-                            }
+                mLoadImageUrlSubscription = new SourceFactory().getSource().cacheFromImagesOfSize(mChapterUrlList).subscribe(new Observer<GlideDrawable>() {
+                    @Override
+                    public void onCompleted() {
+                        mLoadImageUrlSubscription.unsubscribe();
+                        mLoadImageUrlSubscription = null;
+                    }
 
-                            @Override
-                            public void onError(Throwable e) {
-                                if (BuildConfig.DEBUG) {
-                                    e.printStackTrace();
-                                }
-                            }
+                    @Override
+                    public void onError(Throwable e) {
+                        if (BuildConfig.DEBUG) {
+                            e.printStackTrace();
+                        }
+                    }
 
-                            @Override
-                            public void onNext(GlideDrawable glideDrawable) {
-                            }
-                        });
+                    @Override
+                    public void onNext(GlideDrawable glideDrawable) {
+                    }
+                });
             }
         }
     }
@@ -215,44 +226,38 @@ public class ChapterPresenter implements IReader.FragmentPresenter {
     }
 
     @Override
-    public void updateActiveChapter(){
+    public void updateActiveChapter() {
         mActiveChapter = true;
-        if(mFinishedLoading) updateToolbarComplete();
+        if (mFinishedLoading) updateToolbarComplete();
         else updateToolbarLoading();
     }
 
     @Override
     public void updateToolbarComplete() {
-        if(mActiveChapter)
+        if (mActiveChapter)
             mChapterReaderMapper.updateToolbar(mChapter.getMangaTitle(), mChapter.getChapterTitle(), mChapterUrlList.size(), mPosition);
     }
 
     private void updateToolbarFailed() {
-        if(mActiveChapter)
-            mChapterReaderMapper.updateToolbar(mChapter.getMangaTitle(), "Failed to load chapter, refresh", 1, mPosition);
+        if (mActiveChapter) mChapterReaderMapper.updateToolbar(mChapter.getMangaTitle(), "Failed to load chapter, refresh", 1, mPosition);
     }
 
     private void updateToolbarLoading() {
-        if(mActiveChapter)
-            mChapterReaderMapper.updateToolbar(mChapter.getMangaTitle(), "Pages loaded: " + mChapterUrlList.size(), 1, mPosition);
+        if (mActiveChapter) mChapterReaderMapper.updateToolbar(mChapter.getMangaTitle(), "Pages loaded: " + mChapterUrlList.size(), 1, mPosition);
     }
 
     @Override
     public void updateCurrentPage(int aPosition) {
         mPosition = aPosition;
-        mChapterReaderMapper.updateCurrentPage(aPosition  + 1); //update page by 1
+        mChapterReaderMapper.updateCurrentPage(aPosition + 1); //update page by 1
         mChapter.setCurrentPage(aPosition);
     }
 
     @Override
     public void updateChapterViewStatus() {
-        Chapter viewedChapter = cupboard().withDatabase(MFDBHelper.getInstance().getReadableDatabase())
-                .query(Chapter.class)
-                .withSelection("mangaTitle = ? AND chapterNumber = ?", mChapter.getMangaTitle(), Integer.toString(mChapter.getChapterNumber()))
-                .get();
+        Chapter viewedChapter = cupboard().withDatabase(MFDBHelper.getInstance().getReadableDatabase()).query(Chapter.class).withSelection("mangaTitle = ? AND chapterNumber = ?", mChapter.getMangaTitle(), Integer.toString(mChapter.getChapterNumber())).get();
 
-        if (viewedChapter == null)
-            cupboard().withDatabase(MFDBHelper.getInstance().getWritableDatabase()).put(mChapter);
+        if (viewedChapter == null) cupboard().withDatabase(MFDBHelper.getInstance().getWritableDatabase()).put(mChapter);
     }
 
     @Override
@@ -267,6 +272,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter {
             mChapterPageAdapter = new ImagePageAdapter(mChapterReaderMapper.getContext(), mChapterUrlList);
             mChapterReaderMapper.registerAdapter(mChapterPageAdapter);
             mChapterReaderMapper.setCurrentChapterPage(mChapter.getCurrentPage());
+            updateCurrentPage(mChapter.getCurrentPage());
         }
     }
 }
