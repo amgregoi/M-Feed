@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -29,6 +30,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     @Bind(R.id.pager) NoScrollViewPager mViewPager;
     @Bind(R.id.chapter_header) Toolbar mToolbarHeader;
     @Bind(R.id.chapter_header_2) Toolbar mToolbarHeader2;
+    @Bind(R.id.refresh_button) ImageButton mRefreshButton;
     @Bind(R.id.chapter_footer) Toolbar mToolbarFooter;
     @Bind(R.id.chapterTitle) TextView mChapterTitle;
     @Bind(R.id.mangaTitle) TextView mMangaTitle;
@@ -209,11 +211,11 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
         mReaderPresenter.decrementChapterPage(mViewPager.getCurrentItem());
     }
 
-    //refresh button
-//    @OnClick(R.id.refreshButton)
-//    public void onRefreshClicked() {
-//        mReaderPresenter.onRefreshButton(mViewPager.getCurrentItem());
-//    }
+//    refresh button
+    @OnClick(R.id.refresh_button)
+    public void onRefreshClicked() {
+        mReaderPresenter.onRefreshButton(mViewPager.getCurrentItem());
+    }
 
     @OnClick(R.id.forwardPageButton)
     public void onForwardPageClick() {

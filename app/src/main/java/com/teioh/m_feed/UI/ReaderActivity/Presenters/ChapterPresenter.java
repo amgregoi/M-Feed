@@ -257,11 +257,11 @@ public class ChapterPresenter implements IReader.FragmentPresenter {
 
     @Override
     public void onRefresh(int aPosition) {
-        mChapterPageAdapter.refreshView(aPosition);
+        mChapterReaderMapper.registerAdapter(mChapterPageAdapter);
     }
 
     private void updateImageUrlList(List<String> aUrlList) {
-        if (mChapterReaderMapper.getContext() != null) {
+        if (mChapterReaderMapper != null && mChapterReaderMapper.getContext() != null) {
             updateToolbarComplete();
             mChapterUrlList = new ArrayList<>(aUrlList);
             mChapterPageAdapter = new ImagePageAdapter(mChapterReaderMapper.getContext(), mChapterUrlList);

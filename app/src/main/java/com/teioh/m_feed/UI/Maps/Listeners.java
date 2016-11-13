@@ -19,7 +19,7 @@ public interface Listeners {
     /**
      * Chapter reading fragment communicates with ReaderActivity
      */
-    public interface ReaderListener {
+    interface ReaderListener {
         void incrementChapter();
 
         void decrementChapter();
@@ -37,7 +37,7 @@ public interface Listeners {
         boolean checkActiveChapter(int aChapter);
     }
 
-    public interface MALDialogListener{
+    interface MALDialogListener{
         void MALSignOut();
     }
 

@@ -26,7 +26,7 @@ public class ImagePageAdapter extends PagerAdapter {
     private List<String> mImageUrlList;
     private LayoutInflater mInflater;
 
-    SparseArray<View> lViews = new SparseArray<View>();
+    SparseArray<View> mImageViews = new SparseArray<>();
 
 
     public ImagePageAdapter(Context aContext, List<String> aImageUrls) {
@@ -65,18 +65,14 @@ public class ImagePageAdapter extends PagerAdapter {
                     }
                 });
         (aContainer).addView(lView);
-        lViews.put(aPosition, lView);
+        mImageViews.put(aPosition, lView);
         return lView;
     }
 
     @Override
     public void destroyItem(ViewGroup aContainer, int aPosition, Object aObject) {
         (aContainer).removeView((RelativeLayout) aObject);
-        lViews.remove(aPosition);
-    }
-
-    public void refreshView(int aPosition) {
-        lViews.get(aPosition).invalidate();
+        mImageViews.remove(aPosition);
     }
 
     public void addItem(String aImage){
