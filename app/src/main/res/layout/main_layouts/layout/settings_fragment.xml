@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:background="@color/charcoal"
-             android:clickable="true"
-             android:orientation="vertical">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/charcoal"
+                android:clickable="true"
+                android:orientation="vertical">
 
 	<LinearLayout
+		android:id="@+id/general_group"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
+		android:layout_height="wrap_content"
 		android:layout_margin="8dp"
+		android:elevation="10dp"
 		android:orientation="vertical"
 		>
 
@@ -48,7 +50,7 @@
 				android:textSize="14sp"
 				/>
 		</LinearLayout>
-		
+
 		<View
 			android:layout_width="match_parent"
 			android:layout_height="1dp"
@@ -58,7 +60,7 @@
 			/>
 
 		<LinearLayout
-			android:id="@+id/reset_followed_manga_pref"
+			android:id="@+id/contact_us"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:background="@drawable/selector_settings"
@@ -69,7 +71,7 @@
 			<TextView
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:text="Clear Followed Manga"
+				android:text="Concat Us"
 				android:textColor="@color/white"
 				android:textSize="16sp"
 				/>
@@ -77,7 +79,7 @@
 			<TextView
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="Clear all followed manga from the followed list"
+				android:text="Having a problem? Want to leave feedback?"
 				android:textColor="@color/grey"
 				android:textSize="14sp"
 				/>
@@ -119,7 +121,7 @@
 				<TextView
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:text="Checkbox teset"
+					android:text="Checkbox test"
 					android:textColor="@color/white"
 					android:textSize="16sp"/>
 
@@ -132,14 +134,132 @@
 					/>
 			</LinearLayout>
 		</RelativeLayout>
+	</LinearLayout>
+
+	<LinearLayout
+		android:id="@+id/account_group"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="8dp"
+		android:layout_below="@id/general_group"
+		android:elevation="10dp"
+		android:orientation="vertical"
+		>
+		<TextView
+			android:id="@+id/account_heading"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="@dimen/baseline_grid_unit_4dp"
+			android:text="Account"
+			android:textColor="@color/ColorAccent"
+			android:textSize="16sp"
+			android:textStyle="bold"
+			/>
+
+		<LinearLayout
+			android:id="@+id/reset_followed_manga_pref"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@drawable/selector_settings"
+			android:clickable="true"
+			android:orientation="vertical"
+			>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Clear followed manga"
+				android:textColor="@color/white"
+				android:textSize="16sp"
+				/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Clear all followed manga from the followed list"
+				android:textColor="@color/grey"
+				android:textSize="14sp"
+				/>
+
+		</LinearLayout>
 
 		<View
 			android:layout_width="match_parent"
 			android:layout_height="1dp"
-			android:layout_below="@+id/followed_contents"
 			android:layout_marginBottom="8dp"
 			android:layout_marginTop="8dp"
 			android:background="@color/white"
 			/>
+
+		<LinearLayout
+			android:id="@+id/reset_cached_chapters"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@drawable/selector_settings"
+			android:clickable="true"
+			android:orientation="vertical"
+			>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Clear cached chapters"
+				android:textColor="@color/white"
+				android:textSize="16sp"
+				/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Clear all cached chapters from followed manga"
+				android:textColor="@color/grey"
+				android:textSize="14sp"
+				/>
+
+		</LinearLayout>
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_marginBottom="8dp"
+			android:layout_marginTop="8dp"
+			android:background="@color/white"
+			/>
+
+		<LinearLayout
+			android:id="@+id/reset_downloaded_chapters"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@drawable/selector_settings"
+			android:clickable="true"
+			android:orientation="vertical"
+			>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Clear downloaded chapters"
+				android:textColor="@color/white"
+				android:textSize="16sp"
+				/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Delete all downloaded chapters from device"
+				android:textColor="@color/grey"
+				android:textSize="14sp"
+				/>
+
+		</LinearLayout>
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_marginBottom="8dp"
+			android:layout_marginTop="8dp"
+			android:background="@color/white"
+			/>
+
 	</LinearLayout>
-</FrameLayout>
+</RelativeLayout>

@@ -41,8 +41,8 @@ public class MainPresenter implements IMain.ActivityPresenter {
     public final static String TAG = MainPresenter.class.getSimpleName();
 
     private final CharSequence mTabTitles[] = {"Recent", "Followed", "Library"};
+    private String[] mDrawerItems = {"Home", "Filter Search", "Sources", "Settings"};
     private ViewPagerAdapterMain mViewPagerAdapterMain;
-    private ActionBarDrawerToggle mDrawerToggle;
     private IMain.ActivityView mMainMapper;
     private Fragment mSettingsFragment;
     private boolean mGenreFilterActive;
@@ -347,12 +347,7 @@ public class MainPresenter implements IMain.ActivityPresenter {
      *
      */
     private void setupDrawerLayouts() {
-        List<String> lDrawerItems = new ArrayList<>();
-        lDrawerItems.add("Home");
-        lDrawerItems.add("Search");
-        lDrawerItems.add("Sources");
-        lDrawerItems.add("Settings");
-
+        List<String> lDrawerItems = Arrays.asList(mDrawerItems);
 
         Map<String, List<String>> lSourceCollections = new LinkedHashMap<>();
         for (String iDrawerItem : lDrawerItems) {
