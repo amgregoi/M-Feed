@@ -32,21 +32,24 @@ public class ChapterPageAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int aPosition) {
+        try {
+            WeakReference<Fragment> lWeakReference = mPageReferenceMap.get(aPosition);
 
-        WeakReference<Fragment> lWeakReference = mPageReferenceMap.get(aPosition);
+            if (lWeakReference != null) {
+                return lWeakReference.get();
+            } else {
+                Fragment lChapterFragment = new ChapterFragment();
+                Bundle lBundle = new Bundle();
 
-        if(lWeakReference != null) {
-            return lWeakReference.get();
-        }else{
-            Fragment mChapterFragment = new ChapterFragment();
-            Bundle lBundle = new Bundle();
+                lBundle.putParcelable(Chapter.TAG + ":" + aPosition, mChapterList.get(aPosition));
+                lBundle.putInt(POSITION_KEY, aPosition);
+                lChapterFragment.setArguments(lBundle);
+                mPageReferenceMap.put(aPosition, new WeakReference<>(lChapterFragment));
 
-            lBundle.putParcelable(Chapter.TAG + ":" + aPosition, mChapterList.get(aPosition));
-            lBundle.putInt(POSITION_KEY, aPosition);
-            mChapterFragment.setArguments(lBundle);
-            mPageReferenceMap.put(aPosition, new WeakReference<>(mChapterFragment));
-
-            return mChapterFragment;
+                return lChapterFragment;
+            }
+        }catch (Exception aException){
+            return null;
         }
     }
 

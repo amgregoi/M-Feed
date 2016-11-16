@@ -59,19 +59,23 @@ public class MainPresenter implements IMain.ActivityPresenter {
      */
     @Override
     public void init(Bundle aBundle) {
-        //setup base layout first
-        mMainMapper.setupTabLayout();
-        mViewPagerAdapterMain = new ViewPagerAdapterMain(((FragmentActivity) mMainMapper.getContext()).getSupportFragmentManager(), mTabTitles, 3);
-        mMainMapper.registerAdapter(mViewPagerAdapterMain);
+        try {
+            //setup base layout first
+            mMainMapper.setupTabLayout();
+            mViewPagerAdapterMain = new ViewPagerAdapterMain(((FragmentActivity) mMainMapper.getContext()).getSupportFragmentManager(), mTabTitles, 3);
+            mMainMapper.registerAdapter(mViewPagerAdapterMain);
 
-        //init rest of the layout
-        setupDrawerLayouts();
-        mMainMapper.setupSearchView();
-        mMainMapper.setupToolbar();
-        mMainMapper.setupSourceFilterMenu();
-        mMainMapper.setDrawerLayoutListener();
+            //init rest of the layout
+            setupDrawerLayouts();
+            mMainMapper.setupSearchView();
+            mMainMapper.setupToolbar();
+            mMainMapper.setupSourceFilterMenu();
+            mMainMapper.setDrawerLayoutListener();
 
-        mGenreFilterActive = false;
+            mGenreFilterActive = false;
+        } catch (Exception aException) {
+            Log.e(TAG, aException.getMessage());
+        }
 
 //        MALApi.createService("jailhouse", "password").searchManga("bleach", new Callback<MALMangaList>() {
 //            @Override
@@ -103,25 +107,26 @@ public class MainPresenter implements IMain.ActivityPresenter {
      */
     @Override
     public void onRestoreState(Bundle aRestore) {
-        mViewPagerAdapterMain = new ViewPagerAdapterMain(((FragmentActivity) mMainMapper.getContext()).getSupportFragmentManager(), mTabTitles, 3);
-        mMainMapper.registerAdapter(mViewPagerAdapterMain);
+        try {
+            mViewPagerAdapterMain = new ViewPagerAdapterMain(((FragmentActivity) mMainMapper.getContext()).getSupportFragmentManager(), mTabTitles, 3);
+            mMainMapper.registerAdapter(mViewPagerAdapterMain);
+        } catch (Exception aException) {
+            Log.e(TAG, aException.getMessage());
+        }
     }
 
     /***
      * TODO...
-     *
      */
     @Override
     public void onResume() {
         mMainMapper.closeDrawer();
         setupDrawerLayouts();
-        if (mRecentMangaId >= 0)
-            getRecentManga();
+        if (mRecentMangaId >= 0) getRecentManga();
     }
 
     /***
      * TODO...
-     *
      */
     @Override
     public void onPause() {
@@ -135,16 +140,19 @@ public class MainPresenter implements IMain.ActivityPresenter {
      */
     @Override
     public void updateQueryChange(String aNewTest) {
-        if (mViewPagerAdapterMain.hasRegisteredFragments()) {
-            ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).onQueryTextChange(aNewTest);
-            ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).onQueryTextChange(aNewTest);
-            ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).onQueryTextChange(aNewTest);
+        try {
+            if (mViewPagerAdapterMain.hasRegisteredFragments()) {
+                ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).onQueryTextChange(aNewTest);
+                ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).onQueryTextChange(aNewTest);
+                ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).onQueryTextChange(aNewTest);
+            }
+        } catch (Exception aException) {
+            Log.e(TAG, aException.getMessage());
         }
     }
 
     /***
      * TODO...
-     *
      */
     @Override
     public void onDestroy() {
@@ -159,33 +167,36 @@ public class MainPresenter implements IMain.ActivityPresenter {
      */
     @Override
     public void onDrawerItemChosen(int aPosition) {
-        switch (aPosition) {
-            case (0):
-                //home button
-                if (mSettingsFragment != null) {
-                    removeSettingsFragment();
+        try {
+            switch (aPosition) {
+                case (0):
+                    //home button
+                    if (mSettingsFragment != null) {
+                        removeSettingsFragment();
+                        mMainMapper.closeDrawer();
+                        mMainMapper.toggleToolbarElements();
+                        if (mGenreFilterActive) mMainMapper.setActivityTitle(mMainMapper.getContext().getString(R.string.filter_active));
+                    } else mMainMapper.closeDrawer();
+                    return;
+                case (1):
+                    //advanced search fragment
                     mMainMapper.closeDrawer();
-                    mMainMapper.toggleToolbarElements();
-                    if (mGenreFilterActive)
-                        mMainMapper.setActivityTitle(mMainMapper.getContext().getString(R.string.filter_active));
-                } else mMainMapper.closeDrawer();
-                return;
-            case (1):
-                //advanced search fragment
-                mMainMapper.closeDrawer();
-                mMainMapper.setPageAdapterItem(2);
-                if (mSettingsFragment != null) {
-                    removeSettingsFragment();
-                    mMainMapper.toggleToolbarElements();
-                }
-                DialogFragment dialog = FilterDialogFragment.getnewInstance();
-                dialog.show(((AppCompatActivity) mMainMapper).getSupportFragmentManager(), null);
-                return;
-            case (3):
-                //setftings fragment
-                if (mSettingsFragment == null) addSettingsFragment();
-                mMainMapper.closeDrawer();
-                return;
+                    mMainMapper.setPageAdapterItem(2);
+                    if (mSettingsFragment != null) {
+                        removeSettingsFragment();
+                        mMainMapper.toggleToolbarElements();
+                    }
+                    DialogFragment dialog = FilterDialogFragment.getnewInstance();
+                    dialog.show(((AppCompatActivity) mMainMapper).getSupportFragmentManager(), null);
+                    return;
+                case (3):
+                    //setftings fragment
+                    if (mSettingsFragment == null) addSettingsFragment();
+                    mMainMapper.closeDrawer();
+                    return;
+            }
+        } catch (Exception aException) {
+            Log.e(TAG, aException.getMessage());
         }
     }
 
@@ -196,31 +207,35 @@ public class MainPresenter implements IMain.ActivityPresenter {
      */
     @Override
     public void onSourceItemChosen(int aPosition) {
-        Source lSource = new SourceFactory().getSource();
-        SourceType lSourceType = lSource.getSourceByPosition(aPosition);
+        try {
+            Source lSource = new SourceFactory().getSource();
+            SourceType lSourceType = lSource.getSourceByPosition(aPosition);
 
-        if (mViewPagerAdapterMain.hasRegisteredFragments()) {
-            if (lSource.getSourceType() != lSourceType) {
-                new SourceFactory().getSource().setSourceType(lSourceType);
-                Toast.makeText(mMainMapper.getContext(), "Changing source to " + lSourceType, Toast.LENGTH_SHORT).show();
+            if (mViewPagerAdapterMain.hasRegisteredFragments()) {
+                if (lSource.getSourceType() != lSourceType) {
+                    new SourceFactory().getSource().setSourceType(lSourceType);
+                    Toast.makeText(mMainMapper.getContext(), "Changing source to " + lSourceType, Toast.LENGTH_SHORT).show();
 
-                mMainMapper.setDefaultFilterImage();
-                mGenreFilterActive = false;
-                ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).updateSource();
-                ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).updateSource();
-                ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).updateSource();
-                mMainMapper.setActivityTitle(lSourceType.name());
+                    mMainMapper.setDefaultFilterImage();
+                    mGenreFilterActive = false;
+                    ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).updateSource();
+                    ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).updateSource();
+                    ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).updateSource();
+                    mMainMapper.setActivityTitle(lSourceType.name());
+                }
+            } else {
+                Log.e(TAG, "Fragment is null, cannot switch sources");
+                Toast.makeText(mMainMapper.getContext(), "Fragment is null, cannot switch sources", Toast.LENGTH_SHORT).show();
+
             }
-        }else{
-            Log.e(TAG, "Fragment is null, cannot switch sources");
-            Toast.makeText(mMainMapper.getContext(), "Fragment is null, cannot switch sources", Toast.LENGTH_SHORT).show();
 
-        }
-
-        if (mSettingsFragment != null) {
-            removeSettingsFragment();
-            mMainMapper.openDrawer();
-            mMainMapper.toggleToolbarElements();
+            if (mSettingsFragment != null) {
+                removeSettingsFragment();
+                mMainMapper.openDrawer();
+                mMainMapper.toggleToolbarElements();
+            }
+        } catch (Exception aException) {
+            Log.e(TAG, aException.getMessage());
         }
     }
 
@@ -231,10 +246,14 @@ public class MainPresenter implements IMain.ActivityPresenter {
      */
     @Override
     public void onFilterSelected(int aFilter) {
-        if (mViewPagerAdapterMain.hasRegisteredFragments()) {
-            ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).onFilterSelected(aFilter);
-            ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).onFilterSelected(aFilter);
-            ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).onFilterSelected(aFilter);
+        try {
+            if (mViewPagerAdapterMain.hasRegisteredFragments()) {
+                ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).onFilterSelected(aFilter);
+                ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).onFilterSelected(aFilter);
+                ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).onFilterSelected(aFilter);
+            }
+        } catch (Exception aException) {
+            Log.e(TAG, aException.getMessage());
         }
     }
 
@@ -245,40 +264,48 @@ public class MainPresenter implements IMain.ActivityPresenter {
      */
     @Override
     public void onGenreFilterSelected(Intent aIntent) {
-        ArrayList<Manga> list = aIntent.getParcelableArrayListExtra("MANGA");
+        try {
+            ArrayList<Manga> list = aIntent.getParcelableArrayListExtra("MANGA");
 
-        if (mViewPagerAdapterMain.hasRegisteredFragments()) {
-            mGenreFilterActive = true;
-            ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).onGenreFilterSelected(list);
-            ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).onGenreFilterSelected(list);
-            ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).onGenreFilterSelected(list);
+            if (mViewPagerAdapterMain.hasRegisteredFragments()) {
+                mGenreFilterActive = true;
+                ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).onGenreFilterSelected(list);
+                ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).onGenreFilterSelected(list);
+                ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).onGenreFilterSelected(list);
+            }
+        } catch (Exception aException) {
+            Log.e(TAG, aException.getMessage());
         }
     }
 
     /***
      * TODO...
-     *
      */
     @Override
     public void onClearGenreFilter() {
-        if (mViewPagerAdapterMain.hasRegisteredFragments()) {
-            mGenreFilterActive = false;
-            ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).onClearGenreFilter();
-            ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).onClearGenreFilter();
-            ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).onClearGenreFilter();
+        try {
+            if (mViewPagerAdapterMain.hasRegisteredFragments()) {
+                mGenreFilterActive = false;
+                ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).onClearGenreFilter();
+                ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).onClearGenreFilter();
+                ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).onClearGenreFilter();
+            }
+        } catch (Exception aException) {
+            Log.e(TAG, aException.getMessage());
         }
     }
 
     /***
      * TODO...
-     *
      */
     @Override
     public void removeSettingsFragment() {
-        ((MainActivity) mMainMapper.getContext()).getSupportFragmentManager().beginTransaction()
-                .remove(mSettingsFragment)
-                .commit();
-        mSettingsFragment = null;
+        try {
+            ((MainActivity) mMainMapper.getContext()).getSupportFragmentManager().beginTransaction().remove(mSettingsFragment).commit();
+            mSettingsFragment = null;
+        } catch (Exception aException) {
+            Log.e(TAG, aException.getMessage());
+        }
     }
 
     /***
@@ -303,23 +330,25 @@ public class MainPresenter implements IMain.ActivityPresenter {
 
     /***
      * TODO...
-     *
      */
     @Override
     public void getRecentManga() {
-        Manga lManga = MFDBHelper.getInstance().getManga(mRecentMangaId);
+        try {
+            Manga lManga = MFDBHelper.getInstance().getManga(mRecentMangaId);
 
-        if (lManga != null) {
-            ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).updateRecentSelection(lManga);
-            ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).updateRecentSelection(lManga);
-            ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).updateRecentSelection(lManga);
-            mRecentMangaId = -1;
+            if (lManga != null) {
+                ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).updateRecentSelection(lManga);
+                ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).updateRecentSelection(lManga);
+                ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).updateRecentSelection(lManga);
+                mRecentMangaId = -1;
+            }
+        } catch (Exception aException) {
+            Log.e(TAG, aException.getMessage());
         }
     }
 
     /***
      * TODO...
-     *
      */
     @Override
     public void onSignIn() {
@@ -334,7 +363,6 @@ public class MainPresenter implements IMain.ActivityPresenter {
 
     /***
      * TODO...
-     *
      */
     @Override
     public void onSignOut() {
@@ -344,32 +372,37 @@ public class MainPresenter implements IMain.ActivityPresenter {
 
     /***
      * TODO...
-     *
      */
-    private void setupDrawerLayouts() {
-        List<String> lDrawerItems = Arrays.asList(mDrawerItems);
 
-        Map<String, List<String>> lSourceCollections = new LinkedHashMap<>();
-        for (String iDrawerItem : lDrawerItems) {
-            List<String> lDrawerChildren = new ArrayList<>();
-            if (iDrawerItem.equals("Sources")) {
-                for (SourceType iType : Arrays.asList(SourceType.values()))
-                    lDrawerChildren.add(iType.name());
+    private void setupDrawerLayouts() {
+        try {
+            List<String> lDrawerItems = Arrays.asList(mDrawerItems);
+
+            Map<String, List<String>> lSourceCollections = new LinkedHashMap<>();
+            for (String iDrawerItem : lDrawerItems) {
+                List<String> lDrawerChildren = new ArrayList<>();
+                if (iDrawerItem.equals("Sources")) {
+                    for (SourceType iType : Arrays.asList(SourceType.values()))
+                        lDrawerChildren.add(iType.name());
+                }
+                lSourceCollections.put(iDrawerItem, lDrawerChildren);
             }
-            lSourceCollections.put(iDrawerItem, lDrawerChildren);
+            mMainMapper.setupDrawerLayout(lDrawerItems, lSourceCollections);
+        } catch (Exception aException) {
+            Log.e(TAG, aException.getMessage());
         }
-        mMainMapper.setupDrawerLayout(lDrawerItems, lSourceCollections);
     }
 
     /***
      * TODO...
-     *
      */
     private void addSettingsFragment() {
-        mMainMapper.toggleToolbarElements();
-        mSettingsFragment = new SettingsFragment();
-        ((MainActivity) mMainMapper.getContext()).getSupportFragmentManager().beginTransaction()
-                .add(R.id.main_activity_content, mSettingsFragment, SettingsFragment.TAG)
-                .commit();
+        try {
+            mMainMapper.toggleToolbarElements();
+            mSettingsFragment = new SettingsFragment();
+            ((MainActivity) mMainMapper.getContext()).getSupportFragmentManager().beginTransaction().add(R.id.main_activity_content, mSettingsFragment, SettingsFragment.TAG).commit();
+        } catch (Exception aException) {
+            Log.e(TAG, aException.getMessage());
+        }
     }
 }

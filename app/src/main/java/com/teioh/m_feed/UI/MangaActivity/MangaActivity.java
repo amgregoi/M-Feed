@@ -107,6 +107,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        ButterKnife.unbind(this);
         mMangaPresenter.onDestroy();
     }
 
@@ -203,7 +204,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
                 mFollowButton.setVisibility(View.GONE);
                 //TODO update database (add MAL id column)
                 //TODO to check if sync set up, and make other buttons visible
-                mSyncMALButton.setVisibility(View.VISIBLE); //TODO uncomment when MAL implemented
+//                mSyncMALButton.setVisibility(View.VISIBLE); //TODO uncomment when MAL implemented
                 mMALStatusButton.setVisibility(View.VISIBLE);
                 mMALStatusButton.setText(Manga.FollowType.values()[aManga.getFollowingValue()-1].toString());
                 invalidateOptionsMenu();

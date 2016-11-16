@@ -1,5 +1,6 @@
 package com.teioh.m_feed.UI.MainActivity.Presenters;
 
+import android.util.Log;
 import android.widget.Toast;
 
 import com.teioh.m_feed.MFeedApplication;
@@ -27,12 +28,11 @@ public class FollowedPresenter extends MainFragmentPresenterBase {
             mMangaListSubscription = null;
         }
 
-        mMangaListSubscription = MFDBHelper.getInstance()
-                .getFollowedList()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnError(throwable -> Toast.makeText(MFeedApplication.getInstance(), throwable.getMessage(), Toast.LENGTH_SHORT))
-                .subscribe(aManga -> updateMangaGridView(aManga));
+        try {
+            mMangaListSubscription = MFDBHelper.getInstance().getFollowedList().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).doOnError(throwable -> Toast.makeText(MFeedApplication.getInstance(), throwable.getMessage(), Toast.LENGTH_SHORT)).subscribe(aManga -> updateMangaGridView(aManga));
+        }catch (Exception aException){
+            Log.e(TAG, aException.getMessage());
+        }
 
     }
 

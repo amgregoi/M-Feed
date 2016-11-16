@@ -36,6 +36,7 @@
 					app:fab_addButtonColorPressed="@color/ColorPrimaryDark"
 					app:fab_labelStyle="@style/menu_labels_style"
 					app:fab_labelsPosition="left"
+
 					/>
 			</RelativeLayout>
 

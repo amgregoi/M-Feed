@@ -8,14 +8,15 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.teioh.m_feed.UI.ReaderActivity.Adapters.ImagePageAdapter;
+import com.teioh.m_feed.Utils.SharedPrefs;
 
-public class GestureViewPager extends ViewPager implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener{
+public class GestureViewPager extends ViewPager implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
     private GestureImageView mGestureImageView;
     private GestureDetector mGestureDetector;
     private OnSingleTapListener mSingleTapListener;
 
-    private boolean aVertical = false;
+    private boolean mVertical;
 
     public GestureViewPager(Context context) {
         super(context);
@@ -35,11 +36,11 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
         mGestureDetector.onTouchEvent(aEvent);
 
         if (mGestureImageView != null) {
-            if (!mGestureImageView.canScrollParent(aVertical)) {
+            if (!mGestureImageView.canScrollParent(mVertical)) {
                 return false;
             }
         }
-        if (aVertical) {
+        if (mVertical) {
             boolean lResult = super.onInterceptTouchEvent(swapXY(aEvent));
             swapXY(aEvent); // return touch coordinates to original reference frame for any child views
             return lResult;
@@ -91,6 +92,7 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
         }
         return true;
     }
+
     @Override
     public boolean onSingleTapConfirmed(MotionEvent aEvent) {
         final float positionX = aEvent.getX();
@@ -134,16 +136,16 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
         mSingleTapListener = singleTapListener;
     }
 
-    public void incrementCurrentItem(){
+    public void incrementCurrentItem() {
         int position = getCurrentItem();
-        if(getAdapter() != null) {
+        if (getAdapter() != null) {
             if (position != getAdapter().getCount() - 1) {
                 setCurrentItem(position + 1, true);
             }
         }
     }
 
-    public void decrememntCurrentItem(){
+    public void decrememntCurrentItem() {
         int position = getCurrentItem();
         if (position != 0) {
             setCurrentItem(position - 1, true);
@@ -171,31 +173,25 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        if(aVertical)
-            return super.onTouchEvent(swapXY(ev));
+        if (mVertical) return super.onTouchEvent(swapXY(ev));
         else return super.onTouchEvent(ev);
     }
 
     public boolean toggleVerticalScroller() {
-        aVertical = !aVertical;
         return setScrollerType();
     }
 
-    public boolean setScrollerType(){
-        if (aVertical) {
-            // The majority of the magic happens here
+    public boolean setScrollerType() {
+        mVertical = SharedPrefs.getChapterScrollVertical();
+
+        if (mVertical) {
             setPageTransformer(true, new VerticalPageTransformer());
-            // The easiest way to get rid of the overscroll drawing that happens on the left and right
             setOverScrollMode(OVER_SCROLL_IF_CONTENT_SCROLLS);
             return true;
         } else {
             setPageTransformer(true, null);
             return false;
         }
-    }
-
-    public boolean getVerticalScrollingStatus(){
-        return aVertical;
     }
 }
 

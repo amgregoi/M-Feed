@@ -8,6 +8,7 @@ import android.util.SparseArray;
 import com.teioh.m_feed.UI.MainActivity.Fragments.FollowedFragment;
 import com.teioh.m_feed.UI.MainActivity.Fragments.LibraryFragment;
 import com.teioh.m_feed.UI.MainActivity.Fragments.RecentFragment;
+import com.teioh.m_feed.Utils.NetworkService;
 
 public class ViewPagerAdapterMain extends FragmentStatePagerAdapter {
 

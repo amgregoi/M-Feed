@@ -177,7 +177,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
         return mFilteredData.size();
     }
 
-    public void setmOriginalData(ArrayList<Manga> aData) {
+    public void setOriginalData(ArrayList<Manga> aData) {
         this.mOriginalData = new ArrayList<>(aData);
         this.mFilteredData = new ArrayList<>(aData);
         getFilter().filter(mFilter.lastQuery);
@@ -210,7 +210,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
             String lFilterString = aFilterText.toString().toLowerCase();
             FilterResults lResult = new FilterResults();
 
-            final ArrayList<Manga> lBaseData = mOriginalData;
+            final ArrayList<Manga> lBaseData = mFilteredData;
 
             int lCount = lBaseData.size();
             final ArrayList<Manga> lFilteredList = new ArrayList<>(lCount);
@@ -248,6 +248,8 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
             ArrayList<Manga> lResult = new ArrayList<>();
 
             //can later expand to plan to read, reading, on hold etc..
+            mFilteredData = mOriginalData;
+            getFilter().filter(mFilter.lastQuery);
 
             switch (aFilterType) {
                 case 0:

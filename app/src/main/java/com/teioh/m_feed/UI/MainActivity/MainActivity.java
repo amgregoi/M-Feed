@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
             if (aData != null) {
                 mMainPresenter.onGenreFilterSelected(aData);
                 mActivityTitle.setText(getString(R.string.filter_active));
-                mFilterView.setImageDrawable(getDrawable(R.drawable.filter_remove_outline_24dp));
+                mFilterView.setImageDrawable(getResources().getDrawable(R.drawable.filter_remove_outline_24dp));
 
             } else {
                 mMainPresenter.onClearGenreFilter();
@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
                 dialog.show(getSupportFragmentManager(), null);
             } else {
                 mMainPresenter.onClearGenreFilter();
-                mFilterView.setImageDrawable(getDrawable(R.drawable.filter_outline_24dp));
+                mFilterView.setImageDrawable(getResources().getDrawable(R.drawable.filter_outline_24dp));
                 mActivityTitle.setText(new SourceFactory().getSourceName());
             }
         });
@@ -285,7 +285,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
 
     @Override
     public void setDefaultFilterImage(){
-        mFilterView.setImageDrawable(getDrawable(R.drawable.filter_outline_24dp));
+        mFilterView.setImageDrawable(getResources().getDrawable(R.drawable.filter_outline_24dp));
     }
 
     @Override
@@ -294,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         lFAB1.setTitle("Reading");
         lFAB1.setSize(FloatingActionButton.SIZE_MINI);
         lFAB1.setColorNormalResId(R.color.ColorAccent);
-        lFAB1.setIcon(R.drawable.ic_favorite_white_18dp);
+        lFAB1.setIcon(R.drawable.ic_book_white_18dp);
         lFAB1.setOnClickListener(v -> {
             mMultiActionMenu.collapse();
             mMainPresenter.onFilterSelected(1);
@@ -302,7 +302,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
 
         FloatingActionButton lFAB2 = new FloatingActionButton(getBaseContext());
         lFAB2.setTitle("All");
-        lFAB2.setIcon(R.drawable.ic_favorite_border_white_18dp);
+        lFAB2.setIcon(R.drawable.ic_all_inclusive_white_18dp);
         lFAB2.setSize(FloatingActionButton.SIZE_MINI);
         lFAB2.setColorNormalResId(R.color.ColorAccent);
         lFAB2.setOnClickListener(v -> {
@@ -315,7 +315,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         lFAB3.setTitle("Completed");
         lFAB3.setSize(FloatingActionButton.SIZE_MINI);
         lFAB3.setColorNormalResId(R.color.ColorAccent);
-        lFAB3.setIcon(R.drawable.ic_favorite_white_18dp);
+        lFAB3.setIcon(R.drawable.ic_done_white_18dp);
         lFAB3.setOnClickListener(v -> {
             mMultiActionMenu.collapse();
             mMainPresenter.onFilterSelected(2);
@@ -325,7 +325,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         lFAB4.setTitle("On Hold");
         lFAB4.setSize(FloatingActionButton.SIZE_MINI);
         lFAB4.setColorNormalResId(R.color.ColorAccent);
-        lFAB4.setIcon(R.drawable.ic_favorite_white_18dp);
+        lFAB4.setIcon(R.drawable.ic_block_white_18dp);
         lFAB4.setOnClickListener(v -> {
             mMultiActionMenu.collapse();
             mMainPresenter.onFilterSelected(3);
@@ -387,7 +387,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
             openDrawer();
         } else if(mMainPresenter.genreFilterActive()){
             mMainPresenter.onClearGenreFilter();
-            mFilterView.setImageDrawable(getDrawable(R.drawable.filter_outline_24dp));
+            mFilterView.setImageDrawable(getResources().getDrawable(R.drawable.filter_outline_24dp));
             mActivityTitle.setText(new SourceFactory().getSourceName());
         }else if (!mToast.getView().isShown()) { //opens drawer, and shows exit mToast to verify exit
             mDrawerLayout.openDrawer(mDrawerList);
@@ -417,7 +417,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     public void removeFilters(){
         //reset genre filter and UI
         mMainPresenter.onClearGenreFilter();
-        mFilterView.setImageDrawable(getDrawable(R.drawable.filter_outline_24dp));
+        mFilterView.setImageDrawable(getResources().getDrawable(R.drawable.filter_outline_24dp));
         mActivityTitle.setText(new SourceFactory().getSourceName());
 
         //reset

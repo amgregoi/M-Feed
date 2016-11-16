@@ -51,7 +51,10 @@ public class Batoto extends Source {
                 .flatMap(list -> lCurService.getResponse(mUpdatesUrl + 3).flatMap(response -> NetworkService.mapResponseToString(response)).flatMap(html -> Observable.just(scrapeUpdatestoManga(list, html))))
                 .observeOn(AndroidSchedulers.mainThread())
                 .retry(10)
-                .doOnError(Throwable::printStackTrace);
+                .doOnError(throwable -> {
+                    throwable.printStackTrace();
+                    throw new UnsupportedOperationException("onError exception");
+                });
     }
 
     /***
@@ -104,7 +107,11 @@ public class Batoto extends Source {
                 .getResponseCustomHeaders(request.getMangaUrl(), constructRequestHeaders())
                 .flatMap(response -> NetworkService.mapResponseToString(response))
                 .flatMap(unparsedHtml -> Observable.just(parseHtmlToChapters(request, unparsedHtml)))
-                .observeOn(AndroidSchedulers.mainThread());
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnError(throwable -> {
+                    throwable.printStackTrace();
+                    throw new UnsupportedOperationException("onError exception");
+                });
     }
 
     /***
@@ -254,7 +261,10 @@ public class Batoto extends Source {
                 .flatMap(response -> NetworkService.mapResponseToString(response))
                 .flatMap(unparsedHtml -> Observable.just(scrapeAndUpdateManga(request, unparsedHtml)))
                 .onErrorReturn(null)
-                .doOnError(throwable -> throwable.printStackTrace());
+                .doOnError(throwable -> {
+                    throwable.printStackTrace();
+                    throw new UnsupportedOperationException("onError exception");
+                });
     }
 
     /***

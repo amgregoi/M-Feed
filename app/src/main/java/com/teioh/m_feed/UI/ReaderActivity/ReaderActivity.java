@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.ReaderActivity.Presenters.ReaderPresenter;
 import com.teioh.m_feed.UI.ReaderActivity.Widgets.NoScrollViewPager;
+import com.teioh.m_feed.Utils.SharedPrefs;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -120,7 +121,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
 
         mToolbarHeader.animate().translationY(-mToolbarHeader.getHeight()).setInterpolator(new AccelerateInterpolator()).setStartDelay(10).start();
         mToolbarHeader2.animate().translationY(-mToolbarHeader2.getHeight() - mToolbarHeader.getHeight()).setInterpolator(new AccelerateInterpolator()).setStartDelay(10).start();
-        mToolbarFooter.animate().translationY(mToolbarFooter.getHeight()).setInterpolator(new DecelerateInterpolator()).setStartDelay(20).start();
+            mToolbarFooter.animate().translationY(mToolbarFooter.getHeight()).setInterpolator(new DecelerateInterpolator()).setStartDelay(20).start();
     }
 
     @Override
@@ -229,11 +230,14 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     @OnClick(R.id.vertical_scroll_toggle)
-    public void onVerticalScrollToggle(){
+    public void onVerticalScrollToggle() {
+        boolean lCurrentValue = SharedPrefs.getChapterScrollVertical();
+        SharedPrefs.setChapterScrollVertical(!lCurrentValue);
         mReaderPresenter.toggleVerticalScrollSettings(mViewPager.getCurrentItem());
+
     }
 
-    public void setScreenOrientation(boolean isLandscape){
+    public void setScreenOrientation(boolean isLandscape) {
         if (isLandscape) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         } else {

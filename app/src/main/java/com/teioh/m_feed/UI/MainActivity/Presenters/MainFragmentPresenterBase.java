@@ -1,10 +1,12 @@
 package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.mopub.nativeads.MoPubNativeAdPositioning;
@@ -24,7 +26,8 @@ import java.util.List;
 
 import rx.Subscription;
 
-public abstract class MainFragmentPresenterBase implements IMain.FragmentPresenter {
+public abstract class MainFragmentPresenterBase implements IMain.FragmentPresenter
+{
     public final static String TAG = MainFragmentPresenterBase.class.getSimpleName();
     public final static String MANGA_LIST_KEY = TAG + ":MANGA_LIST_KEY";
     private final String NATIVE_AD_1_UNIT_ID = "f27ea659a1084329a656ab28ef29fb6a";
@@ -39,7 +42,8 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     protected Subscription mMangaListSubscription;
     protected IMain.FragmentView mViewMapper;
 
-    public MainFragmentPresenterBase(IMain.FragmentView map) {
+    public MainFragmentPresenterBase(IMain.FragmentView map)
+    {
         mViewMapper = map;
     }
 
@@ -55,18 +59,21 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
      * @param aQueryText
      */
     @Override
-    public void onQueryTextChange(String aQueryText) {
-        if (mAdapter != null)
-            mAdapter.getFilter().filter(aQueryText);
+    public void onQueryTextChange(String aQueryText)
+    {
+        if (mAdapter != null) mAdapter.getFilter().filter(aQueryText);
     }
 
     /***
      * TODO...
      */
     @Override
-    public void updateSource() {
-        if (mViewMapper.getContext() != null) {
-            if (mViewMapper != null && mAdapter != null) {
+    public void updateSource()
+    {
+        if (mViewMapper.getContext() != null)
+        {
+            if (mViewMapper != null && mAdapter != null)
+            {
                 mMangaList.clear();
                 mAdapter.notifyDataSetChanged();
             }
@@ -82,8 +89,10 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
      * @param aFilter
      */
     @Override
-    public void onFilterSelected(int aFilter) {
-        if (mAdapter != null) {
+    public void onFilterSelected(int aFilter)
+    {
+        if (mAdapter != null)
+        {
             mAdapter.filterByStatus(aFilter);
         }
     }
@@ -94,11 +103,13 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
      * @param aMangaList
      */
     @Override
-    public void onGenreFilterSelected(ArrayList<Manga> aMangaList) {
-        if (aMangaList != null) {
+    public void onGenreFilterSelected(ArrayList<Manga> aMangaList)
+    {
+        if (aMangaList != null)
+        {
             mGenreFilterList = new ArrayList<>(aMangaList);
             mGenreFilterList.retainAll(mMangaList);
-            mAdapter.setmOriginalData(mGenreFilterList);
+            mAdapter.setOriginalData(mGenreFilterList);
         }
     }
 
@@ -106,8 +117,9 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
      * TODO...
      */
     @Override
-    public void onClearGenreFilter() {
-        mAdapter.setmOriginalData(mMangaList);
+    public void onClearGenreFilter()
+    {
+        mAdapter.setOriginalData(mMangaList);
     }
 
     /***
@@ -116,12 +128,12 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
      * @param aManga
      */
     @Override
-    public void updateSelection(Manga aManga) {
-        if (mAdapter != null) {
-            if (mViewMapper instanceof FollowedFragment)
-                mAdapter.updateFollowedItem(aManga);
-            else
-                mAdapter.updateItem(aManga);
+    public void updateSelection(Manga aManga)
+    {
+        if (mAdapter != null)
+        {
+            if (mViewMapper instanceof FollowedFragment) mAdapter.updateFollowedItem(aManga);
+            else mAdapter.updateItem(aManga);
         }
     }
 
@@ -131,19 +143,29 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
      * @param aBundle
      */
     @Override
-    public void init(Bundle aBundle) {
-        mViewMapper.setupSwipeRefresh();
-        mLayoutManager = new GridLayoutManager(mViewMapper.getContext(), 3);
-        ((GridLayoutManager) mLayoutManager).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                if (mAdAdapter.isAd(position)) return 3; // ads take up 3 columns
-                else return 1;
-            }
-        });
+    public void init(Bundle aBundle)
+    {
+        try
+        {
+            mViewMapper.setupSwipeRefresh();
+            mLayoutManager = new GridLayoutManager(mViewMapper.getContext(), 3);
+            ((GridLayoutManager) mLayoutManager).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup()
+            {
+                @Override
+                public int getSpanSize(int position)
+                {
+                    if (mAdAdapter.isAd(position)) return 3; // ads take up 3 columns
+                    else return 1;
+                }
+            });
 
-        updateMangaList();
-        mNeedsItemDecoration = true;
+            updateMangaList();
+            mNeedsItemDecoration = true;
+        }
+        catch (Exception lException)
+        {
+            Log.e(TAG, lException.getMessage());
+        }
     }
 
     /***
@@ -152,8 +174,10 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
      * @param aSave
      */
     @Override
-    public void onSaveState(Bundle aSave) {
-        if (mMangaList != null) {
+    public void onSaveState(Bundle aSave)
+    {
+        if (mMangaList != null)
+        {
             aSave.putParcelableArrayList(MANGA_LIST_KEY, mMangaList);
         }
     }
@@ -164,8 +188,10 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
      * @param aRestore
      */
     @Override
-    public void onRestoreState(Bundle aRestore) {
-        if (aRestore.containsKey(MANGA_LIST_KEY)) {
+    public void onRestoreState(Bundle aRestore)
+    {
+        if (aRestore.containsKey(MANGA_LIST_KEY))
+        {
             mMangaList = new ArrayList<>(aRestore.getParcelableArrayList(MANGA_LIST_KEY));
         }
     }
@@ -174,7 +200,8 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
      * TODO...
      */
     @Override
-    public void onPause() {
+    public void onPause()
+    {
 
     }
 
@@ -182,15 +209,18 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
      * TODO...
      */
     @Override
-    public void onResume() {
+    public void onResume()
+    {
     }
 
     /***
      * TODO...
      */
     @Override
-    public void onDestroy() {
-        if (mMangaListSubscription != null) {
+    public void onDestroy()
+    {
+        if (mMangaListSubscription != null)
+        {
             mMangaListSubscription.unsubscribe();
             mMangaListSubscription = null;
         }
@@ -203,9 +233,11 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
      *
      * @param pos
      */
-    protected void onItemClick(int pos) {
+    protected void onItemClick(int pos)
+    {
         Manga manga = mAdapter.getItemAt(mAdAdapter.getOriginalPosition(pos));
-        if (mViewMapper.setRecentSelection(manga.get_id())) {
+        if (mViewMapper.setRecentSelection(manga.get_id()))
+        {
             Intent intent = MangaActivity.getNewInstance(mViewMapper.getContext(), manga.getTitle());
             mViewMapper.getContext().startActivity(intent);
         }
@@ -216,49 +248,60 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
      *
      * @param aMangaList
      */
-    protected void updateMangaGridView(List<Manga> aMangaList) {
-        if (mViewMapper.getContext() != null) {
-            if (aMangaList != null) {
-                mMangaList = new ArrayList<>(aMangaList);
-                //Sorts manga list if Library or Followed fragment
-                if (!(this instanceof RecentPresenter))
-                    Collections.sort(mMangaList, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
-            } else {
-                // failed to update list, show refresh view,
-                mMangaList = new ArrayList<>(); //empty list
+    protected void updateMangaGridView(List<Manga> aMangaList)
+    {
+        try
+        {
+            if (mViewMapper.getContext() != null)
+            {
+                if (aMangaList != null)
+                {
+                    mMangaList = new ArrayList<>(aMangaList);
+                    //Sorts manga list if Library or Followed fragment
+                    if (!(this instanceof RecentPresenter))
+                        Collections.sort(mMangaList, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
+                }
+                else
+                {
+                    // failed to update list, show refresh view,
+                    mMangaList = new ArrayList<>(); //empty list
+                }
+
+                if (mAdapter == null)
+                {
+                    mAdapter = new RecycleSearchAdapter(mMangaList, (pos) -> onItemClick(pos));
+                    setupMoPubAdapter();
+                }
+                else
+                {
+                    mAdapter.setOriginalData(mMangaList);
+                }
+
+                mViewMapper.stopRefresh();
+                mNeedsItemDecoration = false;
+
+                mMangaListSubscription.unsubscribe();
+                mMangaListSubscription = null;
+
+                Glide.get(mViewMapper.getContext()).clearMemory();
             }
-
-            if (mAdapter == null) {
-                mAdapter = new RecycleSearchAdapter(mMangaList, (pos) -> onItemClick(pos));
-                setupMoPubAdapter();
-            } else {
-                mAdapter.setmOriginalData(mMangaList);
-            }
-
-            mViewMapper.stopRefresh();
-            mNeedsItemDecoration = false;
-
-            mMangaListSubscription.unsubscribe();
-            mMangaListSubscription = null;
-
-            Glide.get(mViewMapper.getContext()).clearMemory();
+        }
+        catch (Exception lException)
+        {
+            Log.e(TAG, lException.getMessage());
         }
     }
 
     /***
      * TODO...
      */
-    protected void setupMoPubAdapter() {
+    protected void setupMoPubAdapter()
+    {
         MoPubNativeAdPositioning.MoPubServerPositioning lAdPositioning = MoPubNativeAdPositioning.serverPositioning();
 
         mAdAdapter = new MoPubRecyclerAdapter(((Fragment) mViewMapper).getActivity(), mAdapter, lAdPositioning);
 
-        MoPubStaticNativeAdRenderer lRenderer = new MoPubStaticNativeAdRenderer(new ViewBinder.Builder(R.layout.ad_layout)
-                .titleId(R.id.native_ad_title)
-                .textId(R.id.native_ad_text)
-                .mainImageId(R.id.native_ad_main_image)
-                .iconImageId(R.id.native_ad_icon_image)
-                .build());
+        MoPubStaticNativeAdRenderer lRenderer = new MoPubStaticNativeAdRenderer(new ViewBinder.Builder(R.layout.ad_layout).titleId(R.id.native_ad_title).textId(R.id.native_ad_text).mainImageId(R.id.native_ad_main_image).iconImageId(R.id.native_ad_icon_image).build());
 
         mAdAdapter.registerAdRenderer(lRenderer);
         if (NATIVE_AD_1_UNIT_ID != null) mAdAdapter.loadAds(NATIVE_AD_1_UNIT_ID);

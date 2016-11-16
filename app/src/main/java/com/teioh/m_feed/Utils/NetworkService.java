@@ -1,10 +1,15 @@
 package com.teioh.m_feed.Utils;
 
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import com.teioh.m_feed.MFeedApplication;
 
 import java.util.concurrent.TimeUnit;
 
@@ -36,6 +41,12 @@ public class NetworkService {
         return new NetworkService();
     }
 
+    public static boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) MFeedApplication.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
     /***
      * TODO...
      *
@@ -47,10 +58,7 @@ public class NetworkService {
             @Override
             public void call(Subscriber<? super Response> subscriber) {
                 try {
-                    Request request = new Request.Builder()
-                            .url(aUrl)
-                            .header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.21")
-                            .build();
+                    Request request = new Request.Builder().url(aUrl).header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.21").build();
 
                     subscriber.onNext(mClient.newCall(request).execute());
                     subscriber.onCompleted();
@@ -73,10 +81,7 @@ public class NetworkService {
             @Override
             public void call(Subscriber<? super Response> subscriber) {
                 try {
-                    Request request = new Request.Builder()
-                            .url(aUrl)
-                            .headers(aHeaders)
-                            .build();
+                    Request request = new Request.Builder().url(aUrl).headers(aHeaders).build();
 
                     subscriber.onNext(mClient.newCall(request).execute());
                     subscriber.onCompleted();
@@ -84,8 +89,7 @@ public class NetworkService {
                     subscriber.onError(e);
                 }
             }
-        })
-                .subscribeOn(Schedulers.io());
+        }).subscribeOn(Schedulers.io());
     }
 
     /***

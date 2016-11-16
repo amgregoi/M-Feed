@@ -20,7 +20,8 @@ import com.teioh.m_feed.UI.ReaderActivity.Widgets.GestureViewPager;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class ChapterFragment extends Fragment implements IReader.FragmentView {
+public class ChapterFragment extends Fragment implements IReader.FragmentView
+{
     public final static String TAG = ChapterFragment.class.getSimpleName();
 
 
@@ -29,19 +30,22 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView {
     private Listeners.ReaderListener listener;
 
 
-    public static Fragment getNewInstance() {
+    public static Fragment getNewInstance()
+    {
         Fragment lFragment = new ChapterFragment();
         return lFragment;
     }
 
     @Override
-    public void onCreate(@Nullable Bundle aSavedInstanceState) {
+    public void onCreate(@Nullable Bundle aSavedInstanceState)
+    {
         super.onCreate(aSavedInstanceState);
         mChapterPresenter = new ChapterPresenter(this, getArguments());
     }
 
     @Override
-    public View onCreateView(LayoutInflater aInflater, ViewGroup aContainer, Bundle aSavedInstanceState) {
+    public View onCreateView(LayoutInflater aInflater, ViewGroup aContainer, Bundle aSavedInstanceState)
+    {
         View lView = aInflater.inflate(R.layout.reader_fragment_item, aContainer, false);
         ButterKnife.bind(this, lView);
 
@@ -49,42 +53,51 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView {
     }
 
     @Override
-    public void onStart() {
+    public void onStart()
+    {
         mChapterPresenter.init(getArguments());
         super.onStart();
     }
 
     @Override
-    public void onSaveInstanceState(Bundle aSave) {
+    public void onSaveInstanceState(Bundle aSave)
+    {
         super.onSaveInstanceState(aSave);
-        if (mChapterPresenter != null) {
+        if (mChapterPresenter != null)
+        {
             mChapterPresenter.onSaveState(aSave);
         }
     }
 
     @Override
-    public void onResume() {
+    public void onResume()
+    {
         super.onResume();
         mChapterPresenter.onResume();
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle aSavedInstanceState) {
+    public void onActivityCreated(@Nullable Bundle aSavedInstanceState)
+    {
         super.onActivityCreated(aSavedInstanceState);
-        if (aSavedInstanceState != null) {
+        if (aSavedInstanceState != null)
+        {
             mChapterPresenter.onRestoreState(aSavedInstanceState);
         }
     }
 
     @Override
-    public void onDestroyView() {
+    public void onDestroyView()
+    {
         super.onDestroyView();
         mChapterPresenter.onDestroy();
     }
 
     @Override
-    public void registerAdapter(PagerAdapter aAdapter) {
-        if (aAdapter != null && getContext() != null) {
+    public void registerAdapter(PagerAdapter aAdapter)
+    {
+        if (aAdapter != null && getContext() != null)
+        {
             mViewPager.setAdapter(aAdapter);
             mViewPager.clearOnPageChangeListeners();
             mViewPager.addOnPageChangeListener(this);
@@ -95,144 +108,178 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView {
     }
 
     @Override
-    public void setCurrentChapterPage(int aPosition){
+    public void setCurrentChapterPage(int aPosition)
+    {
         mViewPager.setCurrentItem(aPosition);
     }
 
     @Override
-    public void onPause() {
+    public void onPause()
+    {
         super.onPause();
         mChapterPresenter.onPause();
     }
 
     @Override
-    public void onPageScrolled(int aPosition, float aPositionOffset, int aPositionOffsetPixels) {
+    public void onPageScrolled(int aPosition, float aPositionOffset, int aPositionOffsetPixels)
+    {
         mChapterPresenter.updateOffsetCounter(aPositionOffsetPixels, mViewPager.getCurrentItem());
     }
 
     @Override
-    public void onPageSelected(int aPosition) {
+    public void onPageSelected(int aPosition)
+    {
         mChapterPresenter.updateCurrentPage(aPosition);
     }
 
     @Override
-    public void onPageScrollStateChanged(int aState) {
+    public void onPageScrollStateChanged(int aState)
+    {
         mChapterPresenter.updateState(aState);
     }
 
     @Override
-    public void onSingleTap() {
+    public void onSingleTap()
+    {
         mChapterPresenter.toggleToolbar();
     }
 
     @Override
-    public void setupOnSingleTapListener() {
+    public void setupOnSingleTapListener()
+    {
         mViewPager.setOnSingleTapListener(this);
     }
 
     @Override
-    public void updateToolbar() {
-        if (mChapterPresenter != null) {
+    public void updateToolbar()
+    {
+        if (mChapterPresenter != null)
+        {
             mChapterPresenter.updateActiveChapter();
             mChapterPresenter.updateCurrentPage(mViewPager.getCurrentItem());
         }
     }
 
     @Override
-    public void incrementChapterPage() {
-        if (getContext() != null) {
+    public void incrementChapterPage()
+    {
+        if (getContext() != null)
+        {
             mViewPager.incrementCurrentItem();
         }
     }
 
     @Override
-    public void decrementChapterPage() {
-        if (getContext() != null) {
+    public void decrementChapterPage()
+    {
+        if (getContext() != null)
+        {
             mViewPager.decrememntCurrentItem();
         }
     }
 
     @Override
-    public void setChapterPage(int aPage){
-        if(getContext() != null){
+    public void setChapterPage(int aPage)
+    {
+        if (getContext() != null)
+        {
             mViewPager.setCurrentItem(aPage);
         }
     }
 
     @Override
-    public void updateChapterViewStatus() {
-        if (mChapterPresenter != null) {
+    public void updateChapterViewStatus()
+    {
+        if (mChapterPresenter != null)
+        {
             mChapterPresenter.updateChapterViewStatus();
+        }
+        if (mViewPager != null)
+        {
+            mViewPager.setScrollerType();
         }
     }
 
     @Override
-    public void onAttach(Context aContext) {
+    public void onAttach(Context aContext)
+    {
         super.onAttach(aContext);
-        if (aContext instanceof Listeners.ReaderListener)
-            listener = (Listeners.ReaderListener) aContext;
-        else
-            throw new ClassCastException(aContext.toString() + " must implement Listeners.ReaderListener");
+        if (aContext instanceof Listeners.ReaderListener) listener = (Listeners.ReaderListener) aContext;
+        else throw new ClassCastException(aContext.toString() + " must implement Listeners.ReaderListener");
 
     }
 
     @Override
-    public void incrementChapter() {
+    public void incrementChapter()
+    {
         listener.incrementChapter();
     }
 
     @Override
-    public boolean checkActiveChapter(int aChapter){
+    public boolean checkActiveChapter(int aChapter)
+    {
         return listener.checkActiveChapter(aChapter);
     }
 
     @Override
-    public void decrementChapter() {
+    public void decrementChapter()
+    {
         listener.decrementChapter();
     }
 
     @Override
-    public void hideToolbar(long aDelay) {
+    public void hideToolbar(long aDelay)
+    {
         listener.hideToolbar(aDelay);
     }
 
     @Override
-    public void showToolbar() {
+    public void showToolbar()
+    {
         listener.showToolbar();
     }
 
     @Override
-    public void updateToolbar(String aMangaTitle, String aChapterTitle, int aSize, int aPage) {
+    public void updateToolbar(String aMangaTitle, String aChapterTitle, int aSize, int aPage)
+    {
         listener.updateToolbar(aMangaTitle, aChapterTitle, aSize, aPage);
     }
 
     @Override
-    public void updateCurrentPage(int aPosition) {
+    public void updateCurrentPage(int aPosition)
+    {
         listener.updateCurrentPage(aPosition);
     }
 
     @Override
-    public void toggleVerticalScrollSettings(){
-        if(mViewPager.toggleVerticalScroller()){
+    public void toggleVerticalScrollSettings()
+    {
+        if (mViewPager.toggleVerticalScroller())
+        {
             Toast.makeText(getActivity(), "Vertical scroll enabled", Toast.LENGTH_SHORT).show();
-        }else{
+        }
+        else
+        {
             Toast.makeText(getActivity(), "Horizontal scroll enabled", Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
-    public void onRefresh() {
+    public void onRefresh()
+    {
         mChapterPresenter.onRefresh(mViewPager.getCurrentItem());
 
     }
 
     @Override
-    public void failedLoadChapter() {
+    public void failedLoadChapter()
+    {
         listener.onBackPressed();
     }
 
     @Override
-    public void onLowMemory() {
+    public void onLowMemory()
+    {
         super.onLowMemory();
         Glide.get(getContext()).clearMemory();
     }

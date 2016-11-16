@@ -2,4 +2,5 @@
 <resources>
 	<string name="Email">E-Mail</string>
 	<string name="PREF_USER_SOURCE">SAVED_SOURCE</string>
+	<string name="PREF_CHAPTER_SCROLL_VERTICAL">PREF_CHAPTER_SCROLL_VERTICAL</string>
 </resources>

@@ -138,6 +138,28 @@ public class SharedPrefs {
         return PreferenceManager.getDefaultSharedPreferences(lContext).getString(lContext.getString(R.string.PREF_USER_SOURCE), SourceType.MangaJoy.name());
     }
 
+    /***
+     * TODO...
+     *
+     * @param aVertical
+     */
+    public static void setChapterScrollVertical(boolean aVertical){
+        Context lContext = MFeedApplication.getInstance();
+        SharedPreferences.Editor lEditor = PreferenceManager.getDefaultSharedPreferences(lContext).edit();
+        lEditor.putBoolean(lContext.getString(R.string.PREF_CHAPTER_SCROLL_VERTICAL), aVertical);
+        lEditor.apply();
+    }
+
+    /***
+     * TODO...
+     *
+     * @return
+     */
+    public static boolean getChapterScrollVertical(){
+        Context lContext = MFeedApplication.getInstance();
+        return PreferenceManager.getDefaultSharedPreferences(lContext).getBoolean(lContext.getString(R.string.PREF_CHAPTER_SCROLL_VERTICAL), false);
+    }
+
 
 
 }

@@ -100,7 +100,7 @@ public interface IReader {
 
         void updateState(int aState);
 
-        void updateToolbarComplete();
+        void updateReaderToolbar();
 
         void updateCurrentPage(int aPosition);
 

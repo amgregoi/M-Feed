@@ -80,32 +80,56 @@ public class ReaderPresenter implements IReader.ActivityPresenter {
 
     @Override
     public void updateToolbar(int aPosition) {
-        ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition)).updateToolbar();
+        ChapterFragment lTempFragment;
+        if((lTempFragment = ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition)))!= null){
+            lTempFragment.updateToolbar();
+        }
     }
 
     @Override
     public void incrementChapterPage(int aPosition) {
-        ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition)).incrementChapterPage();
+        ChapterFragment lTempFragment;
+        if((lTempFragment = ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition)))!= null){
+            lTempFragment.incrementChapterPage();
+        }
     }
 
     @Override
     public void decrementChapterPage(int aPosition) {
-        ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition)).decrementChapterPage();
+        ChapterFragment lTempFragment;
+        if((lTempFragment = ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition)))!= null){
+            lTempFragment.decrementChapterPage();
+        }
     }
 
     @Override
     public void updateChapterViewStatus(int aPosition){
-        ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition)).updateChapterViewStatus();
+        ChapterFragment lTempFragment;
+        if((lTempFragment = ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition)))!= null){
+            lTempFragment.updateChapterViewStatus();
+        }
     }
 
     @Override
     public void onRefreshButton(int aPosition) {
-        ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition)).onRefresh();
+        ChapterFragment lTempFragment;
+        if((lTempFragment = ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition)))!= null){
+            lTempFragment.onRefresh();
+        }
     }
 
     @Override
     public void toggleVerticalScrollSettings(int aPosition){
-        ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition)).toggleVerticalScrollSettings();
+        ChapterFragment lTempFragment;
+        if((lTempFragment = ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition)))!= null){
+            lTempFragment.toggleVerticalScrollSettings();
+        }
+        if((lTempFragment = ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition+1)))!= null){
+            lTempFragment.toggleVerticalScrollSettings();
+        }
+        if((lTempFragment = ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition-1)))!= null){
+            lTempFragment.toggleVerticalScrollSettings();
+        }
     }
 
     @Override
