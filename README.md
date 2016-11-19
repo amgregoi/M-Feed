@@ -9,7 +9,7 @@ __TODO:__
 * Research MAL Integration (on hold)
 
 __APK__<br>
-<a href="https://raw.githubusercontent.com/amgregoi/M-Feed/master/app/app-release.apk">hi</a> <br><br>
+<a href="https://raw.githubusercontent.com/amgregoi/M-Feed/master/app/app-release.apk">Click Here for APK</a> <br><br>
 
 __Intro__<br>
 M-Feed is an android application that allows users to browse and read the library of multiple online sources.  You can 'follow' specific manga to keep track of what you read and get recent a list of daily updates in the front page. This side project is a work in progress and updated when I have free time.
