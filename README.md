@@ -8,6 +8,9 @@ __TODO:__
 * Editing some of the layouts (work in progress)
 * Research MAL Integration (on hold)
 
+__APK__<br>
+<a href="https://raw.githubusercontent.com/amgregoi/M-Feed/master/app/app-release.apk">hi</a> <br><br>
+
 __Intro__<br>
 M-Feed is an android application that allows users to browse and read the library of multiple online sources.  You can 'follow' specific manga to keep track of what you read and get recent a list of daily updates in the front page. This side project is a work in progress and updated when I have free time.
 
@@ -34,4 +37,12 @@ __Home Screen__
 
 __Manga information page__
 <br>
-<img src="https://raw.githubusercontent.com/amgregoi/M-Feed/master/images/Manga.png" height="500">
+<img src="https://raw.githubusercontent.com/amgregoi/M-Feed/master/images/Manga.png" height="500"><br><br>
+
+__Manga Reader Page 1
+<br>
+<img src="https://raw.githubusercontent.com/amgregoi/M-Feed/master/images/reader_1.png" height="500"><br><br>
+
+__Manga Reader Page 2
+<br>
+<img src="https://raw.githubusercontent.com/amgregoi/M-Feed/master/images/reader_2.png" height="500"><br><br>

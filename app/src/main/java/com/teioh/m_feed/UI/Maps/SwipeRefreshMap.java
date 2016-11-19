@@ -1,6 +1,7 @@
 package com.teioh.m_feed.UI.Maps;
 
-public interface SwipeRefreshMap {
+public interface SwipeRefreshMap
+{
     void startRefresh();
 
     void stopRefresh();

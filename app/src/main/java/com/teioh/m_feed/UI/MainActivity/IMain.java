@@ -2,6 +2,7 @@ package com.teioh.m_feed.UI.MainActivity;
 
 import android.content.Intent;
 
+import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
 import com.teioh.m_feed.UI.Maps.BaseContextMap;
@@ -15,8 +16,13 @@ import com.teioh.m_feed.UI.Maps.SwipeRefreshMap;
 
 import java.util.ArrayList;
 
-public interface IMain {
-    interface ActivityView extends BaseContextMap, Listeners.MALDialogListener, SearchViewListenerMap, Listeners.MainFragmentListener, DrawerLayoutMap {
+public interface IMain
+{
+    /***
+     * TODO..
+     */
+    interface ActivityView extends BaseContextMap, SearchViewListenerMap, Listeners.MainFragmentListener, DrawerLayoutMap
+    {
 
         void registerAdapter(ViewPagerAdapterMain aAdapter);
 
@@ -37,11 +43,11 @@ public interface IMain {
         void toggleToolbarElements();
     }
 
-    interface ActivityModel {
-        //Nothing?
-    }
-
-    interface ActivityPresenter extends LifeCycleMap {
+    /***
+     * TODO..
+     */
+    interface ActivityPresenter extends LifeCycleMap
+    {
 
         void updateQueryChange(String aNewTest);
 
@@ -49,7 +55,7 @@ public interface IMain {
 
         void onSourceItemChosen(int aPosition);
 
-        void onFilterSelected(int aFilter);
+        void onFilterSelected(MangaEnums.eFilterStatus aFilter);
 
         void removeSettingsFragment();
 
@@ -62,21 +68,21 @@ public interface IMain {
         void getRecentManga();
 
         void setRecentManga(long aMangaId);
-
-        void onSignOut();
-
-        void onSignIn();
     }
 
-    interface FragmentView extends MoPubAdapterMap, SwipeRefreshMap, SearchViewListenerMap, BaseContextMap, MangaFilterMap {
+    /***
+     * TODO..
+     */
+    interface FragmentView extends MoPubAdapterMap, SwipeRefreshMap, SearchViewListenerMap, BaseContextMap, MangaFilterMap
+    {
 
     }
 
-    interface FragmentModel{
-        //Nothing?
-    }
-
-    interface FragmentPresenter extends LifeCycleMap{
+    /***
+     * TODO..
+     */
+    interface FragmentPresenter extends LifeCycleMap
+    {
 
         void updateMangaList();
 
@@ -84,7 +90,7 @@ public interface IMain {
 
         void updateSource();
 
-        void onFilterSelected(int aFilter);
+        void onFilterSelected(MangaEnums.eFilterStatus aFilter);
 
         void onGenreFilterSelected(ArrayList<Manga> aMangaList);
 

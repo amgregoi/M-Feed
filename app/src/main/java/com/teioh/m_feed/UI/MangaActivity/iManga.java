@@ -11,8 +11,13 @@ import com.teioh.m_feed.UI.Maps.SwipeRefreshMap;
 /**
  * Created by amgregoi on 8/21/16.
  */
-public interface IManga {
-    interface ActivityView extends BaseContextMap, BaseAdapterMap, SwipeRefreshMap, EmptyLayoutMap {
+public interface IManga
+{
+    /***
+     * TODO..
+     */
+    interface ActivityView extends BaseContextMap, BaseAdapterMap, SwipeRefreshMap, EmptyLayoutMap
+    {
 
         void setActivityTitle(String title);
 
@@ -22,19 +27,15 @@ public interface IManga {
 
         void setupHeaderButtons();
 
-        void changeFollowButton(boolean following);
-
         void initializeHeaderViews();
 
-        void onMALSyncClicked(MALMangaList list);
-
     }
 
-    interface ActivityModel {
-
-    }
-
-    interface ActivityPresenter extends LifeCycleMap{
+    /***
+     * TODO..
+     */
+    interface ActivityPresenter extends LifeCycleMap
+    {
 
         void chapterOrderButtonClick();
 
@@ -43,8 +44,6 @@ public interface IManga {
         void onUnfollowButtonClick();
 
         void onChapterClicked(Chapter aChapter);
-
-        void onMALSyncClicked();
 
         String getImageUrl();
     }

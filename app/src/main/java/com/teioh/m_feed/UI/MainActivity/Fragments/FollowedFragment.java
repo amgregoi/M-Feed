@@ -12,16 +12,32 @@ import com.teioh.m_feed.UI.MainActivity.Presenters.FollowedPresenter;
 
 import butterknife.ButterKnife;
 
-public class FollowedFragment extends MainFragmentBase {
+public class FollowedFragment extends MainFragmentBase
+{
     public final static String TAG = FollowedFragment.class.getSimpleName();
 
-    public static Fragment getnewInstance(){
+    /***
+     * TODO..
+     *
+     * @return
+     */
+    public static Fragment getnewInstance()
+    {
         Fragment lDialog = new FollowedFragment();
         return lDialog;
     }
 
+    /***
+     * TODO..
+     *
+     * @param aInflater
+     * @param aContainer
+     * @param aSavedInstanceState
+     * @return
+     */
     @Override
-    public View onCreateView(LayoutInflater aInflater, @Nullable ViewGroup aContainer, @Nullable Bundle aSavedInstanceState) {
+    public View onCreateView(LayoutInflater aInflater, @Nullable ViewGroup aContainer, @Nullable Bundle aSavedInstanceState)
+    {
         View lView = aInflater.inflate(R.layout.main_tab_relative, aContainer, false);
         ButterKnife.bind(this, lView);
 
@@ -29,23 +45,39 @@ public class FollowedFragment extends MainFragmentBase {
         return lView;
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    public void startRefresh() {
+    public void startRefresh()
+    {
         //do nothing
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    public void stopRefresh() {
+    public void stopRefresh()
+    {
         //do nothing
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    public void setupSwipeRefresh() {
+    public void setupSwipeRefresh()
+    {
         //do nothing
     }
 
+    /***
+     * TOOD..
+     */
     @Override
-    public void removeFilters() {
+    public void removeFilters()
+    {
 
     }
 }

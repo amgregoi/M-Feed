@@ -17,19 +17,35 @@ import com.teioh.m_feed.UI.MainActivity.Presenters.RecentPresenter;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class RecentFragment extends MainFragmentBase {
+public class RecentFragment extends MainFragmentBase
+{
     public final static String TAG = RecentFragment.class.getSimpleName();
 
     @Bind(R.id.swipe_container) SwipeRefreshLayout mSwipeContainer;
     @Bind(R.id.no_internet_image) ImageView mWifiView;
 
-    public static Fragment getnewInstance() {
+    /***
+     * TODO..
+     *
+     * @return
+     */
+    public static Fragment getnewInstance()
+    {
         Fragment dialog = new RecentFragment();
         return dialog;
     }
 
+    /***
+     * TODO..
+     *
+     * @param aInflater
+     * @param aContainer
+     * @param aSavedInstanceState
+     * @return
+     */
     @Override
-    public View onCreateView(LayoutInflater aInflater, @Nullable ViewGroup aContainer, @Nullable Bundle aSavedInstanceState) {
+    public View onCreateView(LayoutInflater aInflater, @Nullable ViewGroup aContainer, @Nullable Bundle aSavedInstanceState)
+    {
         View lView = aInflater.inflate(R.layout.main_tab_swipe, aContainer, false);
         ButterKnife.bind(this, lView);
 
@@ -40,22 +56,34 @@ public class RecentFragment extends MainFragmentBase {
         return lView;
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    public void startRefresh() {
+    public void startRefresh()
+    {
         mWifiView.setVisibility(View.GONE);
         mGridView.setVisibility(View.GONE);
         mSwipeContainer.post(() -> mSwipeContainer.setRefreshing(true));
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    public void stopRefresh() {
+    public void stopRefresh()
+    {
         mSwipeContainer.setRefreshing(false);
         mWifiView.setVisibility(View.GONE);
         mGridView.setVisibility(View.VISIBLE);
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    public void setupSwipeRefresh() {
+    public void setupSwipeRefresh()
+    {
         mSwipeContainer.setOnRefreshListener(() -> {
             mGridView.setVisibility(View.GONE);
             mFragmentPresenter.updateMangaList();
@@ -64,12 +92,20 @@ public class RecentFragment extends MainFragmentBase {
         });
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    public void removeFilters() {
+    public void removeFilters()
+    {
 
     }
 
-    public void showNoWifiView(){
+    /***
+     * TODO..
+     */
+    public void showNoWifiView()
+    {
         mGridView.setVisibility(View.VISIBLE);
         mWifiView.setVisibility(View.VISIBLE);
         mSwipeContainer.setRefreshing(true);

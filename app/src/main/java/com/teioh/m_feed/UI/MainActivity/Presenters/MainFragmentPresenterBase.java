@@ -13,12 +13,14 @@ import com.mopub.nativeads.MoPubNativeAdPositioning;
 import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
 import com.mopub.nativeads.ViewBinder;
+import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.Adapters.RecycleSearchAdapter;
 import com.teioh.m_feed.UI.MainActivity.Fragments.FollowedFragment;
 import com.teioh.m_feed.UI.MainActivity.IMain;
 import com.teioh.m_feed.UI.MangaActivity.MangaActivity;
+import com.teioh.m_feed.Utils.MangaLogger;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,7 +63,20 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     @Override
     public void onQueryTextChange(String aQueryText)
     {
-        if (mAdapter != null) mAdapter.getFilter().filter(aQueryText);
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
+        try
+        {
+            if (mAdapter != null)
+            {
+                mAdapter.performTextFilter(aQueryText);
+            }
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+        }
+
     }
 
     /***
@@ -70,17 +85,27 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     @Override
     public void updateSource()
     {
-        if (mViewMapper.getContext() != null)
-        {
-            if (mViewMapper != null && mAdapter != null)
-            {
-                mMangaList.clear();
-                mAdapter.notifyDataSetChanged();
-            }
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
 
-            mViewMapper.startRefresh();
-            updateMangaList();
+        try
+        {
+            if (mViewMapper.getContext() != null)
+            {
+                if (mViewMapper != null && mAdapter != null)
+                {
+                    mMangaList.clear();
+                    mAdapter.notifyDataSetChanged();
+                }
+
+                mViewMapper.startRefresh();
+                updateMangaList();
+            }
         }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+        }
+
     }
 
     /***
@@ -89,12 +114,22 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
      * @param aFilter
      */
     @Override
-    public void onFilterSelected(int aFilter)
+    public void onFilterSelected(MangaEnums.eFilterStatus aFilter)
     {
-        if (mAdapter != null)
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
+        try
         {
-            mAdapter.filterByStatus(aFilter);
+            if (mAdapter != null)
+            {
+                mAdapter.filterByStatus(aFilter);
+            }
         }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+        }
+
     }
 
     /***
@@ -105,12 +140,22 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     @Override
     public void onGenreFilterSelected(ArrayList<Manga> aMangaList)
     {
-        if (aMangaList != null)
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
+        try
         {
-            mGenreFilterList = new ArrayList<>(aMangaList);
-            mGenreFilterList.retainAll(mMangaList);
-            mAdapter.setOriginalData(mGenreFilterList);
+            if (aMangaList != null)
+            {
+                mGenreFilterList = new ArrayList<>(aMangaList);
+                mGenreFilterList.retainAll(mMangaList);
+                mAdapter.setOriginalData(mGenreFilterList);
+            }
         }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+        }
+
     }
 
     /***
@@ -119,7 +164,17 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     @Override
     public void onClearGenreFilter()
     {
-        mAdapter.setOriginalData(mMangaList);
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
+        try
+        {
+            mAdapter.setOriginalData(mMangaList);
+
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+        }
     }
 
     /***
@@ -130,11 +185,21 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     @Override
     public void updateSelection(Manga aManga)
     {
-        if (mAdapter != null)
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
+        try
         {
-            if (mViewMapper instanceof FollowedFragment) mAdapter.updateFollowedItem(aManga);
-            else mAdapter.updateItem(aManga);
+            if (mAdapter != null)
+            {
+                if (mViewMapper instanceof FollowedFragment) mAdapter.updateFollowedItem(aManga);
+                else mAdapter.updateItem(aManga);
+            }
         }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+        }
+
     }
 
     /***
@@ -145,6 +210,8 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     @Override
     public void init(Bundle aBundle)
     {
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
         try
         {
             mViewMapper.setupSwipeRefresh();
@@ -164,7 +231,8 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
         }
         catch (Exception lException)
         {
-            Log.e(TAG, lException.getMessage());
+            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+
         }
     }
 
@@ -176,10 +244,20 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     @Override
     public void onSaveState(Bundle aSave)
     {
-        if (mMangaList != null)
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
+        try
         {
-            aSave.putParcelableArrayList(MANGA_LIST_KEY, mMangaList);
+            if (mMangaList != null)
+            {
+                aSave.putParcelableArrayList(MANGA_LIST_KEY, mMangaList);
+            }
         }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+        }
+
     }
 
     /***
@@ -190,10 +268,20 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     @Override
     public void onRestoreState(Bundle aRestore)
     {
-        if (aRestore.containsKey(MANGA_LIST_KEY))
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
+        try
         {
-            mMangaList = new ArrayList<>(aRestore.getParcelableArrayList(MANGA_LIST_KEY));
+            if (aRestore.containsKey(MANGA_LIST_KEY))
+            {
+                mMangaList = new ArrayList<>(aRestore.getParcelableArrayList(MANGA_LIST_KEY));
+            }
         }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+        }
+
     }
 
     /***
@@ -235,12 +323,22 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
      */
     protected void onItemClick(int pos)
     {
-        Manga manga = mAdapter.getItemAt(mAdAdapter.getOriginalPosition(pos));
-        if (mViewMapper.setRecentSelection(manga.get_id()))
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
+        try
         {
-            Intent intent = MangaActivity.getNewInstance(mViewMapper.getContext(), manga.getTitle());
-            mViewMapper.getContext().startActivity(intent);
+            Manga manga = mAdapter.getItemAt(mAdAdapter.getOriginalPosition(pos));
+            if (mViewMapper.setRecentSelection(manga.get_id()))
+            {
+                Intent intent = MangaActivity.getNewInstance(mViewMapper.getContext(), manga.getTitle());
+                mViewMapper.getContext().startActivity(intent);
+            }
         }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+        }
+
     }
 
     /***
@@ -250,6 +348,8 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
      */
     protected void updateMangaGridView(List<Manga> aMangaList)
     {
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
         try
         {
             if (mViewMapper.getContext() != null)
@@ -270,6 +370,7 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
                 if (mAdapter == null)
                 {
                     mAdapter = new RecycleSearchAdapter(mMangaList, (pos) -> onItemClick(pos));
+                    mAdapter.setHasStableIds(true);
                     setupMoPubAdapter();
                 }
                 else
@@ -288,7 +389,7 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
         }
         catch (Exception lException)
         {
-            Log.e(TAG, lException.getMessage());
+            MangaLogger.logError(TAG, lMethod, lException.getMessage());
         }
     }
 
@@ -297,15 +398,25 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
      */
     protected void setupMoPubAdapter()
     {
-        MoPubNativeAdPositioning.MoPubServerPositioning lAdPositioning = MoPubNativeAdPositioning.serverPositioning();
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
 
-        mAdAdapter = new MoPubRecyclerAdapter(((Fragment) mViewMapper).getActivity(), mAdapter, lAdPositioning);
+        try
+        {
+            MoPubNativeAdPositioning.MoPubServerPositioning lAdPositioning = MoPubNativeAdPositioning.serverPositioning();
 
-        MoPubStaticNativeAdRenderer lRenderer = new MoPubStaticNativeAdRenderer(new ViewBinder.Builder(R.layout.ad_layout).titleId(R.id.native_ad_title).textId(R.id.native_ad_text).mainImageId(R.id.native_ad_main_image).iconImageId(R.id.native_ad_icon_image).build());
+            mAdAdapter = new MoPubRecyclerAdapter(((Fragment) mViewMapper).getActivity(), mAdapter, lAdPositioning);
 
-        mAdAdapter.registerAdRenderer(lRenderer);
-        if (NATIVE_AD_1_UNIT_ID != null) mAdAdapter.loadAds(NATIVE_AD_1_UNIT_ID);
+            MoPubStaticNativeAdRenderer lRenderer = new MoPubStaticNativeAdRenderer(new ViewBinder.Builder(R.layout.ad_layout).titleId(R.id.native_ad_title).textId(R.id.native_ad_text).mainImageId(R.id.native_ad_main_image).iconImageId(R.id.native_ad_icon_image).build());
 
-        mViewMapper.registerAdapter(mAdAdapter, mLayoutManager, mNeedsItemDecoration);
+            mAdAdapter.registerAdRenderer(lRenderer);
+            if (NATIVE_AD_1_UNIT_ID != null) mAdAdapter.loadAds(NATIVE_AD_1_UNIT_ID);
+
+            mViewMapper.registerAdapter(mAdAdapter, mLayoutManager, mNeedsItemDecoration);
+
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+        }
     }
 }

@@ -3,7 +3,8 @@ package com.teioh.m_feed.UI.Maps;
 import java.util.List;
 import java.util.Map;
 
-public interface DrawerLayoutMap {
+public interface DrawerLayoutMap
+{
     void setDrawerLayoutListener();
 
     void closeDrawer();

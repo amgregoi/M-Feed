@@ -2,26 +2,51 @@ package com.teioh.m_feed.Utils;
 
 import android.util.Log;
 
-import java.lang.reflect.Method;
+import com.teioh.m_feed.MFeedApplication;
+
 
 /**
  * Created by amgregoi on 11/15/16.
  */
 public class MangaLogger
 {
-    public static void logInfo(String aTag, String aClass, String aMessage)
+    private final static String mApplication = MFeedApplication.class.getSimpleName();
+
+    /***
+     * TODO..
+     *
+     * @param aTag
+     * @param aMethod
+     * @param aMessage
+     */
+    public static void logInfo(String aTag, String aMethod, String aMessage)
     {
-        Log.i(aTag, aClass + " >> " + aMessage);
+        Log.i(mApplication, aTag + " >> " + aMethod + " > " + aMessage);
     }
 
-    public static void logError(String aTag, String aClass, String aError)
+    /***
+     * TODO..
+     *
+     * @param aTag
+     * @param aMethod
+     * @param aError
+     */
+    public static void logError(String aTag, String aMethod, String aError)
     {
-        Log.e(aTag, aClass + " >> " + aError);
+        Log.e(mApplication, aTag + " >> " + aMethod + " > " + aError);
     }
 
-    public static void logError(String aTag, String aClass, String aError, String aExtra)
+    /***
+     * TODO..
+     *
+     * @param aTag
+     * @param aMethod
+     * @param aError
+     * @param aExtra
+     */
+    public static void logError(String aTag, String aMethod, String aError, String aExtra)
     {
-        Log.e(aTag, aClass + " >> " + aExtra + " >> " + aError);
+        Log.e(mApplication, aTag + " >> " + aMethod + " > " + aExtra + " > " + aError);
     }
 
 }

@@ -15,32 +15,68 @@ import com.teioh.m_feed.R;
 import java.util.List;
 import java.util.Map;
 
-public class ExpandableListAdapter extends BaseExpandableListAdapter {
+public class ExpandableListAdapter extends BaseExpandableListAdapter
+{
 
     private Activity mContext;
     private Map<String, List<String>> mSourceCollection;
     private List<String> mDrawerItems;
 
-    public ExpandableListAdapter(Activity aContext, List<String> aDrawerItems, Map<String, List<String>> aSourceCollection) {
+    /***
+     * TODO..
+     *
+     * @param aContext
+     * @param aDrawerItems
+     * @param aSourceCollection
+     */
+    public ExpandableListAdapter(Activity aContext, List<String> aDrawerItems, Map<String, List<String>> aSourceCollection)
+    {
         mContext = aContext;
         mSourceCollection = aSourceCollection;
         mDrawerItems = aDrawerItems;
     }
 
-    public Object getChild(int aGroupPosition, int aChildPosition) {
+    /***
+     * TODO..
+     *
+     * @param aGroupPosition
+     * @param aChildPosition
+     * @return
+     */
+    public Object getChild(int aGroupPosition, int aChildPosition)
+    {
         return mSourceCollection.get(mDrawerItems.get(aGroupPosition)).get(aChildPosition);
     }
 
-    public long getChildId(int aGroupPosition, int aChildPosition) {
+    /***
+     * TODO..
+     *
+     * @param aGroupPosition
+     * @param aChildPosition
+     * @return
+     */
+    public long getChildId(int aGroupPosition, int aChildPosition)
+    {
         return aChildPosition;
     }
 
-
-    public View getChildView(final int aGroupPosition, final int aChildPosition, boolean aLastChild, View aConvertView, ViewGroup aParent) {
+    /***
+     * TODO..
+     *
+     * @param aGroupPosition
+     * @param aChildPosition
+     * @param aLastChild
+     * @param aConvertView
+     * @param aParent
+     * @return
+     */
+    public View getChildView(final int aGroupPosition, final int aChildPosition, boolean aLastChild, View aConvertView, ViewGroup aParent)
+    {
         final String lSource = (String) getChild(aGroupPosition, aChildPosition);
         LayoutInflater lInflater = mContext.getLayoutInflater();
 
-        if (aConvertView == null) {
+        if (aConvertView == null)
+        {
             aConvertView = lInflater.inflate(R.layout.drawer_source_list_item, null);
         }
 
@@ -49,26 +85,64 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         return aConvertView;
     }
 
-    public int getChildrenCount(int aGroupPosition) {
+    /***
+     * TODO..
+     *
+     * @param aGroupPosition
+     * @return
+     */
+    public int getChildrenCount(int aGroupPosition)
+    {
         return mSourceCollection.get(mDrawerItems.get(aGroupPosition)).size();
     }
 
-    public Object getGroup(int aGroupPosition) {
+    /***
+     * TODO..
+     *
+     * @param aGroupPosition
+     * @return
+     */
+    public Object getGroup(int aGroupPosition)
+    {
         return mDrawerItems.get(aGroupPosition);
     }
 
-    public int getGroupCount() {
+    /***
+     * TODO..
+     *
+     * @return
+     */
+    public int getGroupCount()
+    {
         return mDrawerItems.size();
     }
 
-    public long getGroupId(int aGroupPosition) {
+    /***
+     * TODO..
+     *
+     * @param aGroupPosition
+     * @return
+     */
+    public long getGroupId(int aGroupPosition)
+    {
         return aGroupPosition;
     }
 
-    public View getGroupView(int aGroupPosition, boolean aExpanded, View aConvertView, ViewGroup aParent) {
+    /***
+     * TODO..
+     *
+     * @param aGroupPosition
+     * @param aExpanded
+     * @param aConvertView
+     * @param aParent
+     * @return
+     */
+    public View getGroupView(int aGroupPosition, boolean aExpanded, View aConvertView, ViewGroup aParent)
+    {
         String lSource = (String) getGroup(aGroupPosition);
 
-        if (aConvertView == null) {
+        if (aConvertView == null)
+        {
             LayoutInflater lInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             aConvertView = lInflater.inflate(R.layout.drawer_list_item, null);
         }
@@ -79,11 +153,25 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         return aConvertView;
     }
 
-    public boolean hasStableIds() {
+    /***
+     * TODO..
+     *
+     * @return
+     */
+    public boolean hasStableIds()
+    {
         return true;
     }
 
-    public boolean isChildSelectable(int aGroupPosition, int aChildPosition) {
+    /***
+     * TODO..
+     *
+     * @param aGroupPosition
+     * @param aChildPosition
+     * @return
+     */
+    public boolean isChildSelectable(int aGroupPosition, int aChildPosition)
+    {
         return true;
     }
 }

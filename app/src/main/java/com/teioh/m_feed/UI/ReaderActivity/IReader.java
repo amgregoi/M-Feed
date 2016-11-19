@@ -11,9 +11,13 @@ import com.teioh.m_feed.UI.ReaderActivity.Widgets.GestureViewPager;
 /**
  * Created by amgregoi on 8/21/16.
  */
-public interface IReader {
-    interface ActivityView extends BaseContextMap, PageAdapterMap, ViewPager.OnPageChangeListener, Listeners.ReaderListener{
-
+public interface IReader
+{
+    /***
+     * TODO..
+     */
+    interface ActivityView extends BaseContextMap, PageAdapterMap, ViewPager.OnPageChangeListener, Listeners.ReaderListener
+    {
         void setCurrentChapter(int aPosition);
 
         void setupToolbar();
@@ -21,11 +25,11 @@ public interface IReader {
         void setScreenOrientation(boolean aLandscape);
     }
 
-    interface ActivityModel{
-
-    }
-
-    interface ActivityPresenter extends LifeCycleMap{
+    /***
+     * TODO..
+     */
+    interface ActivityPresenter extends LifeCycleMap
+    {
 
         void updateToolbar(int aPosition);
 
@@ -44,7 +48,11 @@ public interface IReader {
         void toggleVerticalScrollSettings(int aPosition);
     }
 
-    interface FragmentView extends BaseContextMap, PageAdapterMap, ViewPager.OnPageChangeListener, GestureViewPager.OnSingleTapListener{
+    /***
+     * TODO..
+     */
+    interface FragmentView extends BaseContextMap, PageAdapterMap, ViewPager.OnPageChangeListener, GestureViewPager.OnSingleTapListener
+    {
 
         void setupOnSingleTapListener();
 
@@ -82,11 +90,11 @@ public interface IReader {
 
     }
 
-    interface FragmentModel{
-
-    }
-
-    interface FragmentPresenter extends LifeCycleMap{
+    /***
+     * TODO..
+     */
+    interface FragmentPresenter extends LifeCycleMap
+    {
 
         void getImageUrls();
 

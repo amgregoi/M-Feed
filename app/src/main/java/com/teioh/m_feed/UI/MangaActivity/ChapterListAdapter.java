@@ -17,7 +17,8 @@ import java.util.List;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
-public class ChapterListAdapter extends ArrayAdapter {
+public class ChapterListAdapter extends ArrayAdapter
+{
 
     public final static String TAG = ChapterListAdapter.class.getSimpleName();
 
@@ -26,7 +27,15 @@ public class ChapterListAdapter extends ArrayAdapter {
     private Context mContext;
     private int mLayoutResource;
 
-    public ChapterListAdapter(Context aContext, int aResource, List<Chapter> aChapterList) {
+    /***
+     * TODO..
+     *
+     * @param aContext
+     * @param aResource
+     * @param aChapterList
+     */
+    public ChapterListAdapter(Context aContext, int aResource, List<Chapter> aChapterList)
+    {
         super(aContext, aResource, aChapterList);
         mContext = aContext;
         mChapterList = new ArrayList<>(aChapterList);
@@ -34,11 +43,21 @@ public class ChapterListAdapter extends ArrayAdapter {
         mLayoutResource = aResource;
     }
 
-    public View getView(int aPosition, View aConvertView, ViewGroup aParent) {
+    /***
+     * TODO..
+     *
+     * @param aPosition
+     * @param aConvertView
+     * @param aParent
+     * @return
+     */
+    public View getView(int aPosition, View aConvertView, ViewGroup aParent)
+    {
         View lRowView = aConvertView;
         ChapterHolder lHolder;
 
-        if (lRowView == null) {
+        if (lRowView == null)
+        {
             lRowView = mInflater.inflate(mLayoutResource, null);
 
             lHolder = new ChapterHolder();
@@ -46,26 +65,28 @@ public class ChapterListAdapter extends ArrayAdapter {
             lHolder.lChapterDate = (TextView) lRowView.findViewById(R.id.chapterDate);
             lRowView.setTag(R.string.ChapterListAdapterHolder, lHolder);
             lRowView.setTag(R.string.ChapterListAdapterTAG, TAG + ":" + aPosition);
-        } else {
+        }
+        else
+        {
             lHolder = (ChapterHolder) lRowView.getTag(R.string.ChapterListAdapterHolder);
         }
 
         Chapter lChapter = mChapterList.get(aPosition);
 
-        if (lChapter == null) {
+        if (lChapter == null)
+        {
             return lRowView;
         }
 
-        Chapter lViewedChapter = cupboard().withDatabase(MFDBHelper.getInstance().getReadableDatabase())
-                .query(Chapter.class)
-                .withSelection("mangaTitle = ? AND chapterNumber = ?", lChapter.getMangaTitle(), Integer.toString(lChapter.getChapterNumber()))
-                .get();
+        Chapter lViewedChapter = cupboard().withDatabase(MFDBHelper.getInstance().getReadableDatabase()).query(Chapter.class).withSelection("mangaTitle = ? AND chapterNumber = ?", lChapter.getMangaTitle(), Integer.toString(lChapter.getChapterNumber())).get();
 
 
-
-        if (lViewedChapter != null) {
+        if (lViewedChapter != null)
+        {
             lRowView.setBackgroundColor(mContext.getResources().getColor(R.color.ColorPrimary));
-        }else{
+        }
+        else
+        {
             lRowView.setBackgroundColor(mContext.getResources().getColor(R.color.charcoal));
         }
 
@@ -74,12 +95,20 @@ public class ChapterListAdapter extends ArrayAdapter {
         return lRowView;
     }
 
-    static class ChapterHolder {
+    /***
+     * TODO..
+     */
+    static class ChapterHolder
+    {
         TextView lMangaTitle;
         TextView lChapterDate;
     }
 
-    public void reverseChapterListOrder(){
+    /***
+     * TODO..
+     */
+    public void reverseChapterListOrder()
+    {
         Collections.reverse(mChapterList);
         notifyDataSetChanged();
     }

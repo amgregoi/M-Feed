@@ -15,69 +15,133 @@ import com.teioh.m_feed.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GenreListAdapter extends BaseAdapter {
+public class GenreListAdapter extends BaseAdapter
+{
 
     private ArrayList<String> mGenreList = null;
     private int mGenreSearchStatus[];
     private LayoutInflater mInflater;
 
-    public GenreListAdapter(Context aContext, ArrayList<String> aGenres) {
+    /***
+     * TODO..
+     *
+     * @param aContext
+     * @param aGenres
+     */
+    public GenreListAdapter(Context aContext, ArrayList<String> aGenres)
+    {
         mGenreList = aGenres;
         mGenreSearchStatus = new int[aGenres.size()];
         mInflater = LayoutInflater.from(aContext);
     }
 
-    public int getCount() {
+    /***
+     * TODO..
+     *
+     * @return
+     */
+    public int getCount()
+    {
         return mGenreList.size();
     }
 
-    public Object getItem(int aPosition) {
+    /***
+     * TODO..
+     *
+     * @param aPosition
+     * @return
+     */
+    public Object getItem(int aPosition)
+    {
         return mGenreList.get(aPosition);
     }
 
-    public long getItemId(int aPosition) {
+    /***
+     * TODO..
+     *
+     * @param aPosition
+     * @return
+     */
+    public long getItemId(int aPosition)
+    {
         return aPosition;
     }
 
-    public void updateItem(int aPosition, View aConvertView) {
+    /***
+     * TODO..
+     *
+     * @param aPosition
+     * @param aConvertView
+     */
+    public void updateItem(int aPosition, View aConvertView)
+    {
         Context lContext = aConvertView.getContext();
 
-        if(aPosition >= 0) {
+        if (aPosition >= 0)
+        {
             View row = aConvertView;
             GenreHolder holder = (GenreHolder) row.getTag();
             mGenreSearchStatus[aPosition] = (mGenreSearchStatus[aPosition] + 1) % 3;
 
-            if (mGenreSearchStatus[aPosition] == 0) {
+            if (mGenreSearchStatus[aPosition] == 0)
+            {
                 holder.lSymbolImageView.setImageDrawable(null);
                 holder.lLayout.setBackgroundColor(lContext.getResources().getColor(R.color.light_charcoal));
-            } else if (mGenreSearchStatus[aPosition] == 1) {
+            }
+            else if (mGenreSearchStatus[aPosition] == 1)
+            {
                 holder.lSymbolImageView.setImageDrawable(lContext.getDrawable(R.drawable.ic_add_white_18dp));
                 holder.lLayout.setBackgroundColor(lContext.getResources().getColor(R.color.green));
-            } else {
+            }
+            else
+            {
                 holder.lSymbolImageView.setImageDrawable(lContext.getDrawable(R.drawable.ic_remove_white_18dp));
                 holder.lLayout.setBackgroundColor(lContext.getResources().getColor(R.color.red));
             }
             row.invalidate();
         }
     }
-    public void resetGenreFilters(){
+
+    /***
+     * TODO..
+     */
+    public void resetGenreFilters()
+    {
         mGenreSearchStatus = new int[mGenreList.size()];
     }
 
-    public List<String> getGenreListByStatus(int aStatus) {
+    /***
+     * TODO..
+     *
+     * @param aStatus
+     * @return
+     */
+    public List<String> getGenreListByStatus(int aStatus)
+    {
         List<String> result = new ArrayList<>();
-        for (int iIndex = 0; iIndex < mGenreList.size(); iIndex++) {
+        for (int iIndex = 0; iIndex < mGenreList.size(); iIndex++)
+        {
             if (mGenreSearchStatus[iIndex] == aStatus) result.add(mGenreList.get(iIndex));
         }
         return result;
     }
 
-    public View getView(int aPosition, View aConvertView, ViewGroup aParent) {
+    /***
+     * TODO..
+     *
+     * @param aPosition
+     * @param aConvertView
+     * @param aParent
+     * @return
+     */
+    public View getView(int aPosition, View aConvertView, ViewGroup aParent)
+    {
         Context lContext = aParent.getContext();
         View lRowView = aConvertView;
         GenreHolder lGenreHolder;
 
-        if (lRowView == null) {
+        if (lRowView == null)
+        {
             lRowView = mInflater.inflate(R.layout.main_genre_grid_item, null);
 
             lGenreHolder = new GenreHolder();
@@ -86,24 +150,32 @@ public class GenreListAdapter extends BaseAdapter {
             lGenreHolder.lLayout = (RelativeLayout) lRowView.findViewById(R.id.card_view_container);
             lGenreHolder.lCard = (CardView) lRowView.findViewById(R.id.genre_card_view);
             lRowView.setTag(lGenreHolder);
-        } else {
+        }
+        else
+        {
             lGenreHolder = (GenreHolder) lRowView.getTag();
         }
 
         String lCurGenre = mGenreList.get(aPosition);
 
-        if (lCurGenre == null) {
+        if (lCurGenre == null)
+        {
             return lRowView;
         }
 
-        if (mGenreSearchStatus[aPosition] == 0) {
+        if (mGenreSearchStatus[aPosition] == 0)
+        {
             lGenreHolder.lSymbolImageView.setImageDrawable(null);
             lGenreHolder.lLayout.setBackgroundColor(lContext.getResources().getColor(R.color.light_charcoal));
-        } else if (mGenreSearchStatus[aPosition] == 1) {
-            lGenreHolder.lSymbolImageView.setImageDrawable(lContext.getDrawable(R.drawable.ic_add_white_18dp));
+        }
+        else if (mGenreSearchStatus[aPosition] == 1)
+        {
+            lGenreHolder.lSymbolImageView.setImageDrawable(lContext.getResources().getDrawable(R.drawable.ic_add_white_18dp));
             lGenreHolder.lLayout.setBackgroundColor(lContext.getResources().getColor(R.color.green));
-        } else {
-            lGenreHolder.lSymbolImageView.setImageDrawable(lContext.getDrawable(R.drawable.ic_remove_white_18dp));
+        }
+        else
+        {
+            lGenreHolder.lSymbolImageView.setImageDrawable(lContext.getResources().getDrawable(R.drawable.ic_remove_white_18dp));
             lGenreHolder.lLayout.setBackgroundColor(lContext.getResources().getColor(R.color.red));
         }
 
@@ -111,7 +183,11 @@ public class GenreListAdapter extends BaseAdapter {
         return lRowView;
     }
 
-    static class GenreHolder {
+    /***
+     * TODO..
+     */
+    static class GenreHolder
+    {
         TextView lTextView;
         ImageView lSymbolImageView;
         RelativeLayout lLayout;

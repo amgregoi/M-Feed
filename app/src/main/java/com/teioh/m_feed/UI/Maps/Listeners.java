@@ -2,12 +2,14 @@ package com.teioh.m_feed.UI.Maps;
 
 import com.teioh.m_feed.Models.Manga;
 
-public interface Listeners {
+public interface Listeners
+{
 
     /**
      * Home screen fragments communicate with activity
      */
-    interface MainFragmentListener {
+    interface MainFragmentListener
+    {
 
         boolean setRecentSelection(Long aId);
 
@@ -19,7 +21,8 @@ public interface Listeners {
     /**
      * Chapter reading fragment communicates with ReaderActivity
      */
-    interface ReaderListener {
+    interface ReaderListener
+    {
         void incrementChapter();
 
         void decrementChapter();
@@ -35,10 +38,6 @@ public interface Listeners {
         void onBackPressed();
 
         boolean checkActiveChapter(int aChapter);
-    }
-
-    interface MALDialogListener{
-        void MALSignOut();
     }
 
 }

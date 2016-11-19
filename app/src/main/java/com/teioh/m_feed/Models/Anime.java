@@ -6,7 +6,8 @@ import android.os.Parcelable;
 /**
  * Created by Asus1 on 11/6/2015.
  */
-public class Anime implements Parcelable {
+public class Anime implements Parcelable
+{
 
     private String mAnimeUrl;
     private String mPictureUrl;
@@ -19,88 +20,109 @@ public class Anime implements Parcelable {
     private String mSource;
 
 
-    public boolean ismFollowing() {
+    public boolean ismFollowing()
+    {
         return mFollowing;
     }
 
-    public void setmFollowing(boolean aFollowing) {
+    public void setmFollowing(boolean aFollowing)
+    {
         mFollowing = aFollowing;
     }
 
-    public String getmSource() {
+    public String getmSource()
+    {
         return mSource;
     }
 
-    public void setmSource(String aSource) {
+    public void setmSource(String aSource)
+    {
         aSource = aSource;
     }
 
-    public String getmPictureUrl() {
+    public String getmPictureUrl()
+    {
         return mPictureUrl;
     }
 
-    public void setmPictureUrl(String aPictureUrl) {
+    public void setmPictureUrl(String aPictureUrl)
+    {
         mPictureUrl = aPictureUrl;
     }
 
-    public String getmTitle() {
+    public String getmTitle()
+    {
         return mTitle;
     }
 
-    public void setmTitle(String aTitle) {
+    public void setmTitle(String aTitle)
+    {
         mTitle = aTitle;
     }
 
-    public String getmAlternateNames() {
+    public String getmAlternateNames()
+    {
         return mAlternateNames;
     }
 
-    public void setmAlternateNames(String aAlternateNames) {
+    public void setmAlternateNames(String aAlternateNames)
+    {
         mAlternateNames = aAlternateNames;
     }
 
-    public String getmGenres() {
+    public String getmGenres()
+    {
         return mGenres;
     }
 
-    public void setmGenres(String aGenres) {
+    public void setmGenres(String aGenres)
+    {
         mGenres = aGenres;
     }
 
-    public String getmStatus() {
+    public String getmStatus()
+    {
         return mStatus;
     }
 
-    public void setmStatus(String aStatus) {
+    public void setmStatus(String aStatus)
+    {
         mStatus = aStatus;
     }
 
-    public String getmSummary() {
+    public String getmSummary()
+    {
         return mSummary;
     }
 
-    public void setmSummary(String aSummary) {
+    public void setmSummary(String aSummary)
+    {
         mSummary = aSummary;
     }
 
-    public String getmAnimeUrl() {
+    public String getmAnimeUrl()
+    {
         return mAnimeUrl;
     }
 
-    public void setmAnimeUrl(String aAnimeUrl) {
+    public void setmAnimeUrl(String aAnimeUrl)
+    {
         mAnimeUrl = aAnimeUrl;
     }
 
-    public Anime(){}
+    public Anime()
+    {
+    }
 
-    public Anime(String aUrl, String aTitle){
+    public Anime(String aUrl, String aTitle)
+    {
         mAnimeUrl = aUrl;
         mTitle = aTitle;
     }
 
 
-
-    protected Anime(Parcel aIn) {
+    protected Anime(Parcel aIn)
+    {
         mAnimeUrl = aIn.readString();
         mPictureUrl = aIn.readString();
         mTitle = aIn.readString();
@@ -113,23 +135,30 @@ public class Anime implements Parcelable {
 
     }
 
-    public static final Creator<Anime> CREATOR = new Creator<Anime>() {
+    public static final Creator<Anime> CREATOR = new Creator<Anime>()
+    {
         @Override
-        public Anime createFromParcel(Parcel in) {
+        public Anime createFromParcel(Parcel in)
+        {
             return new Anime(in);
         }
 
         @Override
-        public Anime[] newArray(int size) {
+        public Anime[] newArray(int size)
+        {
             return new Anime[size];
         }
     };
 
-    @Override public int describeContents() {
+    @Override
+    public int describeContents()
+    {
         return 0;
     }
 
-    @Override public void writeToParcel(Parcel aDest, int aFlags) {
+    @Override
+    public void writeToParcel(Parcel aDest, int aFlags)
+    {
         aDest.writeString(mAnimeUrl);
         aDest.writeString(mPictureUrl);
         aDest.writeString(mTitle);

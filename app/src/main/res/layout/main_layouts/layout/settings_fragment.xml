@@ -6,6 +6,7 @@
                 android:clickable="true"
                 android:orientation="vertical">
 
+	<!-- GENERAL GROUPING -->
 	<LinearLayout
 		android:id="@+id/general_group"
 		android:layout_width="match_parent"
@@ -93,49 +94,9 @@
 			android:background="@color/white"
 			/>
 
-		<RelativeLayout
-			android:id="@+id/reset_followed_manga"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:background="@drawable/selector_settings"
-			android:clickable="true"
-			>
-
-			<CheckBox
-				android:id="@+id/clear_followed_manga_box"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_alignParentEnd="true"
-				android:button="@drawable/ic_box_uncheck"
-				android:gravity="center"
-				/>
-
-			<LinearLayout
-				android:id="@+id/followed_contents"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_alignParentStart="true"
-				android:layout_toLeftOf="@id/clear_followed_manga_box"
-				android:orientation="vertical">
-
-				<TextView
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:text="Checkbox test"
-					android:textColor="@color/white"
-					android:textSize="16sp"/>
-
-				<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Checking checkbox layout"
-					android:textColor="@color/grey"
-					android:textSize="14sp"
-					/>
-			</LinearLayout>
-		</RelativeLayout>
 	</LinearLayout>
 
+	<!-- ACCOUNT GROUPING -->
 	<LinearLayout
 		android:id="@+id/account_group"
 		android:layout_width="match_parent"

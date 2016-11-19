@@ -8,9 +8,10 @@ import com.teioh.m_feed.MFeedApplication;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.Utils.MFDBHelper;
+import com.teioh.m_feed.Utils.MangaLogger;
 import com.teioh.m_feed.Utils.NetworkService;
 import com.teioh.m_feed.WebSources.RequestWrapper;
-import com.teioh.m_feed.WebSources.Source;
+import com.teioh.m_feed.WebSources.SourceBase;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -24,8 +25,9 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MangaHere extends Source {
-
+public class MangaHere extends SourceBase
+{
+    final public static String TAG = MangaHere.class.getSimpleName();
     final public String SourceKey = "MangaHere";
 
     final String mBaseUrl = "http://mangahere.co/";
@@ -68,6 +70,8 @@ public class MangaHere extends Source {
      * @return
      */
     private List<Manga> scrapeUpdatestoManga(final Document parsedDocument) {
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
         List<Manga> mangaList = new ArrayList<>();
         Elements mangaElements = parsedDocument.select("dl");
 
@@ -91,7 +95,7 @@ public class MangaHere extends Source {
                 }
             }
         }
-        Log.i("Pull Recent Updates", "Finished pulling updates");
+        MangaLogger.logError(TAG, lMethod, " Finished parsing recent updates");
         if (mangaList.size() == 0) return null;
         return mangaList;
     }

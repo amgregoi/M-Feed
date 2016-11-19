@@ -13,22 +13,34 @@ import io.fabric.sdk.android.Fabric;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
-public class MFeedApplication extends Application {
+public class MFeedApplication extends Application
+{
 
+    private static MFeedApplication aInstance;
 
-    static {
+    /***
+     * TODO..
+     */
+    static
+    {
         cupboard().register(Manga.class);
         cupboard().register(Chapter.class);
     }
 
-    private static MFeedApplication aInstance;
-
-    public MFeedApplication() {
+    /***
+     * TODO..
+     */
+    public MFeedApplication()
+    {
         aInstance = this;
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    public void onCreate() {
+    public void onCreate()
+    {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
 
@@ -37,19 +49,33 @@ public class MFeedApplication extends Application {
         SharedPrefs.initializePreferences();
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    public void onLowMemory() {
+    public void onLowMemory()
+    {
         super.onLowMemory();
         Glide.get(this).clearMemory();
     }
 
+    /***
+     * TODO..
+     * @param aLevel
+     */
     @Override
-    public void onTrimMemory(int aLevel) {
+    public void onTrimMemory(int aLevel)
+    {
         super.onTrimMemory(aLevel);
         Glide.get(this).trimMemory(aLevel);
     }
 
-    public static synchronized MFeedApplication getInstance() {
+    /***
+     * TODO..
+     * @return
+     */
+    public static synchronized MFeedApplication getInstance()
+    {
         return aInstance;
     }
 

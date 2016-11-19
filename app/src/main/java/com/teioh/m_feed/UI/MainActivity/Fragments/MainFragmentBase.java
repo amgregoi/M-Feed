@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.futuremind.recyclerviewfastscroll.FastScroller;
 import com.mopub.nativeads.MoPubRecyclerAdapter;
+import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.Adapters.RecycleSearchAdapter;
@@ -26,24 +27,34 @@ import butterknife.ButterKnife;
 /**
  * Created by amgregoi on 8/20/16.
  */
-public abstract class MainFragmentBase extends Fragment implements IMain.FragmentView{
+public abstract class MainFragmentBase extends Fragment implements IMain.FragmentView
+{
     @Bind(R.id.manga_recycle_view) RecyclerView mGridView;
     @Bind(R.id.fastscroll) FastScroller mFastSCroller;
 
     protected IMain.FragmentPresenter mFragmentPresenter;
     protected Listeners.MainFragmentListener mListener;
 
-
+    /***
+     * TODO.
+     * @param aInflater
+     * @param aContainer
+     * @param aSavedInstanceState
+     * @return
+     */
     public abstract View onCreateView(LayoutInflater aInflater, @Nullable ViewGroup aContainer, @Nullable Bundle aSavedInstanceState);
 
     /***
      * TODO...
+     *
      * @param aSave
      */
     @Override
-    public void onActivityCreated(@Nullable Bundle aSave) {
+    public void onActivityCreated(@Nullable Bundle aSave)
+    {
         super.onActivityCreated(aSave);
-        if (aSave != null) {
+        if (aSave != null)
+        {
             mFragmentPresenter.onRestoreState(aSave);
         }
         mFragmentPresenter.init(getArguments());
@@ -56,37 +67,38 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
      * @param aRestore
      */
     @Override
-    public void onSaveInstanceState(Bundle aRestore) {
+    public void onSaveInstanceState(Bundle aRestore)
+    {
         super.onSaveInstanceState(aRestore);
         mFragmentPresenter.onSaveState(aRestore);
     }
 
     /***
      * TODO...
-     *
      */
     @Override
-    public void onResume() {
+    public void onResume()
+    {
         super.onResume();
         mFragmentPresenter.onResume();
     }
 
     /***
      * TODO...
-     *
      */
     @Override
-    public void onPause() {
+    public void onPause()
+    {
         super.onPause();
         mFragmentPresenter.onPause();
     }
 
     /***
      * TODO...
-     *
      */
     @Override
-    public void onDestroyView() {
+    public void onDestroyView()
+    {
         super.onDestroyView();
         mFragmentPresenter.onDestroy();
         ButterKnife.unbind(this);
@@ -98,31 +110,30 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
      * @param aContext
      */
     @Override
-    public void onAttach(Context aContext) {
+    public void onAttach(Context aContext)
+    {
         super.onAttach(aContext);
 
-        if (aContext instanceof Listeners.MainFragmentListener)
-            mListener = (Listeners.MainFragmentListener) aContext;
-        else
-            throw new ClassCastException(aContext.toString() + " must implement Listeners.MainFragmentListener");
+        if (aContext instanceof Listeners.MainFragmentListener) mListener = (Listeners.MainFragmentListener) aContext;
+        else throw new ClassCastException(aContext.toString() + " must implement Listeners.MainFragmentListener");
     }
 
     /***
      * TODO...
-     *
      */
     @Override
-    public void onLowMemory() {
+    public void onLowMemory()
+    {
         super.onLowMemory();
         Glide.get(getContext()).clearMemory();
     }
 
     /***
      * TODO...
-     *
      */
     @Override
-    public void updateSource() {
+    public void updateSource()
+    {
         mFragmentPresenter.updateSource();
     }
 
@@ -131,8 +142,8 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
      *
      * @param aFilter
      */
-    @Override
-    public void onFilterSelected(int aFilter) {
+    public void onFilterSelected(MangaEnums.eFilterStatus aFilter)
+    {
         mFragmentPresenter.onFilterSelected(aFilter);
     }
 
@@ -142,16 +153,17 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
      * @param aMangaList
      */
     @Override
-    public void onGenreFilterSelected(ArrayList<Manga> aMangaList) {
+    public void onGenreFilterSelected(ArrayList<Manga> aMangaList)
+    {
         mFragmentPresenter.onGenreFilterSelected(aMangaList);
     }
 
     /***
      * TODO...
-     *
      */
     @Override
-    public void onClearGenreFilter() {
+    public void onClearGenreFilter()
+    {
         mFragmentPresenter.onClearGenreFilter();
     }
 
@@ -163,13 +175,14 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
      * @param aNeedsDecoration
      */
     @Override
-    public void registerAdapter(MoPubRecyclerAdapter aAdapter, RecyclerView.LayoutManager aLayout, boolean aNeedsDecoration) {
-        if (aAdapter != null) {
+    public void registerAdapter(MoPubRecyclerAdapter aAdapter, RecyclerView.LayoutManager aLayout, boolean aNeedsDecoration)
+    {
+        if (aAdapter != null)
+        {
             mGridView.swapAdapter(aAdapter, true);
             mGridView.setLayoutManager(aLayout);
 
-            if (aNeedsDecoration)
-                mGridView.addItemDecoration(new RecycleSearchAdapter.SpacesItemDecoration(20));
+            if (aNeedsDecoration) mGridView.addItemDecoration(new RecycleSearchAdapter.SpacesItemDecoration(20));
         }
     }
 
@@ -179,7 +192,8 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
      * @param aManga
      */
     @Override
-    public void updateSelection(Manga aManga) {
+    public void updateSelection(Manga aManga)
+    {
         mFragmentPresenter.updateSelection(aManga);
     }
 
@@ -190,7 +204,8 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
      * @return
      */
     @Override
-    public boolean setRecentSelection(Long aId) {
+    public boolean setRecentSelection(Long aId)
+    {
         return mListener.setRecentSelection(aId);
     }
 
@@ -200,7 +215,8 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
      * @param aManga
      */
     @Override
-    public void updateRecentSelection(Manga aManga) {
+    public void updateRecentSelection(Manga aManga)
+    {
         mFragmentPresenter.updateSelection(aManga);
     }
 
@@ -211,7 +227,8 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
      * @return
      */
     @Override
-    public boolean onQueryTextSubmit(String aQueryText) {
+    public boolean onQueryTextSubmit(String aQueryText)
+    {
         return false;
     }
 
@@ -222,26 +239,24 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
      * @return
      */
     @Override
-    public boolean onQueryTextChange(String aQueryText) {
+    public boolean onQueryTextChange(String aQueryText)
+    {
         mFragmentPresenter.onQueryTextChange(aQueryText);
         return true;
     }
 
     /***
      * TODO...
-     *
      */
     public abstract void startRefresh();
 
     /***
      * TODO...
-     *
      */
     public abstract void stopRefresh();
 
     /***
      * TODO...
-     *
      */
     public abstract void setupSwipeRefresh();
 

@@ -9,39 +9,70 @@ import android.view.ViewGroup;
 
 import com.teioh.m_feed.R;
 
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends Fragment
+{
     public final static String TAG = SettingsFragment.class.getSimpleName();
 
     //TODO implement settings with shared prefs
 
-    public static Fragment getnewInstance(){
+    /***
+     * TODO..
+     * @return
+     */
+    public static Fragment getnewInstance()
+    {
         Fragment lDialog = new SettingsFragment();
         return lDialog;
     }
 
+    /***
+     * TODO..
+     * @param aInflater
+     * @param aContainer
+     * @param aSavedInstanceState
+     * @return
+     */
     @Override
-    public View onCreateView(LayoutInflater aInflater, @Nullable ViewGroup aContainer, @Nullable Bundle aSavedInstanceState) {
+    public View onCreateView(LayoutInflater aInflater, @Nullable ViewGroup aContainer, @Nullable Bundle aSavedInstanceState)
+    {
         View lView = aInflater.inflate(R.layout.settings_fragment, aContainer, false);
         return lView;
     }
 
+    /***
+     * TODO..
+     * @param aSave
+     */
     @Override
-    public void onActivityCreated(@Nullable Bundle aSave) {
+    public void onActivityCreated(@Nullable Bundle aSave)
+    {
         super.onActivityCreated(aSave);
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    public void onResume() {
+    public void onResume()
+    {
         super.onResume();
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    public void onPause() {
+    public void onPause()
+    {
         super.onPause();
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    public void onDestroyView() {
+    public void onDestroyView()
+    {
         super.onDestroyView();
     }
 }

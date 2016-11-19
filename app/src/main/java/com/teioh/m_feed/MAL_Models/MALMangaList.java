@@ -5,8 +5,7 @@ import org.simpleframework.xml.Root;
 
 import java.util.ArrayList;
 
-@Root(name = "Manga")
-public class MALMangaList {
-    @ElementList(entry="entry", inline=true)
-    public ArrayList<MALManga> mMangaList;
+@Root(name = "Manga") public class MALMangaList
+{
+    @ElementList(entry = "entry", inline = true) public ArrayList<MALManga> mMangaList;
 }

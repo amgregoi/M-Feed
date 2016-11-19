@@ -3,7 +3,8 @@ package com.teioh.m_feed.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Chapter implements Parcelable {
+public class Chapter implements Parcelable
+{
     public final static String TAG = "CHAPTER";
 
     private String url;
@@ -15,17 +16,20 @@ public class Chapter implements Parcelable {
     private int currentPage;
     private int totalPages;
 
-    public Chapter() {
+    public Chapter()
+    {
         currentPage = 0;
         totalPages = 1;
     }
 
-    public Chapter(String aTitle) {
+    public Chapter(String aTitle)
+    {
         mangaTitle = aTitle;
         chapterTitle = aTitle;
     }
 
-    public Chapter(String aUrl, String aMangaTitle, String aChapterTitle, String aDate, int aNum) {
+    public Chapter(String aUrl, String aMangaTitle, String aChapterTitle, String aDate, int aNum)
+    {
         url = aUrl;
         date = aDate;
         mangaTitle = aMangaTitle;
@@ -33,7 +37,8 @@ public class Chapter implements Parcelable {
         chapterNumber = aNum;
     }
 
-    public Chapter(String aUrl, String aMangaTitle, String aChapterTitle, String aDate) {
+    public Chapter(String aUrl, String aMangaTitle, String aChapterTitle, String aDate)
+    {
         url = aUrl;
         date = aDate;
         mangaTitle = aMangaTitle;
@@ -41,12 +46,14 @@ public class Chapter implements Parcelable {
     }
 
     @Override
-    public int describeContents() {
+    public int describeContents()
+    {
         return 0;
     }
 
     @Override
-    public void writeToParcel(Parcel aDest, int aFlags) {
+    public void writeToParcel(Parcel aDest, int aFlags)
+    {
         aDest.writeString(url);
         aDest.writeString(date);
         aDest.writeString(mangaTitle);
@@ -56,7 +63,8 @@ public class Chapter implements Parcelable {
         aDest.writeInt(totalPages);
     }
 
-    protected Chapter(Parcel aIn) {
+    protected Chapter(Parcel aIn)
+    {
         url = aIn.readString();
         date = aIn.readString();
         mangaTitle = aIn.readString();
@@ -66,77 +74,94 @@ public class Chapter implements Parcelable {
         totalPages = aIn.readInt();
     }
 
-    public static final Creator<Chapter> CREATOR = new Creator<Chapter>() {
+    public static final Creator<Chapter> CREATOR = new Creator<Chapter>()
+    {
         @Override
-        public Chapter createFromParcel(Parcel in) {
+        public Chapter createFromParcel(Parcel in)
+        {
             return new Chapter(in);
         }
 
         @Override
-        public Chapter[] newArray(int size) {
+        public Chapter[] newArray(int size)
+        {
             return new Chapter[size];
         }
     };
 
-    public String getChapterUrl() {
+    public String getChapterUrl()
+    {
         return url;
     }
 
-    public void setChapterUrl(String aUrl) {
+    public void setChapterUrl(String aUrl)
+    {
         url = aUrl;
     }
 
-    public String getChapterDate() {
+    public String getChapterDate()
+    {
         return date;
     }
 
-    public void setChapterDate(String aDate) {
+    public void setChapterDate(String aDate)
+    {
         aDate = aDate;
     }
 
-    public String getChapterTitle() {
+    public String getChapterTitle()
+    {
         return chapterTitle;
     }
 
-    public void setChapterTitle(String aTitle) {
+    public void setChapterTitle(String aTitle)
+    {
         chapterTitle = aTitle;
     }
 
-    public int getChapterNumber() {
+    public int getChapterNumber()
+    {
         return chapterNumber;
     }
 
-    public void setChapterNumber(int aNum) {
+    public void setChapterNumber(int aNum)
+    {
         chapterNumber = aNum;
     }
 
-    public String toString() {
+    public String toString()
+    {
         return chapterTitle;
     }
 
-    public String getMangaTitle() {
+    public String getMangaTitle()
+    {
         return mangaTitle;
     }
 
-    public void setMangaTitle(String aTitle) {
+    public void setMangaTitle(String aTitle)
+    {
         mangaTitle = aTitle;
     }
 
-    public int getCurrentPage() {
-        if(currentPage >= 0)
-            return currentPage;
+    public int getCurrentPage()
+    {
+        if (currentPage >= 0) return currentPage;
         else return 1;
     }
 
-    public void setCurrentPage(int aCurrentPage) {
+    public void setCurrentPage(int aCurrentPage)
+    {
         currentPage = aCurrentPage;
     }
 
-    public int getTotalPages() {
+    public int getTotalPages()
+    {
         return totalPages;
     }
 
-    public void setTotalPages(int aTotlePages) {
+    public void setTotalPages(int aTotlePages)
+    {
         totalPages = aTotlePages;
     }
 

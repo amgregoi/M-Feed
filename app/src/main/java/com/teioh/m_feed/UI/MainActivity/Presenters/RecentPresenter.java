@@ -6,6 +6,7 @@ import android.widget.Toast;
 import com.teioh.m_feed.MFeedApplication;
 import com.teioh.m_feed.UI.MainActivity.Fragments.RecentFragment;
 import com.teioh.m_feed.UI.MainActivity.IMain;
+import com.teioh.m_feed.Utils.MangaLogger;
 import com.teioh.m_feed.Utils.NetworkService;
 import com.teioh.m_feed.WebSources.SourceFactory;
 
@@ -25,6 +26,9 @@ public class RecentPresenter extends MainFragmentPresenterBase
     @Override
     public void updateMangaList()
     {
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
+
         if (mMangaListSubscription != null)
         {
             mMangaListSubscription.unsubscribe();
@@ -41,11 +45,13 @@ public class RecentPresenter extends MainFragmentPresenterBase
             }
             else
             {
-                ((RecentFragment)mViewMapper).showNoWifiView();
+                ((RecentFragment) mViewMapper).showNoWifiView();
             }
-        } catch (Exception aException)
+        }
+        catch (Exception aException)
         {
-            Log.e(TAG, aException.getMessage());
+            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+
         }
     }
 }

@@ -27,7 +27,7 @@
     <!--<item name="android:windowTranslucentStatus">true</item>-->
 
     <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
-	    <item name="android:icon">@drawable/filter</item>
+	    <item name="android:icon">@drawable/filter_outline_24dp</item>
     </style>
 
 	<style name="PopupMenu" parent="@android:style/Widget.PopupMenu">

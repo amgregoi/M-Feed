@@ -6,7 +6,8 @@ import android.os.Parcelable;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 
-public class RequestWrapper implements Parcelable {
+public class RequestWrapper implements Parcelable
+{
     public static final String TAG = RequestWrapper.class.getSimpleName();
 
     private Manga mManga;
@@ -17,7 +18,8 @@ public class RequestWrapper implements Parcelable {
      *
      * @param aManga
      */
-    public RequestWrapper(Manga aManga) {
+    public RequestWrapper(Manga aManga)
+    {
         mManga = aManga;
     }
 
@@ -26,23 +28,28 @@ public class RequestWrapper implements Parcelable {
      *
      * @param aChapter
      */
-    public RequestWrapper(Chapter aChapter) {
+    public RequestWrapper(Chapter aChapter)
+    {
         mChapter = aChapter;
     }
 
-    public static final Parcelable.Creator<RequestWrapper> CREATOR = new Parcelable.Creator<RequestWrapper>() {
+    public static final Parcelable.Creator<RequestWrapper> CREATOR = new Parcelable.Creator<RequestWrapper>()
+    {
         @Override
-        public RequestWrapper createFromParcel(Parcel aInputParcel) {
+        public RequestWrapper createFromParcel(Parcel aInputParcel)
+        {
             return new RequestWrapper(aInputParcel);
         }
 
         @Override
-        public RequestWrapper[] newArray(int aSize) {
+        public RequestWrapper[] newArray(int aSize)
+        {
             return new RequestWrapper[aSize];
         }
     };
 
-    private RequestWrapper(Parcel aIn) {
+    private RequestWrapper(Parcel aIn)
+    {
         mManga = aIn.readParcelable(ClassLoader.getSystemClassLoader());
     }
 
@@ -51,7 +58,8 @@ public class RequestWrapper implements Parcelable {
      *
      * @return
      */
-    public String getSource() {
+    public String getSource()
+    {
         return mManga.getSource();
     }
 
@@ -60,7 +68,8 @@ public class RequestWrapper implements Parcelable {
      *
      * @return
      */
-    public String getMangaUrl() {
+    public String getMangaUrl()
+    {
         return mManga.getMangaURL();
     }
 
@@ -69,7 +78,8 @@ public class RequestWrapper implements Parcelable {
      *
      * @return
      */
-    public String getMangaTitle() {
+    public String getMangaTitle()
+    {
         return mManga.getTitle();
     }
 
@@ -78,17 +88,20 @@ public class RequestWrapper implements Parcelable {
      *
      * @return
      */
-    public String getChapterUrl(){
+    public String getChapterUrl()
+    {
         return mChapter.getChapterUrl();
     }
 
     @Override
-    public int describeContents() {
+    public int describeContents()
+    {
         return 0;
     }
 
     @Override
-    public void writeToParcel(Parcel aOut, int aFlags) {
+    public void writeToParcel(Parcel aOut, int aFlags)
+    {
         aOut.writeParcelable(mManga, 0);
     }
 }

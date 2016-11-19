@@ -19,6 +19,7 @@ import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.Adapters.GenreListAdapter;
 import com.teioh.m_feed.Utils.MFDBHelper;
+import com.teioh.m_feed.Utils.MangaLogger;
 import com.teioh.m_feed.WebSources.SourceFactory;
 
 import java.util.ArrayList;
@@ -31,7 +32,8 @@ import nl.qbusict.cupboard.QueryResultIterable;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
-public class FilterDialogFragment extends DialogFragment {
+public class FilterDialogFragment extends DialogFragment
+{
     public final static String TAG = FilterDialogFragment.class.getSimpleName();
 
     @Bind(R.id.genreList) GridView mGenreGridView;
@@ -41,13 +43,26 @@ public class FilterDialogFragment extends DialogFragment {
 
     private GenreListAdapter mAdapter;
 
-    public static DialogFragment getnewInstance(){
+    /***
+     * TODO..
+     * @return
+     */
+    public static DialogFragment getnewInstance()
+    {
         DialogFragment dialog = new FilterDialogFragment();
         return dialog;
     }
 
+    /***
+     * TODO..
+     * @param aInflater
+     * @param aContainer
+     * @param aSavedInstanceState
+     * @return
+     */
     @Override
-    public View onCreateView(LayoutInflater aInflater, @Nullable ViewGroup aContainer, @Nullable Bundle aSavedInstanceState) {
+    public View onCreateView(LayoutInflater aInflater, @Nullable ViewGroup aContainer, @Nullable Bundle aSavedInstanceState)
+    {
         View lView = aInflater.inflate(R.layout.main_search_dialog, aContainer, false);
         ButterKnife.bind(this, lView);
 
@@ -60,13 +75,22 @@ public class FilterDialogFragment extends DialogFragment {
         return lView;
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    public void onDestroy() {
+    public void onDestroy()
+    {
         super.onDestroy();
         ButterKnife.unbind(this);
     }
 
-    private void registerAdapter(BaseAdapter aAdapter) {
+    /***
+     * TODO..
+     * @param aAdapter
+     */
+    private void registerAdapter(BaseAdapter aAdapter)
+    {
         mGenreGridView.setAdapter(aAdapter);
         mGenreGridView.setOnItemClickListener((aParent, aView, aPosition, aId) -> ((GenreListAdapter) aAdapter).updateItem(aPosition, aView));
         mSearchButton.setOnClickListener(aView -> performSearch());
@@ -80,7 +104,13 @@ public class FilterDialogFragment extends DialogFragment {
         });
     }
 
-    private void performSearch() {
+    /***
+     * TODO..
+     */
+    private void performSearch()
+    {
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
         StringBuilder lSelection = new StringBuilder();
         List<String> lSelectionArgs = new ArrayList<>();
 
@@ -91,37 +121,45 @@ public class FilterDialogFragment extends DialogFragment {
         List<String> lRemoveList = mAdapter.getGenreListByStatus(2);
 
         //search with no parameters selected, reset to original data
-        if(lKeepList.size() == 0 && lRemoveList.size() == 0) {
+        if (lKeepList.size() == 0 && lRemoveList.size() == 0)
+        {
             FilterDialogFragment.this.getActivity().onActivityReenter(Activity.RESULT_OK, null);
             getDialog().dismiss();
         }
-        else {
-            Log.e(TAG, "starting setup");
+        else
+        {
+            MangaLogger.logInfo(TAG, lMethod, "Starting filter search");
 
-            for (String iString : lKeepList) {
+            for (String iString : lKeepList)
+            {
                 lSelection.append(" AND ");
                 lSelection.append("genres" + " LIKE ?");
                 lSelectionArgs.add("%" + iString.replaceAll("\\s", "") + "%"); //genres have been stripped of spaces in the database
             }
 
-            for (String iString : lRemoveList) {
+            for (String iString : lRemoveList)
+            {
                 lSelection.append(" AND ");
                 lSelection.append("genres" + " NOT LIKE ?");
                 lSelectionArgs.add("%" + iString.replaceAll("\\s", "") + "%"); //genres have been stripped of spaces in the database
             }
 
-            QueryResultIterable<Manga> iFilteredManga = cupboard().withDatabase(MFDBHelper.getInstance().getReadableDatabase()).query(Manga.class)
-                    .withSelection(lSelection.toString(), lSelectionArgs.toArray(new String[lSelectionArgs.size()]))
-                    .query();
+            QueryResultIterable<Manga> iFilteredManga = cupboard().withDatabase(MFDBHelper.getInstance().getReadableDatabase()).query(Manga.class).withSelection(lSelection.toString(), lSelectionArgs.toArray(new String[lSelectionArgs.size()])).query();
 
-            if (iFilteredManga.iterator().hasNext()) {
+            if (iFilteredManga.iterator().hasNext())
+            {
                 Intent lIntent = new Intent();
                 lIntent.putParcelableArrayListExtra("MANGA", new ArrayList<>(iFilteredManga.list())); //TODO decide if i want to pass whole list or query contents
                 FilterDialogFragment.this.getActivity().onActivityReenter(Activity.RESULT_OK, lIntent);
                 getDialog().dismiss();
-            } else {
+            }
+            else
+            {
                 Toast.makeText(getContext(), "Search result empty", Toast.LENGTH_SHORT).show();
             }
+
+            MangaLogger.logInfo(TAG, lMethod, "Finished filter search");
+
         }
 
         //

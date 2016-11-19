@@ -8,9 +8,10 @@ import com.teioh.m_feed.MFeedApplication;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.Utils.MFDBHelper;
+import com.teioh.m_feed.Utils.MangaLogger;
 import com.teioh.m_feed.Utils.NetworkService;
 import com.teioh.m_feed.WebSources.RequestWrapper;
-import com.teioh.m_feed.WebSources.Source;
+import com.teioh.m_feed.WebSources.SourceBase;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -29,9 +30,10 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class Batoto extends Source {
-
-    final public static String SourceKey = "Batoto"; //Source.SourceType.Batoto.toString();
+public class Batoto extends SourceBase
+{
+    final public static String TAG = Batoto.class.getSimpleName();
+    final public static String SourceKey = "Batoto"; //SourceBase.FilterEnum.Batoto.toString();
 
     final private static String mBaseUrl = "http://bato.to/";
     final private static String mUpdatesUrl = "http://bato.to/search_ajax?order_cond=update&order=desc&p="; //add page number 1,2,3...
@@ -40,21 +42,14 @@ public class Batoto extends Source {
      * builds list of manga for recently updated page
      */
     @Override
-    public Observable<List<Manga>> getRecentUpdatesObservable() {
+    public Observable<List<Manga>> getRecentUpdatesObservable()
+    {
         List<Manga> lReturn = new ArrayList<>();
         NetworkService lCurService = NetworkService.getTemporaryInstance();
-        return lCurService
-                .getResponseCustomHeaders(mUpdatesUrl + 1, constructRequestHeaders())
-                .flatMap(response -> NetworkService.mapResponseToString(response))
-                .flatMap(html -> Observable.just(scrapeUpdatestoManga(lReturn, html)))
-                .flatMap(list -> lCurService.getResponse(mUpdatesUrl + 2).flatMap(response -> NetworkService.mapResponseToString(response)).flatMap(html -> Observable.just(scrapeUpdatestoManga(list, html))))
-                .flatMap(list -> lCurService.getResponse(mUpdatesUrl + 3).flatMap(response -> NetworkService.mapResponseToString(response)).flatMap(html -> Observable.just(scrapeUpdatestoManga(list, html))))
-                .observeOn(AndroidSchedulers.mainThread())
-                .retry(10)
-                .doOnError(throwable -> {
-                    throwable.printStackTrace();
-                    throw new UnsupportedOperationException("onError exception");
-                });
+        return lCurService.getResponseCustomHeaders(mUpdatesUrl + 1, constructRequestHeaders()).flatMap(response -> NetworkService.mapResponseToString(response)).flatMap(html -> Observable.just(scrapeUpdatestoManga(lReturn, html))).flatMap(list -> lCurService.getResponse(mUpdatesUrl + 2).flatMap(response -> NetworkService.mapResponseToString(response)).flatMap(html -> Observable.just(scrapeUpdatestoManga(list, html)))).flatMap(list -> lCurService.getResponse(mUpdatesUrl + 3).flatMap(response -> NetworkService.mapResponseToString(response)).flatMap(html -> Observable.just(scrapeUpdatestoManga(list, html)))).observeOn(AndroidSchedulers.mainThread()).retry(10).doOnError(throwable -> {
+            throwable.printStackTrace();
+            throw new UnsupportedOperationException("onError exception");
+        });
     }
 
     /***
@@ -63,13 +58,18 @@ public class Batoto extends Source {
      * @param aList
      * @param aHtml
      */
-    public List<Manga> scrapeUpdatestoManga(List<Manga> aList, String aHtml) {
-        if (!aHtml.contains("No (more) comics found!")) {
+    public List<Manga> scrapeUpdatestoManga(List<Manga> aList, String aHtml)
+    {
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
+        if (!aHtml.contains("No (more) comics found!"))
+        {
             Document lParseDocuments = Jsoup.parse(aHtml);
             Elements lMangaElements = lParseDocuments.select("tr:not([id]):not([class])");
 
 
-            for (Element iHtmlBlock : lMangaElements) {
+            for (Element iHtmlBlock : lMangaElements)
+            {
                 Element lUrlElement = iHtmlBlock.select("a[href^=http://bato.to]").first();
                 Element lNameElement = lUrlElement;
 
@@ -78,20 +78,22 @@ public class Batoto extends Source {
                 Manga lManga = MFDBHelper.getInstance().getManga(lMangaUrl, SourceKey);
 
 
-                if (lManga != null) {
+                if (lManga != null)
+                {
                     aList.add(lManga);
-                } else {
+                }
+                else
+                {
                     lManga = new Manga(lMangaTitle, lMangaUrl, SourceKey);
                     aList.add(lManga);
                     MFDBHelper.getInstance().putManga(lManga);
-                    updateMangaObservable(new RequestWrapper(lManga))
-                            .subscribeOn(Schedulers.computation())
-                            .doOnError(throwable -> Toast.makeText(MFeedApplication.getInstance(), throwable.getMessage(), Toast.LENGTH_SHORT))
-                            .subscribe();
+                    updateMangaObservable(new RequestWrapper(lManga)).subscribeOn(Schedulers.computation()).doOnError(throwable -> Toast.makeText(MFeedApplication.getInstance(), throwable.getMessage(), Toast.LENGTH_SHORT)).subscribe();
                 }
             }
         }
-        Log.i("Pull Recent Updates", "Finished pulling updates");
+
+        MangaLogger.logError(TAG, lMethod, " Finished parsing recent updates");
+
         return aList;
     }
 
@@ -102,16 +104,12 @@ public class Batoto extends Source {
      * @return
      */
     @Override
-    public Observable<List<Chapter>> getChapterListObservable(final RequestWrapper request) {
-        return NetworkService.getPermanentInstance()
-                .getResponseCustomHeaders(request.getMangaUrl(), constructRequestHeaders())
-                .flatMap(response -> NetworkService.mapResponseToString(response))
-                .flatMap(unparsedHtml -> Observable.just(parseHtmlToChapters(request, unparsedHtml)))
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnError(throwable -> {
-                    throwable.printStackTrace();
-                    throw new UnsupportedOperationException("onError exception");
-                });
+    public Observable<List<Chapter>> getChapterListObservable(final RequestWrapper request)
+    {
+        return NetworkService.getPermanentInstance().getResponseCustomHeaders(request.getMangaUrl(), constructRequestHeaders()).flatMap(response -> NetworkService.mapResponseToString(response)).flatMap(unparsedHtml -> Observable.just(parseHtmlToChapters(request, unparsedHtml))).observeOn(AndroidSchedulers.mainThread()).doOnError(throwable -> {
+            throwable.printStackTrace();
+            throw new UnsupportedOperationException("onError exception");
+        });
     }
 
     /***
@@ -121,12 +119,14 @@ public class Batoto extends Source {
      * @param unparsedHtml
      * @return
      */
-    private List<Chapter> parseHtmlToChapters(RequestWrapper request, String unparsedHtml) {
+    private List<Chapter> parseHtmlToChapters(RequestWrapper request, String unparsedHtml)
+    {
         List<Chapter> chapterList = new ArrayList<>();
 
         Document parsedDocument = Jsoup.parse(unparsedHtml);
         Elements chapterElements = parsedDocument.select("tr.row.lang_English.chapter_row");
-        for (Element chapterElement : chapterElements) {
+        for (Element chapterElement : chapterElements)
+        {
 
             Chapter newChapter = new Chapter();
 
@@ -134,19 +134,25 @@ public class Batoto extends Source {
             Element nameElement = urlElement;
             Element dateElement = chapterElement.select("td").get(4);
 
-            if (urlElement != null) {
+            if (urlElement != null)
+            {
                 String fieldUrl = urlElement.attr("href");
                 newChapter.setChapterUrl(fieldUrl);
             }
-            if (nameElement != null) {
+            if (nameElement != null)
+            {
                 String fieldName = nameElement.text().trim();
                 newChapter.setChapterTitle(fieldName);
             }
-            if (dateElement != null) {
-                try {
+            if (dateElement != null)
+            {
+                try
+                {
                     long date = new SimpleDateFormat("dd MMMMM yyyy - hh:mm a", Locale.ENGLISH).parse(dateElement.text()).getTime();
                     newChapter.setChapterDate(new Date(date).toString());
-                } catch (ParseException e) {
+                }
+                catch (ParseException e)
+                {
 
                 }
             }
@@ -156,7 +162,8 @@ public class Batoto extends Source {
         }
 
         Collections.reverse(chapterList);
-        for (int i = 0; i < chapterList.size(); i++) {
+        for (int i = 0; i < chapterList.size(); i++)
+        {
             chapterList.get(i).setChapterNumber(i + 1);
         }
 
@@ -171,41 +178,31 @@ public class Batoto extends Source {
      * @return
      */
     @Override
-    public Observable<String> getChapterImageListObservable(final RequestWrapper request) {
+    public Observable<String> getChapterImageListObservable(final RequestWrapper request)
+    {
         final List<String> temporaryCachedImageUrls = new ArrayList<>();
 
         final NetworkService currentService = NetworkService.getTemporaryInstance();
 
-        return currentService
-                .getResponseCustomHeaders(request.getChapterUrl(), constructRequestHeaders())
-                .flatMap(response -> NetworkService.mapResponseToString(response))
-                .flatMap(unparsedHtml -> Observable.just(parseHtmlToPageUrls(unparsedHtml)))
-                .flatMap(pageUrls -> Observable.from(pageUrls.toArray(new String[pageUrls.size()])))
-                .buffer(5)
-                .concatMap(batchedPageUrls -> {
-                    List<Observable<String>> imageUrlObservables = new ArrayList<>();
-                    for (String pageUrl : batchedPageUrls) {
-                        Observable<String> temporaryObservable = currentService
-                                .getResponseCustomHeaders(pageUrl, constructRequestHeaders())
-                                .flatMap(response -> NetworkService.mapResponseToString(response))
-                                .flatMap(unparsedHtml -> Observable.just(parseHtmlToImageUrl(unparsedHtml)))
-                                .subscribeOn(Schedulers.io());
+        return currentService.getResponseCustomHeaders(request.getChapterUrl(), constructRequestHeaders()).flatMap(response -> NetworkService.mapResponseToString(response)).flatMap(unparsedHtml -> Observable.just(parseHtmlToPageUrls(unparsedHtml))).flatMap(pageUrls -> Observable.from(pageUrls.toArray(new String[pageUrls.size()]))).buffer(5).concatMap(batchedPageUrls -> {
+            List<Observable<String>> imageUrlObservables = new ArrayList<>();
+            for (String pageUrl : batchedPageUrls)
+            {
+                Observable<String> temporaryObservable = currentService.getResponseCustomHeaders(pageUrl, constructRequestHeaders()).flatMap(response -> NetworkService.mapResponseToString(response)).flatMap(unparsedHtml -> Observable.just(parseHtmlToImageUrl(unparsedHtml))).subscribeOn(Schedulers.io());
 
-                        imageUrlObservables.add(temporaryObservable);
-                    }
+                imageUrlObservables.add(temporaryObservable);
+            }
 
-                    return Observable.zip(imageUrlObservables, args -> {
-                        List<String> imageUrls = new ArrayList<>();
-                        for (Object uncastImageUrl : args) {
-                            imageUrls.add(String.valueOf(uncastImageUrl));
-                        }
+            return Observable.zip(imageUrlObservables, args -> {
+                List<String> imageUrls = new ArrayList<>();
+                for (Object uncastImageUrl : args)
+                {
+                    imageUrls.add(String.valueOf(uncastImageUrl));
+                }
 
-                        return imageUrls;
-                    });
-                })
-                .concatMap(batchedImageUrls -> Observable.from(batchedImageUrls.toArray(new String[batchedImageUrls.size()])))
-                .doOnNext(imageUrl -> temporaryCachedImageUrls.add(imageUrl))
-                .onBackpressureBuffer();
+                return imageUrls;
+            });
+        }).concatMap(batchedImageUrls -> Observable.from(batchedImageUrls.toArray(new String[batchedImageUrls.size()]))).doOnNext(imageUrl -> temporaryCachedImageUrls.add(imageUrl)).onBackpressureBuffer();
     }
 
     /***
@@ -214,13 +211,15 @@ public class Batoto extends Source {
      * @param unparsedHtml
      * @return
      */
-    private List<String> parseHtmlToPageUrls(String unparsedHtml) {
+    private List<String> parseHtmlToPageUrls(String unparsedHtml)
+    {
         Document parsedDocument = Jsoup.parse(unparsedHtml);
 
         List<String> pageUrlList = new ArrayList<>();
 
         Elements pageUrlElements = parsedDocument.getElementById("page_select").getElementsByTag("option");
-        for (Element pageUrlElement : pageUrlElements) {
+        for (Element pageUrlElement : pageUrlElements)
+        {
             pageUrlList.add(pageUrlElement.attr("value"));
         }
 
@@ -233,7 +232,8 @@ public class Batoto extends Source {
      * @param unparsedHtml
      * @return
      */
-    private String parseHtmlToImageUrl(String unparsedHtml) {
+    private String parseHtmlToImageUrl(String unparsedHtml)
+    {
         int beginIndex = unparsedHtml.indexOf("<img id=\"comic_page\"");
         int endIndex = unparsedHtml.indexOf("</a>", beginIndex);
         String trimmedHtml = unparsedHtml.substring(beginIndex, endIndex);
@@ -254,17 +254,13 @@ public class Batoto extends Source {
      * @return
      */
     @Override
-    public Observable<Manga> updateMangaObservable(final RequestWrapper request) {
+    public Observable<Manga> updateMangaObservable(final RequestWrapper request)
+    {
         String mangaId = request.getMangaUrl().substring(request.getMangaUrl().lastIndexOf("r") + 1);
-        return NetworkService.getPermanentInstance()
-                .getResponseCustomHeaders("http://bato.to/comic_pop?id=" + mangaId, constructRequestHeaders())
-                .flatMap(response -> NetworkService.mapResponseToString(response))
-                .flatMap(unparsedHtml -> Observable.just(scrapeAndUpdateManga(request, unparsedHtml)))
-                .onErrorReturn(null)
-                .doOnError(throwable -> {
-                    throwable.printStackTrace();
-                    throw new UnsupportedOperationException("onError exception");
-                });
+        return NetworkService.getPermanentInstance().getResponseCustomHeaders("http://bato.to/comic_pop?id=" + mangaId, constructRequestHeaders()).flatMap(response -> NetworkService.mapResponseToString(response)).flatMap(unparsedHtml -> Observable.just(scrapeAndUpdateManga(request, unparsedHtml))).onErrorReturn(null).doOnError(throwable -> {
+            throwable.printStackTrace();
+            throw new UnsupportedOperationException("onError exception");
+        });
     }
 
     /***
@@ -274,7 +270,8 @@ public class Batoto extends Source {
      * @param unparsedHtml
      * @return
      */
-    private Manga scrapeAndUpdateManga(RequestWrapper request, String unparsedHtml) {
+    private Manga scrapeAndUpdateManga(RequestWrapper request, String unparsedHtml)
+    {
         Document parsedDocument = Jsoup.parse(unparsedHtml);
 
         Element artistElement = parsedDocument.select("a[href^=http://bato.to/search?artist_name]").first();
@@ -284,32 +281,39 @@ public class Batoto extends Source {
 
         Manga newManga = MFDBHelper.getInstance().getManga(request.getMangaUrl(), SourceKey);
 
-        if (newManga == null)
-            newManga = new Manga(request.getMangaTitle(), request.getMangaUrl(), SourceKey);
+        if (newManga == null) newManga = new Manga(request.getMangaTitle(), request.getMangaUrl(), SourceKey);
 
-        if (artistElement != null) {
+        if (artistElement != null)
+        {
             String fieldArtist = artistElement.text();
             newManga.setArtist(fieldArtist);
             newManga.setAuthor(fieldArtist);
         }
-        if (descriptionElement != null) {
+        if (descriptionElement != null)
+        {
             String fieldDescription = descriptionElement.text().substring("Description:".length()).trim();
             newManga.setDescription(fieldDescription);
         }
-        if (genreElements != null) {
+        if (genreElements != null)
+        {
             String fieldGenres = "";
-            for (int index = 0; index < genreElements.size(); index++) {
+            for (int index = 0; index < genreElements.size(); index++)
+            {
                 String currentGenre = genreElements.get(index).attr("alt");
 
-                if (index < genreElements.size() - 1) {
+                if (index < genreElements.size() - 1)
+                {
                     fieldGenres += currentGenre + ", ";
-                } else {
+                }
+                else
+                {
                     fieldGenres += currentGenre;
                 }
             }
             newManga.setmGenre(fieldGenres);
         }
-        if (thumbnailUrlElement != null) {
+        if (thumbnailUrlElement != null)
+        {
             String fieldThumbnailUrl = thumbnailUrlElement.attr("src");
             newManga.setPicUrl(fieldThumbnailUrl);
         }
@@ -321,7 +325,6 @@ public class Batoto extends Source {
         newManga.setInitialized(1);
 
         MFDBHelper.getInstance().putManga(newManga);
-        Log.e("RAWR", newManga.getTitle() + ": updated");
         return newManga;
 
     }
@@ -331,7 +334,8 @@ public class Batoto extends Source {
      *
      * @return
      */
-    private Headers constructRequestHeaders() {
+    private Headers constructRequestHeaders()
+    {
         Headers.Builder headerBuilder = new Headers.Builder();
         headerBuilder.add("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64)");
         headerBuilder.add("Cookie", "lang_option=English");

@@ -13,34 +13,55 @@ import android.widget.TextView;
 
 import com.teioh.m_feed.R;
 
-public class FProgressDialogFragment extends DialogFragment implements TextView.OnEditorActionListener {
+public class FProgressDialogFragment extends DialogFragment implements TextView.OnEditorActionListener
+{
 
-    public static DialogFragment getNewInstance(String aUrl){
+    /***
+     * TODO..
+     * @param aUrl
+     * @return
+     */
+    public static DialogFragment getNewInstance(String aUrl)
+    {
         DialogFragment lFragment = new FProgressDialogFragment();
         return lFragment;
     }
-    
+
+    /***
+     * TODO..
+     * @param aInflater
+     * @param aContainer
+     * @param aSavedInstanceState
+     * @return
+     */
     @Override
-    public View onCreateView(LayoutInflater aInflater, ViewGroup aContainer, Bundle aSavedInstanceState) {
+    public View onCreateView(LayoutInflater aInflater, ViewGroup aContainer, Bundle aSavedInstanceState)
+    {
         getDialog().getWindow().setBackgroundDrawableResource(R.drawable.rounded_dialog);
 
         return super.onCreateView(aInflater, aContainer, aSavedInstanceState);
     }
 
+    /***
+     * TODO..
+     * @param aSavedInstanceState
+     * @return
+     */
     @Override
-    public Dialog onCreateDialog(Bundle aSavedInstanceState) {
+    public Dialog onCreateDialog(Bundle aSavedInstanceState)
+    {
         // Set a theme on the dialog builder constructor!
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyCustomTheme);
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        return builder.setView(inflater.inflate(R.layout.manga_info_header_inc_dialog, null))
-                .setPositiveButton("OK", (dialog, which) -> {
-                    FProgressDialogFragment.this.getActivity().onActivityReenter(Activity.RESULT_OK, FProgressDialogFragment.this.getActivity().getIntent());
-                }).create();
+        return builder.setView(inflater.inflate(R.layout.manga_info_header_inc_dialog, null)).setPositiveButton("OK", (dialog, which) -> {
+            FProgressDialogFragment.this.getActivity().onActivityReenter(Activity.RESULT_OK, FProgressDialogFragment.this.getActivity().getIntent());
+        }).create();
     }
 
     @Override
-    public boolean onEditorAction(TextView lView, int aActionId, KeyEvent aEvent) {
+    public boolean onEditorAction(TextView lView, int aActionId, KeyEvent aEvent)
+    {
         return false;
     }
 }

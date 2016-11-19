@@ -24,19 +24,22 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.teioh.m_feed.MAL_Models.MALMangaList;
+import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MangaActivity.Fragments.FImageDialogFragment;
 import com.teioh.m_feed.UI.MangaActivity.Fragments.FProgressDialogFragment;
 import com.teioh.m_feed.UI.MangaActivity.Fragments.FRemoveDialogFragment;
+import com.teioh.m_feed.WebSources.Sources.MangaEden;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
 
-public class MangaActivity extends AppCompatActivity implements IManga.ActivityView {
+public class MangaActivity extends AppCompatActivity implements IManga.ActivityView
+{
     final public static String TAG = MangaActivity.class.getSimpleName();
 
     @Bind(R.id.activityTitle) TextView mActivityTitle;
@@ -63,67 +66,115 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     private View mMangaInfoHeader;
     private View mChapterHeader;
 
-
     private IManga.ActivityPresenter mMangaPresenter;
 
-    public static Intent getNewInstance(Context aContext, String aTitle) {
+    /***
+     * TODO..
+     *
+     * @param aContext
+     * @param aTitle
+     * @return
+     */
+    public static Intent getNewInstance(Context aContext, String aTitle)
+    {
         Intent intent = new Intent(aContext, MangaActivity.class);
         intent.putExtra(Manga.TAG, aTitle);
         return intent;
     }
 
+    /***
+     * TODO..
+     *
+     * @param aSavedInstanceState
+     */
     @Override
-    protected void onCreate(Bundle aSavedInstanceState) {
+    protected void onCreate(Bundle aSavedInstanceState)
+    {
         super.onCreate(aSavedInstanceState);
         setContentView(R.layout.manga_activity);
         ButterKnife.bind(this);
 
         mMangaPresenter = new MangaPresenter(this);
 
-        if (aSavedInstanceState != null) {
+        if (aSavedInstanceState != null)
+        {
             mMangaPresenter.onRestoreState(aSavedInstanceState);
         }
         mMangaPresenter.init(getIntent().getExtras());
     }
 
+    /***
+     * TODO..
+     *
+     * @param aOutState
+     */
     @Override
-    protected void onSaveInstanceState(Bundle aOutState) {
+    protected void onSaveInstanceState(Bundle aOutState)
+    {
         super.onSaveInstanceState(aOutState);
         mMangaPresenter.onSaveState(aOutState);
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    protected void onResume() {
+    protected void onResume()
+    {
         super.onResume();
         mMangaPresenter.onResume();
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    protected void onPause() {
+    protected void onPause()
+    {
         super.onPause();
         mMangaPresenter.onPause();
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    protected void onDestroy() {
+    protected void onDestroy()
+    {
         super.onDestroy();
         ButterKnife.unbind(this);
         mMangaPresenter.onDestroy();
     }
 
+    /***
+     * TODO..
+     *
+     * @param aMenu
+     * @return
+     */
     @Override
-    public boolean onCreateOptionsMenu(Menu aMenu) {
-        if(mFollowButton.getVisibility() == View.GONE) {
+    public boolean onCreateOptionsMenu(Menu aMenu)
+    {
+        if (mFollowButton.getVisibility() == View.GONE)
+        {
             getMenuInflater().inflate(R.menu.menu_chapter, aMenu);
             return true;
         }
         return false;
     }
 
+    /***
+     * TODO..
+     *
+     * @param aMenuItem
+     * @return
+     */
     @Override
-    public boolean onOptionsItemSelected(MenuItem aMenuItem) {
+    public boolean onOptionsItemSelected(MenuItem aMenuItem)
+    {
         int lId = aMenuItem.getItemId();
-        if (lId == R.id.remove_list) {
+        if (lId == R.id.remove_list)
+        {
             //popup dialog
             DialogFragment newFragment = FRemoveDialogFragment.getNewInstance(R.string.DialogFragmentRemove);
             newFragment.show(getSupportFragmentManager(), "dialog");
@@ -133,57 +184,86 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
         return super.onOptionsItemSelected(aMenuItem);
     }
 
+    /***
+     * TODO..
+     *
+     * @param aResultCode
+     * @param aData
+     */
     @Override
-    public void onActivityReenter(int aResultCode, Intent aData) {
+    public void onActivityReenter(int aResultCode, Intent aData)
+    {
         super.onActivityReenter(aResultCode, aData);
-        if (aResultCode == Activity.RESULT_OK) {
-            if(aData == null) {
+        if (aResultCode == Activity.RESULT_OK)
+        {
+            if (aData == null)
+            {
                 // After Ok code.
-                mSyncMALButton.setVisibility(View.GONE);
+//                mSyncMALButton.setVisibility(View.GONE);
                 mFollowButton.setVisibility(View.VISIBLE);
+                mMALStatusButton.setVisibility(View.GONE);
                 mMangaPresenter.onUnfollowButtonClick();
                 invalidateOptionsMenu();
             }//else if(data.hasextra(etc...)
-        } else if (aResultCode == Activity.RESULT_CANCELED){
+        }
+        else if (aResultCode == Activity.RESULT_CANCELED)
+        {
             // After Cancel code.
         }
     }
 
+    /***
+     * TODO..
+     *
+     * @param aTitle
+     */
     @Override
-    public void setActivityTitle(String aTitle) {
+    public void setActivityTitle(String aTitle)
+    {
         mActivityTitle.setText(aTitle);
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    public void setupToolBar() {
+    public void setupToolBar()
+    {
         setSupportActionBar(mToolBar);
         mToolBar.setNavigationIcon(R.drawable.ic_back);
         mToolBar.setNavigationOnClickListener(v -> onBackPressed());
     }
 
+    /***
+     * TODO..
+     *
+     * @return
+     */
     @Override
-    public Context getContext() {
+    public Context getContext()
+    {
         return this;
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    public void onBackPressed() {
+    public void onBackPressed()
+    {
         super.onBackPressed();
     }
 
+    /***
+     * TODO..
+     *
+     * @param aManga
+     */
     @Override
-    public void changeFollowButton(boolean aFollowing) {
-//        if (following) {
-//            mFollowButton.setText("Remove from list");
-//            //dialog fragment
-//        } else {
-//            mFollowButton.setText("Add to list");
-//        }
-    }
-
-    @Override
-    public void setMangaViews(Manga aManga) {
-        if (aManga != null && getContext() != null) {
+    public void setMangaViews(Manga aManga)
+    {
+        if (aManga != null && getContext() != null)
+        {
             mDescriptionText.setText(aManga.getDescription());
             mDescriptionText.setTypeface(Typeface.SERIF);
             mTitleText.setText(aManga.getTitle() + "\n" + aManga.getSource());
@@ -192,60 +272,87 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
             mGenresText.setText(aManga.getmGenre());
             mAlternateText.setText(aManga.getAlternate());
             mStatusText.setText(aManga.getStatus());
-            Glide.with(getContext())
-                    .load(aManga.getPicUrl())
-                    .skipMemoryCache(true)
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .into(mMangaImage);
+            Glide.with(getContext()).load(aManga.getPicUrl()).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(mMangaImage);
             mChapterList.addHeaderView(mMangaInfoHeader, null, false);
             mChapterList.addHeaderView(mChapterHeader, null, false);
 
-            if(aManga.getFollowing()){
+            if (aManga.getFollowing())
+            {
                 mFollowButton.setVisibility(View.GONE);
                 //TODO update database (add MAL id column)
                 //TODO to check if sync set up, and make other buttons visible
 //                mSyncMALButton.setVisibility(View.VISIBLE); //TODO uncomment when MAL implemented
                 mMALStatusButton.setVisibility(View.VISIBLE);
-                mMALStatusButton.setText(Manga.FollowType.values()[aManga.getFollowingValue()-1].toString());
+                mMALStatusButton.setText(MangaEnums.eFollowType.values()[aManga.getFollowingValue() - 1].toString());
                 invalidateOptionsMenu();
             }
         }
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    public void startRefresh() {
+    public void startRefresh()
+    {
         mSwipeRefresh.setRefreshing(true);
 
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    public void stopRefresh() {
+    public void stopRefresh()
+    {
         mSwipeRefresh.post(() -> mSwipeRefresh.setRefreshing(false));
         mSwipeRefresh.setEnabled(false);
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    public void setupSwipeRefresh() {
+    public void setupSwipeRefresh()
+    {
         mSwipeRefresh.post(() -> mSwipeRefresh.setRefreshing(true));
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    public void hideCoverLayout() {
+    public void hideCoverLayout()
+    {
         mChapterList.setVisibility(View.GONE);
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    public void showCoverLayout() {
+    public void showCoverLayout()
+    {
         mChapterList.setVisibility(View.VISIBLE);
     }
 
+    /***
+     * TODO..
+     *
+     * @param aAdapter
+     */
     @Override
-    public void registerAdapter(BaseAdapter aAdapter) {
+    public void registerAdapter(BaseAdapter aAdapter)
+    {
         mChapterList.setAdapter(aAdapter);
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    public void initializeHeaderViews() {
+    public void initializeHeaderViews()
+    {
         mMangaInfoHeader = LayoutInflater.from(getContext()).inflate(R.layout.manga_info_header, null);
         mChapterHeader = LayoutInflater.from(getContext()).inflate(R.layout.manga_chapter_list_header, null);
 
@@ -268,13 +375,12 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
         mMultiIncButton = (Button) mMangaInfoHeader.findViewById(R.id.multi_update);
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    public void onMALSyncClicked(MALMangaList aList) {
-        //start fragment or activity
-    }
-
-    @Override
-    public void setupHeaderButtons() {
+    public void setupHeaderButtons()
+    {
 
         //Image Click
         mMangaImage.setOnClickListener(v -> {
@@ -286,7 +392,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
         mFollowButton.setOnClickListener(v -> {
             mMangaPresenter.onFollwButtonClick(1);
             mFollowButton.setVisibility(View.GONE); //uncomment after menu remove is  put in
-            mSyncMALButton.setVisibility(View.VISIBLE);   //TODO uncomment when MAL implemented
+//            mSyncMALButton.setVisibility(View.VISIBLE);   //TODO uncomment when MAL implemented
             mMALStatusButton.setVisibility(View.VISIBLE);
             invalidateOptionsMenu();
         });
@@ -296,13 +402,13 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
             //Creating the instance of PopupMenu
             PopupMenu popup = new PopupMenu(MangaActivity.this, mMALStatusButton);
             //Inflating the Popup using xml file
-            popup.getMenuInflater()
-                    .inflate(R.menu.menu_follow, popup.getMenu());
+            popup.getMenuInflater().inflate(R.menu.menu_follow, popup.getMenu());
 
             //registering popup with OnMenuItemClickListener
             popup.setOnMenuItemClickListener(item -> {
-                Manga.FollowType lValues[] = Manga.FollowType.values();
-                switch(item.getItemId()) {
+                MangaEnums.eFollowType lValues[] = MangaEnums.eFollowType.values();
+                switch (item.getItemId())
+                {
                     case R.id.reading:
                         mMangaPresenter.onFollwButtonClick(1);
                         mMALStatusButton.setText(lValues[0].toString());
@@ -334,7 +440,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
 //            mMangaPresenter.onMALSyncClicked();
             mMangaPresenter.onUnfollowButtonClick();
             mFollowButton.setVisibility(View.VISIBLE); //uncomment after menu remove is  put in
-            mSyncMALButton.setVisibility(View.GONE);   //TODO uncomment when MAL implemented
+//            mSyncMALButton.setVisibility(View.GONE);   //TODO uncomment when MAL implemented
             mMALStatusButton.setVisibility(View.GONE);
             invalidateOptionsMenu();
 
@@ -358,25 +464,49 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
         });
     }
 
+    /***
+     * TODO..
+     *
+     * @param aAdapter
+     * @param aView
+     * @param aPosition
+     */
     @OnItemClick(R.id.chapter_list)
-    void onItemClick(AdapterView<?> aAdapter, View aView, int aPosition) {
+    void onItemClick(AdapterView<?> aAdapter, View aView, int aPosition)
+    {
         mMangaPresenter.onChapterClicked((Chapter) aAdapter.getItemAtPosition(aPosition));
     }
 
+    /***
+     * TODO..
+     *
+     * @param aView
+     */
     @OnClick(R.id.orderButton)
-    public void orderButton(View aView) {
+    public void orderButton(View aView)
+    {
         mMangaPresenter.chapterOrderButtonClick();
         mChapterList.setSelection(1);
     }
 
+    /***
+     * TODO..
+     *
+     * @param aLevel
+     */
     @Override
-    public void onTrimMemory(int aLevel) {
+    public void onTrimMemory(int aLevel)
+    {
         super.onTrimMemory(aLevel);
         Glide.get(this).trimMemory(aLevel);
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    public void onLowMemory() {
+    public void onLowMemory()
+    {
         super.onLowMemory();
         Glide.get(this).clearMemory();
     }

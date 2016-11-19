@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ExpandableListAdapter;
@@ -41,7 +42,8 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements IMain.ActivityView {
+public class MainActivity extends AppCompatActivity implements IMain.ActivityView
+{
     public final static String TAG = MainActivity.class.getSimpleName();
 
     @Bind(R.id.search_view) SearchView mSearchView;
@@ -59,132 +61,215 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     private ActionBarDrawerToggle mDrawerToggle;
     private IMain.ActivityPresenter mMainPresenter;
 
-    public static Intent getNewInstance(Context aContext){
+    /***
+     * TODO..
+     * @param aContext
+     * @return
+     */
+    public static Intent getNewInstance(Context aContext)
+    {
         Intent lIntent = new Intent(aContext, MainActivity.class);
         return lIntent;
     }
 
+    /***
+     * TODO..
+     * @param aSavedInstanceState
+     */
     @Override
-    protected void onCreate(Bundle aSavedInstanceState) {
+    protected void onCreate(Bundle aSavedInstanceState)
+    {
         super.onCreate(aSavedInstanceState);
         setContentView(R.layout.main_activity_layout);
         ButterKnife.bind(this);
         mMainPresenter = new MainPresenter(this);
 
-        if (aSavedInstanceState != null) {
+        if (aSavedInstanceState != null)
+        {
             mMainPresenter.onRestoreState(aSavedInstanceState);
         }
 
         mMainPresenter.init(getIntent().getExtras());
         mToast = Toast.makeText(this, "Press back again to exit!", Toast.LENGTH_SHORT);
-
-        //start service in new thread, substantial slow down on main thread
-        //startService(new Intent(this, RecentUpdateService.class));
     }
 
+    /***
+     * TODO..
+     * @param aSave
+     */
     @Override
-    protected void onSaveInstanceState(Bundle aSave) {
+    protected void onSaveInstanceState(Bundle aSave)
+    {
         super.onSaveInstanceState(aSave);
         mMainPresenter.onSaveState(aSave);
     }
 
+    /***
+     * TODO..
+     * @param aSavedInstanceState
+     */
     @Override
-    protected void onPostCreate(Bundle aSavedInstanceState) {
+    protected void onPostCreate(Bundle aSavedInstanceState)
+    {
         super.onPostCreate(aSavedInstanceState);
         mDrawerToggle.syncState();
     }
 
+    /***
+     * TODO..
+     * @param aNewConfig
+     */
     @Override
-    public void onConfigurationChanged(Configuration aNewConfig) {
+    public void onConfigurationChanged(Configuration aNewConfig)
+    {
         super.onConfigurationChanged(aNewConfig);
         mDrawerToggle.onConfigurationChanged(aNewConfig);
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    protected void onResume() {
+    protected void onResume()
+    {
         super.onResume();
         mMainPresenter.onResume();
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    protected void onPause() {
+    protected void onPause()
+    {
         super.onPause();
         mMainPresenter.onPause();
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    public void onDestroy() {
+    public void onDestroy()
+    {
         super.onDestroy();
         mMainPresenter.onDestroy();
     }
 
+    /***
+     * TODO..
+     * @param aLevel
+     */
     @Override
-    public void onTrimMemory(int aLevel) {
+    public void onTrimMemory(int aLevel)
+    {
         super.onTrimMemory(aLevel);
         Glide.get(this).trimMemory(aLevel);
     }
 
+    /***
+     * TODO..
+     */
     @Override
-    public void onLowMemory() {
+    public void onLowMemory()
+    {
         super.onLowMemory();
         Glide.get(this).clearMemory();
     }
 
+    /***
+     * TODO..
+     * @param aMenu
+     * @return
+     */
     @Override
-    public boolean onCreateOptionsMenu(Menu aMenu) {
+    public boolean onCreateOptionsMenu(Menu aMenu)
+    {
         return true;
     }
 
+    /***
+     * TODO..
+     * @param aItem
+     * @return
+     */
     @Override
-    public boolean onOptionsItemSelected(MenuItem aItem) {
+    public boolean onOptionsItemSelected(MenuItem aItem)
+    {
         int lId = aItem.getItemId();
 
-        if (lId == R.id.settings) {
-            return true;
-        } else if (lId == R.id.refresh) {
-            return true;
-        } else if (lId == R.id.views) {
+        if (lId == R.id.settings)
+        {
             return true;
         }
 
         return super.onOptionsItemSelected(aItem);
     }
 
+    /***
+     * TODO..
+     * @param aQueryText
+     * @return
+     */
     @Override
-    public boolean onQueryTextSubmit(String aQueryText) {
+    public boolean onQueryTextSubmit(String aQueryText)
+    {
         return false;
     }
 
+    /***
+     * TODO..
+     * @param aQueryText
+     * @return
+     */
     @Override
-    public boolean onQueryTextChange(String aQueryText) {
+    public boolean onQueryTextChange(String aQueryText)
+    {
         mMainPresenter.updateQueryChange(aQueryText);
         return false;
     }
 
+    /***
+     * TODO..
+     * @param aResultCode
+     * @param aData
+     */
     @Override
-    public void onActivityReenter(int aResultCode, Intent aData) {
+    public void onActivityReenter(int aResultCode, Intent aData)
+    {
         super.onActivityReenter(aResultCode, aData);
 
-        if (aResultCode == Activity.RESULT_OK) {
-            if (aData != null) {
+        if (aResultCode == Activity.RESULT_OK)
+        {
+            if (aData != null)
+            {
                 mMainPresenter.onGenreFilterSelected(aData);
                 mActivityTitle.setText(getString(R.string.filter_active));
                 mFilterView.setImageDrawable(getResources().getDrawable(R.drawable.filter_remove_outline_24dp));
 
-            } else {
+            }
+            else
+            {
                 mMainPresenter.onClearGenreFilter();
             }
         }
     }
 
+    /***
+     * TODO..
+     * @return
+     */
     @Override
-    public Context getContext() {
+    public Context getContext()
+    {
         return this;
     }
 
     @Override
-    public void registerAdapter(ViewPagerAdapterMain aAdapter) {
-        if (aAdapter != null) {
+    public void registerAdapter(ViewPagerAdapterMain aAdapter)
+    {
+        if (aAdapter != null)
+        {
             mViewPager.setAdapter(aAdapter);
             mViewPager.setOffscreenPageLimit(3);
             mTabLayout.setViewPager(mViewPager);
@@ -192,17 +277,20 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     }
 
     @Override
-    public void setDrawerLayoutListener() {
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                mToolBar, R.string.app_name, R.string.Login) {
+    public void setDrawerLayoutListener()
+    {
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolBar, R.string.app_name, R.string.Login)
+        {
             /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
+            public void onDrawerClosed(View view)
+            {
                 super.onDrawerClosed(view);
                 invalidateOptionsMenu();  // creates call to onPrepareOptionsMenu()
             }
 
             /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
+            public void onDrawerOpened(View drawerView)
+            {
                 super.onDrawerOpened(drawerView);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
@@ -211,27 +299,34 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     }
 
     @Override
-    public void closeDrawer() {
+    public void closeDrawer()
+    {
         mDrawerLayout.closeDrawers();
     }
 
     @Override
-    public void openDrawer() {
+    public void openDrawer()
+    {
         mDrawerLayout.openDrawer(mDrawerList);
     }
 
     @Override
-    public void setActivityTitle(String aTitle) {
+    public void setActivityTitle(String aTitle)
+    {
         mActivityTitle.setText(aTitle);
     }
 
     @Override
-    public void toggleToolbarElements() {
-        if (mSearchView.getVisibility() == View.GONE) {
+    public void toggleToolbarElements()
+    {
+        if (mSearchView.getVisibility() == View.GONE)
+        {
             mSearchView.setVisibility(View.VISIBLE);
             mFilterView.setVisibility(View.VISIBLE);
             setActivityTitle(new SourceFactory().getSourceName());
-        } else {
+        }
+        else
+        {
             mSearchView.setVisibility(View.GONE);
             mFilterView.setVisibility(View.GONE);
             setActivityTitle("Settings");
@@ -239,15 +334,19 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     }
 
     @Override
-    public void setupToolbar() {
+    public void setupToolbar()
+    {
         setSupportActionBar(mToolBar);
         mActivityTitle.setText(new SourceFactory().getSourceName());
 
         mFilterView.setOnClickListener(v -> {
-            if (!mMainPresenter.genreFilterActive()) {
+            if (!mMainPresenter.genreFilterActive())
+            {
                 DialogFragment dialog = FilterDialogFragment.getnewInstance();
                 dialog.show(getSupportFragmentManager(), null);
-            } else {
+            }
+            else
+            {
                 mMainPresenter.onClearGenreFilter();
                 mFilterView.setImageDrawable(getResources().getDrawable(R.drawable.filter_outline_24dp));
                 mActivityTitle.setText(new SourceFactory().getSourceName());
@@ -256,16 +355,20 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     }
 
     @Override
-    public void setupSearchView() {
+    public void setupSearchView()
+    {
         mSearchView.setOnQueryTextListener(this);
         mSearchView.setSubmitButtonEnabled(true);
         mSearchView.setOnQueryTextFocusChangeListener((view, queryTextFocused) -> {
-            if (!queryTextFocused) {
+            if (!queryTextFocused)
+            {
                 mActivityTitle.setVisibility(View.VISIBLE);
                 mFilterView.setVisibility(View.VISIBLE);
                 mSearchView.setIconified(true);
                 mSearchView.setQuery("", true);
-            } else {
+            }
+            else
+            {
                 mActivityTitle.setVisibility(View.GONE);
                 mFilterView.setVisibility(View.GONE);
             }
@@ -273,23 +376,27 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     }
 
     @Override
-    public void setupTabLayout() {
+    public void setupTabLayout()
+    {
         mTabLayout.setDistributeEvenly(true); // To make the Tabs Fixed set this true, This makes the mTabLayout Space Evenly in Available width
         mTabLayout.setCustomTabColorizer(position -> getResources().getColor(R.color.tabsScrollColor));
     }
 
     @Override
-    public void setPageAdapterItem(int aPosition){
+    public void setPageAdapterItem(int aPosition)
+    {
         mViewPager.setCurrentItem(aPosition);
     }
 
     @Override
-    public void setDefaultFilterImage(){
+    public void setDefaultFilterImage()
+    {
         mFilterView.setImageDrawable(getResources().getDrawable(R.drawable.filter_outline_24dp));
     }
 
     @Override
-    public void setupSourceFilterMenu() {
+    public void setupSourceFilterMenu()
+    {
         FloatingActionButton lFAB1 = new FloatingActionButton(getBaseContext());
         lFAB1.setTitle("Reading");
         lFAB1.setSize(FloatingActionButton.SIZE_MINI);
@@ -297,7 +404,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         lFAB1.setIcon(R.drawable.ic_book_white_18dp);
         lFAB1.setOnClickListener(v -> {
             mMultiActionMenu.collapse();
-            mMainPresenter.onFilterSelected(1);
+            mMainPresenter.onFilterSelected(MangaEnums.eFilterStatus.READING);
         });
 
         FloatingActionButton lFAB2 = new FloatingActionButton(getBaseContext());
@@ -308,7 +415,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         lFAB2.setOnClickListener(v -> {
             mSearchView.clearFocus();
             mMultiActionMenu.collapse();
-            mMainPresenter.onFilterSelected(0);
+            mMainPresenter.onFilterSelected(MangaEnums.eFilterStatus.NONE);
         });
 
         FloatingActionButton lFAB3 = new FloatingActionButton(getBaseContext());
@@ -318,7 +425,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         lFAB3.setIcon(R.drawable.ic_done_white_18dp);
         lFAB3.setOnClickListener(v -> {
             mMultiActionMenu.collapse();
-            mMainPresenter.onFilterSelected(2);
+            mMainPresenter.onFilterSelected(MangaEnums.eFilterStatus.COMPLETE);
         });
 
         FloatingActionButton lFAB4 = new FloatingActionButton(getBaseContext());
@@ -328,7 +435,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         lFAB4.setIcon(R.drawable.ic_block_white_18dp);
         lFAB4.setOnClickListener(v -> {
             mMultiActionMenu.collapse();
-            mMainPresenter.onFilterSelected(3);
+            mMainPresenter.onFilterSelected(MangaEnums.eFilterStatus.ON_HOLD);
         });
 
         FloatingActionButton lFAB5 = new FloatingActionButton(getBaseContext());
@@ -338,7 +445,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         lFAB5.setIcon(R.drawable.ic_favorite_white_18dp);
         lFAB5.setOnClickListener(v -> {
             mMultiActionMenu.collapse();
-            mMainPresenter.onFilterSelected(5);
+            mMainPresenter.onFilterSelected(MangaEnums.eFilterStatus.FOLLOWING);
         });
 
         mMultiActionMenu.addButton(lFAB4);
@@ -350,7 +457,8 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     }
 
     @Override
-    public void setupDrawerLayout(List<String> aDrawerItems, Map<String, List<String>> aSourceCollections) {
+    public void setupDrawerLayout(List<String> aDrawerItems, Map<String, List<String>> aSourceCollections)
+    {
         final ExpandableListAdapter adapter = new ExpandableListAdapter(this, aDrawerItems, aSourceCollections);
         if (mDrawerHeader != null) mDrawerList.removeHeaderView(mDrawerHeader);
 
@@ -370,37 +478,49 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
             mMainPresenter.onSourceItemChosen(aChildPosition);
             return true;
         });
-
-        mDrawerHeader.setOnClickListener(v -> mMainPresenter.onSignIn());
     }
 
     @Override
-    public void onBackPressed() {
-        if (mMultiActionMenu.isExpanded()) { //closes action menu
+    public void onBackPressed()
+    {
+        if (mMultiActionMenu.isExpanded())
+        { //closes action menu
             mMultiActionMenu.collapse();
-        } else if (!mToast.getView().isShown() && mDrawerLayout.isDrawerOpen(mDrawerList)) { //closes drawer, if exit mToast isn't active
+        }
+        else if (!mToast.getView().isShown() && mDrawerLayout.isDrawerOpen(mDrawerList))
+        { //closes drawer, if exit mToast isn't active
             mDrawerLayout.closeDrawer(mDrawerList);
             mToast.show();
-        } else if (getSupportFragmentManager().findFragmentByTag(SettingsFragment.TAG) != null) {
+        }
+        else if (getSupportFragmentManager().findFragmentByTag(SettingsFragment.TAG) != null)
+        {
             mMainPresenter.removeSettingsFragment();
             toggleToolbarElements();
             openDrawer();
-        } else if(mMainPresenter.genreFilterActive()){
+        }
+        else if (mMainPresenter.genreFilterActive())
+        {
             mMainPresenter.onClearGenreFilter();
             mFilterView.setImageDrawable(getResources().getDrawable(R.drawable.filter_outline_24dp));
             mActivityTitle.setText(new SourceFactory().getSourceName());
-        }else if (!mToast.getView().isShown()) { //opens drawer, and shows exit mToast to verify exit
+        }
+        else if (!mToast.getView().isShown())
+        { //opens drawer, and shows exit mToast to verify exit
             mDrawerLayout.openDrawer(mDrawerList);
             mToast.show();
-        } else {    //user double back pressed to exit within time frame (mToast length)
+        }
+        else
+        {    //user double back pressed to exit within time frame (mToast length)
             mToast.cancel();
             super.onBackPressed();
         }
     }
 
     @Override
-    public boolean setRecentSelection(Long aId) {
-        if(mMultiActionMenu.isExpanded()) {
+    public boolean setRecentSelection(Long aId)
+    {
+        if (mMultiActionMenu.isExpanded())
+        {
             mMultiActionMenu.collapse();
             return false;
         }
@@ -409,26 +529,21 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     }
 
     @Override
-    public void updateRecentSelection(Manga aManga) {
+    public void updateRecentSelection(Manga aManga)
+    {
         mMainPresenter.getRecentManga();
     }
 
     @Override
-    public void removeFilters(){
+    public void removeFilters()
+    {
         //reset genre filter and UI
         mMainPresenter.onClearGenreFilter();
         mFilterView.setImageDrawable(getResources().getDrawable(R.drawable.filter_outline_24dp));
         mActivityTitle.setText(new SourceFactory().getSourceName());
 
         //reset
-        mMainPresenter.onFilterSelected(0);
+        mMainPresenter.onFilterSelected(MangaEnums.eFilterStatus.NONE);
         mSearchView.clearFocus();
     }
-
-    @Override
-    public void MALSignOut() {
-        mMainPresenter.onSignOut();
-    }
-
-
 }

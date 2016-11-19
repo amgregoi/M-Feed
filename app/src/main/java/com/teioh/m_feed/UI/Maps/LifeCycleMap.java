@@ -2,7 +2,8 @@ package com.teioh.m_feed.UI.Maps;
 
 import android.os.Bundle;
 
-public interface LifeCycleMap {
+public interface LifeCycleMap
+{
     void init(Bundle aBundle);
 
     void onSaveState(Bundle aSave);

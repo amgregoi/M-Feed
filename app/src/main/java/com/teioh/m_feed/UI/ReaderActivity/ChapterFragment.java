@@ -30,12 +30,20 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     private Listeners.ReaderListener listener;
 
 
+    /***
+     * TODO..
+     * @return
+     */
     public static Fragment getNewInstance()
     {
         Fragment lFragment = new ChapterFragment();
         return lFragment;
     }
 
+    /***
+     * TODO..
+     * @param aSavedInstanceState
+     */
     @Override
     public void onCreate(@Nullable Bundle aSavedInstanceState)
     {
@@ -43,6 +51,13 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
         mChapterPresenter = new ChapterPresenter(this, getArguments());
     }
 
+    /***
+     * TODO..
+     * @param aInflater
+     * @param aContainer
+     * @param aSavedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater aInflater, ViewGroup aContainer, Bundle aSavedInstanceState)
     {
@@ -52,6 +67,9 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
         return lView;
     }
 
+    /***
+     * TODO..
+     */
     @Override
     public void onStart()
     {
@@ -59,6 +77,10 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
         super.onStart();
     }
 
+    /***
+     * TODO..
+     * @param aSave
+     */
     @Override
     public void onSaveInstanceState(Bundle aSave)
     {
@@ -69,6 +91,9 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
         }
     }
 
+    /***
+     * TODO..
+     */
     @Override
     public void onResume()
     {
@@ -76,6 +101,10 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
         mChapterPresenter.onResume();
     }
 
+    /***
+     * TODO..
+     * @param aSavedInstanceState
+     */
     @Override
     public void onActivityCreated(@Nullable Bundle aSavedInstanceState)
     {
@@ -86,6 +115,9 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
         }
     }
 
+    /***
+     * TODO..
+     */
     @Override
     public void onDestroyView()
     {
@@ -93,6 +125,10 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
         mChapterPresenter.onDestroy();
     }
 
+    /***
+     * TODO..
+     * @param aAdapter
+     */
     @Override
     public void registerAdapter(PagerAdapter aAdapter)
     {
@@ -107,12 +143,19 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
         }
     }
 
+    /***
+     * TODO..
+     * @param aPosition
+     */
     @Override
     public void setCurrentChapterPage(int aPosition)
     {
         mViewPager.setCurrentItem(aPosition);
     }
 
+    /***
+     * TODO..
+     */
     @Override
     public void onPause()
     {
@@ -120,36 +163,59 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
         mChapterPresenter.onPause();
     }
 
+    /***
+     * TODO..
+     * @param aPosition
+     * @param aPositionOffset
+     * @param aPositionOffsetPixels
+     */
     @Override
     public void onPageScrolled(int aPosition, float aPositionOffset, int aPositionOffsetPixels)
     {
         mChapterPresenter.updateOffsetCounter(aPositionOffsetPixels, mViewPager.getCurrentItem());
     }
 
+    /***
+     * TODO..
+     * @param aPosition
+     */
     @Override
     public void onPageSelected(int aPosition)
     {
         mChapterPresenter.updateCurrentPage(aPosition);
     }
 
+    /***
+     * TODO..
+     * @param aState
+     */
     @Override
     public void onPageScrollStateChanged(int aState)
     {
         mChapterPresenter.updateState(aState);
     }
 
+    /***
+     * TODO..
+     */
     @Override
     public void onSingleTap()
     {
         mChapterPresenter.toggleToolbar();
     }
 
+    /***
+     * TODO..
+     */
     @Override
     public void setupOnSingleTapListener()
     {
         mViewPager.setOnSingleTapListener(this);
     }
 
+    /***
+     * TODO..
+     */
     @Override
     public void updateToolbar()
     {
@@ -160,6 +226,9 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
         }
     }
 
+    /***
+     * TODO..
+     */
     @Override
     public void incrementChapterPage()
     {
@@ -169,6 +238,9 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
         }
     }
 
+    /***
+     * TODO..
+     */
     @Override
     public void decrementChapterPage()
     {
@@ -178,6 +250,10 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
         }
     }
 
+    /***
+     * TODO..
+     * @param aPage
+     */
     @Override
     public void setChapterPage(int aPage)
     {
@@ -187,6 +263,9 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
         }
     }
 
+    /***
+     * TODO..
+     */
     @Override
     public void updateChapterViewStatus()
     {
@@ -200,6 +279,10 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
         }
     }
 
+    /***
+     * TODO..
+     * @param aContext
+     */
     @Override
     public void onAttach(Context aContext)
     {
@@ -209,48 +292,80 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
 
     }
 
+    /***
+     * TODO..
+     */
     @Override
     public void incrementChapter()
     {
         listener.incrementChapter();
     }
 
+    /***
+     * TODO..
+     * @param aChapter
+     * @return
+     */
     @Override
     public boolean checkActiveChapter(int aChapter)
     {
         return listener.checkActiveChapter(aChapter);
     }
 
+    /***
+     * TODO..
+     */
     @Override
     public void decrementChapter()
     {
         listener.decrementChapter();
     }
 
+    /***
+     * TODO..
+     * @param aDelay
+     */
     @Override
     public void hideToolbar(long aDelay)
     {
         listener.hideToolbar(aDelay);
     }
 
+    /***
+     * TODO..
+     */
     @Override
     public void showToolbar()
     {
         listener.showToolbar();
     }
 
+    /***
+     * TODO..
+     * @param aMangaTitle
+     * @param aChapterTitle
+     * @param aSize
+     * @param aPage
+     */
     @Override
     public void updateToolbar(String aMangaTitle, String aChapterTitle, int aSize, int aPage)
     {
         listener.updateToolbar(aMangaTitle, aChapterTitle, aSize, aPage);
     }
 
+    /***
+     * TODO..
+     * @param aPosition
+     */
     @Override
     public void updateCurrentPage(int aPosition)
     {
         listener.updateCurrentPage(aPosition);
     }
 
+    /***
+     * TODO..
+     */
     @Override
     public void toggleVerticalScrollSettings()
     {
@@ -264,6 +379,9 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
         }
     }
 
+    /***
+     * TODO..
+     */
     @Override
     public void onRefresh()
     {
@@ -271,12 +389,18 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
 
     }
 
+    /***
+     * TODO..
+     */
     @Override
     public void failedLoadChapter()
     {
         listener.onBackPressed();
     }
 
+    /***
+     * TODO..
+     */
     @Override
     public void onLowMemory()
     {

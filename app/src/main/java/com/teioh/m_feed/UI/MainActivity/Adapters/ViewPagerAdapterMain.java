@@ -10,14 +10,22 @@ import com.teioh.m_feed.UI.MainActivity.Fragments.LibraryFragment;
 import com.teioh.m_feed.UI.MainActivity.Fragments.RecentFragment;
 import com.teioh.m_feed.Utils.NetworkService;
 
-public class ViewPagerAdapterMain extends FragmentStatePagerAdapter {
+public class ViewPagerAdapterMain extends FragmentStatePagerAdapter
+{
 
     private CharSequence mTabTitles[];
     private int mTabCount;
     private SparseArray<Fragment> mRegisteredFragments = new SparseArray<Fragment>();
 
-
-    public ViewPagerAdapterMain(FragmentManager aFragmentManager, CharSequence aTabTitles[], int aTabCount) {
+    /***
+     * TODO..
+     *
+     * @param aFragmentManager
+     * @param aTabTitles
+     * @param aTabCount
+     */
+    public ViewPagerAdapterMain(FragmentManager aFragmentManager, CharSequence aTabTitles[], int aTabCount)
+    {
         super(aFragmentManager);
 
         this.mTabTitles = aTabTitles;
@@ -25,12 +33,20 @@ public class ViewPagerAdapterMain extends FragmentStatePagerAdapter {
 
     }
 
-    //This method return the fragment for the every position in the View Pager
+
+    /***
+     * This method return the fragment for the every position in the View Pager
+     *
+     * @param aPosition
+     * @return
+     */
     @Override
-    public Fragment getItem(int aPosition) {
+    public Fragment getItem(int aPosition)
+    {
 
         Fragment lFragment;
-        switch (aPosition) {
+        switch (aPosition)
+        {
             case 0:
                 lFragment = new RecentFragment();
                 mRegisteredFragments.put(0, lFragment);
@@ -46,23 +62,47 @@ public class ViewPagerAdapterMain extends FragmentStatePagerAdapter {
         return lFragment;
     }
 
-    // This method return the titles for the Tabs in the Tab Strip
+    /***
+     * This method return the titles for the Tabs in the Tab Strip
+     *
+     * @param aPosition
+     * @return
+     */
     @Override
-    public CharSequence getPageTitle(int aPosition) {
+    public CharSequence getPageTitle(int aPosition)
+    {
         return mTabTitles[aPosition];
     }
 
-    // This method return the Number of tabs for the tabs Strip
+    /***
+     * This method return the Number of tabs for the tabs Strip
+     *
+     * @return
+     */
     @Override
-    public int getCount() {
+    public int getCount()
+    {
         return mTabCount;
     }
 
-    public Fragment getRegisteredFragment(int aPosition) {
+    /***
+     * TODO..
+     *
+     * @param aPosition
+     * @return
+     */
+    public Fragment getRegisteredFragment(int aPosition)
+    {
         return mRegisteredFragments.get(aPosition);
     }
 
-    public boolean hasRegisteredFragments() {
+    /***
+     * TODO..
+     *
+     * @return
+     */
+    public boolean hasRegisteredFragments()
+    {
         return mRegisteredFragments.get(0) != null;
     }
 }

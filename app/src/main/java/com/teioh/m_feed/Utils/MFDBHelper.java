@@ -24,14 +24,18 @@ import rx.Subscriber;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
-public class MFDBHelper extends SQLiteOpenHelper {
+public class MFDBHelper extends SQLiteOpenHelper
+{
+    public static final String TAG = MFDBHelper.class.getSimpleName();
+
     public static final int sDATABASE_VERSION = 1;
     private static final String sDB_PATH = "/data/data/com.teioh.m_feed/databases/";
     private static final String sDB_NAME = "MangaFeed.db";
     private static MFDBHelper sInstance;
     private Context mContext;
 
-    public MFDBHelper(Context aContext) {
+    public MFDBHelper(Context aContext)
+    {
         super(aContext, sDB_NAME, null, sDATABASE_VERSION);
         mContext = aContext;
     }
@@ -39,8 +43,10 @@ public class MFDBHelper extends SQLiteOpenHelper {
     /***
      * TODO...
      */
-    public static synchronized MFDBHelper getInstance() {
-        if (sInstance == null) {
+    public static synchronized MFDBHelper getInstance()
+    {
+        if (sInstance == null)
+        {
             sInstance = new MFDBHelper(MFeedApplication.getInstance());
         }
         return sInstance;
@@ -49,30 +55,35 @@ public class MFDBHelper extends SQLiteOpenHelper {
     /***
      * TODO...
      */
-    public void onCreate(SQLiteDatabase aDb) {
+    public void onCreate(SQLiteDatabase aDb)
+    {
         cupboard().withDatabase(aDb).createTables();
     }
 
     /***
      * TODO...
      */
-    public void onUpgrade(SQLiteDatabase aDb, int aOldVersion, int aNewVersion) {
+    public void onUpgrade(SQLiteDatabase aDb, int aOldVersion, int aNewVersion)
+    {
         cupboard().withDatabase(aDb).upgradeTables();
     }
 
     /***
      * TODO...
      */
-    public void createDatabase() {
+    public void createDatabase()
+    {
         createDB();
     }
 
     /***
      * TODO...
      */
-    private void createDB() {
+    private void createDB()
+    {
         boolean dbExist = DBExists();
-        if (!dbExist) {
+        if (!dbExist)
+        {
             this.getReadableDatabase();
             copyDBFromResource();
         }
@@ -83,21 +94,29 @@ public class MFDBHelper extends SQLiteOpenHelper {
      *
      * @return true if database exists
      */
-    private boolean DBExists() {
+    private boolean DBExists()
+    {
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
         SQLiteDatabase db = null;
 
-        try {
+        try
+        {
             File database = mContext.getDatabasePath(sDB_NAME);
-            if (database.exists()) {
+            if (database.exists())
+            {
                 db = SQLiteDatabase.openDatabase(database.getPath(), null, SQLiteDatabase.OPEN_READWRITE);
                 db.setLocale(Locale.getDefault());
                 db.setVersion(1);
             }
-        } catch (Exception e) {
-            Log.e("SqlHelper", "database not found");
+        }
+        catch (Exception aException)
+        {
+            MangaLogger.logError(TAG, lMethod, aException.getMessage(), "Database not found");
         }
 
-        if (db != null) {
+        if (db != null)
+        {
             db.close();
         }
         return db != null;
@@ -106,23 +125,30 @@ public class MFDBHelper extends SQLiteOpenHelper {
     /***
      * TODO...
      */
-    private void copyDBFromResource() {
+    private void copyDBFromResource()
+    {
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
         String dbFilePath = sDB_PATH + sDB_NAME;
-        try {
+        try
+        {
             InputStream inputStream = MFeedApplication.getInstance().getAssets().open(sDB_NAME);
             OutputStream outStream = new FileOutputStream(dbFilePath);
 
             byte[] buffer = new byte[1024];
             int length;
-            while ((length = inputStream.read(buffer)) > 0) {
+            while ((length = inputStream.read(buffer)) > 0)
+            {
                 outStream.write(buffer, 0, length);
             }
 
             outStream.flush();
             outStream.close();
             inputStream.close();
-        } catch (IOException e) {
-            throw new Error("Problem copying database from resource file.");
+        }
+        catch (IOException aException)
+        {
+            MangaLogger.logError(TAG, lMethod, aException.getMessage());
         }
     }
 
@@ -132,7 +158,8 @@ public class MFDBHelper extends SQLiteOpenHelper {
      * @param aTitle
      * @param aValue
      */
-    public void updateMangaFollow(String aTitle, int aValue) {
+    public void updateMangaFollow(String aTitle, int aValue)
+    {
         ContentValues values = new ContentValues(1);
         values.put("following", aValue);
         cupboard().withDatabase(getWritableDatabase()).update(Manga.class, values, "title = ?", aTitle);
@@ -143,7 +170,8 @@ public class MFDBHelper extends SQLiteOpenHelper {
      *
      * @param aTitle
      */
-    public void updateMangaUnfollow(String aTitle) {
+    public void updateMangaUnfollow(String aTitle)
+    {
         ContentValues values = new ContentValues(1);
         values.put("following", 0);
         cupboard().withDatabase(getWritableDatabase()).update(Manga.class, values, "title = ?", aTitle);
@@ -154,23 +182,29 @@ public class MFDBHelper extends SQLiteOpenHelper {
      *
      * @return Observable arraylist of users followed manga
      */
-    public Observable<ArrayList<Manga>> getFollowedList() {
-        return Observable.create(new Observable.OnSubscribe<ArrayList<Manga>>() {
+    public Observable<ArrayList<Manga>> getFollowedList()
+    {
+        return Observable.create(new Observable.OnSubscribe<ArrayList<Manga>>()
+        {
             @Override
-            public void call(Subscriber<? super ArrayList<Manga>> subscriber) {
-                try {
+            public void call(Subscriber<? super ArrayList<Manga>> subscriber)
+            {
+                try
+                {
                     ArrayList<Manga> mangaList = new ArrayList<>();
-                    QueryResultIterable<Manga> itr = cupboard().withDatabase(getReadableDatabase())
-                            .query(Manga.class).withSelection("NOT following = ? AND source = ?", "0", new SourceFactory().getSourceName()).query();
+                    QueryResultIterable<Manga> itr = cupboard().withDatabase(getReadableDatabase()).query(Manga.class).withSelection("NOT following = ? AND source = ?", "0", new SourceFactory().getSourceName()).query();
 
-                    for (Manga manga : itr) {
+                    for (Manga manga : itr)
+                    {
                         mangaList.add(manga);
                     }
                     itr.close();
 
                     subscriber.onNext(mangaList);
                     subscriber.onCompleted();
-                } catch (Exception lException) {
+                }
+                catch (Exception lException)
+                {
                     subscriber.onError(lException);
                 }
             }
@@ -183,24 +217,29 @@ public class MFDBHelper extends SQLiteOpenHelper {
      *
      * @return Observable arraylist of users followed manga
      */
-    public Observable<ArrayList<Manga>> getLibraryList() {
-        return Observable.create(new Observable.OnSubscribe<ArrayList<Manga>>() {
+    public Observable<ArrayList<Manga>> getLibraryList()
+    {
+        return Observable.create(new Observable.OnSubscribe<ArrayList<Manga>>()
+        {
             @Override
-            public void call(Subscriber<? super ArrayList<Manga>> subscriber) {
-                try {
+            public void call(Subscriber<? super ArrayList<Manga>> subscriber)
+            {
+                try
+                {
                     ArrayList<Manga> mangaList = new ArrayList<>();
-                    QueryResultIterable<Manga> itr = cupboard().withDatabase(getReadableDatabase()).query(Manga.class)
-                            .withSelection("source = ?", SharedPrefs.getSavedSource())
-                            .query();
+                    QueryResultIterable<Manga> itr = cupboard().withDatabase(getReadableDatabase()).query(Manga.class).withSelection("source = ?", SharedPrefs.getSavedSource()).query();
 
-                    for (Manga manga : itr) {
+                    for (Manga manga : itr)
+                    {
                         mangaList.add(manga);
                     }
                     itr.close();
 
                     subscriber.onNext(mangaList);
                     subscriber.onCompleted();
-                } catch (Exception lException) {
+                }
+                catch (Exception lException)
+                {
                     subscriber.onError(lException);
                 }
             }
@@ -214,7 +253,8 @@ public class MFDBHelper extends SQLiteOpenHelper {
      * @param aSource
      * @return
      */
-    public Manga getManga(String aUrl, String aSource) {
+    public Manga getManga(String aUrl, String aSource)
+    {
         return cupboard().withDatabase(getReadableDatabase()).query(Manga.class).withSelection("link = ? AND source = ?", aUrl, aSource).get();
     }
 
@@ -224,7 +264,8 @@ public class MFDBHelper extends SQLiteOpenHelper {
      * @param aId
      * @return
      */
-    public Manga getManga(long aId) {
+    public Manga getManga(long aId)
+    {
         return cupboard().withDatabase(getReadableDatabase()).query(Manga.class).withSelection("_id = ?", Long.toString(aId)).get();
     }
 
@@ -233,7 +274,8 @@ public class MFDBHelper extends SQLiteOpenHelper {
      *
      * @param aManga
      */
-    public void putManga(Manga aManga) {
+    public void putManga(Manga aManga)
+    {
         cupboard().withDatabase(getWritableDatabase()).put(aManga);
     }
 
@@ -243,7 +285,8 @@ public class MFDBHelper extends SQLiteOpenHelper {
      * @param aValues
      * @param aUrl
      */
-    public void updateManga(ContentValues aValues, String aUrl) {
+    public void updateManga(ContentValues aValues, String aUrl)
+    {
         cupboard().withDatabase(getWritableDatabase()).update(Manga.class, aValues, "link = ?", aUrl);
     }
 

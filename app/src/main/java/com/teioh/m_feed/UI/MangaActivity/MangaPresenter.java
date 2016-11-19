@@ -59,9 +59,19 @@ public class MangaPresenter implements IManga.ActivityPresenter
     @Override
     public void onSaveState(Bundle aSave)
     {
-        if (mManga != null) aSave.putParcelable(MANGA_KEY, mManga);
-        if (mChapterList != null) aSave.putParcelableArrayList(CHAPTER_LIST_KEY, mChapterList);
-        aSave.putBoolean(ORDER_DESCENDING_KEY, mChapterOrderDescending);
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
+        try
+        {
+            if (mManga != null) aSave.putParcelable(MANGA_KEY, mManga);
+            if (mChapterList != null) aSave.putParcelableArrayList(CHAPTER_LIST_KEY, mChapterList);
+            aSave.putBoolean(ORDER_DESCENDING_KEY, mChapterOrderDescending);
+
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+        }
 
     }
 
@@ -73,13 +83,23 @@ public class MangaPresenter implements IManga.ActivityPresenter
     @Override
     public void onRestoreState(Bundle aRestore)
     {
-        if (aRestore.containsKey(MANGA_KEY)) mManga = aRestore.getParcelable(MANGA_KEY);
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
 
-        if (aRestore.containsKey(CHAPTER_LIST_KEY)) mChapterList = new ArrayList<>(aRestore.getParcelableArrayList(CHAPTER_LIST_KEY));
+        try
+        {
+            if (aRestore.containsKey(MANGA_KEY)) mManga = aRestore.getParcelable(MANGA_KEY);
 
-        if (aRestore.containsKey(MANGA_KEY)) mManga = aRestore.getParcelable(MANGA_KEY);
+            if (aRestore.containsKey(CHAPTER_LIST_KEY)) mChapterList = new ArrayList<>(aRestore.getParcelableArrayList(CHAPTER_LIST_KEY));
 
-        if (aRestore.containsKey(ORDER_DESCENDING_KEY)) mChapterOrderDescending = aRestore.getBoolean(ORDER_DESCENDING_KEY);
+            if (aRestore.containsKey(MANGA_KEY)) mManga = aRestore.getParcelable(MANGA_KEY);
+
+            if (aRestore.containsKey(ORDER_DESCENDING_KEY)) mChapterOrderDescending = aRestore.getBoolean(ORDER_DESCENDING_KEY);
+
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+        }
 
     }
 
@@ -120,10 +140,6 @@ public class MangaPresenter implements IManga.ActivityPresenter
         {
             MangaLogger.logError(TAG, lMethod, aException.getMessage());
         }
-//        shared prefs set on login, eventually
-//        username, pass stored in shared prefs
-//        mMALService = MALApi.createService(null, null);
-//        getMALSyncOptions();
     }
 
     /***
@@ -132,7 +148,17 @@ public class MangaPresenter implements IManga.ActivityPresenter
     @Override
     public void onResume()
     {
-        if (mAdapter != null) mAdapter.notifyDataSetChanged();
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
+        try
+        {
+            if (mAdapter != null) mAdapter.notifyDataSetChanged();
+
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+        }
     }
 
     /***
@@ -141,17 +167,27 @@ public class MangaPresenter implements IManga.ActivityPresenter
     @Override
     public void onPause()
     {
-        if (mObservableMangaSubscription != null)
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
+        try
         {
-            mObservableMangaSubscription.unsubscribe();
-            mObservableMangaSubscription = null;
+            if (mObservableMangaSubscription != null)
+            {
+                mObservableMangaSubscription.unsubscribe();
+                mObservableMangaSubscription = null;
+            }
+
+            if (mChapterListSubscription != null)
+            {
+                mChapterListSubscription.unsubscribe();
+                mChapterListSubscription = null;
+            }
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lMethod, lException.getMessage());
         }
 
-        if (mChapterListSubscription != null)
-        {
-            mChapterListSubscription.unsubscribe();
-            mChapterListSubscription = null;
-        }
     }
 
     /***
@@ -160,8 +196,18 @@ public class MangaPresenter implements IManga.ActivityPresenter
     @Override
     public void onDestroy()
     {
-        Glide.get(mMangaMapper.getContext()).clearMemory();
-        mMangaMapper = null;
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
+        try
+        {
+            Glide.get(mMangaMapper.getContext()).clearMemory();
+            mMangaMapper = null;
+
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+        }
     }
 
     /***
@@ -219,22 +265,24 @@ public class MangaPresenter implements IManga.ActivityPresenter
 
     /***
      * TODO...
-     */
-    @Override
-    public void onMALSyncClicked()
-    {
-        mMangaMapper.onMALSyncClicked(mMALMangaList);
-    }
-
-    /***
-     * TODO...
      *
      * @return
      */
     @Override
     public String getImageUrl()
     {
-        return mManga.getPicUrl();
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
+        try
+        {
+            return mManga.getPicUrl();
+
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+        }
+        return "";
     }
 
     /***
@@ -245,8 +293,17 @@ public class MangaPresenter implements IManga.ActivityPresenter
     @Override
     public void onFollwButtonClick(int aValue)
     {
-        mMangaMapper.changeFollowButton(mManga.getFollowing());
-        MFDBHelper.getInstance().updateMangaFollow(mManga.getTitle(), aValue);
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
+        try
+        {
+            MFDBHelper.getInstance().updateMangaFollow(mManga.getTitle(), aValue);
+
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+        }
     }
 
     /***
@@ -255,26 +312,16 @@ public class MangaPresenter implements IManga.ActivityPresenter
     @Override
     public void onUnfollowButtonClick()
     {
-        MFDBHelper.getInstance().updateMangaUnfollow(mManga.getTitle());
-    }
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
 
-    /***
-     * TODO...
-     */
-    private void getMALSyncOptions()
-    {
-//        mMALService.searchManga(mManga.getMangaTitle(), new Callback<MALMangaList>() {
-//            @Override
-//            public void success(MALMangaList list, Response response) {
-//                Log.e(TAG, list.toString());
-//                mMALMangaList = list;
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                Log.e(TAG, error.getMessage());
-//            }
-//        });
+        try
+        {
+            MFDBHelper.getInstance().updateMangaUnfollow(mManga.getTitle());
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+        }
     }
 
     /***
@@ -326,7 +373,6 @@ public class MangaPresenter implements IManga.ActivityPresenter
                 if (mMangaMapper.getContext() != null)
                 {
                     mMangaMapper.setMangaViews(aManga);
-                    mMangaMapper.changeFollowButton(aManga.getFollowing());
                 }
                 mManga = aManga;
 

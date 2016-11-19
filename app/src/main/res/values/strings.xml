@@ -1,36 +1,40 @@
 <resources>
-    <string name="app_name">Manga Feed</string>
-    <string name="Settings">Settings</string>
+	<string name="app_name">Manga Feed</string>
+	<string name="Settings">Settings</string>
 
-    <string name="title_activity_main">MainActivity</string>
-    <string name="title_activity_manga">MangaActivity</string>
-    <string name="title_activity_login">LoginActivity</string>
-
-
-    <string name="Username">Username</string>
-    <string name="Password">Password</string>
-    <string name="Login">Login</string>
-    <string name="SignUp">Sign Up</string>
-    <string name="Logout">Log out</string>
-    <string name="Welcome">Welcome!</string>
-    <string name="drawerlayout_general_heading">General</string>
-    <string name="drawerlayout_sources_heading">Sources</string>
-    <string name="drawerlayout_general_search">Advanced Search</string>
-    <string name="drawerlayout_general_logout">Logout</string>
-    <string name="drawerlayout_general_home">Home</string>
-    <string name="drawer_item_icon">DrawerLayout Item Icon</string>
-
-    <string-array name="library_item_menu">
-        <item>Remove</item>
-        <item>Cancel</item>
-    </string-array>
-
-    <!-- TAG Resources-->
-    <string name="ChapterListAdapterHolder">1</string>
-    <string name="ChapterListAdapterTAG">2</string>
-    <string name="com.appsee.apikey" translatable="false">9f9af3c86f7441d486152cc00cdc55ee</string>
+	<string name="title_activity_main">MainActivity</string>
+	<string name="title_activity_manga">MangaActivity</string>
+	<string name="title_activity_login">LoginActivity</string>
 
 
-    <string name="DialogFragmentRemove">Remove from list?</string>
+	<string name="Username">Username</string>
+	<string name="Password">Password</string>
+	<string name="Login">Login</string>
+	<string name="SignUp">Sign Up</string>
+	<string name="Logout">Log out</string>
+	<string name="Welcome">Welcome!</string>
+	<string name="drawerlayout_general_heading">General</string>
+	<string name="drawerlayout_sources_heading">Sources</string>
+	<string name="drawerlayout_general_search">Advanced Search</string>
+	<string name="drawerlayout_general_logout">Logout</string>
+	<string name="drawerlayout_general_home">Home</string>
+	<string name="drawer_item_icon">DrawerLayout Item Icon</string>
+
+	<string-array name="library_item_menu">
+		<item>Remove</item>
+		<item>Cancel</item>
+	</string-array>
+
+	<!-- TAG Resources-->
+	<string name="ChapterListAdapterHolder">1</string>
+	<string name="ChapterListAdapterTAG">2</string>
+	<string name="com.appsee.apikey" translatable="false">9f9af3c86f7441d486152cc00cdc55ee</string>
+
+
+	<string name="DialogFragmentRemove">Remove from list?</string>
+
+	<string name="Email">E-Mail</string>
+	<string name="PREF_USER_SOURCE">SAVED_SOURCE</string>
+
 
 </resources>

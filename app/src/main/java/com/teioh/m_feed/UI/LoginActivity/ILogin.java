@@ -6,19 +6,23 @@ import com.teioh.m_feed.UI.Maps.LifeCycleMap;
 /**
  * Created by amgregoi on 8/21/16.
  */
-public interface ILogin {
-    interface ActivityView extends BaseContextMap {
+public interface ILogin
+{
+    interface ActivityView extends BaseContextMap
+    {
 
         void onLoginSuccess();
 
         void onLoginFail();
     }
 
-    interface ActivityModel{
+    interface ActivityModel
+    {
 
     }
 
-    interface ActivityPresenter extends LifeCycleMap {
+    interface ActivityPresenter extends LifeCycleMap
+    {
 
         void onSignupButton(String aUsername, String aPassword);
 
