@@ -45,7 +45,7 @@ public class MangaHere extends SourceBase
                 .flatMap(html -> Observable.just(parseRecentUpdatesToManga(html)))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .retry(10)
+                .retry(5)
                 .doOnError(Throwable::printStackTrace);
     }
 

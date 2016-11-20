@@ -29,6 +29,8 @@ public interface IManga
 
         void initializeHeaderViews();
 
+        void showFailedToLoad();
+
     }
 
     /***

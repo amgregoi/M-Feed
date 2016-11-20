@@ -43,7 +43,7 @@ public class MangaJoy extends SourceBase
      */
     public Observable<List<Manga>> getRecentUpdatesObservable()
     {
-        return NetworkService.getTemporaryInstance().getResponse(mUpdatesUrl).flatMap(response -> NetworkService.mapResponseToString(response)).flatMap(html -> Observable.just(scrapeUpdatestoManga(html))).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).retry(10).doOnError(Throwable::printStackTrace);
+        return NetworkService.getTemporaryInstance().getResponse(mUpdatesUrl).flatMap(response -> NetworkService.mapResponseToString(response)).flatMap(html -> Observable.just(scrapeUpdatestoManga(html))).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).retry(5).doOnError(Throwable::printStackTrace);
     }
 
     /***
@@ -97,9 +97,13 @@ public class MangaJoy extends SourceBase
      */
     public Observable<List<Chapter>> getChapterListObservable(RequestWrapper request)
     {
-        NetworkService currService = NetworkService.getTemporaryInstance();
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+        MangaLogger.logInfo(TAG, lMethod, "Entering");
 
-        return currService.getResponse(request.getMangaUrl()).flatMap(response -> NetworkService.mapResponseToString(response)).flatMap(html -> Observable.just(parseHtmlToChapters(request, html))).observeOn(AndroidSchedulers.mainThread()).doOnError(throwable -> throwable.printStackTrace());
+        return NetworkService.getTemporaryInstance().getResponse(request.getMangaUrl())
+                .flatMap(response -> NetworkService.mapResponseToString(response))
+                .flatMap(html -> Observable.just(parseHtmlToChapters(request, html)))
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     /***

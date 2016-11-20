@@ -41,7 +41,7 @@ public class MangaPark extends SourceBase
      */
     public Observable<List<Manga>> getRecentUpdatesObservable()
     {
-        return NetworkService.getTemporaryInstance().getResponse(mUpdateUrl).flatMap(html -> NetworkService.mapResponseToString(html)).flatMap(html -> Observable.just(parseRecentUpdatesToManga(html))).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).retry(10).doOnError(Throwable::printStackTrace);
+        return NetworkService.getTemporaryInstance().getResponse(mUpdateUrl).flatMap(html -> NetworkService.mapResponseToString(html)).flatMap(html -> Observable.just(parseRecentUpdatesToManga(html))).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).retry(5).doOnError(Throwable::printStackTrace);
     }
 
     /***

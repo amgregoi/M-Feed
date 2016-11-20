@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -47,6 +48,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     @Bind(R.id.tool_bar) Toolbar mToolBar;
     @Bind(R.id.swipe_container) SwipeRefreshLayout mSwipeRefresh;
     @Bind(R.id.chapter_list) ListView mChapterList;
+    @Bind(R.id.failed_to_load_view) LinearLayout mFailedToLoad;
 
     private ImageView mMangaImage;
     private TextView mDescriptionText;
@@ -474,6 +476,14 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
         });
     }
 
+    /***
+     * TODO..
+     */
+    @Override
+    public void showFailedToLoad(){
+        mFailedToLoad.setVisibility(View.VISIBLE);
+        mChapterList.setVisibility(View.GONE);
+    }
     /***
      * TODO..
      *

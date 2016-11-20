@@ -84,6 +84,7 @@ public class RecentFragment extends MainFragmentBase
     @Override
     public void setupSwipeRefresh()
     {
+        mSwipeContainer.setEnabled(true);
         mSwipeContainer.setOnRefreshListener(() -> {
             mGridView.setVisibility(View.GONE);
             mFragmentPresenter.updateMangaList();

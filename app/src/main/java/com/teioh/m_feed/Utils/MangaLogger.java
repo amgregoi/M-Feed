@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.teioh.m_feed.MFeedApplication;
 
+import java.text.MessageFormat;
+
 
 /**
  * Created by amgregoi on 11/15/16.
@@ -21,7 +23,7 @@ public class MangaLogger
      */
     public static void logInfo(String aTag, String aMethod, String aMessage)
     {
-        Log.i(mApplication, aTag + " >> " + aMethod + " > " + aMessage);
+        Log.i(mApplication, MessageFormat.format("{0}.class >> {1}() > {2}", aTag, aMethod, aMessage));
     }
 
     /***
@@ -33,7 +35,7 @@ public class MangaLogger
      */
     public static void logError(String aTag, String aMethod, String aError)
     {
-        Log.e(mApplication, aTag + " >> " + aMethod + " > " + aError);
+        Log.e(mApplication, MessageFormat.format("{0}.class >> {1}() > {2}", aTag, aMethod, aError));
     }
 
     /***
@@ -46,7 +48,7 @@ public class MangaLogger
      */
     public static void logError(String aTag, String aMethod, String aError, String aExtra)
     {
-        Log.e(mApplication, aTag + " >> " + aMethod + " > " + aExtra + " > " + aError);
+        Log.e(mApplication, MessageFormat.format("{0}.class >> {1}() > {2} > {3}", aTag, aMethod, aExtra, aError));
     }
 
 }

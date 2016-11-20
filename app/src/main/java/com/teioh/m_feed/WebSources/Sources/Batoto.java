@@ -46,7 +46,7 @@ public class Batoto extends SourceBase
     {
         List<Manga> lReturn = new ArrayList<>();
         NetworkService lCurService = NetworkService.getTemporaryInstance();
-        return lCurService.getResponseCustomHeaders(mUpdatesUrl + 1, constructRequestHeaders()).flatMap(response -> NetworkService.mapResponseToString(response)).flatMap(html -> Observable.just(scrapeUpdatestoManga(lReturn, html))).flatMap(list -> lCurService.getResponse(mUpdatesUrl + 2).flatMap(response -> NetworkService.mapResponseToString(response)).flatMap(html -> Observable.just(scrapeUpdatestoManga(list, html)))).flatMap(list -> lCurService.getResponse(mUpdatesUrl + 3).flatMap(response -> NetworkService.mapResponseToString(response)).flatMap(html -> Observable.just(scrapeUpdatestoManga(list, html)))).observeOn(AndroidSchedulers.mainThread()).retry(10).doOnError(throwable -> {
+        return lCurService.getResponseCustomHeaders(mUpdatesUrl + 1, constructRequestHeaders()).flatMap(response -> NetworkService.mapResponseToString(response)).flatMap(html -> Observable.just(scrapeUpdatestoManga(lReturn, html))).flatMap(list -> lCurService.getResponse(mUpdatesUrl + 2).flatMap(response -> NetworkService.mapResponseToString(response)).flatMap(html -> Observable.just(scrapeUpdatestoManga(list, html)))).flatMap(list -> lCurService.getResponse(mUpdatesUrl + 3).flatMap(response -> NetworkService.mapResponseToString(response)).flatMap(html -> Observable.just(scrapeUpdatestoManga(list, html)))).observeOn(AndroidSchedulers.mainThread()).retry(5).doOnError(throwable -> {
             throwable.printStackTrace();
             throw new UnsupportedOperationException("onError exception");
         });

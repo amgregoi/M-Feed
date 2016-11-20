@@ -44,7 +44,7 @@ public class MangaEden extends SourceBase
      */
     public Observable<List<Manga>> getRecentUpdatesObservable()
     {
-        return NetworkService.getTemporaryInstance().getResponse(mUpdatesUrl).flatMap(response -> NetworkService.mapResponseToString(response)).flatMap(html -> Observable.just(scrapeUpdatestoManga(Jsoup.parse(html)))).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread()).retry(10).doOnError(Throwable::printStackTrace);
+        return NetworkService.getTemporaryInstance().getResponse(mUpdatesUrl).flatMap(response -> NetworkService.mapResponseToString(response)).flatMap(html -> Observable.just(scrapeUpdatestoManga(Jsoup.parse(html)))).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread()).retry(5).doOnError(Throwable::printStackTrace);
     }
 
     /***
