@@ -44,9 +44,9 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     protected Subscription mMangaListSubscription;
     protected IMain.FragmentView mViewMapper;
 
-    public MainFragmentPresenterBase(IMain.FragmentView map)
+    public MainFragmentPresenterBase(IMain.FragmentView aMap)
     {
-        mViewMapper = map;
+        mViewMapper = aMap;
     }
 
     /***
@@ -330,7 +330,7 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
             Manga manga = mAdapter.getItemAt(mAdAdapter.getOriginalPosition(pos));
             if (mViewMapper.setRecentSelection(manga.get_id()))
             {
-                Intent intent = MangaActivity.getNewInstance(mViewMapper.getContext(), manga.getTitle());
+                Intent intent = MangaActivity.getNewInstance(mViewMapper.getContext(), manga.getMangaURL());
                 mViewMapper.getContext().startActivity(intent);
             }
         }

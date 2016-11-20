@@ -537,9 +537,28 @@ public class ChapterPresenter implements IReader.FragmentPresenter
         {
             cleanupSubscribers();
 
-            if (mChapterPageAdapter != null && !mChapterUrlList.isEmpty() && mChapterUrlList != null)
-                mChapterReaderMapper.registerAdapter(mChapterPageAdapter);
-            else getImageUrls();
+            switch (mLoadingStatus)
+            {
+                case COMPLETE:
+                {
+                    if (mChapterPageAdapter != null && !mChapterUrlList.isEmpty() && mChapterUrlList != null)
+                    {
+                        mChapterReaderMapper.registerAdapter(mChapterPageAdapter);
+                        mChapterReaderMapper.setCurrentChapterPage(mChapter.getCurrentPage());
+                        break;
+                    }
+                }
+                case ERROR:
+                {
+                    getImageUrls();
+                }
+                case LOADING:
+                {
+                    break;
+                }
+
+            }
+
         }
         catch (Exception aException)
         {

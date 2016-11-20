@@ -21,6 +21,7 @@
             android:layout_height="wrap_content"
             android:headerDividersEnabled="false"
             android:background="@color/charcoal"
+            android:fastScrollEnabled="true"
             />
 
     </android.support.v4.widget.SwipeRefreshLayout>

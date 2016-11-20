@@ -73,13 +73,13 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
      * TODO..
      *
      * @param aContext
-     * @param aTitle
+     * @param aUrl
      * @return
      */
-    public static Intent getNewInstance(Context aContext, String aTitle)
+    public static Intent getNewInstance(Context aContext, String aUrl)
     {
         Intent intent = new Intent(aContext, MangaActivity.class);
-        intent.putExtra(Manga.TAG, aTitle);
+        intent.putExtra(Manga.TAG, aUrl);
         return intent;
     }
 

@@ -38,10 +38,8 @@ public class MangaPresenter implements IManga.ActivityPresenter
     private ArrayList<Chapter> mChapterList;
     private ChapterListAdapter mAdapter;
     private boolean mChapterOrderDescending;
+    private boolean mRestoreActivity;
     private Manga mManga;
-
-    //    MALService mMALService;
-    MALMangaList mMALMangaList;
 
     private IManga.ActivityView mMangaMapper;
 
@@ -87,6 +85,8 @@ public class MangaPresenter implements IManga.ActivityPresenter
 
         try
         {
+            mRestoreActivity = true;
+
             if (aRestore.containsKey(MANGA_KEY)) mManga = aRestore.getParcelable(MANGA_KEY);
 
             if (aRestore.containsKey(CHAPTER_LIST_KEY)) mChapterList = new ArrayList<>(aRestore.getParcelableArrayList(CHAPTER_LIST_KEY));
@@ -117,12 +117,14 @@ public class MangaPresenter implements IManga.ActivityPresenter
         {
             if (mManga == null)
             {
-                String lTitle = aBundle.getString(Manga.TAG);
+                String lMangaUrl = aBundle.getString(Manga.TAG);
+                String lSource = new SourceFactory().getSourceName();
 
                 //TODO > bundle url instead of title and use MFDBHelper
-                mManga = cupboard().withDatabase(MFDBHelper.getInstance().getReadableDatabase()).query(Manga.class).withSelection("title = ? AND source = ?", lTitle, new SourceFactory().getSourceName()).get();
+//                mManga = cupboard().withDatabase(MFDBHelper.getInstance().getReadableDatabase()).query(Manga.class).withSelection("title = ? AND source = ?", lTitle, new SourceFactory().getSourceName()).get();
+                mManga = MFDBHelper.getInstance().getManga(lMangaUrl, lSource);
             }
-            mChapterOrderDescending = true;
+            if(!mRestoreActivity) mChapterOrderDescending = true;
             mMangaMapper.setActivityTitle(mManga.getTitle());
             mMangaMapper.setupToolBar();
             mMangaMapper.initializeHeaderViews();
