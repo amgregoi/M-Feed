@@ -51,4 +51,9 @@ public class MangaLogger
         Log.e(mApplication, MessageFormat.format("{0}.class >> {1}() > {2} > {3}", aTag, aMethod, aExtra, aError));
     }
 
+    public static void logDebug(String aTag, String aMethod, String aMessage)
+    {
+        Log.i(mApplication, MessageFormat.format("{0}.class >> {1}() > {2}", aTag, aMethod, aMessage));
+    }
+
 }

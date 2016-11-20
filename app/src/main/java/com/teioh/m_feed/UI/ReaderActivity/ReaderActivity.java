@@ -17,10 +17,15 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.R;
+import com.teioh.m_feed.UI.MangaActivity.MangaPresenter;
 import com.teioh.m_feed.UI.ReaderActivity.Presenters.ReaderPresenter;
 import com.teioh.m_feed.UI.ReaderActivity.Widgets.NoScrollViewPager;
 import com.teioh.m_feed.Utils.SharedPrefs;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -50,10 +55,13 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
      * @param aContext
      * @return
      */
-    public static Intent getNewInstance(Context aContext)
+    public static Intent getNewInstance(Context aContext, ArrayList<Chapter> aChapterList, int aPosition)
     {
-        Intent intent = new Intent(aContext, ReaderActivity.class);
-        return intent;
+        Intent lIntent = new Intent(aContext, ReaderActivity.class);
+        lIntent.putParcelableArrayListExtra(MangaPresenter.CHAPTER_LIST_KEY, aChapterList);
+        lIntent.putExtra(MangaPresenter.LIST_POSITION_KEY, aPosition);
+
+        return lIntent;
     }
 
     /***

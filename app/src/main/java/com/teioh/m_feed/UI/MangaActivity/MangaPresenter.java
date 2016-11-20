@@ -17,6 +17,7 @@ import com.teioh.m_feed.Utils.NetworkService;
 import com.teioh.m_feed.WebSources.RequestWrapper;
 import com.teioh.m_feed.WebSources.SourceFactory;
 
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -119,9 +120,6 @@ public class MangaPresenter implements IManga.ActivityPresenter
             {
                 String lMangaUrl = aBundle.getString(Manga.TAG);
                 String lSource = new SourceFactory().getSourceName();
-
-                //TODO > bundle url instead of title and use MFDBHelper
-//                mManga = cupboard().withDatabase(MFDBHelper.getInstance().getReadableDatabase()).query(Manga.class).withSelection("title = ? AND source = ?", lTitle, new SourceFactory().getSourceName()).get();
                 mManga = MFDBHelper.getInstance().getManga(lMangaUrl, lSource);
             }
             if (!mRestoreActivity) mChapterOrderDescending = true;
@@ -245,16 +243,11 @@ public class MangaPresenter implements IManga.ActivityPresenter
 
         try
         {
-            ArrayList<Chapter> newChapterList = new ArrayList<>(mChapterList);
+            ArrayList<Chapter> lNewChapterList = new ArrayList<>(mChapterList);
+            if (mChapterOrderDescending) Collections.reverse(lNewChapterList);
+            int lPosition = lNewChapterList.indexOf(aChapter);
 
-            if (mChapterOrderDescending) Collections.reverse(newChapterList);
-
-            int lPosition = newChapterList.indexOf(aChapter);
-
-            //TODO > update ReaderActivity.getInstance()
-            Intent lIntent = new Intent(mMangaMapper.getContext(), ReaderActivity.class);
-            lIntent.putParcelableArrayListExtra(CHAPTER_LIST_KEY, newChapterList);
-            lIntent.putExtra(LIST_POSITION_KEY, lPosition);
+            Intent lIntent = ReaderActivity.getNewInstance(mMangaMapper.getContext(), lNewChapterList, lPosition);
             mMangaMapper.getContext().startActivity(lIntent);
         }
         catch (Exception aException)
@@ -337,11 +330,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
             {
                 if (mManga.getInitialized() == 0)
                 {
-                    mObservableMangaSubscription = new SourceFactory().getSource()
-                            .updateMangaObservable(new RequestWrapper(mManga))
-                            .doOnError(throwable -> MangaLogger.logError(TAG, lMethod, throwable.getMessage()))
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(manga -> updateMangaView(manga));
+                    mObservableMangaSubscription = new SourceFactory().getSource().updateMangaObservable(new RequestWrapper(mManga)).doOnError(throwable -> MangaLogger.logError(TAG, lMethod, throwable.getMessage())).observeOn(AndroidSchedulers.mainThread()).subscribe(manga -> updateMangaView(manga));
                 }
                 else
                 {
@@ -413,10 +402,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
             {
                 if (mChapterList == null)
                 {
-                    mChapterListSubscription = new SourceFactory().getSource()
-                            .getChapterListObservable(new RequestWrapper(mManga))
-                            .doOnError(throwable -> MangaLogger.logError(TAG, lMethod, throwable.getMessage()))
-                            .subscribe(chapters -> updateChapterList(chapters));
+                    mChapterListSubscription = new SourceFactory().getSource().getChapterListObservable(new RequestWrapper(mManga)).doOnError(throwable -> MangaLogger.logError(TAG, lMethod, throwable.getMessage())).subscribe(chapters -> updateChapterList(chapters));
                 }
                 else
                 {
