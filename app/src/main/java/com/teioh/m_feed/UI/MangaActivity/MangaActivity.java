@@ -28,6 +28,7 @@ import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
+import com.teioh.m_feed.UI.MainActivity.MainActivity;
 import com.teioh.m_feed.UI.MangaActivity.Fragments.FImageDialogFragment;
 import com.teioh.m_feed.UI.MangaActivity.Fragments.FProgressDialogFragment;
 import com.teioh.m_feed.UI.MangaActivity.Fragments.FRemoveDialogFragment;
@@ -251,7 +252,16 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     @Override
     public void onBackPressed()
     {
-        super.onBackPressed();
+        if (isTaskRoot())
+        {
+            Intent lIntent = MainActivity.getNewInstance(this);
+            startActivity(lIntent);
+            finish();
+        }
+        else
+        {
+            super.onBackPressed();
+        }
     }
 
     /***
@@ -488,6 +498,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
         mMangaPresenter.chapterOrderButtonClick();
         mChapterList.setSelection(1);
     }
+
 
     /***
      * TODO..
