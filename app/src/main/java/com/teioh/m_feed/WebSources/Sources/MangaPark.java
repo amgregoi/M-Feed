@@ -1,7 +1,6 @@
 package com.teioh.m_feed.WebSources.Sources;
 
 import android.content.ContentValues;
-import android.util.Log;
 
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;

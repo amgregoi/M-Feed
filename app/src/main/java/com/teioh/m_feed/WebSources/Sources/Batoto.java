@@ -1,6 +1,5 @@
 package com.teioh.m_feed.WebSources.Sources;
 
-import android.util.Log;
 import android.widget.Toast;
 
 import com.squareup.okhttp.Headers;

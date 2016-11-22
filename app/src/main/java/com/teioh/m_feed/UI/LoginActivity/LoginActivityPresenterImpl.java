@@ -2,14 +2,6 @@ package com.teioh.m_feed.UI.LoginActivity;
 
 import android.os.Bundle;
 
-import com.teioh.m_feed.MAL_Models.verify_credentials;
-import com.teioh.m_feed.Utils.MAL.MALApi;
-import com.teioh.m_feed.Utils.MAL.MALService;
-import com.teioh.m_feed.Utils.SharedPrefs;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
 public class LoginActivityPresenterImpl implements ILogin.ActivityPresenter
@@ -19,7 +11,6 @@ public class LoginActivityPresenterImpl implements ILogin.ActivityPresenter
 
     private ILogin.ActivityView mLoginActivityMapper;
     private String mUsername;
-    MALService mMALService;
 
     public LoginActivityPresenterImpl(ILogin.ActivityView aMap)
     {
@@ -73,22 +64,7 @@ public class LoginActivityPresenterImpl implements ILogin.ActivityPresenter
     @Override
     public void onLoginbutton(String aUsername, String aPassword)
     {
-        mMALService = MALApi.createService(aUsername, aPassword);
-        mMALService.verifyUserAccount(new Callback<verify_credentials>()
-        {
-            @Override
-            public void success(verify_credentials credentials, Response response)
-            {
-                SharedPrefs.setMALCredential(aUsername, aPassword);
-                mLoginActivityMapper.onLoginSuccess();
-            }
 
-            @Override
-            public void failure(RetrofitError error)
-            {
-                mLoginActivityMapper.onLoginFail();
-            }
-        });
     }
 
     @Override

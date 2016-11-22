@@ -2,6 +2,8 @@ package com.teioh.m_feed.UI.MainActivity;
 
 import android.content.Intent;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
@@ -12,6 +14,7 @@ import com.teioh.m_feed.UI.Maps.Listeners;
 import com.teioh.m_feed.UI.Maps.MangaFilterMap;
 import com.teioh.m_feed.UI.Maps.MoPubAdapterMap;
 import com.teioh.m_feed.UI.Maps.SearchViewListenerMap;
+import com.teioh.m_feed.UI.Maps.SignInMap;
 import com.teioh.m_feed.UI.Maps.SwipeRefreshMap;
 
 import java.util.ArrayList;
@@ -21,7 +24,7 @@ public interface IMain
     /***
      * TODO..
      */
-    interface ActivityView extends BaseContextMap, SearchViewListenerMap, Listeners.MainFragmentListener, DrawerLayoutMap
+    interface ActivityView extends BaseContextMap, SearchViewListenerMap, Listeners.MainFragmentListener, DrawerLayoutMap, SignInMap
     {
 
         void registerAdapter(ViewPagerAdapterMain aAdapter);
@@ -51,7 +54,7 @@ public interface IMain
 
         void updateQueryChange(String aNewTest);
 
-        void onDrawerItemChosen(int aPosition);
+        void onDrawerItemSelected(int aPosition);
 
         void onSourceItemChosen(int aPosition);
 
@@ -68,6 +71,8 @@ public interface IMain
         void getRecentManga();
 
         void setRecentManga(long aMangaId);
+
+        void updateSignIn(GoogleSignInResult aAccount);
     }
 
     /***

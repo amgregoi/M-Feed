@@ -29,27 +29,25 @@ public class SharedPrefs
     /**
      * Sets the users MyAnimeList(MAL) login credentials for authorized API calls
      *
-     * @param aUsername, The users MyAnimeList Username
-     * @param aPassword, The users MyAnimeList Password
+     * @param aEmail, The users Google email
      */
-    public static void setMALCredential(String aUsername, String aPassword)
+    public static void setGoogleEmail(String aEmail)
     {
         Context lContext = MFeedApplication.getInstance();
         SharedPreferences.Editor lEditor = PreferenceManager.getDefaultSharedPreferences(lContext).edit();
-        lEditor.putString(lContext.getString(R.string.PREF_MAL_USERNAME), aUsername);
-        lEditor.putString(lContext.getString(R.string.PREF_MAL_PASSWORD), aPassword);
+        lEditor.putString(lContext.getString(R.string.PREF_GOOGLE_EMAIL), aEmail);
         lEditor.apply();
     }
 
     /**
-     * Get the users MAL username
+     * Get the users Google email
      *
-     * @return The users MAL username
+     * @return The users Google Email
      */
-    public static String getMALUsername()
+    public static String getGoogleEmail()
     {
         Context lContext = MFeedApplication.getInstance();
-        return PreferenceManager.getDefaultSharedPreferences(lContext).getString(lContext.getString(R.string.PREF_MAL_USERNAME), "Guest (Sign in)");
+        return PreferenceManager.getDefaultSharedPreferences(lContext).getString(lContext.getString(R.string.PREF_GOOGLE_EMAIL), "Guest (Sign in)");
     }
 
     /**
@@ -57,15 +55,15 @@ public class SharedPrefs
      *
      * @return The users MAL password
      */
-    public static String getMALPassword()
-    {
-        Context lContext = MFeedApplication.getInstance();
-        return PreferenceManager.getDefaultSharedPreferences(lContext).getString(lContext.getString(R.string.PREF_MAL_PASSWORD), null);
-    }
+//    public static String getMALPassword()
+//    {
+//        Context lContext = MFeedApplication.getInstance();
+//        return PreferenceManager.getDefaultSharedPreferences(lContext).getString(lContext.getString(R.string.PREF_MAL_PASSWORD), null);
+//    }
 
     public static boolean isSignedIn()
     {
-        if (getMALPassword() == null) return false;
+        if (getGoogleEmail().contains("Guest")) return false;
         return true;
     }
 

@@ -1,6 +1,5 @@
 package com.teioh.m_feed.UI.MangaActivity;
 
-import com.teioh.m_feed.MAL_Models.MALMangaList;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.UI.Maps.BaseAdapterMap;
 import com.teioh.m_feed.UI.Maps.BaseContextMap;

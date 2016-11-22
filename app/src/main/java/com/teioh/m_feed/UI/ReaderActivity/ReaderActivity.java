@@ -8,8 +8,6 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -25,7 +23,6 @@ import com.teioh.m_feed.UI.ReaderActivity.Widgets.NoScrollViewPager;
 import com.teioh.m_feed.Utils.SharedPrefs;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

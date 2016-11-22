@@ -30,7 +30,7 @@ import butterknife.ButterKnife;
 public abstract class MainFragmentBase extends Fragment implements IMain.FragmentView
 {
     @Bind(R.id.manga_recycle_view) RecyclerView mGridView;
-    @Bind(R.id.fastscroll) FastScroller mFastSCroller;
+    @Bind(R.id.fastscroll) FastScroller mFastScroller;
 
     protected IMain.FragmentPresenter mFragmentPresenter;
     protected Listeners.MainFragmentListener mListener;
@@ -58,7 +58,10 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
             mFragmentPresenter.onRestoreState(aSave);
         }
         mFragmentPresenter.init(getArguments());
-        mFastSCroller.setRecyclerView(mGridView);
+        mFastScroller.setRecyclerView(mGridView);
+        mFastScroller.setBubbleColor(0xffff0000);
+        mFastScroller.setHandleColor(0xffff0000);
+        mFastScroller.setBubbleTextAppearance(R.style.StyledScrollerTextAppearance);
     }
 
     /***

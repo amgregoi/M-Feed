@@ -24,7 +24,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.teioh.m_feed.MAL_Models.MALMangaList;
 import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
@@ -33,7 +32,6 @@ import com.teioh.m_feed.UI.MainActivity.MainActivity;
 import com.teioh.m_feed.UI.MangaActivity.Fragments.FImageDialogFragment;
 import com.teioh.m_feed.UI.MangaActivity.Fragments.FProgressDialogFragment;
 import com.teioh.m_feed.UI.MangaActivity.Fragments.FRemoveDialogFragment;
-import com.teioh.m_feed.WebSources.Sources.MangaEden;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

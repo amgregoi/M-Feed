@@ -5,7 +5,7 @@
 	<string name="PREF_CATEGORY_SOURCE_TITLE">Catalogue</string>
 
 	<!-- MAL -->
-	<string name="PREF_MAL_USERNAME">MAL_USERNAME</string>
+	<string name="PREF_GOOGLE_EMAIL">MAL_USERNAME</string>
 	<string name="PREF_MAL_PASSWORD">MAL_PASSWORD</string>
 
 	<!-- Pref Screen -->

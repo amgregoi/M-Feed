@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "445472688663",
+    "project_id": "mang-feed"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:445472688663:android:1249bcb66367d2dc",
+        "android_client_info": {
+          "package_name": "com.teioh.m_feed"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "445472688663-bvipl6de5h7qjfibtn42oolr3ub8kpnn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.teioh.m_feed",
+            "certificate_hash": "11ABF6D7DA41D09B48526A8940511C099A0E393B"
+          }
+        },
+        {
+          "client_id": "445472688663-1igj91no7a7ioh7c88op784laanrg6du.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDimpHYg0TaLx-q8QQK8-lshUbYd6uFRvE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

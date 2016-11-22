@@ -2,11 +2,8 @@ package com.teioh.m_feed.UI.MangaActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.teioh.m_feed.MAL_Models.MALMangaList;
-import com.teioh.m_feed.MFeedApplication;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
@@ -17,15 +14,12 @@ import com.teioh.m_feed.Utils.NetworkService;
 import com.teioh.m_feed.WebSources.RequestWrapper;
 import com.teioh.m_feed.WebSources.SourceFactory;
 
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-
-import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 public class MangaPresenter implements IManga.ActivityPresenter
 {

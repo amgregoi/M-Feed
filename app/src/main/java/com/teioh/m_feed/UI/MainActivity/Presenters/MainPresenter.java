@@ -7,9 +7,10 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
@@ -23,6 +24,7 @@ import com.teioh.m_feed.UI.MainActivity.IMain;
 import com.teioh.m_feed.UI.MainActivity.MainActivity;
 import com.teioh.m_feed.Utils.MFDBHelper;
 import com.teioh.m_feed.Utils.MangaLogger;
+import com.teioh.m_feed.Utils.SharedPrefs;
 import com.teioh.m_feed.WebSources.SourceBase;
 import com.teioh.m_feed.WebSources.SourceFactory;
 
@@ -45,6 +47,8 @@ public class MainPresenter implements IMain.ActivityPresenter
     private Fragment mSettingsFragment;
     private boolean mGenreFilterActive;
     private long mRecentMangaId;
+
+    private GoogleSignInAccount mGoogleAccount;
 
     public MainPresenter(IMain.ActivityView aMap)
     {
@@ -185,7 +189,7 @@ public class MainPresenter implements IMain.ActivityPresenter
      * @param aPosition
      */
     @Override
-    public void onDrawerItemChosen(int aPosition)
+    public void onDrawerItemSelected(int aPosition)
     {
         String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
 
@@ -217,10 +221,24 @@ public class MainPresenter implements IMain.ActivityPresenter
                     dialog.show(((AppCompatActivity) mMainMapper).getSupportFragmentManager(), null);
                     return;
                 case (3):
-                    //setftings fragment
+                    //settings fragment
                     if (mSettingsFragment == null) addSettingsFragment();
                     mMainMapper.closeDrawer();
                     return;
+                case (4):
+                    //sign in / sign out
+                    if (mGoogleAccount == null)
+                    {
+                        mMainMapper.signIn();
+                        setupDrawerLayouts();
+
+                    }
+                    else
+                    {
+                        mMainMapper.signOut();
+                        updateSignIn(null);
+                        setupDrawerLayouts();
+                    }
             }
         }
         catch (Exception aException)
@@ -397,6 +415,44 @@ public class MainPresenter implements IMain.ActivityPresenter
         mRecentMangaId = aMangaId;
     }
 
+    @Override
+    public void updateSignIn(GoogleSignInResult aAccount)
+    {
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
+        try
+        {
+            if (aAccount != null)
+            {
+                if (aAccount.isSuccess())
+                {
+                    mGoogleAccount = aAccount.getSignInAccount();
+                    SharedPrefs.setGoogleEmail(mGoogleAccount.getEmail());
+                    //TODO..
+                    //update favorites list from back end etc..( when implemented )
+                }
+                else
+                {
+                    mGoogleAccount = null;
+                    SharedPrefs.setGoogleEmail(null);
+                    MangaLogger.logInfo(TAG, lMethod, "Sign in failed, logging out");
+                }
+            }
+            else
+            {
+                mGoogleAccount = null;
+                SharedPrefs.setGoogleEmail(null);
+                MangaLogger.logInfo(TAG, lMethod, "Sign in result was null, logging out");
+
+            }
+        }
+        catch (Exception aException)
+        {
+            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+        }
+
+    }
+
     /***
      * TODO...
      */
@@ -433,8 +489,16 @@ public class MainPresenter implements IMain.ActivityPresenter
 
         try
         {
-            List<String> lDrawerItems = Arrays.asList(mDrawerItems);
-
+            ArrayList<String> lDrawerItems = new ArrayList<>(Arrays.asList(mDrawerItems));
+            //check if signed in or signed out
+            if (SharedPrefs.isSignedIn())
+            {
+                lDrawerItems.add("Sign in with Google");
+            }
+            else
+            {
+                lDrawerItems.add("Sign out");
+            }
             Map<String, List<String>> lSourceCollections = new LinkedHashMap<>();
             for (String iDrawerItem : lDrawerItems)
             {
@@ -446,6 +510,7 @@ public class MainPresenter implements IMain.ActivityPresenter
                 }
                 lSourceCollections.put(iDrawerItem, lDrawerChildren);
             }
+
             mMainMapper.setupDrawerLayout(lDrawerItems, lSourceCollections);
         }
         catch (Exception aException)

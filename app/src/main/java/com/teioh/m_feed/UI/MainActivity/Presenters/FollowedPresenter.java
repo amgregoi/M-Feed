@@ -1,6 +1,5 @@
 package com.teioh.m_feed.UI.MainActivity.Presenters;
 
-import android.util.Log;
 import android.widget.Toast;
 
 import com.teioh.m_feed.MFeedApplication;

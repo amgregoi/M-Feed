@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
+apply plugin: 'com.google.gms.google-services'
+
 
 android {
     compileSdkVersion 23
@@ -95,6 +97,8 @@ dependencies {
         transitive = true;
     }
 
+    compile 'com.google.android.gms:play-services-auth:9.0.0'
+
 }
 
 //retrolambda
@@ -107,6 +111,9 @@ buildscript {
     dependencies {
         classpath 'me.tatarka:gradle-retrolambda:3.2.4'
         classpath 'io.fabric.tools:gradle:1.21.6'
+        //google services
+        classpath 'com.google.gms:google-services:3.0.0'
+
     }
 }
 
@@ -119,6 +126,8 @@ repositories {
 apply plugin: 'com.android.application' //or apply plugin: 'java'
 apply plugin: 'me.tatarka.retrolambda'
 //end retrolambda
+
+
 
 
 

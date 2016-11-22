@@ -16,11 +16,6 @@ public interface ILogin
         void onLoginFail();
     }
 
-    interface ActivityModel
-    {
-
-    }
-
     interface ActivityPresenter extends LifeCycleMap
     {
 

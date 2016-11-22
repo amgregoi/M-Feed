@@ -1,7 +1,6 @@
 package com.teioh.m_feed.WebSources.Sources;
 
 import android.content.ContentValues;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.teioh.m_feed.MFeedApplication;

@@ -12,8 +12,6 @@ import com.teioh.m_feed.Utils.MangaLogger;
 
 import java.util.ArrayList;
 
-import butterknife.ButterKnife;
-
 public class ReaderPresenter implements IReader.ActivityPresenter
 {
     public final static String TAG = ReaderPresenter.class.getSimpleName();

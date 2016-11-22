@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -24,14 +25,19 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ExpandableListAdapter;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
-import com.teioh.m_feed.UI.MainActivity.Presenters.MainPresenter;
 import com.teioh.m_feed.UI.MainActivity.Fragments.FilterDialogFragment;
 import com.teioh.m_feed.UI.MainActivity.Fragments.SettingsFragment;
+import com.teioh.m_feed.UI.MainActivity.Presenters.MainPresenter;
 import com.teioh.m_feed.UI.MainActivity.Widgets.SlidingTabLayout;
 import com.teioh.m_feed.Utils.SharedPrefs;
 import com.teioh.m_feed.WebSources.SourceFactory;
@@ -42,7 +48,7 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements IMain.ActivityView
+public class MainActivity extends AppCompatActivity implements IMain.ActivityView, GoogleApiClient.OnConnectionFailedListener
 {
     public final static String TAG = MainActivity.class.getSimpleName();
 
@@ -60,9 +66,11 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     private Toast mToast;
     private ActionBarDrawerToggle mDrawerToggle;
     private IMain.ActivityPresenter mMainPresenter;
+    private GoogleApiClient mGoogleApiClient;
 
     /***
      * TODO..
+     *
      * @param aContext
      * @return
      */
@@ -74,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
 
     /***
      * TODO..
+     *
      * @param aSavedInstanceState
      */
     @Override
@@ -91,10 +100,16 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
 
         mMainPresenter.init(getIntent().getExtras());
         mToast = Toast.makeText(this, "Press back again to exit!", Toast.LENGTH_SHORT);
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
+
     }
 
     /***
      * TODO..
+     *
      * @param aSave
      */
     @Override
@@ -106,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
 
     /***
      * TODO..
+     *
      * @param aSavedInstanceState
      */
     @Override
@@ -117,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
 
     /***
      * TODO..
+     *
      * @param aNewConfig
      */
     @Override
@@ -158,6 +175,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
 
     /***
      * TODO..
+     *
      * @param aLevel
      */
     @Override
@@ -179,6 +197,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
 
     /***
      * TODO..
+     *
      * @param aMenu
      * @return
      */
@@ -190,6 +209,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
 
     /***
      * TODO..
+     *
      * @param aItem
      * @return
      */
@@ -208,6 +228,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
 
     /***
      * TODO..
+     *
      * @param aQueryText
      * @return
      */
@@ -219,6 +240,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
 
     /***
      * TODO..
+     *
      * @param aQueryText
      * @return
      */
@@ -231,6 +253,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
 
     /***
      * TODO..
+     *
      * @param aResultCode
      * @param aData
      */
@@ -257,6 +280,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
 
     /***
      * TODO..
+     *
      * @return
      */
     @Override
@@ -464,13 +488,13 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
 
         mDrawerHeader = LayoutInflater.from(getContext()).inflate(R.layout.drawer_header, null);
         TextView lUsernameTextView = (TextView) mDrawerHeader.findViewById(R.id.drawer_username);
-        lUsernameTextView.setText(SharedPrefs.getMALUsername());
+        lUsernameTextView.setText(SharedPrefs.getGoogleEmail());
 
         mDrawerList.addHeaderView(mDrawerHeader);
         mDrawerList.setAdapter(adapter);
 
         mDrawerList.setOnGroupClickListener((aParent, aView, aGroupPosition, aId) -> {
-            mMainPresenter.onDrawerItemChosen(aGroupPosition);
+            mMainPresenter.onDrawerItemSelected(aGroupPosition);
             return false;
         });
 
@@ -545,5 +569,38 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         //reset
         mMainPresenter.onFilterSelected(MangaEnums.eFilterStatus.NONE);
         mSearchView.clearFocus();
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult aResult)
+    {
+
+    }
+
+
+    @Override
+    public void signIn()
+    {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, 8008);
+    }
+
+    @Override
+    public void signOut()
+    {
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 8008)
+        {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            mMainPresenter.updateSignIn(result);
+
+        }
     }
 }

@@ -1,12 +1,10 @@
 package com.teioh.m_feed.UI.MainActivity.Presenters;
 
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.mopub.nativeads.MoPubNativeAdPositioning;
