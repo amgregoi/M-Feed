@@ -2,7 +2,9 @@ package com.teioh.m_feed.Utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.nfc.Tag;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.teioh.m_feed.MFeedApplication;
 import com.teioh.m_feed.MangaEnums;

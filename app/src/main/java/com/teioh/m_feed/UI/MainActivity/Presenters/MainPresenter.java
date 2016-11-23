@@ -435,7 +435,7 @@ public class MainPresenter implements IMain.ActivityPresenter
                 {
                     mGoogleAccount = null;
                     SharedPrefs.setGoogleEmail(null);
-                    MangaLogger.logInfo(TAG, lMethod, "Sign in failed, logging out");
+                    MangaLogger.logInfo(TAG, lMethod, "Sign in failed, logging out: " +  aAccount.getStatus());
                 }
             }
             else
@@ -493,12 +493,13 @@ public class MainPresenter implements IMain.ActivityPresenter
             //check if signed in or signed out
             if (SharedPrefs.isSignedIn())
             {
-                lDrawerItems.add("Sign in with Google");
+                lDrawerItems.add("Sign out");
             }
             else
             {
-                lDrawerItems.add("Sign out");
+                lDrawerItems.add("Sign in with Google");
             }
+
             Map<String, List<String>> lSourceCollections = new LinkedHashMap<>();
             for (String iDrawerItem : lDrawerItems)
             {

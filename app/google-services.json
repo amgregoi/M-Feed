@@ -1,7 +1,9 @@
 {
   "project_info": {
     "project_number": "445472688663",
-    "project_id": "mang-feed"
+    "firebase_url": "https://mang-feed.firebaseio.com",
+    "project_id": "mang-feed",
+    "storage_bucket": "mang-feed.appspot.com"
   },
   "client": [
     {
@@ -13,12 +15,16 @@
       },
       "oauth_client": [
         {
-          "client_id": "445472688663-bvipl6de5h7qjfibtn42oolr3ub8kpnn.apps.googleusercontent.com",
+          "client_id": "445472688663-hh65t6dfd31q51l7qvp5db9iq3k6tuvu.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.teioh.m_feed",
-            "certificate_hash": "11ABF6D7DA41D09B48526A8940511C099A0E393B"
+            "certificate_hash": "87A2521B161F00B474C210CFE00B03D4F6DBDB9C"
           }
+        },
+        {
+          "client_id": "445472688663-r9r9p37ug5fd9nsqufgacjtdkfuet38l.apps.googleusercontent.com",
+          "client_type": 3
         },
         {
           "client_id": "445472688663-1igj91no7a7ioh7c88op784laanrg6du.apps.googleusercontent.com",
@@ -35,11 +41,16 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "445472688663-r9r9p37ug5fd9nsqufgacjtdkfuet38l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }
