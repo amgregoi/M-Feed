@@ -315,6 +315,10 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
         return mFilter;
     }
 
+    public ArrayList<Manga> getOriginalData(){
+        return mOriginalData;
+    }
+
     public void filterByStatus(MangaEnums.eFilterStatus aFilterType)
     {
         mFilter.filterByStatus(aFilterType);
