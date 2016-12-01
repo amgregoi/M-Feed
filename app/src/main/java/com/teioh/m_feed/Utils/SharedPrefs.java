@@ -175,5 +175,29 @@ public class SharedPrefs
         return PreferenceManager.getDefaultSharedPreferences(lContext).getBoolean(lContext.getString(R.string.PREF_CHAPTER_SCROLL_VERTICAL), false);
     }
 
+    /***
+     * TODO...
+     *
+     * @param aLandscape
+     */
+    public static void setChapterScreenOrientation(boolean aLandscape)
+    {
+        Context lContext = MFeedApplication.getInstance();
+        SharedPreferences.Editor lEditor = PreferenceManager.getDefaultSharedPreferences(lContext).edit();
+        lEditor.putBoolean(lContext.getString(R.string.PREF_CHAPTER_SCREEN_ORIENTATION), aLandscape);
+        lEditor.apply();
+    }
+
+    /***
+     * TODO...
+     *
+     * @return true if LandScape, false otherwise
+     */
+    public static boolean getChapterScreenOrientation()
+    {
+        Context lContext = MFeedApplication.getInstance();
+        return PreferenceManager.getDefaultSharedPreferences(lContext).getBoolean(lContext.getString(R.string.PREF_CHAPTER_SCREEN_ORIENTATION), false);
+    }
+
 
 }

@@ -30,7 +30,7 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
 {
     public final static String TAG = MainFragmentPresenterBase.class.getSimpleName();
     public final static String MANGA_LIST_KEY = TAG + ":MANGA_LIST_KEY";
-    private final String NATIVE_AD_1_UNIT_ID = "f27ea659a1084329a656ab28ef29fb6a"; //comented out for debug
+    private final String NATIVE_AD_1_UNIT_ID = "";//"f27ea659a1084329a656ab28ef29fb6a"; //comented out for debug
 
     protected ArrayList<Manga> mMangaList;
     protected ArrayList<Manga> mGenreFilterList;

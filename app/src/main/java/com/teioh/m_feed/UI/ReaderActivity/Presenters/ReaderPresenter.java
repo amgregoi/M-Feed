@@ -9,6 +9,7 @@ import com.teioh.m_feed.UI.ReaderActivity.ChapterFragment;
 import com.teioh.m_feed.UI.ReaderActivity.IReader;
 import com.teioh.m_feed.UI.ReaderActivity.ReaderActivity;
 import com.teioh.m_feed.Utils.MangaLogger;
+import com.teioh.m_feed.Utils.SharedPrefs;
 
 import java.util.ArrayList;
 
@@ -23,8 +24,6 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     private ChapterPageAdapter mChapterPagerAdapter;
     private ArrayList<Chapter> mChapterList;
     private int mChapterPosition;
-
-    private boolean mLandscapeOrientationLocked = false;
 
     /***
      * TODO..
@@ -50,8 +49,6 @@ public class ReaderPresenter implements IReader.ActivityPresenter
         {
             if (mChapterList != null) aSave.putParcelableArrayList(CHAPTER_LIST_KEY, mChapterList);
             aSave.putInt(CHAPTER_POSITION, mChapterPosition);
-            aSave.putBoolean(SCREEN_ORIENTATION, mLandscapeOrientationLocked);
-
         }
         catch (Exception lException)
         {
@@ -73,7 +70,6 @@ public class ReaderPresenter implements IReader.ActivityPresenter
         {
             if (aRestore.containsKey(CHAPTER_LIST_KEY)) mChapterList = new ArrayList<>(aRestore.getParcelableArrayList(CHAPTER_LIST_KEY));
             if (aRestore.containsKey(CHAPTER_POSITION)) mChapterPosition = aRestore.getInt(CHAPTER_POSITION);
-            if (aRestore.containsKey(SCREEN_ORIENTATION)) mLandscapeOrientationLocked = aRestore.getBoolean(SCREEN_ORIENTATION);
 
         }
         catch (Exception lException)
@@ -104,7 +100,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
             mReaderMap.registerAdapter(mChapterPagerAdapter);
             mReaderMap.setCurrentChapter(mChapterPosition);
             mReaderMap.setupToolbar();
-            mReaderMap.setScreenOrientation(mLandscapeOrientationLocked);
+            mReaderMap.setScreenOrientation(SharedPrefs.getChapterScreenOrientation());
 
         }
         catch (Exception lException)
@@ -306,6 +302,9 @@ public class ReaderPresenter implements IReader.ActivityPresenter
 
         try
         {
+            boolean lCurrentValue = SharedPrefs.getChapterScrollVertical();
+            SharedPrefs.setChapterScrollVertical(!lCurrentValue);
+
             ChapterFragment lTempFragment;
             if ((lTempFragment = ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition))) != null)
             {
@@ -324,7 +323,6 @@ public class ReaderPresenter implements IReader.ActivityPresenter
         {
             MangaLogger.logError(TAG, lMethod, lException.getMessage());
         }
-
     }
 
     /***
@@ -337,23 +335,14 @@ public class ReaderPresenter implements IReader.ActivityPresenter
 
         try
         {
-            mLandscapeOrientationLocked = !mLandscapeOrientationLocked;
+            boolean lCurrentValue = SharedPrefs.getChapterScreenOrientation();
+            SharedPrefs.setChapterScreenOrientation(!lCurrentValue);
+            mReaderMap.setScreenOrientation(!lCurrentValue);
 
         }
         catch (Exception lException)
         {
             MangaLogger.logError(TAG, lMethod, lException.getMessage());
         }
-    }
-
-    /***
-     * TODO..
-     *
-     * @return
-     */
-    @Override
-    public boolean getOrientation()
-    {
-        return mLandscapeOrientationLocked;
     }
 }

@@ -40,9 +40,7 @@ public interface IReader
         void updateChapterViewStatus(int aPosition);
 
         void onRefreshButton(int aPosition);
-
-        boolean getOrientation();
-
+        
         void toggleOrientation();
 
         void toggleVerticalScrollSettings(int aPosition);

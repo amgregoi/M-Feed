@@ -13,6 +13,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.teioh.m_feed.Models.Chapter;
@@ -36,6 +37,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     @Bind(R.id.chapter_header) Toolbar mToolbarHeader;
     @Bind(R.id.chapter_header_2) Toolbar mToolbarHeader2;
     @Bind(R.id.refresh_button) ImageButton mRefreshButton;
+    @Bind(R.id.screen_orient_button) ImageButton mScreenOrientationButton;
     @Bind(R.id.vertical_scroll_toggle) ImageButton mVerticalScrollButton;
     @Bind(R.id.chapter_footer) Toolbar mToolbarFooter;
     @Bind(R.id.chapterTitle) TextView mChapterTitle;
@@ -360,6 +362,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     public void onRefreshClicked()
     {
         mReaderPresenter.onRefreshButton(mViewPager.getCurrentItem());
+        Toast.makeText(this, "Refreshing chapter", Toast.LENGTH_SHORT).show();
     }
 
     /***
@@ -387,7 +390,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     public void onScreenOrientClick()
     {
         mReaderPresenter.toggleOrientation();
-        setScreenOrientation(mReaderPresenter.getOrientation());
+        //toggleicon
     }
 
     /***
@@ -396,8 +399,6 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     @OnClick(R.id.vertical_scroll_toggle)
     public void onVerticalScrollToggle()
     {
-        boolean lCurrentValue = SharedPrefs.getChapterScrollVertical();
-        SharedPrefs.setChapterScrollVertical(!lCurrentValue);
         mReaderPresenter.toggleVerticalScrollSettings(mViewPager.getCurrentItem());
         toggleVerticalScrollIcon();
 
