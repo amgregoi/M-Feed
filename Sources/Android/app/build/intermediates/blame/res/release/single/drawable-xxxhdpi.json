@@ -1,0 +1,38 @@
+[
+    {
+        "merged": "/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/res/merged/release/drawable-xxxhdpi/ic_refresh_white_24dp.png",
+        "source": "/Users/amgregoi/Desktop/Git/M-Feed/app/src/main/res/drawable-xxxhdpi/ic_refresh_white_24dp.png"
+    },
+    {
+        "merged": "/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/res/merged/release/drawable-xxxhdpi/ic_all_inclusive_white_18dp.png",
+        "source": "/Users/amgregoi/Desktop/Git/M-Feed/app/src/main/res/drawable-xxxhdpi/ic_all_inclusive_white_18dp.png"
+    },
+    {
+        "merged": "/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/res/merged/release/drawable-xxxhdpi/ic_swap_vert_white_18dp.png",
+        "source": "/Users/amgregoi/Desktop/Git/M-Feed/app/src/main/res/drawable-xxxhdpi/ic_swap_vert_white_18dp.png"
+    },
+    {
+        "merged": "/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/res/merged/release/drawable-xxxhdpi/ic_swap_horiz_white_24dp.png",
+        "source": "/Users/amgregoi/Desktop/Git/M-Feed/app/src/main/res/drawable-xxxhdpi/ic_swap_horiz_white_24dp.png"
+    },
+    {
+        "merged": "/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/res/merged/release/drawable-xxxhdpi/ic_swap_vert_white_24dp.png",
+        "source": "/Users/amgregoi/Desktop/Git/M-Feed/app/src/main/res/drawable-xxxhdpi/ic_swap_vert_white_24dp.png"
+    },
+    {
+        "merged": "/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/res/merged/release/drawable-xxxhdpi/ic_block_white_18dp.png",
+        "source": "/Users/amgregoi/Desktop/Git/M-Feed/app/src/main/res/drawable-xxxhdpi/ic_block_white_18dp.png"
+    },
+    {
+        "merged": "/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/res/merged/release/drawable-xxxhdpi/ic_book_white_18dp.png",
+        "source": "/Users/amgregoi/Desktop/Git/M-Feed/app/src/main/res/drawable-xxxhdpi/ic_book_white_18dp.png"
+    },
+    {
+        "merged": "/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/res/merged/release/drawable-xxxhdpi/ic_done_white_18dp.png",
+        "source": "/Users/amgregoi/Desktop/Git/M-Feed/app/src/main/res/drawable-xxxhdpi/ic_done_white_18dp.png"
+    },
+    {
+        "merged": "/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/res/merged/release/drawable-xxxhdpi/ic_signal_wifi_off_white_48dp.png",
+        "source": "/Users/amgregoi/Desktop/Git/M-Feed/app/src/main/res/drawable-xxxhdpi/ic_signal_wifi_off_white_48dp.png"
+    }
+]

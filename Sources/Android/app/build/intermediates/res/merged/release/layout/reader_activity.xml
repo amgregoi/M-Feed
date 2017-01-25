@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+android:id="@+id/reader_fragment_container"
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@android:color/white"
+android:clickable="true">
+
+    <include
+        android:id="@+id/chapter_header"
+        layout="@layout/reader_header"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        />
+
+    <include
+        android:id="@+id/chapter_header_2"
+        layout="@layout/reader_header_2"
+        android:layout_below="@id/chapter_header"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        />
+
+    <com.teioh.m_feed.UI.ReaderActivity.Widgets.NoScrollViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        />
+
+    <include
+        android:id="@+id/chapter_footer"
+        layout="@layout/reader_footer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        />
+
+</RelativeLayout>

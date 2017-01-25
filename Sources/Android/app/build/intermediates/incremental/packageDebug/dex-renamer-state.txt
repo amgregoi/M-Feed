@@ -1,0 +1,7 @@
+#Wed Jan 25 00:18:42 CST 2017
+base.0=/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_da13af7e7a88206fb2651f20bfca7c111cf15afd
+renamed.1=classes.dex
+renamed.0=classes2.dex
+file.1=/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_2a2bee5a46c3fb6c7eb7e0fd081b17f3c84edf5f/classes.dex
+base.1=/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_2a2bee5a46c3fb6c7eb7e0fd081b17f3c84edf5f
+file.0=/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_da13af7e7a88206fb2651f20bfca7c111cf15afd/classes.dex

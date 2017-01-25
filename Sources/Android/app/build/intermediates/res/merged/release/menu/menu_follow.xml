@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+	<item
+		android:id="@+id/reading"
+		android:title="Reading"/>
+
+	<item
+		android:id="@+id/complete"
+		android:title="Completed"/>
+
+	<item
+		android:id="@+id/hold"
+		android:title="On Hold"/>
+
+</menu>

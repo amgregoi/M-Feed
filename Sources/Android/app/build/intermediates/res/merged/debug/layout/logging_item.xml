@@ -1,0 +1,15 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+	<TextView
+		android:id="@+id/log_item"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/single_line_height_48dp"
+	    android:textColor="@color/white"
+	    android:focusable="true"
+		>
+	</TextView>
+
+</LinearLayout>

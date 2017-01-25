@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/res/merged/release/animator/fastscroll__default_show.xml",
+        "source": "/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.futuremind.recyclerfastscroll/fastscroll/0.2.4/res/animator/fastscroll__default_show.xml"
+    },
+    {
+        "merged": "/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/res/merged/release/animator/fastscroll__default_hide.xml",
+        "source": "/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.futuremind.recyclerfastscroll/fastscroll/0.2.4/res/animator/fastscroll__default_hide.xml"
+    }
+]

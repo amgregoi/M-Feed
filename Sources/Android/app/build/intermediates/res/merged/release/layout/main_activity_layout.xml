@@ -1,0 +1,65 @@
+<LinearLayout
+	android:id="@+id/layout"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/charcoal"
+	android:orientation="vertical">
+
+	<include layout="@layout/toolbar_filter"/>
+
+	<android.support.v4.widget.DrawerLayout
+		android:id="@+id/drawer_layout"
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<FrameLayout
+			android:id="@+id/main_activity_content"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+			<RelativeLayout
+				android:layout_width="match_parent"
+				android:layout_height="match_parent">
+
+				<include layout="@layout/activity_layout"/>
+
+				<com.getbase.floatingactionbutton.FloatingActionsMenu
+					android:id="@+id/actionMenu"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignParentBottom="true"
+					android:layout_alignParentEnd="true"
+					app:fab_addButtonColorNormal="@color/ColorPrimary"
+					app:fab_addButtonColorPressed="@color/ColorPrimaryDark"
+					app:fab_labelStyle="@style/menu_labels_style"
+					app:fab_labelsPosition="left"
+
+					/>
+			</RelativeLayout>
+
+		</FrameLayout>
+
+
+		<!-- left drawer -->
+		<ExpandableListView
+			android:id="@+id/drawerLayoutListView"
+			android:layout_width="280dp"
+			android:layout_height="match_parent"
+			android:layout_gravity="start"
+			android:background="#222222"
+			android:choiceMode="singleChoice"
+			android:divider="@android:color/transparent"
+			android:dividerHeight="0dp"
+			/>
+
+	</android.support.v4.widget.DrawerLayout>
+</LinearLayout>
+
+
+
+
+
+

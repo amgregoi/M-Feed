@@ -9,7 +9,7 @@ __TODO:__
 * Editing some of the layouts (work in progress)
 
 __APK__<br>
-<a href="https://raw.githubusercontent.com/amgregoi/M-Feed/master/app/app-release.apk">Click Here for APK</a> <br>
+<a href="https://raw.githubusercontent.com/amgregoi/M-Feed/master/Artifacts/app-release.apk">Click Here for APK</a> <br>
 NOTE: restart device if app fails to resume properly after re-entering when first installed.<<br><br>
 
 __Intro__<br>
@@ -28,22 +28,22 @@ __Libraries Used__
 --------------------------
 __Navigation__
 <br>
-<img src="https://raw.githubusercontent.com/amgregoi/M-Feed/master/images/Nav.png" height="500">
+<img src="https://raw.githubusercontent.com/amgregoi/M-Feed/master/Sources/Android/images/Nav.png" height="500">
 <br><br>
 
 __Home Screen__
 <br>
-<img src="https://raw.githubusercontent.com/amgregoi/M-Feed/master/images/Home.png" height="500">
+<img src="https://raw.githubusercontent.com/amgregoi/M-Feed/master/Sources/Android/images/Home.png" height="500">
 <br><br>
 
 __Manga information page__
 <br>
-<img src="https://raw.githubusercontent.com/amgregoi/M-Feed/master/images/Manga.png" height="500"><br><br>
+<img src="https://raw.githubusercontent.com/amgregoi/M-Feed/master/Sources/Android/images/Manga.png" height="500"><br><br>
 
 __Manga Reader Page 1__
 <br>
-<img src="https://raw.githubusercontent.com/amgregoi/M-Feed/master/images/reader_1.png" height="500"><br><br>
+<img src="https://raw.githubusercontent.com/amgregoi/M-Feed/master/Sources/Android/images/reader_1.png" height="500"><br><br>
 
 __Manga Reader Page 2__
 <br>
-<img src="https://raw.githubusercontent.com/amgregoi/M-Feed/master/images/reader_2.png" height="500"><br><br>
+<img src="https://raw.githubusercontent.com/amgregoi/M-Feed/master/Sources/Android/images/reader_2.png" height="500"><br><br>

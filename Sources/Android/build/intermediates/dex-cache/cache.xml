@@ -1,0 +1,851 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="cc178928721f3222b3b06bdfbd9497378ccb9792">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.google.android.gms-play-services-basement-9.0.0_73ab4593e159e364b61836e0879668c8f56ba59b.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-auth-base/9.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="7a23185c9b1c100e7d1a32275017e4712e31c796">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-auth-base-9.0.0_0688d29960c1812432bac95fecf0ad05cbc48678/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.mopub/mopub-sdk-base/4.11.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="3cb69c8f121a1a08fb01b893e16507576b93eae8">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.mopub-mopub-sdk-base-4.11.0_e095c0d73e1d049d22902a17d407618547ad33ef/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.crashlytics.sdk.android/crashlytics-core/2.3.8/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="c9ef45dcbd082cd63aac09a5e2cd443adb5df837">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.crashlytics.sdk.android-crashlytics-core-2.3.8_6fd32f30270a42a309360e0e43e76d32b0af2835/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.1.1/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="5e412e954a24c5310a459c09870e4e2081aceb03">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.android.support-cardview-v7-23.1.1_c6765451d34b612275bfa32a2cf85a19fbd0060e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp-urlconnection/2.0.0/afe8399d352713b66e597e9670c741d1e60ae923/okhttp-urlconnection-2.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="afe8399d352713b66e597e9670c741d1e60ae923">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/okhttp-urlconnection-2.0.0_8b02ce08c0b4c3704d5e7f1e556af221fbb19b7f.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/jars/libs/internal_impl-23.4.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="ea3c07504d2c8f4b13aa17c45c1b68ed9c1c3674">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/internal_impl-23.4.0_618c52601ea0ea08df4d89dcd7b2b7f9b76affa4.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.mopub/mopub-sdk-banner/4.11.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="431975800846a421d3b7ae1e5388b5bd87a5cfca">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.mopub-mopub-sdk-banner-4.11.0_19fb56415ebadc74ae353daa10fc4833d19da426.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/io.fabric.sdk.android/fabric/1.3.10/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="a5db9a2dd46d84285ef737f65030b74b6e8ee2a4">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/io.fabric.sdk.android-fabric-1.3.10_7a8b43161e352a92938139091c291fffc1f63873/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit/converter-simplexml/1.9.0/9c00647c949b9c521ca62390159b37adfc31c50a/converter-simplexml-1.9.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="9c00647c949b9c521ca62390159b37adfc31c50a">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/converter-simplexml-1.9.0_76d0d1029aa16909ed6313d1faa20fd8c00a0c8f.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.mopub/mopub-sdk/4.11.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="58d775ddb89146f1aaf31f5090ba9831069076e8">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.mopub-mopub-sdk-4.11.0_96722fd4b993861126ff4825c4064101ff5bc18c.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.crashlytics.sdk.android/answers/1.3.6/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="9af3b9b8114e685291aa00e6572b0a9131244956">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.crashlytics.sdk.android-answers-1.3.6_ee7b4142bae845fe1604de525aadc8f730b83907.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.4.0/support-annotations-23.4.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="ffbe55fdb2bb456b1485831706a9eac3300bb6b8">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-23.4.0_de9e83cbb1016a6fb94113bf219f9cac085e6993/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.google.android.exoplayer/exoplayer/r1.5.6/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="3c046dc3c0911d142627192884ee771d9a6f5f34">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.exoplayer-exoplayer-r1.5.6_d4940f505e537985602921ace2644dd753e2f19a/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.crashlytics.sdk.android/crashlytics/2.5.5/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="611605b6b640c1558f9bdea41de8ff837ab68ca8">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.crashlytics.sdk.android-crashlytics-2.5.5_77c000c3af14e0ea0c9282815763964b4b18bbdf/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.4.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="de4db3785756bfb0915a9f59a9b3f2fea7407be4">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.android.support-animated-vector-drawable-23.4.0_ea74ac44b15640213ff6a00b4e7a18e71949611f.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.google.firebase/firebase-iid/9.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="ea4b54dcbfe5ac05efb0a314105f07258118d3a7">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-iid-9.0.0_b11b34932474cc31e2a3740d456c7f6b0f62d6ba/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.mopub/mopub-sdk-rewardedvideo/4.11.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="92371d7303cc2411771e6d76bcd79119830e1fbf">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.mopub-mopub-sdk-rewardedvideo-4.11.0_d7c8ac72324e89a1cd74fca035d3d72ef773a0d8/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.futuremind.recyclerfastscroll/fastscroll/0.2.4/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="5149993d94b005b9c8f69548be8d4f139c0a55d3">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.futuremind.recyclerfastscroll-fastscroll-0.2.4_3fd592c0576f329dbfb6ce6ad304b4d55c383b7d/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/.gradle/caches/modules-2/files-2.1/com.github.bumptech.glide/glide/3.5.2/ecf534dba3a8446ce84cbb797d314763be212a68/glide-3.5.2.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="ecf534dba3a8446ce84cbb797d314763be212a68">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/glide-3.5.2_2642f4b72d8391ee94427b815d0eb7df0e49113e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.mopub/mopub-sdk-native-video/4.11.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="af595815ceb3c9dea11f8a74d592a05ff4ead05f">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.mopub-mopub-sdk-native-video-4.11.0_28575bc92636d438d225ed5aa9a1cfef23dac89d.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.google.firebase/firebase-common/9.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="42df48c7305b08b14fa0e84561091b0c24d70d26">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-common-9.0.0_474a44ea15c5f6ee047585b819e284f067bb895e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/io.reactivex/rxandroid/1.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="aa81bfe8c5cc88c2472ca936ae71f0c3dd1766df">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/io.reactivex-rxandroid-1.0.1_0b89201a7fb78ba0be91abbcebce9a4d3ea6b70a/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.google.firebase/firebase-analytics/9.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="4ef8ab5fee042023018249474bc93bd4b2b9c17e">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-analytics-9.0.0_756131e9a970bd7c88f864aff0d14b13141f76ee/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.getbase/floatingactionbutton/1.10.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="f40cf334cdc8b098b74312e21c7741c6eefbeb0e">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.getbase-floatingactionbutton-1.10.1_734db8efa6d717b2fb5669c5fa2e00fba78660d7/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/9.0.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="1941832901fc4e7a93300b53762e9f65d7650b99">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.google.android.gms-play-services-tasks-9.0.0_87444d7f474883d29ecccd6cf3cca19accc7abbd.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.mopub/mopub-sdk-interstitial/4.11.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="b7433f0a43af98cb62a9b7ffc049d4e3a268c1f5">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.mopub-mopub-sdk-interstitial-4.11.0_d5fec6fb567dd3a0546d40a6436114cf272f649b/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.google.firebase/firebase-analytics-impl/9.0.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="0dc8ab07eeceda5e99b305c8069765056b6e5c9d">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.google.firebase-firebase-analytics-impl-9.0.0_94ade5892af26c7f9cdebd575df5b65b206a52c6.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="548f06de403a9409f00554b3ee12a9fdea0e236c">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-appcompat-v7-23.4.0_a2192db1cf7943b679436c555ebb176c7339755e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.3.1/ecb6e1f8e4b0e84c4b886c2f14a1500caf309757/gson-2.3.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="ecb6e1f8e4b0e84c4b886c2f14a1500caf309757">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/gson-2.3.1_a8813c0f80f24c5eb41ea168023815ec676e6a80/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.mopub/mopub-sdk-native-static/4.11.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="5abc448dbde53b0cd4cbe3c19d1e40c680667563">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.mopub-mopub-sdk-native-static-4.11.0_1dde58630356ef63830fcc4c84d515f7cbcc4f32/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/io.fabric.sdk.android/fabric/1.3.10/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="a5db9a2dd46d84285ef737f65030b74b6e8ee2a4">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/io.fabric.sdk.android-fabric-1.3.10_7a8b43161e352a92938139091c291fffc1f63873.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/.gradle/caches/modules-2/files-2.1/com.jakewharton/butterknife/7.0.1/d5d13ea991eab0252e3710e5df3d6a9d4b21d461/butterknife-7.0.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="d5d13ea991eab0252e3710e5df3d6a9d4b21d461">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/butterknife-7.0.1_54d71d13710bdfd5cab9311a9e4e97fcfd4e8b3d.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/.gradle/caches/modules-2/files-2.1/io.reactivex/rxjava/1.0.14/898f9ab61e2a23afd615f0b0389478bec86f49f9/rxjava-1.0.14.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="898f9ab61e2a23afd615f0b0389478bec86f49f9">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/rxjava-1.0.14_a3c644499400b133071ca1842ff150edef4dd835/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/.gradle/caches/modules-2/files-2.1/nl.qbusict/cupboard/2.1.4/ba5bc66fad1fc20aeb8a74f0013b04185fd9a3a9/cupboard-2.1.4.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="ba5bc66fad1fc20aeb8a74f0013b04185fd9a3a9">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/cupboard-2.1.4_21304a5c395fe28e1234b309ed5e5b9b4ec9c6ed.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/1.6.0/98476622f10715998eacf9240d6b479f12c66143/okio-1.6.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="98476622f10715998eacf9240d6b479f12c66143">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/okio-1.6.0_014a5cb7c472747eeab193ef538ff0f48cf5a999.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="67bd36ee9340ec7c254108936ad16b24bed160cc">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-v4-23.4.0_2eb801c84bf62e2a31f21089f4e4f77bc35c2145/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp/2.5.0/4de2b4ed3445c37ec1720a7d214712e845a24636/okhttp-2.5.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="4de2b4ed3445c37ec1720a7d214712e845a24636">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/okhttp-2.5.0_cbf59b1c170057fdc7dab5960c4489070c08775d.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-auth/9.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="7da84426d876216ed4cdddd85e739be5ecabdd04">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-auth-9.0.0_ffacb1fe55ae1166304ed362e193bfb4af1f06ff/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.4.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="ec75036c3c52e451d0cde50a5aedaf5fd32354a0">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-recyclerview-v7-23.4.0_eff385ac239a7efcb3770949119b760badddf960/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/.gradle/caches/modules-2/files-2.1/com.mopub.volley/mopub-volley/1.1.0/4357bce66ae3bb9be50679e43df122fd0a8f3394/mopub-volley-1.1.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="4357bce66ae3bb9be50679e43df122fd0a8f3394">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/mopub-volley-1.1.0_8ff7485ffa349074cf19f57d26e602325b4dad3f/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="6f65c144283b31b4b9a70e6e7aa4c4a1c897d4b8">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-base-9.0.0_d4e72fc0f2850f60e03766febc75a3c6eca9d835/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/.gradle/caches/modules-2/files-2.1/org.simpleframework/simple-xml/2.7.1/dd91fb744c2ff921407475cb29a1e3fee397d411/simple-xml-2.7.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="dd91fb744c2ff921407475cb29a1e3fee397d411">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/simple-xml-2.7.1_31f3307d9ab1d42cb37606ef4f98cb81e1d2d4a1/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="cc178928721f3222b3b06bdfbd9497378ccb9792">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-basement-9.0.0_73ab4593e159e364b61836e0879668c8f56ba59b/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.4.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="c2c594cace5d83a3227b2b6e658ecbfd586d3ed9">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-vector-drawable-23.4.0_27def605cd81059e4104d5092ac5777dd71e1673/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/.gradle/caches/modules-2/files-2.1/org.jsoup/jsoup/1.8.1/1eb6690b0c629d7000c77a72df5e822fb974f521/jsoup-1.8.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="1eb6690b0c629d7000c77a72df5e822fb974f521">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/jsoup-1.8.1_9a3da7dbe443e6ab4da970a6e43600bdb57d9793.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.crashlytics.sdk.android/crashlytics-core/2.3.8/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="c9ef45dcbd082cd63aac09a5e2cd443adb5df837">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.crashlytics.sdk.android-crashlytics-core-2.3.8_6fd32f30270a42a309360e0e43e76d32b0af2835.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-auth-base/9.0.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="7a23185c9b1c100e7d1a32275017e4712e31c796">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.google.android.gms-play-services-auth-base-9.0.0_0688d29960c1812432bac95fecf0ad05cbc48678.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.crashlytics.sdk.android/crashlytics/2.5.5/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="611605b6b640c1558f9bdea41de8ff837ab68ca8">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.crashlytics.sdk.android-crashlytics-2.5.5_77c000c3af14e0ea0c9282815763964b4b18bbdf.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp-urlconnection/2.0.0/afe8399d352713b66e597e9670c741d1e60ae923/okhttp-urlconnection-2.0.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="afe8399d352713b66e597e9670c741d1e60ae923">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/okhttp-urlconnection-2.0.0_8b02ce08c0b4c3704d5e7f1e556af221fbb19b7f/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.mopub/mopub-sdk-banner/4.11.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="431975800846a421d3b7ae1e5388b5bd87a5cfca">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.mopub-mopub-sdk-banner-4.11.0_19fb56415ebadc74ae353daa10fc4833d19da426/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/jars/libs/internal_impl-23.4.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="ea3c07504d2c8f4b13aa17c45c1b68ed9c1c3674">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-23.4.0_618c52601ea0ea08df4d89dcd7b2b7f9b76affa4/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.mopub/mopub-sdk-rewardedvideo/4.11.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="92371d7303cc2411771e6d76bcd79119830e1fbf">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.mopub-mopub-sdk-rewardedvideo-4.11.0_d7c8ac72324e89a1cd74fca035d3d72ef773a0d8.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.1.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="5e412e954a24c5310a459c09870e4e2081aceb03">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-cardview-v7-23.1.1_c6765451d34b612275bfa32a2cf85a19fbd0060e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.crashlytics.sdk.android/answers/1.3.6/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="9af3b9b8114e685291aa00e6572b0a9131244956">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.crashlytics.sdk.android-answers-1.3.6_ee7b4142bae845fe1604de525aadc8f730b83907/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit/converter-simplexml/1.9.0/9c00647c949b9c521ca62390159b37adfc31c50a/converter-simplexml-1.9.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="9c00647c949b9c521ca62390159b37adfc31c50a">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/converter-simplexml-1.9.0_76d0d1029aa16909ed6313d1faa20fd8c00a0c8f/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/.gradle/caches/modules-2/files-2.1/com.github.bumptech.glide/glide/3.5.2/ecf534dba3a8446ce84cbb797d314763be212a68/glide-3.5.2.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="ecf534dba3a8446ce84cbb797d314763be212a68">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/glide-3.5.2_2642f4b72d8391ee94427b815d0eb7df0e49113e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.mopub/mopub-sdk/4.11.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="58d775ddb89146f1aaf31f5090ba9831069076e8">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.mopub-mopub-sdk-4.11.0_96722fd4b993861126ff4825c4064101ff5bc18c/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.google.android.exoplayer/exoplayer/r1.5.6/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="3c046dc3c0911d142627192884ee771d9a6f5f34">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.google.android.exoplayer-exoplayer-r1.5.6_d4940f505e537985602921ace2644dd753e2f19a.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.4.0/support-annotations-23.4.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="ffbe55fdb2bb456b1485831706a9eac3300bb6b8">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/support-annotations-23.4.0_de9e83cbb1016a6fb94113bf219f9cac085e6993.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.crashlytics.sdk.android/beta/1.1.4/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="ad5bb101ced4d3939225c9b57e5a3d81547c1fbb">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.crashlytics.sdk.android-beta-1.1.4_2e6d3fefc82503b8f7f42ba3a1f997eedb4ef5f0/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit/retrofit/1.9.0/a681c044244d9fc375198588297a39ba78028423/retrofit-1.9.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="a681c044244d9fc375198588297a39ba78028423">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/retrofit-1.9.0_30b47f763923d27a7e7e34a2d5b95ade7a937897/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.4.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="de4db3785756bfb0915a9f59a9b3f2fea7407be4">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-animated-vector-drawable-23.4.0_ea74ac44b15640213ff6a00b4e7a18e71949611f/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.4.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="c2c594cace5d83a3227b2b6e658ecbfd586d3ed9">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.android.support-support-vector-drawable-23.4.0_27def605cd81059e4104d5092ac5777dd71e1673.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.google.firebase/firebase-common/9.0.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="42df48c7305b08b14fa0e84561091b0c24d70d26">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.google.firebase-firebase-common-9.0.0_474a44ea15c5f6ee047585b819e284f067bb895e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/io.reactivex/rxandroid/1.0.1/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="aa81bfe8c5cc88c2472ca936ae71f0c3dd1766df">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/io.reactivex-rxandroid-1.0.1_0b89201a7fb78ba0be91abbcebce9a4d3ea6b70a.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/.gradle/caches/modules-2/files-2.1/org.simpleframework/simple-xml/2.7.1/dd91fb744c2ff921407475cb29a1e3fee397d411/simple-xml-2.7.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="dd91fb744c2ff921407475cb29a1e3fee397d411">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/simple-xml-2.7.1_31f3307d9ab1d42cb37606ef4f98cb81e1d2d4a1.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.google.firebase/firebase-iid/9.0.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="ea4b54dcbfe5ac05efb0a314105f07258118d3a7">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.google.firebase-firebase-iid-9.0.0_b11b34932474cc31e2a3740d456c7f6b0f62d6ba.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit/retrofit/1.9.0/a681c044244d9fc375198588297a39ba78028423/retrofit-1.9.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="a681c044244d9fc375198588297a39ba78028423">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/retrofit-1.9.0_30b47f763923d27a7e7e34a2d5b95ade7a937897.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.futuremind.recyclerfastscroll/fastscroll/0.2.4/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="5149993d94b005b9c8f69548be8d4f139c0a55d3">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.futuremind.recyclerfastscroll-fastscroll-0.2.4_3fd592c0576f329dbfb6ce6ad304b4d55c383b7d.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/9.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="1941832901fc4e7a93300b53762e9f65d7650b99">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-tasks-9.0.0_87444d7f474883d29ecccd6cf3cca19accc7abbd/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.mopub/mopub-sdk-interstitial/4.11.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="b7433f0a43af98cb62a9b7ffc049d4e3a268c1f5">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.mopub-mopub-sdk-interstitial-4.11.0_d5fec6fb567dd3a0546d40a6436114cf272f649b.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.crashlytics.sdk.android/beta/1.1.4/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="ad5bb101ced4d3939225c9b57e5a3d81547c1fbb">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.crashlytics.sdk.android-beta-1.1.4_2e6d3fefc82503b8f7f42ba3a1f997eedb4ef5f0.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.getbase/floatingactionbutton/1.10.1/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="f40cf334cdc8b098b74312e21c7741c6eefbeb0e">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.getbase-floatingactionbutton-1.10.1_734db8efa6d717b2fb5669c5fa2e00fba78660d7.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.mopub/mopub-sdk-native-video/4.11.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="af595815ceb3c9dea11f8a74d592a05ff4ead05f">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.mopub-mopub-sdk-native-video-4.11.0_28575bc92636d438d225ed5aa9a1cfef23dac89d/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.google.firebase/firebase-analytics/9.0.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="4ef8ab5fee042023018249474bc93bd4b2b9c17e">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.google.firebase-firebase-analytics-9.0.0_756131e9a970bd7c88f864aff0d14b13141f76ee.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="bdd12e56a1ccb85d25d2806a1f6978ac3e919dec">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_2a2bee5a46c3fb6c7eb7e0fd081b17f3c84edf5f/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="548f06de403a9409f00554b3ee12a9fdea0e236c">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.android.support-appcompat-v7-23.4.0_a2192db1cf7943b679436c555ebb176c7339755e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.mopub/mopub-sdk-native-static/4.11.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="5abc448dbde53b0cd4cbe3c19d1e40c680667563">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.mopub-mopub-sdk-native-static-4.11.0_1dde58630356ef63830fcc4c84d515f7cbcc4f32.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.google.firebase/firebase-analytics-impl/9.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="0dc8ab07eeceda5e99b305c8069765056b6e5c9d">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-analytics-impl-9.0.0_94ade5892af26c7f9cdebd575df5b65b206a52c6/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/.gradle/caches/modules-2/files-2.1/org.jsoup/jsoup/1.8.1/1eb6690b0c629d7000c77a72df5e822fb974f521/jsoup-1.8.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="1eb6690b0c629d7000c77a72df5e822fb974f521">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/jsoup-1.8.1_9a3da7dbe443e6ab4da970a6e43600bdb57d9793/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/1.6.0/98476622f10715998eacf9240d6b479f12c66143/okio-1.6.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="98476622f10715998eacf9240d6b479f12c66143">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/okio-1.6.0_014a5cb7c472747eeab193ef538ff0f48cf5a999/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.3.1/ecb6e1f8e4b0e84c4b886c2f14a1500caf309757/gson-2.3.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="ecb6e1f8e4b0e84c4b886c2f14a1500caf309757">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/gson-2.3.1_a8813c0f80f24c5eb41ea168023815ec676e6a80.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="67bd36ee9340ec7c254108936ad16b24bed160cc">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.android.support-support-v4-23.4.0_2eb801c84bf62e2a31f21089f4e4f77bc35c2145.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/.gradle/caches/modules-2/files-2.1/com.jakewharton/butterknife/7.0.1/d5d13ea991eab0252e3710e5df3d6a9d4b21d461/butterknife-7.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="d5d13ea991eab0252e3710e5df3d6a9d4b21d461">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/butterknife-7.0.1_54d71d13710bdfd5cab9311a9e4e97fcfd4e8b3d/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/.gradle/caches/modules-2/files-2.1/nl.qbusict/cupboard/2.1.4/ba5bc66fad1fc20aeb8a74f0013b04185fd9a3a9/cupboard-2.1.4.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="ba5bc66fad1fc20aeb8a74f0013b04185fd9a3a9">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/cupboard-2.1.4_21304a5c395fe28e1234b309ed5e5b9b4ec9c6ed/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/.gradle/caches/modules-2/files-2.1/com.mopub.volley/mopub-volley/1.1.0/4357bce66ae3bb9be50679e43df122fd0a8f3394/mopub-volley-1.1.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="4357bce66ae3bb9be50679e43df122fd0a8f3394">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/mopub-volley-1.1.0_8ff7485ffa349074cf19f57d26e602325b4dad3f.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.mopub/mopub-sdk-base/4.11.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="3cb69c8f121a1a08fb01b893e16507576b93eae8">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.mopub-mopub-sdk-base-4.11.0_e095c0d73e1d049d22902a17d407618547ad33ef.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="9c6c7f497e6167b5bbb2d48f5407be616e6b1a05">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_da13af7e7a88206fb2651f20bfca7c111cf15afd/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.4.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="ec75036c3c52e451d0cde50a5aedaf5fd32354a0">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.android.support-recyclerview-v7-23.4.0_eff385ac239a7efcb3770949119b760badddf960.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/amgregoi/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp/2.5.0/4de2b4ed3445c37ec1720a7d214712e845a24636/okhttp-2.5.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.1"
+        sha1="4de2b4ed3445c37ec1720a7d214712e845a24636">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/transforms/dex/debug/folders/1000/10/okhttp-2.5.0_cbf59b1c170057fdc7dab5960c4489070c08775d/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/.gradle/caches/modules-2/files-2.1/io.reactivex/rxjava/1.0.14/898f9ab61e2a23afd615f0b0389478bec86f49f9/rxjava-1.0.14.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="898f9ab61e2a23afd615f0b0389478bec86f49f9">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/rxjava-1.0.14_a3c644499400b133071ca1842ff150edef4dd835.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.0.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="6f65c144283b31b4b9a70e6e7aa4c4a1c897d4b8">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.google.android.gms-play-services-base-9.0.0_d4e72fc0f2850f60e03766febc75a3c6eca9d835.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-auth/9.0.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="7da84426d876216ed4cdddd85e739be5ecabdd04">
+        <dex dex="/Users/amgregoi/Desktop/Git/M-Feed/app/build/intermediates/pre-dexed/release/com.google.android.gms-play-services-auth-9.0.0_ffacb1fe55ae1166304ed362e193bfb4af1f06ff.jar" />
+    </item>
+
+</items>
