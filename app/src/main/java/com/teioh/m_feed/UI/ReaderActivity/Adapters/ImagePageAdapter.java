@@ -1,7 +1,9 @@
 package com.teioh.m_feed.UI.ReaderActivity.Adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.ReaderActivity.Widgets.GestureImageView;
+import com.teioh.m_feed.Utils.MangaLogger;
 
 import java.util.List;
 
@@ -75,7 +78,12 @@ public class ImagePageAdapter extends PagerAdapter
         View lView = mInflater.inflate(R.layout.reader_chapter_item, aContainer, false);
 
         GestureImageView mImage = (GestureImageView) lView.findViewById(R.id.chapterPageImageView);
-        Glide.with(mContext).load(mImageUrlList.get(aPosition)).animate(android.R.anim.fade_in).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(new GlideDrawableImageViewTarget(mImage)
+        Glide.with(mContext).load(mImageUrlList.get(aPosition))
+                .animate(android.R.anim.fade_in)
+                .placeholder(mContext.getResources().getDrawable(R.drawable.ic_book_white_18dp))
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .into(new GlideDrawableImageViewTarget(mImage)
         {
             @Override
             public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation)
@@ -83,8 +91,9 @@ public class ImagePageAdapter extends PagerAdapter
                 super.onResourceReady(resource, animation);
                 mImage.initializeView();
                 mImage.setTag(TAG + ":" + aPosition);
-                mImage.startFling(0, 10000f); //large fling to initialize the image to the top for long pages
+                mImage.startFling(0, 100000f); //large fling to initialize the image to the top for long pages
             }
+
         });
         (aContainer).addView(lView);
         mImageViews.put(aPosition, lView);

@@ -199,5 +199,29 @@ public class SharedPrefs
         return PreferenceManager.getDefaultSharedPreferences(lContext).getBoolean(lContext.getString(R.string.PREF_CHAPTER_SCREEN_ORIENTATION), false);
     }
 
+    /***
+     * TODO...
+     *
+     * @return true if logging, false otherwise
+     */
+    public static boolean getLoggingStatus()
+    {
+        Context lContext = MFeedApplication.getInstance();
+        return PreferenceManager.getDefaultSharedPreferences(lContext).getBoolean(lContext.getString(R.string.PREF_LOGGING_STATUS), false);
+    }
+
+    /***
+     * TODO...
+     *
+     * @param aLogging
+     */
+    public static void setLoggingStatus(boolean aLogging)
+    {
+        Context lContext = MFeedApplication.getInstance();
+        SharedPreferences.Editor lEditor = PreferenceManager.getDefaultSharedPreferences(lContext).edit();
+        lEditor.putBoolean(lContext.getString(R.string.PREF_LOGGING_STATUS), aLogging);
+        lEditor.apply();
+    }
+
 
 }

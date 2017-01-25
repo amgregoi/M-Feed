@@ -12,10 +12,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.futuremind.recyclerviewfastscroll.SectionTitleProvider;
+import com.teioh.m_feed.MFeedApplication;
 import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
@@ -163,7 +165,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
                 aHolder.mTextView.setTextColor(lContext.getResources().getColor(R.color.black));
         }
 
-        Glide.with(lContext).load(lMangaItem.getPicUrl()).animate(android.R.anim.fade_in).skipMemoryCache(true).into(new GlideDrawableImageViewTarget(aHolder.mImageView)
+        Glide.with(lContext).load(lMangaItem.getPicUrl()).animate(android.R.anim.fade_in).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE).into(new GlideDrawableImageViewTarget(aHolder.mImageView)
         {
             @Override
             public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation)

@@ -36,8 +36,6 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     @Bind(R.id.pager) NoScrollViewPager mViewPager;
     @Bind(R.id.chapter_header) Toolbar mToolbarHeader;
     @Bind(R.id.chapter_header_2) Toolbar mToolbarHeader2;
-    @Bind(R.id.refresh_button) ImageButton mRefreshButton;
-    @Bind(R.id.screen_orient_button) ImageButton mScreenOrientationButton;
     @Bind(R.id.vertical_scroll_toggle) ImageButton mVerticalScrollButton;
     @Bind(R.id.chapter_footer) Toolbar mToolbarFooter;
     @Bind(R.id.chapterTitle) TextView mChapterTitle;

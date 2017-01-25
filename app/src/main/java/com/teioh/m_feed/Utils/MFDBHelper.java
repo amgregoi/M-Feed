@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.teioh.m_feed.MFeedApplication;
+import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.WebSources.SourceFactory;
 
@@ -287,6 +288,10 @@ public class MFDBHelper extends SQLiteOpenHelper
     public void updateManga(ContentValues aValues, String aUrl)
     {
         cupboard().withDatabase(getWritableDatabase()).update(Manga.class, aValues, "link = ?", aUrl);
+    }
+
+    public void updateChapter(Chapter aChapter){
+        MangaLogger.logInfo(TAG, "updateChapter", "Not yet implemented");
     }
 
 

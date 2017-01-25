@@ -5,6 +5,8 @@ import android.util.Log;
 import com.teioh.m_feed.MFeedApplication;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -13,6 +15,8 @@ import java.text.MessageFormat;
 public class MangaLogger
 {
     private final static String mApplication = MFeedApplication.class.getSimpleName();
+
+    private static List<String> mCurrentLogs = new ArrayList<>();
 
     /***
      * TODO..
@@ -23,7 +27,9 @@ public class MangaLogger
      */
     public static void logInfo(String aTag, String aMethod, String aMessage)
     {
-        Log.i(mApplication, MessageFormat.format("{0}.class >> {1}() > {2}", aTag, aMethod, aMessage));
+        String lMessage = MessageFormat.format("{0}.class >> {1}() > {2}", aTag, aMethod, aMessage);
+        mCurrentLogs.add(lMessage);
+        Log.i(mApplication, lMessage);
     }
 
     /***
@@ -35,7 +41,9 @@ public class MangaLogger
      */
     public static void logError(String aTag, String aMethod, String aError)
     {
-        Log.e(mApplication, MessageFormat.format("{0}.class >> {1}() > {2}", aTag, aMethod, aError));
+        String lMessage = MessageFormat.format("{0}.class >> {1}() > {2}", aTag, aMethod, aError);
+        mCurrentLogs.add(lMessage);
+        Log.e(mApplication, lMessage);
     }
 
     /***
@@ -48,12 +56,24 @@ public class MangaLogger
      */
     public static void logError(String aTag, String aMethod, String aError, String aExtra)
     {
-        Log.e(mApplication, MessageFormat.format("{0}.class >> {1}() > {2} > {3}", aTag, aMethod, aExtra, aError));
+        String lMessage = MessageFormat.format("{0}.class >> {1}() > {2} > {3}", aTag, aMethod, aExtra, aError);
+        mCurrentLogs.add(lMessage);
+        Log.e(mApplication, lMessage);
     }
 
     public static void logDebug(String aTag, String aMethod, String aMessage)
     {
-        Log.i(mApplication, MessageFormat.format("{0}.class >> {1}() > {2}", aTag, aMethod, aMessage));
+        String lMessage = MessageFormat.format("{0}.class >> {1}() > {2}", aTag, aMethod, aMessage);
+        mCurrentLogs.add(lMessage);
+        Log.i(mApplication, lMessage);
+    }
+
+    public static void clearLogs(){
+        mCurrentLogs = new ArrayList<>();
+    }
+
+    public static List<String> getLogs(){
+        return mCurrentLogs;
     }
 
 }

@@ -19,6 +19,7 @@ import com.teioh.m_feed.WebSources.SourceFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.qbusict.cupboard.Cupboard;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -190,6 +191,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
                     mLoadingStatus = MangaEnums.eLoadingStatus.COMPLETE;
                     MangaLogger.logInfo(TAG, lMethod, "Completed image url retrieval");
                     updateReaderToolbar();
+                    mChapterReaderMapper.setCurrentChapterPage(mChapter.getCurrentPage());
 
                 }
 
@@ -288,9 +290,12 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     public void onPause()
     {
         String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+        //TODO.. Update chapter object when fragment is paused to keep changes
+        //TODO.. Might be moving away from cupboard in the future
 
         try
         {
+            MFDBHelper.getInstance().updateChapter(mChapter);
             Glide.get(mChapterReaderMapper.getContext()).clearMemory();
         }
         catch (Exception aException)
@@ -352,6 +357,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     public void setToNextChapter()
     {
         String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+        mChapter.setCurrentPage(0); //reset current page to beginning when done with a chapter
 
         try
         {
@@ -535,6 +541,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
         try
         {
             cleanupSubscribers();
+            mLoadingStatus = MangaEnums.eLoadingStatus.ERROR; //TODO.. Consider everything an error for now (temporary)
 
             switch (mLoadingStatus)
             {

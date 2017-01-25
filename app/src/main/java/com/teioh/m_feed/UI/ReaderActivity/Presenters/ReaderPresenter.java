@@ -1,8 +1,13 @@
 package com.teioh.m_feed.UI.ReaderActivity.Presenters;
 
+import android.content.ComponentCallbacks2;
 import android.os.Bundle;
 
+import com.bumptech.glide.Glide;
+import com.teioh.m_feed.MFeedApplication;
 import com.teioh.m_feed.Models.Chapter;
+import com.teioh.m_feed.UI.MainActivity.MainActivity;
+import com.teioh.m_feed.UI.MangaActivity.MangaActivity;
 import com.teioh.m_feed.UI.MangaActivity.MangaPresenter;
 import com.teioh.m_feed.UI.ReaderActivity.Adapters.ChapterPageAdapter;
 import com.teioh.m_feed.UI.ReaderActivity.ChapterFragment;
@@ -18,7 +23,6 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     public final static String TAG = ReaderPresenter.class.getSimpleName();
     public final static String CHAPTER_LIST_KEY = TAG + ":CHAPTER_LIST";
     public final static String CHAPTER_POSITION = TAG + ":POSITION";
-    public final static String SCREEN_ORIENTATION = TAG + ":SCREEN";
 
     private IReader.ActivityView mReaderMap;
     private ChapterPageAdapter mChapterPagerAdapter;
