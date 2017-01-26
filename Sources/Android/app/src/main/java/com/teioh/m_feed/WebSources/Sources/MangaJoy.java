@@ -38,8 +38,7 @@ public class MangaJoy extends SourceBase
      */
     public Observable<List<Manga>> getRecentUpdatesObservable()
     {
-        String lMethod = Thread.currentThread()
-                               .getStackTrace()[2].getMethodName();
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
         return NetworkService.getTemporaryInstance()
                              .getResponse(mUpdatesUrl)
                              .flatMap(response -> NetworkService.mapResponseToString(response))
@@ -100,8 +99,7 @@ public class MangaJoy extends SourceBase
      */
     public Observable<List<Chapter>> getChapterListObservable(RequestWrapper request)
     {
-        String lMethod = Thread.currentThread()
-                               .getStackTrace()[2].getMethodName();
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
         MangaLogger.logInfo(TAG, lMethod, "Entering");
 
         return NetworkService.getTemporaryInstance()
@@ -137,13 +135,11 @@ public class MangaJoy extends SourceBase
      */
     private List<Manga> scrapeUpdatestoManga(final String unparsedHtml)
     {
-        String lMethod = Thread.currentThread()
-                               .getStackTrace()[2].getMethodName();
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
 
         List<Manga> lMangaList = new ArrayList<>();
         Document lParsedDocument = Jsoup.parse(unparsedHtml);
-        Elements lMangaElements = lParsedDocument.select("div.manga_updates")
-                                                 .select("dl");
+        Elements lMangaElements = lParsedDocument.select("div.manga_updates").select("dl");
 
         for (Element wholeElement : lMangaElements)
         {
@@ -151,14 +147,11 @@ public class MangaJoy extends SourceBase
             Elements usefulElements = parseSections.select("dt");
             for (Element usefulElement : usefulElements)
             {
-                String lMangaTitle = usefulElement.select("a")
-                                                  .attr("title");
-                String lMangaUrl = usefulElement.select("a")
-                                                .attr("href");
+                String lMangaTitle = usefulElement.select("a").attr("title");
+                String lMangaUrl = usefulElement.select("a").attr("href");
 
                 if (lMangaUrl.charAt(lMangaUrl.length() - 1) != '/') lMangaUrl += "/"; //add ending slash to url if missing
-                Manga lManga = MFDBHelper.getInstance()
-                                         .getManga(lMangaUrl, SourceKey);
+                Manga lManga = MFDBHelper.getInstance().getManga(lMangaUrl, SourceKey);
                 if (lManga != null)
                 {
                     lMangaList.add(lManga);
@@ -167,8 +160,7 @@ public class MangaJoy extends SourceBase
                 {
                     lManga = new Manga(lMangaTitle, lMangaUrl, SourceKey);
                     lMangaList.add(lManga);
-                    MFDBHelper.getInstance()
-                              .putManga(lManga);
+                    MFDBHelper.getInstance().putManga(lManga);
 
                     updateMangaObservable(new RequestWrapper(lManga)).subscribeOn(Schedulers.computation())
                                                                      .doOnError(aThrowable -> MangaLogger.logError(TAG, lMethod, aThrowable.getMessage()))
@@ -206,22 +198,16 @@ public class MangaJoy extends SourceBase
     private List<Chapter> scrapeChaptersFromParsedDocument(final Document parsedDocument, final String title)
     {
         List<Chapter> chapterList = new ArrayList<>();
-        Elements chapterElements = parsedDocument.select("ul.chapter-list")
-                                                 .select("li");
+        Elements chapterElements = parsedDocument.select("ul.chapter-list").select("li");
         int numChapters = chapterElements.size();
 
 
         for (Element chapterElement : chapterElements)
         {
-            String chapterUrl = chapterElement.select("a")
-                                              .attr("href");
-            String cTitle = chapterElement.select("span")
-                                          .first()
-                                          .text();
+            String chapterUrl = chapterElement.select("a").attr("href");
+            String cTitle = chapterElement.select("span").first().text();
 
-            String chapterDate = chapterElement.select("span")
-                                               .get(1)
-                                               .text();
+            String chapterDate = chapterElement.select("span").get(1).text();
 
             Chapter curChapter = new Chapter(chapterUrl, title, cTitle, chapterDate, numChapters);
             numChapters--;
@@ -243,16 +229,13 @@ public class MangaJoy extends SourceBase
 
         Document doc = Jsoup.parse(html);
 
-        Elements nav = doc.select("h5.widget-heading")
-                          .select("select")
-                          .select("option");
+        Elements nav = doc.select("h5.widget-heading").select("select").select("option");
 
         int pages = nav.size();
 
         for (int i = 1; i < pages; i++)
         {
-            String link = nav.get(i)
-                             .attr("value");
+            String link = nav.get(i).attr("value");
             images.add(link);
         }
         return images;
@@ -267,8 +250,7 @@ public class MangaJoy extends SourceBase
     public String parseHtmlToImageUrl(String html)
     {
         Document parsedDocument = Jsoup.parse(html);
-        String link = parsedDocument.select("img.img-responsive")
-                                    .attr("src");
+        String link = parsedDocument.select("img.img-responsive").attr("src");
         return link;
     }
 
@@ -281,25 +263,18 @@ public class MangaJoy extends SourceBase
      */
     private Manga scrapeAndUpdateManga(final String unparsedHtml, RequestWrapper aRequest)
     {
-        String lMethod = Thread.currentThread()
-                               .getStackTrace()[2].getMethodName();
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
 
         Document html = Jsoup.parse(unparsedHtml);
 
         try
         {
             //image url
-            Element imageElement = html.body()
-                                       .select("img.img-responsive.mobile-img")
-                                       .first();
+            Element imageElement = html.body().select("img.img-responsive.mobile-img").first();
             //summary
-            Element summaryElement = html.body()
-                                         .select("div.note.note-default.margin-top-15")
-                                         .first();
+            Element summaryElement = html.body().select("div.note.note-default.margin-top-15").first();
 
-            Elements e = html.body()
-                             .select("dl.dl-horizontal")
-                             .select("dd");
+            Elements e = html.body().select("dl.dl-horizontal").select("dd");
             String img = imageElement.attr("src");
             String summary = summaryElement.text();
             String alternate = null;
@@ -311,28 +286,23 @@ public class MangaJoy extends SourceBase
             {
                 if (i == 0)
                 {
-                    alternate = e.get(i)
-                                 .text();
+                    alternate = e.get(i).text();
                 }
                 else if (i == 5)
                 {
-                    author = e.get(i)
-                              .text();
+                    author = e.get(i).text();
                 }
-                else if (i == 6)
+                else if (i == 4)
                 {
-                    artist = e.get(i)
-                              .text();
+                    artist = e.get(i).text();
                 }
                 else if (i == 2)
                 {
-                    genres = e.get(i)
-                              .text();
+                    genres = e.get(i).text();
                 }
                 else if (i == 1)
                 {
-                    status = e.get(i)
-                              .text();
+                    status = e.get(i).text();
                 }
             }
 
@@ -347,10 +317,8 @@ public class MangaJoy extends SourceBase
             values.put("status", status);
             values.put("source", SourceKey);
 
-            MFDBHelper.getInstance()
-                      .updateManga(values, aRequest.getMangaUrl());
-            Manga manga = MFDBHelper.getInstance()
-                                    .getManga(aRequest.getMangaUrl(), SourceKey);
+            MFDBHelper.getInstance().updateManga(values, aRequest.getMangaUrl());
+            Manga manga = MFDBHelper.getInstance().getManga(aRequest.getMangaUrl(), SourceKey);
             return manga;
         }
         catch (Exception aException)

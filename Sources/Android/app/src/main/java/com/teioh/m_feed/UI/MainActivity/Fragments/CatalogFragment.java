@@ -8,13 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.teioh.m_feed.R;
-import com.teioh.m_feed.UI.MainActivity.Presenters.FollowedPresenter;
+import com.teioh.m_feed.UI.MainActivity.Presenters.CatalogPresenter;
 
 import butterknife.ButterKnife;
 
-public class FollowedFragment extends MainFragmentBase
+public class CatalogFragment extends MainFragmentBase
 {
-    public final static String TAG = FollowedFragment.class.getSimpleName();
+    public final static String TAG = CatalogFragment.class.getSimpleName();
 
     /***
      * TODO..
@@ -23,8 +23,8 @@ public class FollowedFragment extends MainFragmentBase
      */
     public static Fragment getnewInstance()
     {
-        Fragment lDialog = new FollowedFragment();
-        return lDialog;
+        Fragment dialog = new CatalogFragment();
+        return dialog;
     }
 
     /***
@@ -41,7 +41,7 @@ public class FollowedFragment extends MainFragmentBase
         View lView = aInflater.inflate(R.layout.main_tab_relative, aContainer, false);
         ButterKnife.bind(this, lView);
 
-        mFragmentPresenter = new FollowedPresenter(this);
+        mFragmentPresenter = new CatalogPresenter(this);
         return lView;
     }
 
@@ -73,7 +73,7 @@ public class FollowedFragment extends MainFragmentBase
     }
 
     /***
-     * TOOD..
+     * TODO..
      */
     @Override
     public void removeFilters()

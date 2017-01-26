@@ -182,7 +182,7 @@ public class MFDBHelper extends SQLiteOpenHelper
      *
      * @return Observable arraylist of users followed manga
      */
-    public Observable<ArrayList<Manga>> getFollowedList()
+    public Observable<ArrayList<Manga>> getLibraryList()
     {
         return Observable.create(new Observable.OnSubscribe<ArrayList<Manga>>()
         {
@@ -215,9 +215,9 @@ public class MFDBHelper extends SQLiteOpenHelper
     /**
      * TODO...
      *
-     * @return Observable arraylist of users followed manga
+     * @return Observable arraylist of sources manga
      */
-    public Observable<ArrayList<Manga>> getLibraryList()
+    public Observable<ArrayList<Manga>> getCatalogList()
     {
         return Observable.create(new Observable.OnSubscribe<ArrayList<Manga>>()
         {

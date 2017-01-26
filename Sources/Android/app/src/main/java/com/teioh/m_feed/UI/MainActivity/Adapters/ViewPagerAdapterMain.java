@@ -5,8 +5,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 
-import com.teioh.m_feed.UI.MainActivity.Fragments.FollowedFragment;
 import com.teioh.m_feed.UI.MainActivity.Fragments.LibraryFragment;
+import com.teioh.m_feed.UI.MainActivity.Fragments.CatalogFragment;
 import com.teioh.m_feed.UI.MainActivity.Fragments.RecentFragment;
 
 public class ViewPagerAdapterMain extends FragmentStatePagerAdapter
@@ -51,11 +51,11 @@ public class ViewPagerAdapterMain extends FragmentStatePagerAdapter
                 mRegisteredFragments.put(0, lFragment);
                 break;
             case 1:
-                lFragment = new FollowedFragment();
+                lFragment = new LibraryFragment();
                 mRegisteredFragments.put(1, lFragment);
                 break;
             default:
-                lFragment = new LibraryFragment();
+                lFragment = new CatalogFragment();
                 mRegisteredFragments.put(2, lFragment);
         }
         return lFragment;

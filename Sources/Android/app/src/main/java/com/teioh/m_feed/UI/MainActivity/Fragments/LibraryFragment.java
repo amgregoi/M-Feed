@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.teioh.m_feed.R;
-import com.teioh.m_feed.UI.MainActivity.Presenters.LibraryPresenter;
 
 import butterknife.ButterKnife;
 
@@ -23,8 +22,8 @@ public class LibraryFragment extends MainFragmentBase
      */
     public static Fragment getnewInstance()
     {
-        Fragment dialog = new LibraryFragment();
-        return dialog;
+        Fragment lDialog = new LibraryFragment();
+        return lDialog;
     }
 
     /***
@@ -41,7 +40,7 @@ public class LibraryFragment extends MainFragmentBase
         View lView = aInflater.inflate(R.layout.main_tab_relative, aContainer, false);
         ButterKnife.bind(this, lView);
 
-        mFragmentPresenter = new LibraryPresenter(this);
+        mFragmentPresenter = new com.teioh.m_feed.UI.MainActivity.Presenters.LibraryFragment(this);
         return lView;
     }
 
@@ -73,7 +72,7 @@ public class LibraryFragment extends MainFragmentBase
     }
 
     /***
-     * TODO..
+     * TOOD..
      */
     @Override
     public void removeFilters()

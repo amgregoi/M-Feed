@@ -15,7 +15,7 @@ import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.Adapters.RecycleSearchAdapter;
-import com.teioh.m_feed.UI.MainActivity.Fragments.FollowedFragment;
+import com.teioh.m_feed.UI.MainActivity.Fragments.LibraryFragment;
 import com.teioh.m_feed.UI.MainActivity.IMain;
 import com.teioh.m_feed.UI.MangaActivity.MangaActivity;
 import com.teioh.m_feed.Utils.MangaLogger;
@@ -189,7 +189,7 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
         {
             if (mAdapter != null)
             {
-                if (mViewMapper instanceof FollowedFragment) mAdapter.updateFollowedItem(aManga);
+                if (mViewMapper instanceof LibraryFragment) mAdapter.updateLibraryItem(aManga);
                 else mAdapter.updateItem(aManga);
 
                 mMangaList = mAdapter.getOriginalData();
@@ -357,7 +357,7 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
                 if (aMangaList != null)
                 {
                     mMangaList = new ArrayList<>(aMangaList);
-                    //Sorts manga list if Library or Followed fragment
+                    //Sorts manga list of Library or Catalog fragment
                     if (!(this instanceof RecentPresenter))
                         Collections.sort(mMangaList, (emp1, emp2) -> emp1.getTitle().compareToIgnoreCase(emp2.getTitle()));
                 }

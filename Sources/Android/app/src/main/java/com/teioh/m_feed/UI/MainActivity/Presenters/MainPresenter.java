@@ -16,8 +16,8 @@ import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
 import com.teioh.m_feed.UI.MainActivity.Fragments.FilterDialogFragment;
-import com.teioh.m_feed.UI.MainActivity.Fragments.FollowedFragment;
 import com.teioh.m_feed.UI.MainActivity.Fragments.LibraryFragment;
+import com.teioh.m_feed.UI.MainActivity.Fragments.CatalogFragment;
 import com.teioh.m_feed.UI.MainActivity.Fragments.RecentFragment;
 import com.teioh.m_feed.UI.MainActivity.Fragments.SettingsFragment;
 import com.teioh.m_feed.UI.MainActivity.IMain;
@@ -40,7 +40,7 @@ public class MainPresenter implements IMain.ActivityPresenter
 {
     public final static String TAG = MainPresenter.class.getSimpleName();
 
-    private final CharSequence mTabTitles[] = {"Recent", "Followed", "Library"};
+    private final CharSequence mTabTitles[] = {"Recent", "Library", "Catalog"};
     private String[] mDrawerItems = {"Home", "Filter Search", "Sources", "Settings"};
     private ViewPagerAdapterMain mViewPagerAdapterMain;
     private IMain.ActivityView mMainMapper;
@@ -163,8 +163,8 @@ public class MainPresenter implements IMain.ActivityPresenter
             if (mViewPagerAdapterMain.hasRegisteredFragments())
             {
                 ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).onQueryTextChange(aNewTest);
-                ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).onQueryTextChange(aNewTest);
-                ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).onQueryTextChange(aNewTest);
+                ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).onQueryTextChange(aNewTest);
+                ((CatalogFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).onQueryTextChange(aNewTest);
             }
         }
         catch (Exception aException)
@@ -272,8 +272,8 @@ public class MainPresenter implements IMain.ActivityPresenter
                     mMainMapper.setDefaultFilterImage();
                     mGenreFilterActive = false;
                     ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).updateSource();
-                    ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).updateSource();
-                    ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).updateSource();
+                    ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).updateSource();
+                    ((CatalogFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).updateSource();
                     mMainMapper.setActivityTitle(lSourceType.name());
                 }
             }
@@ -312,8 +312,8 @@ public class MainPresenter implements IMain.ActivityPresenter
             if (mViewPagerAdapterMain.hasRegisteredFragments())
             {
                 ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).onFilterSelected(aFilter);
-                ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).onFilterSelected(aFilter);
-                ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).onFilterSelected(aFilter);
+                ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).onFilterSelected(aFilter);
+                ((CatalogFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).onFilterSelected(aFilter);
             }
         }
         catch (Exception aException)
@@ -340,8 +340,8 @@ public class MainPresenter implements IMain.ActivityPresenter
             {
                 mGenreFilterActive = true;
                 ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).onGenreFilterSelected(list);
-                ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).onGenreFilterSelected(list);
-                ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).onGenreFilterSelected(list);
+                ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).onGenreFilterSelected(list);
+                ((CatalogFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).onGenreFilterSelected(list);
             }
         }
         catch (Exception aException)
@@ -364,8 +364,8 @@ public class MainPresenter implements IMain.ActivityPresenter
             {
                 mGenreFilterActive = false;
                 ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).onClearGenreFilter();
-                ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).onClearGenreFilter();
-                ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).onClearGenreFilter();
+                ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).onClearGenreFilter();
+                ((CatalogFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).onClearGenreFilter();
             }
         }
         catch (Exception aException)
@@ -468,8 +468,8 @@ public class MainPresenter implements IMain.ActivityPresenter
             if (lManga != null)
             {
                 ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).updateRecentSelection(lManga);
-                ((FollowedFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).updateRecentSelection(lManga);
-                ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).updateRecentSelection(lManga);
+                ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).updateRecentSelection(lManga);
+                ((CatalogFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).updateRecentSelection(lManga);
                 mRecentMangaId = -1;
             }
         }

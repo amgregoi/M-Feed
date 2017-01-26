@@ -112,12 +112,9 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         mMainPresenter.init(getIntent().getExtras());
         mToast = Toast.makeText(this, "Press back again to exit!", Toast.LENGTH_SHORT);
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
-                                                                                                      .build();
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this , this)
-                                                            .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                                                            .build();
+        mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, this).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
 
     }
 
@@ -176,8 +173,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     public void onTrimMemory(int aLevel)
     {
         super.onTrimMemory(aLevel);
-        Glide.get(this)
-             .trimMemory(aLevel);
+        Glide.get(this).trimMemory(aLevel);
     }
 
     /***
@@ -379,7 +375,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         });
 
         FloatingActionButton lFAB5 = new FloatingActionButton(getBaseContext());
-        lFAB5.setTitle("Followed");
+        lFAB5.setTitle("Library");
         lFAB5.setSize(FloatingActionButton.SIZE_MINI);
         lFAB5.setColorNormalResId(R.color.ColorAccent);
         lFAB5.setIcon(R.drawable.ic_favorite_white_18dp);
@@ -471,8 +467,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         final ExpandableListAdapter adapter = new ExpandableListAdapter(this, aDrawerItems, aSourceCollections);
         if (mDrawerHeader != null) mDrawerList.removeHeaderView(mDrawerHeader);
 
-        mDrawerHeader = LayoutInflater.from(getContext())
-                                      .inflate(R.layout.drawer_header, null);
+        mDrawerHeader = LayoutInflater.from(getContext()).inflate(R.layout.drawer_header, null);
         TextView lUsernameTextView = (TextView) mDrawerHeader.findViewById(R.id.drawer_username);
         lUsernameTextView.setText(SharedPrefs.getGoogleEmail());
 
@@ -558,7 +553,8 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     {
 
         // Clear search view regardless of state when back is pressed (might change)
-        if(!mSearchView.isIconified()){
+        if (!mSearchView.isIconified())
+        {
             mSearchView.clearFocus();
             mSearchView.setIconified(true);
         }
@@ -568,8 +564,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
             //closes action menu
             mMultiActionMenu.collapse();
         }
-        else if (!mToast.getView()
-                        .isShown() && mDrawerLayout.isDrawerOpen(mDrawerList))
+        else if (!mToast.getView().isShown() && mDrawerLayout.isDrawerOpen(mDrawerList))
         {
             //closes drawer, if exit toast message isn't active
             mDrawerLayout.closeDrawer(mDrawerList);
@@ -588,8 +583,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
             mFilterView.setImageDrawable(getResources().getDrawable(R.drawable.filter_outline_24dp));
             mActivityTitle.setText(new SourceFactory().getSourceName());
         }
-        else if (!mToast.getView()
-                        .isShown())
+        else if (!mToast.getView().isShown())
         {
             //opens drawer, and shows exit mToast to verify exit
             mDrawerLayout.openDrawer(mDrawerList);
@@ -610,8 +604,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     public void onLowMemory()
     {
         super.onLowMemory();
-        Glide.get(this)
-             .clearMemory();
+        Glide.get(this).clearMemory();
     }
 
     /***

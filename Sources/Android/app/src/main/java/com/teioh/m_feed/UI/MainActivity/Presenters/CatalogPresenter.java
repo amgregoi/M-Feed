@@ -11,11 +11,11 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 
-public class LibraryPresenter extends MainFragmentPresenterBase
+public class CatalogPresenter extends MainFragmentPresenterBase
 {
     public final static String TAG = RecentPresenter.class.getSimpleName();
 
-    public LibraryPresenter(IMain.FragmentView aMap)
+    public CatalogPresenter(IMain.FragmentView aMap)
     {
         super(aMap);
     }
@@ -36,7 +36,7 @@ public class LibraryPresenter extends MainFragmentPresenterBase
 
         try
         {
-            mMangaListSubscription = MFDBHelper.getInstance().getLibraryList().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).doOnError(throwable -> Toast.makeText(MFeedApplication.getInstance(), throwable.getMessage(), Toast.LENGTH_SHORT)).subscribe(aManga -> updateMangaGridView(aManga));
+            mMangaListSubscription = MFDBHelper.getInstance().getCatalogList().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).doOnError(throwable -> Toast.makeText(MFeedApplication.getInstance(), throwable.getMessage(), Toast.LENGTH_SHORT)).subscribe(aManga -> updateMangaGridView(aManga));
         }
         catch (Exception aException)
         {

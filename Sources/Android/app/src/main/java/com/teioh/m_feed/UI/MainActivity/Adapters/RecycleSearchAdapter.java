@@ -230,7 +230,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
      *
      * @param aManga
      */
-    public void updateFollowedItem(Manga aManga)
+    public void updateLibraryItem(Manga aManga)
     {
         int lPosition;
         //updates item, adds item if not in list and following

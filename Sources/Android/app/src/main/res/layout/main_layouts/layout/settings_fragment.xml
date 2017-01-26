@@ -137,7 +137,7 @@
 				<TextView
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:text="Clear followed manga"
+					android:text="Clear Library"
 					android:textColor="@color/white"
 					android:textSize="16sp"
 					/>
@@ -180,7 +180,7 @@
 				<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="Clear all cached chapters from followed manga"
+					android:text="Clear all cached chapters from library"
 					android:textColor="@color/grey"
 					android:textSize="14sp"
 					/>
