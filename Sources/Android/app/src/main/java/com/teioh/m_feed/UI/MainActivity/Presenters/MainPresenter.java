@@ -15,9 +15,9 @@ import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
+import com.teioh.m_feed.UI.MainActivity.Fragments.CatalogFragment;
 import com.teioh.m_feed.UI.MainActivity.Fragments.FilterDialogFragment;
 import com.teioh.m_feed.UI.MainActivity.Fragments.LibraryFragment;
-import com.teioh.m_feed.UI.MainActivity.Fragments.CatalogFragment;
 import com.teioh.m_feed.UI.MainActivity.Fragments.RecentFragment;
 import com.teioh.m_feed.UI.MainActivity.Fragments.SettingsFragment;
 import com.teioh.m_feed.UI.MainActivity.IMain;
@@ -435,7 +435,7 @@ public class MainPresenter implements IMain.ActivityPresenter
                 {
                     mGoogleAccount = null;
                     SharedPrefs.setGoogleEmail(null);
-                    MangaLogger.logInfo(TAG, lMethod, "Sign in failed, logging out: " +  aAccount.getStatus());
+                    MangaLogger.logInfo(TAG, lMethod, "Sign in failed, logging out: " + aAccount.getStatus());
                 }
             }
             else
@@ -531,7 +531,10 @@ public class MainPresenter implements IMain.ActivityPresenter
         {
             mMainMapper.toggleToolbarElements();
             mSettingsFragment = new SettingsFragment();
-            ((MainActivity) mMainMapper.getContext()).getSupportFragmentManager().beginTransaction().add(R.id.main_activity_content, mSettingsFragment, SettingsFragment.TAG).commit();
+            ((MainActivity) mMainMapper.getContext()).getSupportFragmentManager()
+                                                     .beginTransaction()
+                                                     .add(R.id.main_activity_content, mSettingsFragment, SettingsFragment.TAG)
+                                                     .commit();
         }
         catch (Exception aException)
         {

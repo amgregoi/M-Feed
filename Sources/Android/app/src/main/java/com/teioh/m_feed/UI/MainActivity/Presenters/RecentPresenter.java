@@ -1,8 +1,5 @@
 package com.teioh.m_feed.UI.MainActivity.Presenters;
 
-import android.widget.Toast;
-
-import com.teioh.m_feed.MFeedApplication;
 import com.teioh.m_feed.UI.MainActivity.Fragments.RecentFragment;
 import com.teioh.m_feed.UI.MainActivity.IMain;
 import com.teioh.m_feed.Utils.MangaLogger;
@@ -39,7 +36,9 @@ public class RecentPresenter extends MainFragmentPresenterBase
             if (NetworkService.isNetworkAvailable())
             {
                 mViewMapper.startRefresh();
-                mMangaListSubscription = new SourceFactory().getSource().getRecentUpdatesObservable().subscribe(aManga -> updateMangaGridView(aManga));
+                mMangaListSubscription = new SourceFactory().getSource()
+                                                            .getRecentUpdatesObservable()
+                                                            .subscribe(aManga -> updateMangaGridView(aManga));
 
             }
             else

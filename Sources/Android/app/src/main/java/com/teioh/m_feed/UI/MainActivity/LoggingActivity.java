@@ -16,6 +16,9 @@ import com.teioh.m_feed.Utils.MangaLogger;
  * Created by amgregoi on 1/24/17.
  */
 
+/***
+ * This class is to give me access to my personal logging to see check its status while on my personal phone
+ */
 public class LoggingActivity extends AppCompatActivity
 {
     public final static String TAG = LoggingActivity.class.getSimpleName();

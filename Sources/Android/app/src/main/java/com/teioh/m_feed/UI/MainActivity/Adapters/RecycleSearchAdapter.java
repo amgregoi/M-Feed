@@ -17,7 +17,6 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.futuremind.recyclerviewfastscroll.SectionTitleProvider;
-import com.teioh.m_feed.MFeedApplication;
 import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
@@ -28,68 +27,10 @@ import java.util.Collections;
 public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdapter.ViewHolder> implements SectionTitleProvider
 {
 
+    private final ItemSelectedListener mListener;
     private ArrayList<Manga> mOriginalData = null;
     private ArrayList<Manga> mFilteredData = null;
     private TextFilter mFilter = new TextFilter();
-
-    private final ItemSelectedListener mListener;
-
-    /***
-     * TODO..
-     *
-     * @param position
-     * @return
-     */
-    @Override
-    public String getSectionTitle(int position)
-    {
-        return mFilteredData.get(position).toString().substring(0, 1);
-    }
-
-    /***
-     * TODO..
-     */
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
-    {
-        public TextView mTextView;
-        public ImageView mImageView;
-        public LinearLayout mLayoutFooter;
-
-        /***
-         * TODO..
-         *
-         * @param aView
-         */
-        public ViewHolder(View aView)
-        {
-            super(aView);
-            mTextView = (TextView) aView.findViewById(R.id.itemTitleField);
-            mImageView = (ImageView) aView.findViewById(R.id.imageView);
-            mLayoutFooter = (LinearLayout) aView.findViewById(R.id.footerLinearLayout);
-            aView.setOnClickListener(this);
-        }
-
-        /***
-         * TODO..
-         *
-         * @param aView
-         */
-        @Override
-        public void onClick(View aView)
-        {
-            notifyItemChanged(getLayoutPosition());
-            mListener.onItemSelected(getAdapterPosition());
-        }
-
-    }
-
-    /***
-     * TODO..
-     */
-    public interface ItemSelectedListener
-    {
-        void onItemSelected(int aPosition);
-    }
 
     /***
      * TODO..
@@ -107,6 +48,18 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
     /***
      * TODO..
      *
+     * @param position
+     * @return
+     */
+    @Override
+    public String getSectionTitle(int position)
+    {
+        return mFilteredData.get(position).toString().substring(0, 1);
+    }
+
+    /***
+     * TODO..
+     *
      * @param aParent
      * @param aViewType
      * @return
@@ -116,18 +69,6 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
     {
         View lView = LayoutInflater.from(aParent.getContext()).inflate(R.layout.main_manga_grid_item, aParent, false);
         return new ViewHolder(lView);
-    }
-
-    /***
-     * TODO..
-     *
-     * @param aHolder
-     */
-    @Override
-    public void onViewRecycled(ViewHolder aHolder)
-    {
-        super.onViewRecycled(aHolder);
-        Glide.clear(aHolder.mImageView);
     }
 
     /***
@@ -165,16 +106,21 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
                 aHolder.mTextView.setTextColor(lContext.getResources().getColor(R.color.black));
         }
 
-        Glide.with(lContext).load(lMangaItem.getPicUrl()).animate(android.R.anim.fade_in).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE).into(new GlideDrawableImageViewTarget(aHolder.mImageView)
-        {
-            @Override
-            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation)
-            {
-                super.onResourceReady(resource, animation);
-                aHolder.mImageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        Glide.with(lContext)
+             .load(lMangaItem.getPicUrl())
+             .animate(android.R.anim.fade_in)
+             .skipMemoryCache(true)
+             .diskCacheStrategy(DiskCacheStrategy.NONE)
+             .into(new GlideDrawableImageViewTarget(aHolder.mImageView)
+             {
+                 @Override
+                 public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation)
+                 {
+                     super.onResourceReady(resource, animation);
+                     aHolder.mImageView.setScaleType(ImageView.ScaleType.FIT_XY);
 
-            }
-        });
+                 }
+             });
 
         aHolder.mTextView.setText(lMangaItem.toString());
     }
@@ -188,6 +134,29 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
     public long getItemId(int aPosition)
     {
         return aPosition;
+    }
+
+    /***
+     * TODO..
+     *
+     * @return
+     */
+    @Override
+    public int getItemCount()
+    {
+        return mFilteredData.size();
+    }
+
+    /***
+     * TODO..
+     *
+     * @param aHolder
+     */
+    @Override
+    public void onViewRecycled(ViewHolder aHolder)
+    {
+        super.onViewRecycled(aHolder);
+        Glide.clear(aHolder.mImageView);
     }
 
     /***
@@ -265,31 +234,6 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
     /***
      * TODO..
      *
-     * @return
-     */
-    @Override
-    public int getItemCount()
-    {
-        return mFilteredData.size();
-    }
-
-    /***
-     * TODO..
-     *
-     * @param aData
-     */
-    public void setOriginalData(ArrayList<Manga> aData)
-    {
-        //Reset both sets of data
-        mOriginalData = new ArrayList<>(aData);
-        mFilteredData = new ArrayList<>(aData);
-        //
-        getFilter().filter(mFilter.mLastQuery);
-    }
-
-    /***
-     * TODO..
-     *
      * @param aQuery
      */
     public void performTextFilter(String aQuery)
@@ -317,8 +261,23 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
         return mFilter;
     }
 
-    public ArrayList<Manga> getOriginalData(){
+    public ArrayList<Manga> getOriginalData()
+    {
         return mOriginalData;
+    }
+
+    /***
+     * TODO..
+     *
+     * @param aData
+     */
+    public void setOriginalData(ArrayList<Manga> aData)
+    {
+        //Reset both sets of data
+        mOriginalData = new ArrayList<>(aData);
+        mFilteredData = new ArrayList<>(aData);
+        //
+        getFilter().filter(mFilter.mLastQuery);
     }
 
     public void filterByStatus(MangaEnums.eFilterStatus aFilterType)
@@ -326,6 +285,94 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
         mFilter.filterByStatus(aFilterType);
         mFilter.filter(mFilter.mLastQuery);
         notifyDataSetChanged();
+    }
+
+    /***
+     * TODO..
+     */
+    public interface ItemSelectedListener
+    {
+        void onItemSelected(int aPosition);
+    }
+
+    /***
+     * TOOD..
+     */
+    public static class SpacesItemDecoration extends RecyclerView.ItemDecoration
+    {
+
+        private int lHalfSpace;
+
+        /***
+         * TODO..
+         *
+         * @param space
+         */
+        public SpacesItemDecoration(int space)
+        {
+            this.lHalfSpace = space / 2;
+        }
+
+        /***
+         * TODO..
+         *
+         * @param aOutRect
+         * @param aView
+         * @param aParent
+         * @param aState
+         */
+        @Override
+        public void getItemOffsets(Rect aOutRect, View aView, RecyclerView aParent, RecyclerView.State aState)
+        {
+
+            if (aParent.getPaddingLeft() != lHalfSpace)
+            {
+                aParent.setPadding(lHalfSpace, lHalfSpace, lHalfSpace, lHalfSpace);
+                aParent.setClipToPadding(false);
+            }
+
+            aOutRect.top = lHalfSpace;
+            aOutRect.bottom = lHalfSpace;
+            aOutRect.left = lHalfSpace;
+            aOutRect.right = lHalfSpace;
+        }
+    }
+
+    /***
+     * TODO..
+     */
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+    {
+        public TextView mTextView;
+        public ImageView mImageView;
+        public LinearLayout mLayoutFooter;
+
+        /***
+         * TODO..
+         *
+         * @param aView
+         */
+        public ViewHolder(View aView)
+        {
+            super(aView);
+            mTextView = (TextView) aView.findViewById(R.id.itemTitleField);
+            mImageView = (ImageView) aView.findViewById(R.id.imageView);
+            mLayoutFooter = (LinearLayout) aView.findViewById(R.id.footerLinearLayout);
+            aView.setOnClickListener(this);
+        }
+
+        /***
+         * TODO..
+         *
+         * @param aView
+         */
+        @Override
+        public void onClick(View aView)
+        {
+            notifyItemChanged(getLayoutPosition());
+            mListener.onItemSelected(getAdapterPosition());
+        }
+
     }
 
     /***
@@ -397,7 +444,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
          * @param aFilterText
          * @param aFilterResult
          */
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings( "unchecked" )
         @Override
         protected void publishResults(CharSequence aFilterText, FilterResults aFilterResult)
         {
@@ -416,49 +463,6 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
         }
 
 
-    }
-
-    /***
-     * TOOD..
-     */
-    public static class SpacesItemDecoration extends RecyclerView.ItemDecoration
-    {
-
-        private int lHalfSpace;
-
-        /***
-         * TODO..
-         *
-         * @param space
-         */
-        public SpacesItemDecoration(int space)
-        {
-            this.lHalfSpace = space / 2;
-        }
-
-        /***
-         * TODO..
-         *
-         * @param aOutRect
-         * @param aView
-         * @param aParent
-         * @param aState
-         */
-        @Override
-        public void getItemOffsets(Rect aOutRect, View aView, RecyclerView aParent, RecyclerView.State aState)
-        {
-
-            if (aParent.getPaddingLeft() != lHalfSpace)
-            {
-                aParent.setPadding(lHalfSpace, lHalfSpace, lHalfSpace, lHalfSpace);
-                aParent.setClipToPadding(false);
-            }
-
-            aOutRect.top = lHalfSpace;
-            aOutRect.bottom = lHalfSpace;
-            aOutRect.left = lHalfSpace;
-            aOutRect.right = lHalfSpace;
-        }
     }
 
 }

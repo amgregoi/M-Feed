@@ -406,7 +406,11 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
 
             mAdAdapter = new MoPubRecyclerAdapter(((Fragment) mViewMapper).getActivity(), mAdapter, lAdPositioning);
 
-            MoPubStaticNativeAdRenderer lRenderer = new MoPubStaticNativeAdRenderer(new ViewBinder.Builder(R.layout.ad_layout).titleId(R.id.native_ad_title).textId(R.id.native_ad_text).mainImageId(R.id.native_ad_main_image).iconImageId(R.id.native_ad_icon_image).build());
+            MoPubStaticNativeAdRenderer lRenderer = new MoPubStaticNativeAdRenderer(new ViewBinder.Builder(R.layout.ad_layout).titleId(R.id.native_ad_title)
+                                                                                                                              .textId(R.id.native_ad_text)
+                                                                                                                              .mainImageId(R.id.native_ad_main_image)
+                                                                                                                              .iconImageId(R.id.native_ad_icon_image)
+                                                                                                                              .build());
 
             mAdAdapter.registerAdRenderer(lRenderer);
             if (NATIVE_AD_1_UNIT_ID != null) mAdAdapter.loadAds(NATIVE_AD_1_UNIT_ID);
