@@ -39,7 +39,7 @@ public class RecentPresenter extends MainFragmentPresenterBase
             if (NetworkService.isNetworkAvailable())
             {
                 mViewMapper.startRefresh();
-                mMangaListSubscription = new SourceFactory().getSource().getRecentUpdatesObservable().doOnError(throwable -> Toast.makeText(MFeedApplication.getInstance(), throwable.getMessage(), Toast.LENGTH_SHORT)).subscribe(aManga -> updateMangaGridView(aManga));
+                mMangaListSubscription = new SourceFactory().getSource().getRecentUpdatesObservable().subscribe(aManga -> updateMangaGridView(aManga));
 
             }
             else

@@ -78,6 +78,11 @@ public class NetworkService
      */
     public Observable<Response> getResponse(final String aUrl)
     {
+        if (!isNetworkAvailable())
+        {
+            return null;
+        }
+
         return Observable.create(new Observable.OnSubscribe<Response>()
         {
             @Override
@@ -107,6 +112,11 @@ public class NetworkService
      */
     public Observable<Response> getResponseCustomHeaders(final String aUrl, final Headers aHeaders)
     {
+        if (!isNetworkAvailable())
+        {
+            return null;
+        }
+
         return Observable.create(new Observable.OnSubscribe<Response>()
         {
             @Override

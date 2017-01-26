@@ -42,11 +42,13 @@ public class MFeedApplication extends Application
     public void onCreate()
     {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
 
         //creates database if fresh install
         MFDBHelper.getInstance().createDatabase();
         SharedPrefs.initializePreferences();
+
+        // Fabric init
+        Fabric.with(this, new Crashlytics());
     }
 
     /***

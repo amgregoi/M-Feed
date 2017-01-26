@@ -52,15 +52,24 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
 {
     public final static String TAG = MainActivity.class.getSimpleName();
 
-    @Bind(R.id.search_view) SearchView mSearchView;
-    @Bind(R.id.filter_view) ImageView mFilterView;
-    @Bind(R.id.activityTitle) TextView mActivityTitle;
-    @Bind(R.id.pager) ViewPager mViewPager;
-    @Bind(R.id.tabs) SlidingTabLayout mTabLayout;
-    @Bind(R.id.tool_bar) Toolbar mToolBar;
-    @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-    @Bind(R.id.drawerLayoutListView) ExpandableListView mDrawerList;
-    @Bind(R.id.actionMenu) FloatingActionsMenu mMultiActionMenu;
+    @Bind( R.id.search_view )
+    SearchView mSearchView;
+    @Bind( R.id.filter_view )
+    ImageView mFilterView;
+    @Bind( R.id.activityTitle )
+    TextView mActivityTitle;
+    @Bind( R.id.pager )
+    ViewPager mViewPager;
+    @Bind( R.id.tabs )
+    SlidingTabLayout mTabLayout;
+    @Bind( R.id.tool_bar )
+    Toolbar mToolBar;
+    @Bind( R.id.drawer_layout )
+    DrawerLayout mDrawerLayout;
+    @Bind( R.id.drawerLayoutListView )
+    ExpandableListView mDrawerList;
+    @Bind( R.id.actionMenu )
+    FloatingActionsMenu mMultiActionMenu;
 
     private View mDrawerHeader;
     private Toast mToast;
@@ -507,6 +516,13 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     @Override
     public void onBackPressed()
     {
+        // close search bar when back is pressed regardless
+        if (!mSearchView.isIconified())
+        {
+            mSearchView.clearFocus();
+            mSearchView.setIconified(true);
+        }
+
         if (mMultiActionMenu.isExpanded())
         { //closes action menu
             mMultiActionMenu.collapse();

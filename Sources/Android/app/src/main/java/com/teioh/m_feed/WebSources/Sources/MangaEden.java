@@ -1,8 +1,5 @@
 package com.teioh.m_feed.WebSources.Sources;
 
-import android.widget.Toast;
-
-import com.teioh.m_feed.MFeedApplication;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.Utils.MFDBHelper;
@@ -43,7 +40,121 @@ public class MangaEden extends SourceBase
      */
     public Observable<List<Manga>> getRecentUpdatesObservable()
     {
-        return NetworkService.getTemporaryInstance().getResponse(mUpdatesUrl).flatMap(response -> NetworkService.mapResponseToString(response)).flatMap(html -> Observable.just(scrapeUpdatestoManga(Jsoup.parse(html)))).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread()).retry(5).doOnError(Throwable::printStackTrace);
+        String lMethod = Thread.currentThread()
+                               .getStackTrace()[2].getMethodName();
+
+        return NetworkService.getTemporaryInstance()
+                             .getResponse(mUpdatesUrl)
+                             .flatMap(response -> NetworkService.mapResponseToString(response))
+                             .flatMap(html -> Observable.just(scrapeUpdatestoManga(Jsoup.parse(html))))
+                             .subscribeOn(Schedulers.computation())
+                             .observeOn(AndroidSchedulers.mainThread())
+                             .retry(5)
+                             .doOnError(aThrowable -> MangaLogger.logError(TAG, lMethod, aThrowable.getMessage()))
+                             .onErrorReturn(null);
+    }
+
+    /***
+     * ChapterFragment - takes a chapter url, and returns list of urls to chapter images
+     *
+     * @param request
+     * @return
+     */
+    public Observable<String> getChapterImageListObservable(final RequestWrapper request)
+    {
+        return NetworkService.getPermanentInstance()
+                             .getResponse(request.getChapterUrl())
+                             .subscribeOn(Schedulers.computation())
+                             .observeOn(AndroidSchedulers.mainThread())
+                             .flatMap(response -> NetworkService.mapResponseToString(response))
+                             .flatMap(unparsedJson -> Observable.create(new Observable.OnSubscribe<List<String>>()
+                             {
+                                 @Override
+                                 public void call(Subscriber<? super List<String>> subscriber)
+                                 {
+                                     try
+                                     {
+                                         subscriber.onNext(parseJsonToImageUrls(unparsedJson));
+                                         subscriber.onCompleted();
+                                     }
+                                     catch (Throwable e)
+                                     {
+                                         subscriber.onError(e);
+                                     }
+                                 }
+                             }))
+                             .flatMap(imageUrls -> Observable.from(imageUrls.toArray(new String[imageUrls.size()])));
+    }
+
+    /***
+     * TODO...
+     *
+     * @param request
+     * @return
+     */
+    public Observable<List<Chapter>> getChapterListObservable(final RequestWrapper request)
+    {
+        String lMethod = Thread.currentThread()
+                               .getStackTrace()[2].getMethodName();
+
+        return NetworkService.getPermanentInstance()
+                             .getResponse(request.getMangaUrl())
+                             .flatMap(response -> NetworkService.mapResponseToString(response))
+                             .flatMap(unparsedJson -> Observable.create(new Observable.OnSubscribe<List<Chapter>>()
+                             {
+                                 @Override
+                                 public void call(Subscriber<? super List<Chapter>> subscriber)
+                                 {
+                                     try
+                                     {
+                                         subscriber.onNext(parseJsonToChapters(request, unparsedJson));
+                                         subscriber.onCompleted();
+                                     }
+                                     catch (Throwable e)
+                                     {
+                                         subscriber.onError(e);
+                                     }
+                                 }
+                             }))
+                             .observeOn(AndroidSchedulers.mainThread())
+                             .doOnError(aThrowable -> MangaLogger.logError(TAG, lMethod, aThrowable.getMessage()))
+                             .onErrorReturn(null);
+
+    }
+
+    /***
+     * Adds new Manga and
+     * gets missing manga information and updates database
+     *
+     * @param request
+     * @return
+     */
+    public Observable<Manga> updateMangaObservable(final RequestWrapper request)
+    {
+        String lMethod = Thread.currentThread()
+                               .getStackTrace()[2].getMethodName();
+
+        return NetworkService.getTemporaryInstance()
+                             .getResponse(request.getMangaUrl())
+                             .flatMap(response -> NetworkService.mapResponseToString(response))
+                             .flatMap(unparsedJson -> Observable.create(new Observable.OnSubscribe<Manga>()
+                             {
+                                 @Override
+                                 public void call(Subscriber<? super Manga> subscriber)
+                                 {
+                                     try
+                                     {
+                                         subscriber.onNext(parseJsonToManga(request, unparsedJson));
+                                         subscriber.onCompleted();
+                                     }
+                                     catch (Throwable e)
+                                     {
+                                         subscriber.onError(e);
+                                     }
+                                 }
+                             }))
+                             .doOnError(aThrowable -> MangaLogger.logError(TAG, lMethod, aThrowable.getMessage()))
+                             .onErrorReturn(null);
     }
 
     /***
@@ -54,20 +165,25 @@ public class MangaEden extends SourceBase
      */
     private List<Manga> scrapeUpdatestoManga(final Document parsedDocument)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+        String lMethod = Thread.currentThread()
+                               .getStackTrace()[2].getMethodName();
 
         List<Manga> mangaList = new ArrayList<>();
         Elements mangaElements = parsedDocument.select("body > li");
 
         for (Element htmlBlock : mangaElements)
         {
-            Element urlElement = htmlBlock.select("div.newsManga").first();
-            Element nameElement = htmlBlock.select("div.manga_tooltop_header > a").first();
+            Element urlElement = htmlBlock.select("div.newsManga")
+                                          .first();
+            Element nameElement = htmlBlock.select("div.manga_tooltop_header > a")
+                                           .first();
 
             String mangaTitle = nameElement.text();
-            String mangaUrl = "https://www.mangaeden.com/api/manga/" + urlElement.id().substring(0, 24) + "/";
+            String mangaUrl = "https://www.mangaeden.com/api/manga/" + urlElement.id()
+                                                                                 .substring(0, 24) + "/";
 
-            Manga lManga = MFDBHelper.getInstance().getManga(mangaUrl, SourceKey);
+            Manga lManga = MFDBHelper.getInstance()
+                                     .getManga(mangaUrl, SourceKey);
             if (lManga != null)
             {
                 mangaList.add(lManga);
@@ -76,8 +192,11 @@ public class MangaEden extends SourceBase
             {
                 lManga = new Manga(mangaTitle, mangaUrl, SourceKey);
                 mangaList.add(lManga);
-                MFDBHelper.getInstance().putManga(lManga);
-                updateMangaObservable(new RequestWrapper(lManga)).subscribeOn(Schedulers.computation()).doOnError(throwable -> Toast.makeText(MFeedApplication.getInstance(), throwable.getMessage(), Toast.LENGTH_SHORT)).subscribe();
+                MFDBHelper.getInstance()
+                          .putManga(lManga);
+                updateMangaObservable(new RequestWrapper(lManga)).subscribeOn(Schedulers.computation())
+                                                                 .doOnError(aThrowable -> MangaLogger.logError(TAG, lMethod, aThrowable.getMessage()))
+                                                                 .subscribe();
             }
         }
 
@@ -85,33 +204,6 @@ public class MangaEden extends SourceBase
 
         if (mangaList.size() == 0) return null;
         return mangaList;
-    }
-
-
-    /***
-     * TODO...
-     *
-     * @param request
-     * @return
-     */
-    public Observable<List<Chapter>> getChapterListObservable(final RequestWrapper request)
-    {
-        return NetworkService.getPermanentInstance().getResponse(request.getMangaUrl()).flatMap(response -> NetworkService.mapResponseToString(response)).flatMap(unparsedJson -> Observable.create(new Observable.OnSubscribe<List<Chapter>>()
-        {
-            @Override
-            public void call(Subscriber<? super List<Chapter>> subscriber)
-            {
-                try
-                {
-                    subscriber.onNext(parseJsonToChapters(request, unparsedJson));
-                    subscriber.onCompleted();
-                }
-                catch (Throwable e)
-                {
-                    subscriber.onError(e);
-                }
-            }
-        })).observeOn(AndroidSchedulers.mainThread());
     }
 
     /***
@@ -158,6 +250,17 @@ public class MangaEden extends SourceBase
         return chapterList;
     }
 
+    /*
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
+
     /***
      * TODO...
      *
@@ -189,47 +292,11 @@ public class MangaEden extends SourceBase
         Collections.reverse(chapterList);
         for (int index = 0; index < chapterList.size(); index++)
         {
-            chapterList.get(index).setChapterNumber(index + 1);
+            chapterList.get(index)
+                       .setChapterNumber(index + 1);
         }
 
         return chapterList;
-    }
-
-    /*
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     */
-
-    /***
-     * ChapterFragment - takes a chapter url, and returns list of urls to chapter images
-     *
-     * @param request
-     * @return
-     */
-    public Observable<String> getChapterImageListObservable(final RequestWrapper request)
-    {
-        return NetworkService.getPermanentInstance().getResponse(request.getChapterUrl()).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread()).flatMap(response -> NetworkService.mapResponseToString(response)).flatMap(unparsedJson -> Observable.create(new Observable.OnSubscribe<List<String>>()
-        {
-            @Override
-            public void call(Subscriber<? super List<String>> subscriber)
-            {
-                try
-                {
-                    subscriber.onNext(parseJsonToImageUrls(unparsedJson));
-                    subscriber.onCompleted();
-                }
-                catch (Throwable e)
-                {
-                    subscriber.onError(e);
-                }
-            }
-        })).flatMap(imageUrls -> Observable.from(imageUrls.toArray(new String[imageUrls.size()])));
     }
 
     /***
@@ -254,35 +321,6 @@ public class MangaEden extends SourceBase
         Collections.reverse(imageUrlList);
 
         return imageUrlList;
-    }
-
-
-    /***
-     * Adds new Manga and
-     * gets missing manga information and updates database
-     *
-     * @param request
-     * @return
-     */
-    public Observable<Manga> updateMangaObservable(final RequestWrapper request)
-    {
-        NetworkService currService = NetworkService.getTemporaryInstance();
-        return currService.getResponse(request.getMangaUrl()).flatMap(response -> NetworkService.mapResponseToString(response)).flatMap(unparsedJson -> Observable.create(new Observable.OnSubscribe<Manga>()
-        {
-            @Override
-            public void call(Subscriber<? super Manga> subscriber)
-            {
-                try
-                {
-                    subscriber.onNext(parseJsonToManga(request, unparsedJson));
-                    subscriber.onCompleted();
-                }
-                catch (Throwable e)
-                {
-                    subscriber.onError(e);
-                }
-            }
-        })).onErrorReturn(null).doOnError(throwable -> throwable.printStackTrace());
     }
 
     /***
@@ -311,16 +349,19 @@ public class MangaEden extends SourceBase
             }
         }
 
-        Manga newManga = MFDBHelper.getInstance().getManga(request.getMangaUrl(), SourceKey);
+        Manga newManga = MFDBHelper.getInstance()
+                                   .getManga(request.getMangaUrl(), SourceKey);
 
         newManga.setArtist(parsedJsonObject.getString("artist"));
         newManga.setAuthor(parsedJsonObject.getString("author"));
-        newManga.setDescription(parsedJsonObject.getString("description").trim());
+        newManga.setDescription(parsedJsonObject.getString("description")
+                                                .trim());
         newManga.setmGenre(fieldGenre);
         newManga.setPicUrl("https://cdn.mangaeden.com/mangasimg/" + parsedJsonObject.getString("image"));
         newManga.setInitialized(1);
 
-        MFDBHelper.getInstance().putManga(newManga);
+        MFDBHelper.getInstance()
+                  .putManga(newManga);
         return newManga;
     }
 }
