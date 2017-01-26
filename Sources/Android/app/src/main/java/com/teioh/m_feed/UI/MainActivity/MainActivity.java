@@ -68,6 +68,8 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     DrawerLayout mDrawerLayout;
     @Bind( R.id.drawerLayoutListView )
     ExpandableListView mDrawerList;
+
+    //TODO.. see if I can make this action menu and the button inits in a layout vs manually doing it here
     @Bind( R.id.actionMenu )
     FloatingActionsMenu mMultiActionMenu;
 
@@ -110,22 +112,13 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         mMainPresenter.init(getIntent().getExtras());
         mToast = Toast.makeText(this, "Press back again to exit!", Toast.LENGTH_SHORT);
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
+                                                                                                      .build();
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
+        mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this , this)
+                                                            .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                                                            .build();
 
-    }
-
-    /***
-     * TODO..
-     *
-     * @param aSave
-     */
-    @Override
-    protected void onSaveInstanceState(Bundle aSave)
-    {
-        super.onSaveInstanceState(aSave);
-        mMainPresenter.onSaveState(aSave);
     }
 
     /***
@@ -156,30 +149,22 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
      * TODO..
      */
     @Override
-    protected void onResume()
-    {
-        super.onResume();
-        mMainPresenter.onResume();
-    }
-
-    /***
-     * TODO..
-     */
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
-        mMainPresenter.onPause();
-    }
-
-    /***
-     * TODO..
-     */
-    @Override
     public void onDestroy()
     {
         super.onDestroy();
         mMainPresenter.onDestroy();
+    }
+
+    /***
+     * TODO..
+     *
+     * @param aSave
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle aSave)
+    {
+        super.onSaveInstanceState(aSave);
+        mMainPresenter.onSaveState(aSave);
     }
 
     /***
@@ -191,17 +176,8 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     public void onTrimMemory(int aLevel)
     {
         super.onTrimMemory(aLevel);
-        Glide.get(this).trimMemory(aLevel);
-    }
-
-    /***
-     * TODO..
-     */
-    @Override
-    public void onLowMemory()
-    {
-        super.onLowMemory();
-        Glide.get(this).clearMemory();
+        Glide.get(this)
+             .trimMemory(aLevel);
     }
 
     /***
@@ -238,31 +214,6 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     /***
      * TODO..
      *
-     * @param aQueryText
-     * @return
-     */
-    @Override
-    public boolean onQueryTextSubmit(String aQueryText)
-    {
-        return false;
-    }
-
-    /***
-     * TODO..
-     *
-     * @param aQueryText
-     * @return
-     */
-    @Override
-    public boolean onQueryTextChange(String aQueryText)
-    {
-        mMainPresenter.updateQueryChange(aQueryText);
-        return false;
-    }
-
-    /***
-     * TODO..
-     *
      * @param aResultCode
      * @param aData
      */
@@ -290,6 +241,31 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     /***
      * TODO..
      *
+     * @param aQueryText
+     * @return
+     */
+    @Override
+    public boolean onQueryTextSubmit(String aQueryText)
+    {
+        return false;
+    }
+
+    /***
+     * TODO..
+     *
+     * @param aQueryText
+     * @return
+     */
+    @Override
+    public boolean onQueryTextChange(String aQueryText)
+    {
+        mMainPresenter.updateQueryChange(aQueryText);
+        return false;
+    }
+
+    /***
+     * TODO..
+     *
      * @return
      */
     @Override
@@ -306,63 +282,6 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
             mViewPager.setAdapter(aAdapter);
             mViewPager.setOffscreenPageLimit(3);
             mTabLayout.setViewPager(mViewPager);
-        }
-    }
-
-    @Override
-    public void setDrawerLayoutListener()
-    {
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolBar, R.string.app_name, R.string.Login)
-        {
-            /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view)
-            {
-                super.onDrawerClosed(view);
-                invalidateOptionsMenu();  // creates call to onPrepareOptionsMenu()
-            }
-
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView)
-            {
-                super.onDrawerOpened(drawerView);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-        };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-    }
-
-    @Override
-    public void closeDrawer()
-    {
-        mDrawerLayout.closeDrawers();
-    }
-
-    @Override
-    public void openDrawer()
-    {
-        mDrawerLayout.openDrawer(mDrawerList);
-    }
-
-    @Override
-    public void setActivityTitle(String aTitle)
-    {
-        mActivityTitle.setText(aTitle);
-    }
-
-    @Override
-    public void toggleToolbarElements()
-    {
-        if (mSearchView.getVisibility() == View.GONE)
-        {
-            mSearchView.setVisibility(View.VISIBLE);
-            mFilterView.setVisibility(View.VISIBLE);
-            setActivityTitle(new SourceFactory().getSourceName());
-        }
-        else
-        {
-            mSearchView.setVisibility(View.GONE);
-            mFilterView.setVisibility(View.GONE);
-            setActivityTitle("Settings");
         }
     }
 
@@ -388,6 +307,13 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     }
 
     @Override
+    public void setupTabLayout()
+    {
+        mTabLayout.setDistributeEvenly(true); // To make the Tabs Fixed set this true, This makes the mTabLayout Space Evenly in Available width
+        mTabLayout.setCustomTabColorizer(position -> getResources().getColor(R.color.tabsScrollColor));
+    }
+
+    @Override
     public void setupSearchView()
     {
         mSearchView.setOnQueryTextListener(this);
@@ -406,25 +332,6 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
                 mFilterView.setVisibility(View.GONE);
             }
         });
-    }
-
-    @Override
-    public void setupTabLayout()
-    {
-        mTabLayout.setDistributeEvenly(true); // To make the Tabs Fixed set this true, This makes the mTabLayout Space Evenly in Available width
-        mTabLayout.setCustomTabColorizer(position -> getResources().getColor(R.color.tabsScrollColor));
-    }
-
-    @Override
-    public void setPageAdapterItem(int aPosition)
-    {
-        mViewPager.setCurrentItem(aPosition);
-    }
-
-    @Override
-    public void setDefaultFilterImage()
-    {
-        mFilterView.setImageDrawable(getResources().getDrawable(R.drawable.filter_outline_24dp));
     }
 
     @Override
@@ -490,12 +397,82 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     }
 
     @Override
+    public void setActivityTitle(String aTitle)
+    {
+        mActivityTitle.setText(aTitle);
+    }
+
+    @Override
+    public void setPageAdapterItem(int aPosition)
+    {
+        mViewPager.setCurrentItem(aPosition);
+    }
+
+    @Override
+    public void setDefaultFilterImage()
+    {
+        mFilterView.setImageDrawable(getResources().getDrawable(R.drawable.filter_outline_24dp));
+    }
+
+    @Override
+    public void toggleToolbarElements()
+    {
+        if (mSearchView.getVisibility() == View.GONE)
+        {
+            mSearchView.setVisibility(View.VISIBLE);
+            mFilterView.setVisibility(View.VISIBLE);
+            setActivityTitle(new SourceFactory().getSourceName());
+        }
+        else
+        {
+            mSearchView.setVisibility(View.GONE);
+            mFilterView.setVisibility(View.GONE);
+            setActivityTitle("Settings");
+        }
+    }
+
+    @Override
+    public void setDrawerLayoutListener()
+    {
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolBar, R.string.app_name, R.string.Login)
+        {
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView)
+            {
+                super.onDrawerOpened(drawerView);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view)
+            {
+                super.onDrawerClosed(view);
+                invalidateOptionsMenu();  // creates call to onPrepareOptionsMenu()
+            }
+        };
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+    }
+
+    @Override
+    public void closeDrawer()
+    {
+        mDrawerLayout.closeDrawers();
+    }
+
+    @Override
+    public void openDrawer()
+    {
+        mDrawerLayout.openDrawer(mDrawerList);
+    }
+
+    @Override
     public void setupDrawerLayout(List<String> aDrawerItems, Map<String, List<String>> aSourceCollections)
     {
         final ExpandableListAdapter adapter = new ExpandableListAdapter(this, aDrawerItems, aSourceCollections);
         if (mDrawerHeader != null) mDrawerList.removeHeaderView(mDrawerHeader);
 
-        mDrawerHeader = LayoutInflater.from(getContext()).inflate(R.layout.drawer_header, null);
+        mDrawerHeader = LayoutInflater.from(getContext())
+                                      .inflate(R.layout.drawer_header, null);
         TextView lUsernameTextView = (TextView) mDrawerHeader.findViewById(R.id.drawer_username);
         lUsernameTextView.setText(SharedPrefs.getGoogleEmail());
 
@@ -511,49 +488,6 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
             mMainPresenter.onSourceItemChosen(aChildPosition);
             return true;
         });
-    }
-
-    @Override
-    public void onBackPressed()
-    {
-        // close search bar when back is pressed regardless
-        if (!mSearchView.isIconified())
-        {
-            mSearchView.clearFocus();
-            mSearchView.setIconified(true);
-        }
-
-        if (mMultiActionMenu.isExpanded())
-        { //closes action menu
-            mMultiActionMenu.collapse();
-        }
-        else if (!mToast.getView().isShown() && mDrawerLayout.isDrawerOpen(mDrawerList))
-        { //closes drawer, if exit mToast isn't active
-            mDrawerLayout.closeDrawer(mDrawerList);
-            mToast.show();
-        }
-        else if (getSupportFragmentManager().findFragmentByTag(SettingsFragment.TAG) != null)
-        {
-            mMainPresenter.removeSettingsFragment();
-            toggleToolbarElements();
-            openDrawer();
-        }
-        else if (mMainPresenter.genreFilterActive())
-        {
-            mMainPresenter.onClearGenreFilter();
-            mFilterView.setImageDrawable(getResources().getDrawable(R.drawable.filter_outline_24dp));
-            mActivityTitle.setText(new SourceFactory().getSourceName());
-        }
-        else if (!mToast.getView().isShown())
-        { //opens drawer, and shows exit mToast to verify exit
-            mDrawerLayout.openDrawer(mDrawerList);
-            mToast.show();
-        }
-        else
-        {    //user double back pressed to exit within time frame (mToast length)
-            mToast.cancel();
-            super.onBackPressed();
-        }
     }
 
     @Override
@@ -593,7 +527,6 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
 
     }
 
-
     @Override
     public void signIn()
     {
@@ -618,5 +551,86 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
             mMainPresenter.updateSignIn(result);
 
         }
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+
+        // Clear search view regardless of state when back is pressed (might change)
+        if(!mSearchView.isIconified()){
+            mSearchView.clearFocus();
+            mSearchView.setIconified(true);
+        }
+
+        if (mMultiActionMenu.isExpanded())
+        {
+            //closes action menu
+            mMultiActionMenu.collapse();
+        }
+        else if (!mToast.getView()
+                        .isShown() && mDrawerLayout.isDrawerOpen(mDrawerList))
+        {
+            //closes drawer, if exit toast message isn't active
+            mDrawerLayout.closeDrawer(mDrawerList);
+            mToast.show();
+        }
+        else if (getSupportFragmentManager().findFragmentByTag(SettingsFragment.TAG) != null)
+        {
+            //closes settings fragment if open
+            mMainPresenter.removeSettingsFragment();
+            toggleToolbarElements();
+            openDrawer();
+        }
+        else if (mMainPresenter.genreFilterActive())
+        {
+            mMainPresenter.onClearGenreFilter();
+            mFilterView.setImageDrawable(getResources().getDrawable(R.drawable.filter_outline_24dp));
+            mActivityTitle.setText(new SourceFactory().getSourceName());
+        }
+        else if (!mToast.getView()
+                        .isShown())
+        {
+            //opens drawer, and shows exit mToast to verify exit
+            mDrawerLayout.openDrawer(mDrawerList);
+            mToast.show();
+        }
+        else
+        {
+            //user double back pressed to exit within time frame (mToast length)
+            mToast.cancel();
+            super.onBackPressed();
+        }
+    }
+
+    /***
+     * TODO..
+     */
+    @Override
+    public void onLowMemory()
+    {
+        super.onLowMemory();
+        Glide.get(this)
+             .clearMemory();
+    }
+
+    /***
+     * TODO..
+     */
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        mMainPresenter.onPause();
+    }
+
+    /***
+     * TODO..
+     */
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        mMainPresenter.onResume();
     }
 }
