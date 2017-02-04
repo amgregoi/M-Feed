@@ -357,7 +357,6 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     public void setToNextChapter()
     {
         String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-        mChapter.setCurrentPage(0); //reset current page to beginning when done with a chapter
 
         try
         {
