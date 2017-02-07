@@ -192,7 +192,10 @@ public class MFDBHelper extends SQLiteOpenHelper
                 try
                 {
                     ArrayList<Manga> mangaList = new ArrayList<>();
-                    QueryResultIterable<Manga> itr = cupboard().withDatabase(getReadableDatabase()).query(Manga.class).withSelection("NOT following = ? AND source = ?", "0", new SourceFactory().getSourceName()).query();
+                    QueryResultIterable<Manga> itr = cupboard().withDatabase(getReadableDatabase())
+                                                               .query(Manga.class)
+                                                               .withSelection("NOT following = ? AND source = ?", "0", new SourceFactory().getSourceName())
+                                                               .query();
 
                     for (Manga manga : itr)
                     {
@@ -227,7 +230,10 @@ public class MFDBHelper extends SQLiteOpenHelper
                 try
                 {
                     ArrayList<Manga> mangaList = new ArrayList<>();
-                    QueryResultIterable<Manga> itr = cupboard().withDatabase(getReadableDatabase()).query(Manga.class).withSelection("source = ?", SharedPrefs.getSavedSource()).query();
+                    QueryResultIterable<Manga> itr = cupboard().withDatabase(getReadableDatabase())
+                                                               .query(Manga.class)
+                                                               .withSelection("source = ?", SharedPrefs.getSavedSource())
+                                                               .query();
 
                     for (Manga manga : itr)
                     {
@@ -290,8 +296,23 @@ public class MFDBHelper extends SQLiteOpenHelper
         cupboard().withDatabase(getWritableDatabase()).update(Manga.class, aValues, "link = ?", aUrl);
     }
 
-    public void updateChapter(Chapter aChapter){
+    public void updateChapter(Chapter aChapter)
+    {
         MangaLogger.logInfo(TAG, "updateChapter", "Not yet implemented");
+    }
+
+    public Chapter getChapter(String aUrl)
+    {
+        return cupboard().withDatabase(getReadableDatabase()).query(Chapter.class).withSelection("url = ?", aUrl).get();
+    }
+
+    public void addChapter(Chapter aChapter)
+    {
+        cupboard().withDatabase(getWritableDatabase()).put(aChapter);
+    }
+
+    public void removeChapters(Manga aManga){
+        cupboard().withDatabase(getWritableDatabase()).delete(Chapter.class, "mangaTitle = ?", aManga.getTitle());
     }
 
 

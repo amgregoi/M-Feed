@@ -19,7 +19,6 @@ import com.teioh.m_feed.WebSources.SourceFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.qbusict.cupboard.Cupboard;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -30,11 +29,13 @@ import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 public class ChapterPresenter implements IReader.FragmentPresenter
 {
     public static final String TAG = ChapterPresenter.class.getSimpleName();
-    public static final String CURRENT_URL_LIST_PARCELABLE_KEY = TAG + ":CURRENT";
+    public static final String CHAPTER_PARENT_FOLLOWING = TAG + ":CHAPTER_PARENT_FOLLOWING";
+
+    private static final String CURRENT_URL_LIST_PARCELABLE_KEY = TAG + ":CURRENT";
     public static final String CHAPTER_POSITION_LIST_PARCELABLE_KEY = TAG + ":POSITION";
-    public static final String ACTIVE_CHAPTER = TAG + ":ACTIVE_CHAPTER";
+    private static final String ACTIVE_CHAPTER = TAG + ":ACTIVE_CHAPTER";
     public static final String CHAPTER = TAG + ":CHAPTER";
-    public static final String LOADING_STATUS = TAG + ":LOADING";
+    private static final String LOADING_STATUS = TAG + ":LOADING";
 
     private IReader.FragmentView mChapterReaderMapper;
 
@@ -42,6 +43,8 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     private int mPosition, mPageOffsetCount;
     private boolean mIsToolbarShowing, mIsForwardChapter, mLazyLoading;
     private Chapter mChapter;
+    private boolean mChapterParentFollowing;
+
     private Subscription mImageListSubscription, mLoadImageUrlSubscription;
     private ImagePageAdapter mChapterPageAdapter;
 
@@ -58,9 +61,10 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     public ChapterPresenter(IReader.FragmentView aMap, Bundle aBundle)
     {
         mChapterReaderMapper = aMap;
-        mPosition = aBundle.getInt(ChapterPageAdapter.POSITION_KEY);
+        mPosition = aBundle.getInt(CHAPTER_POSITION_LIST_PARCELABLE_KEY);
         mChapter = aBundle.getParcelable(Chapter.TAG + ":" + mPosition);
         mActiveChapter = mChapterReaderMapper.checkActiveChapter(mPosition);
+        mChapterParentFollowing = aBundle.getBoolean(CHAPTER_PARENT_FOLLOWING, false);
         mIsToolbarShowing = true;
         mLoadingStatus = MangaEnums.eLoadingStatus.LOADING;
     }
@@ -167,130 +171,9 @@ public class ChapterPresenter implements IReader.FragmentPresenter
      * TODO..
      */
     @Override
-    public void getImageUrls()
-    {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
-        try
-        {
-            mChapterUrlList = new ArrayList<>();
-            updateReaderToolbar();
-
-            mImageListSubscription = new SourceFactory().getSource().getChapterImageListObservable(new RequestWrapper(mChapter)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>()
-            {
-                /***
-                 * TODO..
-                 */
-                @Override
-                public void onCompleted()
-                {
-                    preLoadImagesToCache();
-                    mChapterPageAdapter = new ImagePageAdapter(mChapterReaderMapper.getContext(), mChapterUrlList);
-                    mChapterReaderMapper.registerAdapter(mChapterPageAdapter);
-                    mChapter.setTotalPages(mChapterUrlList.size());
-                    mLoadingStatus = MangaEnums.eLoadingStatus.COMPLETE;
-                    MangaLogger.logInfo(TAG, lMethod, "Completed image url retrieval");
-                    updateReaderToolbar();
-                    mChapterReaderMapper.setCurrentChapterPage(mChapter.getCurrentPage());
-
-                }
-
-                /***
-                 * TODO..
-                 * @param aThrowable
-                 */
-                @Override
-                public void onError(Throwable aThrowable)
-                {
-                    mLoadingStatus = MangaEnums.eLoadingStatus.ERROR;
-                    MangaLogger.logError(TAG, lMethod, aThrowable.getMessage());
-                    updateReaderToolbar();
-                    Toast.makeText(mChapterReaderMapper.getContext(), "Failed, please try refreshing.", Toast.LENGTH_SHORT).show();
-                }
-
-                /***
-                 * TODO..
-                 * @param imageUrl
-                 */
-                @Override
-                public void onNext(String imageUrl)
-                {
-                    if (imageUrl != null)
-                    {
-                        mLoadingStatus = MangaEnums.eLoadingStatus.LOADING;
-                        mChapterUrlList.add(imageUrl);
-                        updateReaderToolbar();
-                    }
-                }
-            });
-        }
-        catch (Exception lException)
-        {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
-        }
-
-    }
-
-    /***
-     * TODO..
-     */
-    private void preLoadImagesToCache()
-    {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
-        try
-        {
-            if (!mLazyLoading)
-            {
-                if (mLoadImageUrlSubscription != null)
-                {
-                    mLoadImageUrlSubscription.unsubscribe();
-                    mLoadImageUrlSubscription = null;
-                }
-
-                if (mChapterUrlList != null)
-                {
-                    mLoadImageUrlSubscription = new SourceFactory().getSource().cacheFromImagesOfSize(mChapterUrlList).subscribe(new Observer<GlideDrawable>()
-                    {
-                        @Override
-                        public void onCompleted()
-                        {
-                            mLoadImageUrlSubscription.unsubscribe();
-                            mLoadImageUrlSubscription = null;
-                        }
-
-                        @Override
-                        public void onError(Throwable e)
-                        {
-                            if (BuildConfig.DEBUG)
-                            {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        @Override
-                        public void onNext(GlideDrawable glideDrawable)
-                        {
-                        }
-                    });
-                }
-            }
-        }
-        catch (Exception lException)
-        {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
-        }
-
-    }
-
-    /***
-     * TODO..
-     */
-    @Override
     public void onPause()
     {
         String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-        //TODO.. Update chapter object when fragment is paused to keep changes
         //TODO.. Might be moving away from cupboard in the future
 
         try
@@ -310,7 +193,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     @Override
     public void onResume()
     {
-
+        //DO STUFF..
     }
 
     /***
@@ -321,6 +204,79 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     {
         cleanupSubscribers();
         mChapterReaderMapper = null;
+    }
+
+    /***
+     * TODO..
+     */
+    @Override
+    public void getImageUrls()
+    {
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
+        try
+        {
+            mChapterUrlList = new ArrayList<>();
+            updateReaderToolbar();
+
+            mImageListSubscription = new SourceFactory().getSource()
+                                                        .getChapterImageListObservable(new RequestWrapper(mChapter))
+                                                        .subscribeOn(Schedulers.io())
+                                                        .observeOn(AndroidSchedulers.mainThread())
+                                                        .subscribe(new Observer<String>()
+                                                        {
+                                                            /***
+                                                             * TODO..
+                                                             */
+                                                            @Override
+                                                            public void onCompleted()
+                                                            {
+                                                                preLoadImagesToCache();
+                                                                mChapterPageAdapter = new ImagePageAdapter(mChapterReaderMapper.getContext(), mChapterUrlList);
+                                                                mChapterReaderMapper.registerAdapter(mChapterPageAdapter);
+                                                                mChapter.setTotalPages(mChapterUrlList.size());
+                                                                mLoadingStatus = MangaEnums.eLoadingStatus.COMPLETE;
+                                                                MangaLogger.logInfo(TAG, lMethod, "Completed image url retrieval");
+                                                                updateReaderToolbar();
+                                                                mChapterReaderMapper.setCurrentChapterPage(mChapter.getCurrentPage());
+
+                                                            }
+
+                                                            /***
+                                                             * TODO..
+                                                             * @param aThrowable
+                                                             */
+                                                            @Override
+                                                            public void onError(Throwable aThrowable)
+                                                            {
+                                                                mLoadingStatus = MangaEnums.eLoadingStatus.ERROR;
+                                                                MangaLogger.logError(TAG, lMethod, aThrowable.getMessage());
+                                                                updateReaderToolbar();
+                                                                Toast.makeText(mChapterReaderMapper.getContext(), "Failed, please try refreshing.", Toast.LENGTH_SHORT)
+                                                                     .show();
+                                                            }
+
+                                                            /***
+                                                             * TODO..
+                                                             * @param imageUrl
+                                                             */
+                                                            @Override
+                                                            public void onNext(String imageUrl)
+                                                            {
+                                                                if (imageUrl != null)
+                                                                {
+                                                                    mLoadingStatus = MangaEnums.eLoadingStatus.LOADING;
+                                                                    mChapterUrlList.add(imageUrl);
+                                                                    updateReaderToolbar();
+                                                                }
+                                                            }
+                                                        });
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+        }
+
     }
 
     /***
@@ -443,26 +399,6 @@ public class ChapterPresenter implements IReader.FragmentPresenter
      * TODO..
      */
     @Override
-    public void updateActiveChapter()
-    {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
-        try
-        {
-            mActiveChapter = true;
-            updateReaderToolbar();
-
-        }
-        catch (Exception lException)
-        {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
-        }
-    }
-
-    /***
-     * TODO..
-     */
-    @Override
     public void updateReaderToolbar()
     {
         String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
@@ -481,6 +417,8 @@ public class ChapterPresenter implements IReader.FragmentPresenter
                     case ERROR:
                         mChapterReaderMapper.updateToolbar(mChapter.getMangaTitle(), "Failed to load chapter, refresh", 1, mPosition);
                         break;
+                    case REFRESH:
+                        mChapterReaderMapper.updateToolbar(mChapter.getMangaTitle(), "Starting refresh..", 1, mPosition);
                 }
             }
         }
@@ -516,14 +454,38 @@ public class ChapterPresenter implements IReader.FragmentPresenter
      * TODO..
      */
     @Override
+    public void updateActiveChapter()
+    {
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
+        try
+        {
+            mActiveChapter = true;
+            updateReaderToolbar();
+
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+        }
+    }
+
+    /***
+     * TODO..
+     */
+    @Override
     public void updateChapterViewStatus()
     {
         String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
 
         try
         {
-            Chapter viewedChapter = cupboard().withDatabase(MFDBHelper.getInstance().getReadableDatabase()).query(Chapter.class).withSelection("mangaTitle = ? AND chapterNumber = ?", mChapter.getMangaTitle(), Integer.toString(mChapter.getChapterNumber())).get();
-            if (viewedChapter == null) cupboard().withDatabase(MFDBHelper.getInstance().getWritableDatabase()).put(mChapter);
+            Chapter viewedChapter = MFDBHelper.getInstance().getChapter(mChapter.getChapterUrl());
+
+            if (mChapterParentFollowing && viewedChapter == null)
+            {
+                MFDBHelper.getInstance().addChapter(mChapter);
+            }
 
         }
         catch (Exception lException)
@@ -540,35 +502,66 @@ public class ChapterPresenter implements IReader.FragmentPresenter
         try
         {
             cleanupSubscribers();
-            mLoadingStatus = MangaEnums.eLoadingStatus.ERROR; //TODO.. Consider everything an error for now (temporary)
-
-            switch (mLoadingStatus)
-            {
-                case COMPLETE:
-                {
-                    if (mChapterPageAdapter != null && !mChapterUrlList.isEmpty() && mChapterUrlList != null)
-                    {
-                        mChapterReaderMapper.registerAdapter(mChapterPageAdapter);
-                        mChapterReaderMapper.setCurrentChapterPage(mChapter.getCurrentPage());
-                        break;
-                    }
-                }
-                case ERROR:
-                {
-                    getImageUrls();
-                }
-                case LOADING:
-                {
-                    break;
-                }
-
-            }
-
+            mChapterUrlList = new ArrayList<>();
+            updateImageUrlList(mChapterUrlList);
+            mLoadingStatus = MangaEnums.eLoadingStatus.REFRESH;
+            getImageUrls();
         }
         catch (Exception aException)
         {
             MangaLogger.logError(TAG, lMethod, aException.getMessage());
         }
+    }
+
+    /***
+     * TODO..
+     */
+    private void preLoadImagesToCache()
+    {
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
+        try
+        {
+            if (mLazyLoading)
+            {
+                if (mLoadImageUrlSubscription != null)
+                {
+                    mLoadImageUrlSubscription.unsubscribe();
+                    mLoadImageUrlSubscription = null;
+                }
+
+                if (mChapterUrlList != null)
+                {
+                    mLoadImageUrlSubscription = new SourceFactory().getSource()
+                                                                   .cacheFromImagesOfSize(mChapterUrlList)
+                                                                   .subscribe(new Observer<GlideDrawable>()
+                                                                   {
+                                                                       @Override
+                                                                       public void onCompleted()
+                                                                       {
+                                                                           mLoadImageUrlSubscription.unsubscribe();
+                                                                           mLoadImageUrlSubscription = null;
+                                                                       }
+
+                                                                       @Override
+                                                                       public void onError(Throwable aThrowable)
+                                                                       {
+                                                                           MangaLogger.logError(TAG, lMethod, aThrowable.getMessage());
+                                                                       }
+
+                                                                       @Override
+                                                                       public void onNext(GlideDrawable glideDrawable)
+                                                                       {
+                                                                       }
+                                                                   });
+                }
+            }
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+        }
+
     }
 
     /***

@@ -35,15 +35,20 @@ public class FilterDialogFragment extends DialogFragment
 {
     public final static String TAG = FilterDialogFragment.class.getSimpleName();
 
-    @Bind(R.id.genreList) GridView mGenreGridView;
-    @Bind(R.id.genre_search_button) Button mSearchButton;
-    @Bind(R.id.genre_cancel_button) Button mCancelButton;
-    @Bind(R.id.genre_clear_button) Button mClearButton;
+    @Bind( R.id.genreList )
+    GridView mGenreGridView;
+    @Bind( R.id.genre_search_button )
+    Button mSearchButton;
+    @Bind( R.id.genre_cancel_button )
+    Button mCancelButton;
+    @Bind( R.id.genre_clear_button )
+    Button mClearButton;
 
     private GenreListAdapter mAdapter;
 
     /***
      * TODO..
+     *
      * @return
      */
     public static DialogFragment getnewInstance()
@@ -54,6 +59,7 @@ public class FilterDialogFragment extends DialogFragment
 
     /***
      * TODO..
+     *
      * @param aInflater
      * @param aContainer
      * @param aSavedInstanceState
@@ -86,6 +92,7 @@ public class FilterDialogFragment extends DialogFragment
 
     /***
      * TODO..
+     *
      * @param aAdapter
      */
     private void registerAdapter(BaseAdapter aAdapter)
@@ -143,7 +150,11 @@ public class FilterDialogFragment extends DialogFragment
                 lSelectionArgs.add("%" + iString.replaceAll("\\s", "") + "%"); //genres have been stripped of spaces in the database
             }
 
-            QueryResultIterable<Manga> iFilteredManga = cupboard().withDatabase(MFDBHelper.getInstance().getReadableDatabase()).query(Manga.class).withSelection(lSelection.toString(), lSelectionArgs.toArray(new String[lSelectionArgs.size()])).query();
+            QueryResultIterable<Manga> iFilteredManga = cupboard().withDatabase(MFDBHelper.getInstance().getReadableDatabase())
+                                                                  .query(Manga.class)
+                                                                  .withSelection(lSelection.toString(), lSelectionArgs.toArray(new String[lSelectionArgs
+                                                                          .size()]))
+                                                                  .query();
 
             if (iFilteredManga.iterator().hasNext())
             {

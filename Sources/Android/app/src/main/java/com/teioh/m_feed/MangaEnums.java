@@ -50,7 +50,9 @@ public class MangaEnums
 
         LOADING,
 
-        ERROR;
+        ERROR,
+
+        REFRESH;
 
         public static eLoadingStatus getLoadingStatus(int aStatus)
         {
@@ -60,6 +62,8 @@ public class MangaEnums
                     return LOADING;
                 case 1:
                     return COMPLETE;
+                case 2:
+                    return REFRESH;
                 default:
                     return ERROR;
             }
@@ -73,8 +77,10 @@ public class MangaEnums
                     return 0;
                 case COMPLETE:
                     return 1;
-                default:
+                case REFRESH:
                     return 2;
+                default:
+                    return 3;
             }
         }
     }

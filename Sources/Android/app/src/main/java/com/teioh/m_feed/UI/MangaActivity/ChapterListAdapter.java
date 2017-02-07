@@ -78,7 +78,7 @@ public class ChapterListAdapter extends ArrayAdapter
             return lRowView;
         }
 
-        Chapter lViewedChapter = cupboard().withDatabase(MFDBHelper.getInstance().getReadableDatabase()).query(Chapter.class).withSelection("mangaTitle = ? AND chapterNumber = ?", lChapter.getMangaTitle(), Integer.toString(lChapter.getChapterNumber())).get();
+        Chapter lViewedChapter = MFDBHelper.getInstance().getChapter(lChapter.getChapterUrl());
 
 
         if (lViewedChapter != null)

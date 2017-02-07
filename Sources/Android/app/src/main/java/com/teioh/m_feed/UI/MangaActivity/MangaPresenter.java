@@ -241,7 +241,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
             if (mChapterOrderDescending) Collections.reverse(lNewChapterList);
             int lPosition = lNewChapterList.indexOf(aChapter);
 
-            Intent lIntent = ReaderActivity.getNewInstance(mMangaMapper.getContext(), lNewChapterList, lPosition);
+            Intent lIntent = ReaderActivity.getNewInstance(mMangaMapper.getContext(), lNewChapterList, lPosition, mManga.getFollowing());
             mMangaMapper.getContext().startActivity(lIntent);
         }
         catch (Exception aException)
@@ -285,7 +285,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
         try
         {
             MFDBHelper.getInstance().updateMangaFollow(mManga.getTitle(), aValue);
-
+            mManga.setFollowing(aValue);
         }
         catch (Exception lException)
         {
@@ -303,7 +303,9 @@ public class MangaPresenter implements IManga.ActivityPresenter
 
         try
         {
+            mManga.setFollowing(0);
             MFDBHelper.getInstance().updateMangaUnfollow(mManga.getTitle());
+            MFDBHelper.getInstance().removeChapters(mManga);
         }
         catch (Exception lException)
         {

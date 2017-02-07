@@ -23,11 +23,14 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     public final static String TAG = ReaderPresenter.class.getSimpleName();
     public final static String CHAPTER_LIST_KEY = TAG + ":CHAPTER_LIST";
     public final static String CHAPTER_POSITION = TAG + ":POSITION";
+    public final static String PARENT_FOLLOWING = TAG + ":PARENT_FOLLOWING";
 
     private IReader.ActivityView mReaderMap;
     private ChapterPageAdapter mChapterPagerAdapter;
     private ArrayList<Chapter> mChapterList;
     private int mChapterPosition;
+
+    private boolean mParentFollowing;
 
     /***
      * TODO..
@@ -100,7 +103,8 @@ public class ReaderPresenter implements IReader.ActivityPresenter
                 mChapterPosition = aBundle.getInt(MangaPresenter.LIST_POSITION_KEY);
             }
 
-            mChapterPagerAdapter = new ChapterPageAdapter(((ReaderActivity) mReaderMap).getSupportFragmentManager(), mChapterList);
+            mParentFollowing = aBundle.getBoolean(PARENT_FOLLOWING, false);
+            mChapterPagerAdapter = new ChapterPageAdapter(((ReaderActivity) mReaderMap).getSupportFragmentManager(), mChapterList, mParentFollowing);
             mReaderMap.registerAdapter(mChapterPagerAdapter);
             mReaderMap.setCurrentChapter(mChapterPosition);
             mReaderMap.setupToolbar();

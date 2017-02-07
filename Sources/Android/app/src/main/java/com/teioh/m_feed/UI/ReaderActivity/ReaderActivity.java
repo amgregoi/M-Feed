@@ -52,11 +52,12 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
      * @param aContext
      * @return
      */
-    public static Intent getNewInstance(Context aContext, ArrayList<Chapter> aChapterList, int aPosition)
+    public static Intent getNewInstance(Context aContext, ArrayList<Chapter> aChapterList, int aPosition, boolean aParentFollow)
     {
         Intent lIntent = new Intent(aContext, ReaderActivity.class);
         lIntent.putParcelableArrayListExtra(MangaPresenter.CHAPTER_LIST_KEY, aChapterList);
         lIntent.putExtra(MangaPresenter.LIST_POSITION_KEY, aPosition);
+        lIntent.putExtra(ReaderPresenter.PARENT_FOLLOWING, aParentFollow);
 
         return lIntent;
     }

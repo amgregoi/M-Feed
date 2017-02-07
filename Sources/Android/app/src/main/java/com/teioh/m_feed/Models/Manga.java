@@ -236,6 +236,11 @@ public class Manga implements Parcelable
         return following;
     }
 
+    /***
+     *
+     * @param lVal 0 - not following, ... finish describing values
+     * @return
+     */
     public int setFollowing(int lVal)
     {
         following = lVal;

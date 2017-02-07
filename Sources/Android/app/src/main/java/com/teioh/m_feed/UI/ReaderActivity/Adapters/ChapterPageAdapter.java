@@ -1,6 +1,5 @@
 package com.teioh.m_feed.UI.ReaderActivity.Adapters;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -20,20 +19,21 @@ import java.util.ArrayList;
 public class ChapterPageAdapter extends FragmentStatePagerAdapter
 {
     public final static String TAG = ChapterPageAdapter.class.getSimpleName();
-    public final static String POSITION_KEY = TAG + ":POSITION";
 
     private ArrayList<Chapter> mChapterList;
     private SparseArray<WeakReference<Fragment>> mPageReferenceMap = new SparseArray<WeakReference<Fragment>>();
 
+    private boolean mParentFollowing;
     /***
      * TODO..
      * @param aFragmentManager
      * @param aChapterList
      */
-    public ChapterPageAdapter(FragmentManager aFragmentManager, ArrayList<Chapter> aChapterList)
+    public ChapterPageAdapter(FragmentManager aFragmentManager, ArrayList<Chapter> aChapterList, boolean aParentFollowing)
     {
         super(aFragmentManager);
         mChapterList = new ArrayList<>(aChapterList);
+        mParentFollowing = aParentFollowing;
     }
 
     /***
@@ -54,12 +54,7 @@ public class ChapterPageAdapter extends FragmentStatePagerAdapter
             }
             else
             {
-                Fragment lChapterFragment = new ChapterFragment();
-                Bundle lBundle = new Bundle();
-
-                lBundle.putParcelable(Chapter.TAG + ":" + aPosition, mChapterList.get(aPosition));
-                lBundle.putInt(POSITION_KEY, aPosition);
-                lChapterFragment.setArguments(lBundle);
+                Fragment lChapterFragment = ChapterFragment.getNewInstance(mParentFollowing , mChapterList.get(aPosition), aPosition);
                 mPageReferenceMap.put(aPosition, new WeakReference<>(lChapterFragment));
 
                 return lChapterFragment;
