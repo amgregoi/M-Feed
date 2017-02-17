@@ -40,13 +40,15 @@ public interface IManga
 
         void chapterOrderButtonClick();
 
-        void onFollwButtonClick(int aValue);
+        void onFollowButtonClick(int aValue);
 
         void onUnfollowButtonClick();
 
         void onChapterClicked(Chapter aChapter);
 
         String getImageUrl();
+
+        void onContinueReadingButtonClick();
     }
 
 

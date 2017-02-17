@@ -52,12 +52,12 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
      * @param aContext
      * @return
      */
-    public static Intent getNewInstance(Context aContext, ArrayList<Chapter> aChapterList, int aPosition, boolean aParentFollow)
+    public static Intent getNewInstance(Context aContext, ArrayList<Chapter> aChapterList, int aPosition, String aParentUrl)
     {
         Intent lIntent = new Intent(aContext, ReaderActivity.class);
         lIntent.putParcelableArrayListExtra(MangaPresenter.CHAPTER_LIST_KEY, aChapterList);
         lIntent.putExtra(MangaPresenter.LIST_POSITION_KEY, aPosition);
-        lIntent.putExtra(ReaderPresenter.PARENT_FOLLOWING, aParentFollow);
+        lIntent.putExtra(ReaderPresenter.PARENT_URL, aParentUrl);
 
         return lIntent;
     }
@@ -170,7 +170,9 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     @Override
     public void incrementChapter()
     {
-        mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
+        mViewPager.incrementCurrentItem();
+        mReaderPresenter.updateRecentChapter(mViewPager.getCurrentItem());
+
     }
 
     /***
@@ -179,7 +181,8 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     @Override
     public void decrementChapter()
     {
-        mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
+        mViewPager.decrememntCurrentItem();
+        mReaderPresenter.updateRecentChapter(mViewPager.getCurrentItem());
     }
 
     /***
@@ -343,6 +346,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     public void onSkipPreviousClick()
     {
         mViewPager.decrememntCurrentItem();
+        mReaderPresenter.updateRecentChapter(mViewPager.getCurrentItem());
     }
 
     /***
@@ -380,6 +384,8 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     public void onSkipForwardClick()
     {
         mViewPager.incrementCurrentItem();
+        mReaderPresenter.updateRecentChapter(mViewPager.getCurrentItem());
+
     }
 
     /***

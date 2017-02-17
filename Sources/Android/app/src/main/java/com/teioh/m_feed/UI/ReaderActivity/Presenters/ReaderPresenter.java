@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.bumptech.glide.Glide;
 import com.teioh.m_feed.MFeedApplication;
 import com.teioh.m_feed.Models.Chapter;
+import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.UI.MainActivity.MainActivity;
 import com.teioh.m_feed.UI.MangaActivity.MangaActivity;
 import com.teioh.m_feed.UI.MangaActivity.MangaPresenter;
@@ -13,6 +14,7 @@ import com.teioh.m_feed.UI.ReaderActivity.Adapters.ChapterPageAdapter;
 import com.teioh.m_feed.UI.ReaderActivity.ChapterFragment;
 import com.teioh.m_feed.UI.ReaderActivity.IReader;
 import com.teioh.m_feed.UI.ReaderActivity.ReaderActivity;
+import com.teioh.m_feed.Utils.MFDBHelper;
 import com.teioh.m_feed.Utils.MangaLogger;
 import com.teioh.m_feed.Utils.SharedPrefs;
 
@@ -23,14 +25,14 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     public final static String TAG = ReaderPresenter.class.getSimpleName();
     public final static String CHAPTER_LIST_KEY = TAG + ":CHAPTER_LIST";
     public final static String CHAPTER_POSITION = TAG + ":POSITION";
-    public final static String PARENT_FOLLOWING = TAG + ":PARENT_FOLLOWING";
+    public final static String PARENT_URL = TAG + ":PARENT_URL";
 
     private IReader.ActivityView mReaderMap;
     private ChapterPageAdapter mChapterPagerAdapter;
     private ArrayList<Chapter> mChapterList;
     private int mChapterPosition;
 
-    private boolean mParentFollowing;
+    private Manga mParentManga;
 
     /***
      * TODO..
@@ -103,8 +105,9 @@ public class ReaderPresenter implements IReader.ActivityPresenter
                 mChapterPosition = aBundle.getInt(MangaPresenter.LIST_POSITION_KEY);
             }
 
-            mParentFollowing = aBundle.getBoolean(PARENT_FOLLOWING, false);
-            mChapterPagerAdapter = new ChapterPageAdapter(((ReaderActivity) mReaderMap).getSupportFragmentManager(), mChapterList, mParentFollowing);
+            String lParentUrl = aBundle.getString(PARENT_URL);
+            mParentManga = MFDBHelper.getInstance().getManga(lParentUrl);
+            mChapterPagerAdapter = new ChapterPageAdapter(((ReaderActivity) mReaderMap).getSupportFragmentManager(), mChapterList, mParentManga.getFollowing());
             mReaderMap.registerAdapter(mChapterPagerAdapter);
             mReaderMap.setCurrentChapter(mChapterPosition);
             mReaderMap.setupToolbar();
@@ -325,6 +328,25 @@ public class ReaderPresenter implements IReader.ActivityPresenter
             if ((lTempFragment = ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition - 1))) != null)
             {
                 lTempFragment.toggleVerticalScrollSettings();
+            }
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+        }
+    }
+
+    @Override
+    public void updateRecentChapter(int aPosition)
+    {
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
+        try
+        {
+            if (aPosition < mChapterList.size() && aPosition > 0)
+            {
+                mParentManga.setRecentChapter(mChapterList.get(aPosition).getChapterUrl());
+                MFDBHelper.getInstance().updateManga(mParentManga);
             }
         }
         catch (Exception lException)

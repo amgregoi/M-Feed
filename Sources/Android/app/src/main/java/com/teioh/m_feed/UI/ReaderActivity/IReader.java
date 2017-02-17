@@ -44,6 +44,8 @@ public interface IReader
         void toggleOrientation();
 
         void toggleVerticalScrollSettings(int aPosition);
+
+        void updateRecentChapter(int aPosition);
     }
 
     /***

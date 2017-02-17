@@ -136,42 +136,53 @@ public class MangaJoy extends SourceBase
     private List<Manga> scrapeUpdatestoManga(final String unparsedHtml)
     {
         String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         List<Manga> lMangaList = new ArrayList<>();
-        Document lParsedDocument = Jsoup.parse(unparsedHtml);
-        Elements lMangaElements = lParsedDocument.select("div.manga_updates").select("dl");
 
-        for (Element wholeElement : lMangaElements)
+        try
         {
-            Document parseSections = Jsoup.parse(wholeElement.toString());
-            Elements usefulElements = parseSections.select("dt");
-            for (Element usefulElement : usefulElements)
+            Document lParsedDocument = Jsoup.parse(unparsedHtml);
+            Elements lMangaElements = lParsedDocument.select("div.manga_updates").select("dl");
+
+            for (Element wholeElement : lMangaElements)
             {
-                String lMangaTitle = usefulElement.select("a").attr("title");
-                String lMangaUrl = usefulElement.select("a").attr("href");
-
-                if (lMangaUrl.charAt(lMangaUrl.length() - 1) != '/') lMangaUrl += "/"; //add ending slash to url if missing
-                Manga lManga = MFDBHelper.getInstance().getManga(lMangaUrl, SourceKey);
-                if (lManga != null)
+                Document parseSections = Jsoup.parse(wholeElement.toString());
+                Elements usefulElements = parseSections.select("dt");
+                for (Element usefulElement : usefulElements)
                 {
-                    lMangaList.add(lManga);
-                }
-                else
-                {
-                    lManga = new Manga(lMangaTitle, lMangaUrl, SourceKey);
-                    lMangaList.add(lManga);
-                    MFDBHelper.getInstance().putManga(lManga);
+                    String lMangaTitle = usefulElement.select("a").attr("title");
+                    String lMangaUrl = usefulElement.select("a").attr("href");
 
-                    updateMangaObservable(new RequestWrapper(lManga)).subscribeOn(Schedulers.computation())
-                                                                     .doOnError(aThrowable -> MangaLogger.logError(TAG, lMethod, aThrowable.getMessage()))
-                                                                     .onErrorReturn(null)
-                                                                     .subscribe();
+                    if (lMangaUrl.charAt(lMangaUrl.length() - 1) != '/') lMangaUrl += "/"; //add ending slash to url if missing
+                    Manga lManga = MFDBHelper.getInstance().getManga(lMangaUrl);
+                    if (lManga != null)
+                    {
+                        lMangaList.add(lManga);
+                    }
+                    else
+                    {
+                        lManga = new Manga(lMangaTitle, lMangaUrl, SourceKey);
+                        lMangaList.add(lManga);
+                        MFDBHelper.getInstance().putManga(lManga);
+
+                        updateMangaObservable(new RequestWrapper(lManga)).subscribeOn(Schedulers.computation())
+                                                                         .doOnError(aThrowable -> MangaLogger.logError(TAG, lMethod, aThrowable.getMessage()))
+                                                                         .onErrorReturn(null)
+                                                                         .subscribe();
+                    }
                 }
             }
+            MangaLogger.logInfo(TAG, lMethod, "Finished parsing recent updates");
         }
-        MangaLogger.logError(TAG, lMethod, " Finished parsing recent updates");
-        if (lMangaList.size() == 0) return null;
-        return lMangaList;
+        catch (Exception aException)
+        {
+            MangaLogger.logError(TAG, lMethod, " Failed to parse recent updates: ");
+        }
+        finally
+        {
+            if (lMangaList.size() == 0) return null;
+            return lMangaList;
+
+        }
     }
 
     /***
@@ -306,20 +317,19 @@ public class MangaJoy extends SourceBase
                 }
             }
 
+            Manga lManga = new Manga();
+            lManga.setAlternate(alternate);
+            lManga.setPicUrl(img);
+            lManga.setDescription(summary);
+            lManga.setArtist(artist);
+            lManga.setAuthor(author);
+            lManga.setmGenre(genres);
+            lManga.setStatus(status);
+            lManga.setSource(SourceKey);
+            lManga.setMangaUrl(aRequest.getMangaUrl());
 
-            ContentValues values = new ContentValues(1);
-            values.put("alternate", alternate);
-            values.put("image", img);
-            values.put("description", summary);
-            values.put("artist", artist);
-            values.put("author", author);
-            values.put("genres", genres);
-            values.put("status", status);
-            values.put("source", SourceKey);
-
-            MFDBHelper.getInstance().updateManga(values, aRequest.getMangaUrl());
-            Manga manga = MFDBHelper.getInstance().getManga(aRequest.getMangaUrl(), SourceKey);
-            return manga;
+            MFDBHelper.getInstance().updateManga(lManga);
+            return MFDBHelper.getInstance().getManga(aRequest.getMangaUrl());
         }
         catch (Exception aException)
         {

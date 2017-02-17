@@ -63,28 +63,6 @@
 					android:textColor="@color/button_color"
 					android:visibility="gone"/>
 
-				<!-- when synced with MAL-->
-				<Button
-					android:id="@+id/score_mal"
-					android:layout_width="fill_parent"
-					android:layout_height="wrap_content"
-					android:layout_marginBottom="@dimen/baseline_grid_unit_4dp"
-					android:background="@drawable/button_animation"
-					android:text="Score"
-					android:textColor="@color/button_color"
-					android:visibility="gone"/>
-
-				<!-- when added to list-->
-				<Button
-					android:id="@+id/syncMALButton"
-					android:layout_width="fill_parent"
-					android:layout_height="wrap_content"
-					android:layout_marginBottom="@dimen/baseline_grid_unit_4dp"
-					android:background="@drawable/button_animation"
-					android:text="Sync with MAL?"
-					android:textColor="@color/button_color"
-					android:visibility="gone"/>
-
 				<RelativeLayout
 					android:layout_width="fill_parent"
 					android:layout_height="wrap_content">
@@ -119,40 +97,16 @@
 
 					<!-- when synced with MAL-->
 					<Button
-						android:id="@+id/chapter_plus"
+						android:id="@+id/continue_reading_button"
 						android:layout_width="fill_parent"
 						android:layout_height="wrap_content"
 						android:layout_marginRight="@dimen/baseline_grid_unit_4dp"
 						android:layout_weight=".8"
 						android:background="@drawable/button_animation"
-						android:text="+1C"
+						android:text="Continue Reading"
 						android:textColor="@color/button_color"
 						android:visibility="gone"
 						/>
-
-					<!-- when synced with MAL-->
-					<Button
-						android:id="@+id/volume_plus"
-						android:layout_width="fill_parent"
-						android:layout_height="wrap_content"
-						android:layout_marginRight="@dimen/baseline_grid_unit_4dp"
-						android:layout_weight=".8"
-						android:background="@drawable/button_animation"
-						android:text="+1V"
-						android:textColor="@color/button_color"
-						android:visibility="gone"/>
-
-					<!-- when synced with MAL-->
-					<Button
-						android:id="@+id/multi_update"
-						android:layout_width="fill_parent"
-						android:layout_height="wrap_content"
-						android:layout_weight="1"
-						android:background="@drawable/button_animation"
-						android:text="+"
-						android:textColor="@color/button_color"
-						android:visibility="gone"/>
-
 				</LinearLayout>
 			</LinearLayout>
 		</RelativeLayout>

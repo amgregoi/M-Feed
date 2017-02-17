@@ -256,12 +256,11 @@ public class MFDBHelper extends SQLiteOpenHelper
      * TODO...
      *
      * @param aUrl
-     * @param aSource
      * @return
      */
-    public Manga getManga(String aUrl, String aSource)
+    public Manga getManga(String aUrl)
     {
-        return cupboard().withDatabase(getReadableDatabase()).query(Manga.class).withSelection("link = ? AND source = ?", aUrl, aSource).get();
+        return cupboard().withDatabase(getReadableDatabase()).query(Manga.class).withSelection("link = ?", aUrl).get();
     }
 
     /***
@@ -288,17 +287,40 @@ public class MFDBHelper extends SQLiteOpenHelper
     /***
      * TODO...
      *
-     * @param aValues
-     * @param aUrl
+     * @param aManga
      */
-    public void updateManga(ContentValues aValues, String aUrl)
+    public void updateManga(Manga aManga)
     {
-        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, aValues, "link = ?", aUrl);
+        ContentValues lValues = new ContentValues(1);
+        lValues.put("alternate", aManga.getAlternate());
+        lValues.put("image", aManga.getPicUrl());
+        lValues.put("description", aManga.getDescription());
+        lValues.put("artist", aManga.getArtist());
+        lValues.put("author", aManga.getAuthor());
+        lValues.put("genres", aManga.getmGenre());
+        lValues.put("status", aManga.getStatus());
+        lValues.put("source", aManga.getSource());
+        lValues.put("recentChapter", aManga.getRecentChapter());
+        lValues.put("link", aManga.getMangaURL());
+
+        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, lValues, "link = ?", aManga.getMangaURL());
     }
 
     public void updateChapter(Chapter aChapter)
     {
         MangaLogger.logInfo(TAG, "updateChapter", "Not yet implemented");
+
+        ContentValues lValues = new ContentValues(1);
+        lValues.put("url", aChapter.getChapterUrl());
+        lValues.put("date", aChapter.getChapterDate());
+        lValues.put("mangaTitle", aChapter.getMangaTitle());
+        lValues.put("chapterTitle", aChapter.getChapterTitle());
+        lValues.put("chapterNumber", aChapter.getChapterNumber());
+        lValues.put("currentPage", aChapter.getCurrentPage());
+        lValues.put("totalPages", aChapter.getTotalPages());
+
+        cupboard().withDatabase(getWritableDatabase()).update(Chapter.class, lValues, "link = ?", aChapter.getChapterUrl());
+
     }
 
     public Chapter getChapter(String aUrl)

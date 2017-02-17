@@ -40,8 +40,7 @@ public class Batoto extends SourceBase
     @Override
     public Observable<List<Manga>> getRecentUpdatesObservable()
     {
-        String lMethod = Thread.currentThread()
-                               .getStackTrace()[2].getMethodName();
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
 
         List<Manga> lReturn = new ArrayList<>();
         NetworkService lCurService = NetworkService.getTemporaryInstance();
@@ -116,8 +115,7 @@ public class Batoto extends SourceBase
     @Override
     public Observable<List<Chapter>> getChapterListObservable(final RequestWrapper request)
     {
-        String lMethod = Thread.currentThread()
-                               .getStackTrace()[2].getMethodName();
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
 
         return NetworkService.getPermanentInstance()
                              .getResponseCustomHeaders(request.getMangaUrl(), constructRequestHeaders())
@@ -139,8 +137,7 @@ public class Batoto extends SourceBase
     @Override
     public Observable<Manga> updateMangaObservable(final RequestWrapper request)
     {
-        String lMethod = Thread.currentThread()
-                               .getStackTrace()[2].getMethodName();
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
 
         String mangaId = request.getMangaUrl().substring(request.getMangaUrl().lastIndexOf("r") + 1);
 
@@ -161,8 +158,7 @@ public class Batoto extends SourceBase
      */
     public List<Manga> scrapeUpdatestoManga(List<Manga> aList, String aHtml)
     {
-        String lMethod = Thread.currentThread()
-                               .getStackTrace()[2].getMethodName();
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
 
         if (!aHtml.contains("No (more) comics found!"))
         {
@@ -172,15 +168,12 @@ public class Batoto extends SourceBase
 
             for (Element iHtmlBlock : lMangaElements)
             {
-                Element lUrlElement = iHtmlBlock.select("a[href^=http://bato.to]")
-                                                .first();
+                Element lUrlElement = iHtmlBlock.select("a[href^=http://bato.to]").first();
                 Element lNameElement = lUrlElement;
 
                 String lMangaUrl = lUrlElement.attr("href");
-                String lMangaTitle = lNameElement.text()
-                                                 .trim();
-                Manga lManga = MFDBHelper.getInstance()
-                                         .getManga(lMangaUrl, SourceKey);
+                String lMangaTitle = lNameElement.text().trim();
+                Manga lManga = MFDBHelper.getInstance().getManga(lMangaUrl);
 
 
                 if (lManga != null)
@@ -191,8 +184,7 @@ public class Batoto extends SourceBase
                 {
                     lManga = new Manga(lMangaTitle, lMangaUrl, SourceKey);
                     aList.add(lManga);
-                    MFDBHelper.getInstance()
-                              .putManga(lManga);
+                    MFDBHelper.getInstance().putManga(lManga);
                     updateMangaObservable(new RequestWrapper(lManga)).subscribeOn(Schedulers.computation())
                                                                      .doOnError(aThrowable -> MangaLogger.logError(TAG, lMethod, aThrowable.getMessage()))
                                                                      .subscribe();
@@ -223,11 +215,9 @@ public class Batoto extends SourceBase
 
             Chapter newChapter = new Chapter();
 
-            Element urlElement = chapterElement.select("a")
-                                               .first();
+            Element urlElement = chapterElement.select("a").first();
             Element nameElement = urlElement;
-            Element dateElement = chapterElement.select("td")
-                                                .get(4);
+            Element dateElement = chapterElement.select("td").get(4);
 
             if (urlElement != null)
             {
@@ -236,16 +226,14 @@ public class Batoto extends SourceBase
             }
             if (nameElement != null)
             {
-                String fieldName = nameElement.text()
-                                              .trim();
+                String fieldName = nameElement.text().trim();
                 newChapter.setChapterTitle(fieldName);
             }
             if (dateElement != null)
             {
                 try
                 {
-                    long date = new SimpleDateFormat("dd MMMMM yyyy - hh:mm a", Locale.ENGLISH).parse(dateElement.text())
-                                                                                               .getTime();
+                    long date = new SimpleDateFormat("dd MMMMM yyyy - hh:mm a", Locale.ENGLISH).parse(dateElement.text()).getTime();
                     newChapter.setChapterDate(new Date(date).toString());
                 }
                 catch (ParseException e)
@@ -261,8 +249,7 @@ public class Batoto extends SourceBase
         Collections.reverse(chapterList);
         for (int i = 0; i < chapterList.size(); i++)
         {
-            chapterList.get(i)
-                       .setChapterNumber(i + 1);
+            chapterList.get(i).setChapterNumber(i + 1);
         }
 
         return chapterList;
@@ -280,8 +267,7 @@ public class Batoto extends SourceBase
 
         List<String> pageUrlList = new ArrayList<>();
 
-        Elements pageUrlElements = parsedDocument.getElementById("page_select")
-                                                 .getElementsByTag("option");
+        Elements pageUrlElements = parsedDocument.getElementById("page_select").getElementsByTag("option");
         for (Element pageUrlElement : pageUrlElements)
         {
             pageUrlList.add(pageUrlElement.attr("value"));
@@ -320,16 +306,12 @@ public class Batoto extends SourceBase
     {
         Document parsedDocument = Jsoup.parse(unparsedHtml);
 
-        Element artistElement = parsedDocument.select("a[href^=http://bato.to/search?artist_name]")
-                                              .first();
-        Element descriptionElement = parsedDocument.select("tr")
-                                                   .get(5);
+        Element artistElement = parsedDocument.select("a[href^=http://bato.to/search?artist_name]").first();
+        Element descriptionElement = parsedDocument.select("tr").get(5);
         Elements genreElements = parsedDocument.select("img[src=http://bato.to/forums/public/style_images/master/bullet_black.png]");
-        Element thumbnailUrlElement = parsedDocument.select("img[src^=http://img.bato.to/forums/uploads/]")
-                                                    .first();
+        Element thumbnailUrlElement = parsedDocument.select("img[src^=http://img.bato.to/forums/uploads/]").first();
 
-        Manga newManga = MFDBHelper.getInstance()
-                                   .getManga(request.getMangaUrl(), SourceKey);
+        Manga newManga = MFDBHelper.getInstance().getManga(request.getMangaUrl());
 
         if (newManga == null) newManga = new Manga(request.getMangaTitle(), request.getMangaUrl(), SourceKey);
 
@@ -341,9 +323,7 @@ public class Batoto extends SourceBase
         }
         if (descriptionElement != null)
         {
-            String fieldDescription = descriptionElement.text()
-                                                        .substring("Description:".length())
-                                                        .trim();
+            String fieldDescription = descriptionElement.text().substring("Description:".length()).trim();
             newManga.setDescription(fieldDescription);
         }
         if (genreElements != null)
@@ -351,8 +331,7 @@ public class Batoto extends SourceBase
             String fieldGenres = "";
             for (int index = 0; index < genreElements.size(); index++)
             {
-                String currentGenre = genreElements.get(index)
-                                                   .attr("alt");
+                String currentGenre = genreElements.get(index).attr("alt");
 
                 if (index < genreElements.size() - 1)
                 {
@@ -377,8 +356,7 @@ public class Batoto extends SourceBase
 
         newManga.setInitialized(1);
 
-        MFDBHelper.getInstance()
-                  .putManga(newManga);
+        MFDBHelper.getInstance().putManga(newManga);
         return newManga;
 
     }

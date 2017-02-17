@@ -19,6 +19,7 @@ public class Manga implements Parcelable
     private String status;
     private String source;
     private String alternate;
+    private String recentChapter;
     private int following;
     private int initialized;
 
@@ -31,6 +32,7 @@ public class Manga implements Parcelable
         title = aTitle;
         link = aUrl;
         source = aSource;
+        recentChapter = "";
         initialized = 0;
         _id = null;
     }
@@ -48,6 +50,7 @@ public class Manga implements Parcelable
         status = aIn.getStatus();
         source = aIn.getSource();
         alternate = aIn.getAlternate();
+        recentChapter = aIn.getRecentChapter();
         following = aIn.getFollowingValue();
         initialized = getInitialized();
     }
@@ -66,6 +69,7 @@ public class Manga implements Parcelable
         status = aIn.readString();
         source = aIn.readString();
         alternate = aIn.readString();
+        recentChapter = aIn.readString();
         following = aIn.readInt();
         initialized = aIn.readInt();
     }
@@ -266,5 +270,15 @@ public class Manga implements Parcelable
             if (getTitle().equals(((Manga) aObject).getTitle())) lCompare = true;
         }
         return lCompare;
+    }
+
+    public String getRecentChapter()
+    {
+        return recentChapter;
+    }
+
+    public void setRecentChapter(String aRecentChapter)
+    {
+        recentChapter = aRecentChapter;
     }
 }

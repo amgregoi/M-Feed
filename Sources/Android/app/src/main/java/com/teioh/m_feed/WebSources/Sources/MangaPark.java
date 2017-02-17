@@ -177,7 +177,7 @@ public class MangaPark extends SourceBase
             {
                 String mangaTitle = usefulElement.select("a").text();
                 String mangaUrl = mBaseUrl + usefulElement.select("a").attr("href");
-                Manga manga = MFDBHelper.getInstance().getManga(mangaUrl, SourceKey);
+                Manga manga = MFDBHelper.getInstance().getManga(mangaUrl);
                 if (manga != null)
                 {
                     mangaList.add(manga);
@@ -418,18 +418,19 @@ public class MangaPark extends SourceBase
             }
         }
 
+        Manga lManga = new Manga();
+        lManga.setAlternate(alternate);
+        lManga.setPicUrl(img);
+        lManga.setDescription(summary);
+        lManga.setArtist(artist);
+        lManga.setAuthor(author);
+        lManga.setmGenre(genres);
+        lManga.setStatus(status);
+        lManga.setSource(SourceKey);
+        lManga.setMangaUrl(aRequest.getMangaUrl());
 
-        ContentValues values = new ContentValues(1);
-        values.put("alternate", alternate);
-        values.put("image", img);
-        values.put("description", summary);
-        values.put("artist", artist);
-        values.put("author", author);
-        values.put("genres", genres);
-        values.put("status", status);
-        values.put("source", SourceKey);
 
-        MFDBHelper.getInstance().updateManga(values, aRequest.getMangaUrl());
-        return MFDBHelper.getInstance().getManga(aRequest.getMangaUrl(), SourceKey);
+        MFDBHelper.getInstance().updateManga(lManga);
+        return MFDBHelper.getInstance().getManga(aRequest.getMangaUrl());
     }
 }

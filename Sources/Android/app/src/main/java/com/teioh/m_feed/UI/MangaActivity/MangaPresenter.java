@@ -47,6 +47,41 @@ public class MangaPresenter implements IManga.ActivityPresenter
     /***
      * TODO...
      *
+     * @param aBundle
+     */
+    @Override
+    public void init(Bundle aBundle)
+    {
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
+        try
+        {
+            if (mManga == null)
+            {
+                String lMangaUrl = aBundle.getString(Manga.TAG);
+                mManga = MFDBHelper.getInstance().getManga(lMangaUrl);
+            }
+            if (!mRestoreActivity) mChapterOrderDescending = true;
+            mMangaMapper.setActivityTitle(mManga.getTitle());
+            mMangaMapper.setupToolBar();
+            mMangaMapper.initializeHeaderViews();
+            mMangaMapper.setupHeaderButtons();
+            mMangaMapper.setupSwipeRefresh();
+            mMangaMapper.hideCoverLayout();
+
+            getMangaViewInfo();
+            getChapterList();
+
+        }
+        catch (Exception aException)
+        {
+            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+        }
+    }
+
+    /***
+     * TODO...
+     *
      * @param aSave
      */
     @Override
@@ -100,61 +135,6 @@ public class MangaPresenter implements IManga.ActivityPresenter
 
     /***
      * TODO...
-     *
-     * @param aBundle
-     */
-    @Override
-    public void init(Bundle aBundle)
-    {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
-        try
-        {
-            if (mManga == null)
-            {
-                String lMangaUrl = aBundle.getString(Manga.TAG);
-                String lSource = new SourceFactory().getSourceName();
-                mManga = MFDBHelper.getInstance().getManga(lMangaUrl, lSource);
-            }
-            if (!mRestoreActivity) mChapterOrderDescending = true;
-            mMangaMapper.setActivityTitle(mManga.getTitle());
-            mMangaMapper.setupToolBar();
-            mMangaMapper.initializeHeaderViews();
-            mMangaMapper.setupHeaderButtons();
-            mMangaMapper.setupSwipeRefresh();
-            mMangaMapper.hideCoverLayout();
-
-            getMangaViewInfo();
-            getChapterList();
-
-        }
-        catch (Exception aException)
-        {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
-        }
-    }
-
-    /***
-     * TODO...
-     */
-    @Override
-    public void onResume()
-    {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
-        try
-        {
-            if (mAdapter != null) mAdapter.notifyDataSetChanged();
-
-        }
-        catch (Exception lException)
-        {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
-        }
-    }
-
-    /***
-     * TODO...
      */
     @Override
     public void onPause()
@@ -163,6 +143,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
 
         try
         {
+
             if (mObservableMangaSubscription != null)
             {
                 mObservableMangaSubscription.unsubscribe();
@@ -180,6 +161,26 @@ public class MangaPresenter implements IManga.ActivityPresenter
             MangaLogger.logError(TAG, lMethod, lException.getMessage());
         }
 
+    }
+
+    /***
+     * TODO...
+     */
+    @Override
+    public void onResume()
+    {
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
+        try
+        {
+            if (mAdapter != null) mAdapter.notifyDataSetChanged();
+            mManga = MFDBHelper.getInstance().getManga(mManga.getMangaURL()); //get updates manga object
+
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+        }
     }
 
     /***
@@ -228,57 +229,10 @@ public class MangaPresenter implements IManga.ActivityPresenter
     /***
      * TODO...
      *
-     * @param aChapter
-     */
-    @Override
-    public void onChapterClicked(Chapter aChapter)
-    {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
-        try
-        {
-            ArrayList<Chapter> lNewChapterList = new ArrayList<>(mChapterList);
-            if (mChapterOrderDescending) Collections.reverse(lNewChapterList);
-            int lPosition = lNewChapterList.indexOf(aChapter);
-
-            Intent lIntent = ReaderActivity.getNewInstance(mMangaMapper.getContext(), lNewChapterList, lPosition, mManga.getFollowing());
-            mMangaMapper.getContext().startActivity(lIntent);
-        }
-        catch (Exception aException)
-        {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
-        }
-    }
-
-    /***
-     * TODO...
-     *
-     * @return
-     */
-    @Override
-    public String getImageUrl()
-    {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
-        try
-        {
-            return mManga.getPicUrl();
-
-        }
-        catch (Exception lException)
-        {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
-        }
-        return "";
-    }
-
-    /***
-     * TODO...
-     *
      * @param aValue
      */
     @Override
-    public void onFollwButtonClick(int aValue)
+    public void onFollowButtonClick(int aValue)
     {
         String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
 
@@ -315,6 +269,96 @@ public class MangaPresenter implements IManga.ActivityPresenter
 
     /***
      * TODO...
+     *
+     * @param aChapter
+     */
+    @Override
+    public void onChapterClicked(Chapter aChapter)
+    {
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
+        try
+        {
+            ArrayList<Chapter> lNewChapterList = new ArrayList<>(mChapterList);
+            if (mChapterOrderDescending) Collections.reverse(lNewChapterList);
+            int lPosition = lNewChapterList.indexOf(aChapter);
+
+            mManga.setRecentChapter(aChapter.getChapterUrl());
+            MFDBHelper.getInstance().updateManga(mManga);
+
+            Intent lIntent = ReaderActivity.getNewInstance(mMangaMapper.getContext(), lNewChapterList, lPosition, mManga.getMangaURL());
+            mMangaMapper.getContext().startActivity(lIntent);
+        }
+        catch (Exception aException)
+        {
+            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+        }
+    }
+
+    /***
+     * TODO...
+     *
+     * @return
+     */
+    @Override
+    public String getImageUrl()
+    {
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
+        try
+        {
+            return mManga.getPicUrl();
+
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+        }
+        return "";
+    }
+
+    /***
+     * TODO..
+     */
+    @Override
+    public void onContinueReadingButtonClick()
+    {
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+
+        try
+        {
+            if (mManga.getRecentChapter() == null) mManga.setRecentChapter(""); //TODO.. Remove when updates to database fix this default null
+
+            Chapter lChapter = null;
+            ArrayList<Chapter> lNewChapterList = new ArrayList<>(mChapterList);
+            if (mChapterOrderDescending) Collections.reverse(lNewChapterList);
+
+            for (Chapter iChapter : lNewChapterList)
+            {
+                if (iChapter.getChapterUrl().equals(mManga.getRecentChapter()))
+                {
+                    lChapter = iChapter;
+                    mManga.setRecentChapter(lChapter.getChapterUrl());
+
+                }
+            }
+
+            // defaults to original chapter, if one is not set/found
+            if (lChapter == null) lChapter = lNewChapterList.get(0);
+
+            int lPosition = lNewChapterList.indexOf(lChapter);
+
+            Intent lIntent = ReaderActivity.getNewInstance(mMangaMapper.getContext(), lNewChapterList, lPosition, mManga.getMangaURL());
+            mMangaMapper.getContext().startActivity(lIntent);
+        }
+        catch (Exception aException)
+        {
+            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+        }
+    }
+
+    /***
+     * TODO...
      */
     private void getMangaViewInfo()
     {
@@ -326,7 +370,11 @@ public class MangaPresenter implements IManga.ActivityPresenter
             {
                 if (mManga.getInitialized() == 0)
                 {
-                    mObservableMangaSubscription = new SourceFactory().getSource().updateMangaObservable(new RequestWrapper(mManga)).doOnError(throwable -> MangaLogger.logError(TAG, lMethod, throwable.getMessage())).observeOn(AndroidSchedulers.mainThread()).subscribe(manga -> updateMangaView(manga));
+                    mObservableMangaSubscription = new SourceFactory().getSource()
+                                                                      .updateMangaObservable(new RequestWrapper(mManga))
+                                                                      .doOnError(throwable -> MangaLogger.logError(TAG, lMethod, throwable.getMessage()))
+                                                                      .observeOn(AndroidSchedulers.mainThread())
+                                                                      .subscribe(manga -> updateMangaView(manga));
                 }
                 else
                 {
@@ -398,7 +446,10 @@ public class MangaPresenter implements IManga.ActivityPresenter
             {
                 if (mChapterList == null)
                 {
-                    mChapterListSubscription = new SourceFactory().getSource().getChapterListObservable(new RequestWrapper(mManga)).doOnError(throwable -> MangaLogger.logError(TAG, lMethod, throwable.getMessage())).subscribe(chapters -> updateChapterList(chapters));
+                    mChapterListSubscription = new SourceFactory().getSource()
+                                                                  .getChapterListObservable(new RequestWrapper(mManga))
+                                                                  .doOnError(throwable -> MangaLogger.logError(TAG, lMethod, throwable.getMessage()))
+                                                                  .subscribe(chapters -> updateChapterList(chapters));
                 }
                 else
                 {

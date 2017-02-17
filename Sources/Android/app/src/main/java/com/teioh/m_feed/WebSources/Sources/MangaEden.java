@@ -40,8 +40,7 @@ public class MangaEden extends SourceBase
      */
     public Observable<List<Manga>> getRecentUpdatesObservable()
     {
-        String lMethod = Thread.currentThread()
-                               .getStackTrace()[2].getMethodName();
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
 
         return NetworkService.getTemporaryInstance()
                              .getResponse(mUpdatesUrl)
@@ -94,8 +93,7 @@ public class MangaEden extends SourceBase
      */
     public Observable<List<Chapter>> getChapterListObservable(final RequestWrapper request)
     {
-        String lMethod = Thread.currentThread()
-                               .getStackTrace()[2].getMethodName();
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
 
         return NetworkService.getPermanentInstance()
                              .getResponse(request.getMangaUrl())
@@ -131,8 +129,7 @@ public class MangaEden extends SourceBase
      */
     public Observable<Manga> updateMangaObservable(final RequestWrapper request)
     {
-        String lMethod = Thread.currentThread()
-                               .getStackTrace()[2].getMethodName();
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
 
         return NetworkService.getTemporaryInstance()
                              .getResponse(request.getMangaUrl())
@@ -165,25 +162,20 @@ public class MangaEden extends SourceBase
      */
     private List<Manga> scrapeUpdatestoManga(final Document parsedDocument)
     {
-        String lMethod = Thread.currentThread()
-                               .getStackTrace()[2].getMethodName();
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
 
         List<Manga> mangaList = new ArrayList<>();
         Elements mangaElements = parsedDocument.select("body > li");
 
         for (Element htmlBlock : mangaElements)
         {
-            Element urlElement = htmlBlock.select("div.newsManga")
-                                          .first();
-            Element nameElement = htmlBlock.select("div.manga_tooltop_header > a")
-                                           .first();
+            Element urlElement = htmlBlock.select("div.newsManga").first();
+            Element nameElement = htmlBlock.select("div.manga_tooltop_header > a").first();
 
             String mangaTitle = nameElement.text();
-            String mangaUrl = "https://www.mangaeden.com/api/manga/" + urlElement.id()
-                                                                                 .substring(0, 24) + "/";
+            String mangaUrl = "https://www.mangaeden.com/api/manga/" + urlElement.id().substring(0, 24) + "/";
 
-            Manga lManga = MFDBHelper.getInstance()
-                                     .getManga(mangaUrl, SourceKey);
+            Manga lManga = MFDBHelper.getInstance().getManga(mangaUrl);
             if (lManga != null)
             {
                 mangaList.add(lManga);
@@ -192,8 +184,7 @@ public class MangaEden extends SourceBase
             {
                 lManga = new Manga(mangaTitle, mangaUrl, SourceKey);
                 mangaList.add(lManga);
-                MFDBHelper.getInstance()
-                          .putManga(lManga);
+                MFDBHelper.getInstance().putManga(lManga);
                 updateMangaObservable(new RequestWrapper(lManga)).subscribeOn(Schedulers.computation())
                                                                  .doOnError(aThrowable -> MangaLogger.logError(TAG, lMethod, aThrowable.getMessage()))
                                                                  .subscribe();
@@ -292,8 +283,7 @@ public class MangaEden extends SourceBase
         Collections.reverse(chapterList);
         for (int index = 0; index < chapterList.size(); index++)
         {
-            chapterList.get(index)
-                       .setChapterNumber(index + 1);
+            chapterList.get(index).setChapterNumber(index + 1);
         }
 
         return chapterList;
@@ -349,19 +339,16 @@ public class MangaEden extends SourceBase
             }
         }
 
-        Manga newManga = MFDBHelper.getInstance()
-                                   .getManga(request.getMangaUrl(), SourceKey);
+        Manga newManga = MFDBHelper.getInstance().getManga(request.getMangaUrl());
 
         newManga.setArtist(parsedJsonObject.getString("artist"));
         newManga.setAuthor(parsedJsonObject.getString("author"));
-        newManga.setDescription(parsedJsonObject.getString("description")
-                                                .trim());
+        newManga.setDescription(parsedJsonObject.getString("description").trim());
         newManga.setmGenre(fieldGenre);
         newManga.setPicUrl("https://cdn.mangaeden.com/mangasimg/" + parsedJsonObject.getString("image"));
         newManga.setInitialized(1);
 
-        MFDBHelper.getInstance()
-                  .putManga(newManga);
+        MFDBHelper.getInstance().putManga(newManga);
         return newManga;
     }
 }

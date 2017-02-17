@@ -30,7 +30,6 @@ import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.MainActivity;
 import com.teioh.m_feed.UI.MangaActivity.Fragments.FImageDialogFragment;
-import com.teioh.m_feed.UI.MangaActivity.Fragments.FProgressDialogFragment;
 import com.teioh.m_feed.UI.MangaActivity.Fragments.FRemoveDialogFragment;
 
 import butterknife.Bind;
@@ -58,11 +57,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     private TextView mStatusText;
     private Button mFollowButton;
     private Button mMALStatusButton;
-    private Button mMALScoreButton;
-    private Button mSyncMALButton;
-    private Button mChapterIncButton;
-    private Button mVolumeIncButton;
-    private Button mMultiIncButton;
+    private Button mContinueReadingButton;
 
     private View mMangaInfoHeader;
     private View mChapterHeader;
@@ -203,9 +198,10 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
 //                mSyncMALButton.setVisibility(View.GONE);
                 mFollowButton.setVisibility(View.VISIBLE);
                 mMALStatusButton.setVisibility(View.GONE);
+                mContinueReadingButton.setVisibility(View.GONE);
                 mMangaPresenter.onUnfollowButtonClick();
                 invalidateOptionsMenu();
-            }//else if(data.hasextra(etc...)
+            }
         }
         else if (aResultCode == Activity.RESULT_CANCELED)
         {
@@ -289,9 +285,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
             if (aManga.getFollowing())
             {
                 mFollowButton.setVisibility(View.GONE);
-                //TODO update database (add MAL id column)
-                //TODO to check if sync set up, and make other buttons visible
-//                mSyncMALButton.setVisibility(View.VISIBLE); //TODO uncomment when MAL implemented
+                mContinueReadingButton.setVisibility(View.VISIBLE);
                 mMALStatusButton.setVisibility(View.VISIBLE);
                 mMALStatusButton.setText(MangaEnums.eFollowType.values()[aManga.getFollowingValue() - 1].toString());
                 invalidateOptionsMenu();
@@ -378,11 +372,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
 
         mFollowButton = (Button) mMangaInfoHeader.findViewById(R.id.followButton);
         mMALStatusButton = (Button) mMangaInfoHeader.findViewById(R.id.read_status_mal);
-        mMALScoreButton = (Button) mMangaInfoHeader.findViewById(R.id.score_mal);
-        mSyncMALButton = (Button) mMangaInfoHeader.findViewById(R.id.syncMALButton);
-        mChapterIncButton = (Button) mMangaInfoHeader.findViewById(R.id.chapter_plus);
-        mVolumeIncButton = (Button) mMangaInfoHeader.findViewById(R.id.volume_plus);
-        mMultiIncButton = (Button) mMangaInfoHeader.findViewById(R.id.multi_update);
+        mContinueReadingButton = (Button) mMangaInfoHeader.findViewById(R.id.continue_reading_button);
     }
 
     /***
@@ -400,9 +390,9 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
 
         //Follow Button
         mFollowButton.setOnClickListener(v -> {
-            mMangaPresenter.onFollwButtonClick(1);
+            mMangaPresenter.onFollowButtonClick(1);
             mFollowButton.setVisibility(View.GONE); //uncomment after menu remove is  put in
-//            mSyncMALButton.setVisibility(View.VISIBLE);   //TODO uncomment when MAL implemented
+            mContinueReadingButton.setVisibility(View.VISIBLE);
             mMALStatusButton.setVisibility(View.VISIBLE);
             invalidateOptionsMenu();
         });
@@ -420,15 +410,15 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
                 switch (item.getItemId())
                 {
                     case R.id.reading:
-                        mMangaPresenter.onFollwButtonClick(1);
+                        mMangaPresenter.onFollowButtonClick(1);
                         mMALStatusButton.setText(lValues[0].toString());
                         break;
                     case R.id.complete:
-                        mMangaPresenter.onFollwButtonClick(2);
+                        mMangaPresenter.onFollowButtonClick(2);
                         mMALStatusButton.setText(lValues[1].toString());
                         break;
                     case R.id.hold:
-                        mMangaPresenter.onFollwButtonClick(3);
+                        mMangaPresenter.onFollowButtonClick(3);
                         mMALStatusButton.setText(lValues[2].toString());
                         break;
                 }
@@ -440,37 +430,8 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
 
         });
 
-        //Rate the manga (1-10) MAL
-        mMALScoreButton.setOnClickListener(v -> {
-
-        });
-
-        //Find MAL equivalent of manga and link to it
-        mSyncMALButton.setOnClickListener(v -> {
-//            mMangaPresenter.onMALSyncClicked();
-            mMangaPresenter.onUnfollowButtonClick();
-            mFollowButton.setVisibility(View.VISIBLE); //uncomment after menu remove is  put in
-//            mSyncMALButton.setVisibility(View.GONE);   //TODO uncomment when MAL implemented
-            mMALStatusButton.setVisibility(View.GONE);
-            invalidateOptionsMenu();
-
-        });
-
-        //Increment Chapter button
-        mChapterIncButton.setOnClickListener(v -> {
-
-        });
-
-        //Increment Volume button
-        mVolumeIncButton.setOnClickListener(v -> {
-
-        });
-
-        //Manually set chapter/volume
-        mMultiIncButton.setOnClickListener(v -> {
-            DialogFragment newFragment = new FProgressDialogFragment();
-            newFragment.show(getSupportFragmentManager(), "dialog");
-
+        mContinueReadingButton.setOnClickListener(v -> {
+            mMangaPresenter.onContinueReadingButtonClick();
         });
     }
 
