@@ -47,6 +47,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     @Bind(R.id.chapter_list) ListView mChapterList;
     @Bind(R.id.failed_to_load_view) LinearLayout mFailedToLoad;
 
+    //Views inside the manga information header
     private ImageView mMangaImage;
     private TextView mDescriptionText;
     private TextView mTitleText;
@@ -195,7 +196,6 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
             if (aData == null)
             {
                 // After Ok code.
-//                mSyncMALButton.setVisibility(View.GONE);
                 mFollowButton.setVisibility(View.VISIBLE);
                 mMALStatusButton.setVisibility(View.GONE);
                 mContinueReadingButton.setVisibility(View.GONE);
@@ -272,7 +272,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
         {
             mDescriptionText.setText(aManga.getDescription());
             mDescriptionText.setTypeface(Typeface.SERIF);
-            mTitleText.setText(aManga.getTitle() + "\n" + aManga.getSource());
+            mTitleText.setText(aManga.getTitle()); // + "\n" + aManga.getSource());
             mAuthorText.setText(aManga.getAuthor());
             mArtistText.setText(aManga.getArtist());
             mGenresText.setText(aManga.getmGenre());
