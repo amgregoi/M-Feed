@@ -2,11 +2,11 @@
 ==============
 
 __TODO:__
-* Offline reader option
-* Update MangaHere/Park updateMangaObservable()
-* Fix Batoto chapter list/reader
-* Fix MangaHere/MangaPark chapter images not always loading
-* Editing some of the layouts (work in progress)
+* [ ] Offline reader option 
+* [ ] Update MangaHere/Park updateMangaObservable() 
+* [ ] Fix Batoto chapter list/reader 
+* [ ] Fix MangaHere/MangaPark chapter images not always loading 
+* [ ] Editing some of the layouts (work in progress) 
 
 __APK__<br>
 <a href="https://raw.githubusercontent.com/amgregoi/M-Feed/master/Artifacts/app-release.apk">Click Here for APK</a> <br>
