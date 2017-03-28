@@ -40,12 +40,6 @@
             android:theme="@style/AppTheme">
         </activity>
         <activity
-            android:name=".UI.LoginActivity.LoginActivity"
-            android:label="@string/title_activity_login"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/AppTheme">
-        </activity>
-        <activity
             android:name=".UI.ReaderActivity.ReaderActivity"
             android:label="ReaderActivity"
             android:theme="@style/ReaderTheme">

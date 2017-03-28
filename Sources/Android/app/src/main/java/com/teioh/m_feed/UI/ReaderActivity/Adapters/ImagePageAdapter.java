@@ -79,12 +79,12 @@ public class ImagePageAdapter extends PagerAdapter
 
         GestureImageView mImage = (GestureImageView) lView.findViewById(R.id.chapterPageImageView);
         Glide.with(mContext).load(mImageUrlList.get(aPosition))
-                .override(8192, 8192) //OpenGLRenderer max image size, if larger in X or Y it will scale the image
+                .override(2048, 8192) //OpenGLRenderer max image size, if larger in X or Y it will scale the image
                 .fitCenter()
                 .animate(android.R.anim.fade_in)
                 .placeholder(mContext.getResources().getDrawable(R.drawable.ic_book_white_18dp))
                 .skipMemoryCache(true)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .into(new GlideDrawableImageViewTarget(mImage)
         {
             @Override
