@@ -337,5 +337,31 @@ public class MFDBHelper extends SQLiteOpenHelper
         cupboard().withDatabase(getWritableDatabase()).delete(Chapter.class, "mangaTitle = ?", aManga.getTitle());
     }
 
+    public void resetLibrary(){
+        QueryResultIterable<Manga> itr = cupboard().withDatabase(getReadableDatabase())
+                                                   .query(Manga.class)
+                                                   .withSelection("NOT following = ? AND source = ?", "0", new SourceFactory().getSourceName())
+                                                   .query();
+
+        for (Manga manga : itr)
+        {
+            updateMangaUnfollow(manga.getTitle());
+        }
+        itr.close();
+    }
+
+    public void resetCachedChapters(){
+        QueryResultIterable<Manga> itr = cupboard().withDatabase(getReadableDatabase())
+                                                   .query(Manga.class)
+                                                   .withSelection("NOT following = ? AND source = ?", "0", new SourceFactory().getSourceName())
+                                                   .query();
+
+        for (Manga manga : itr)
+        {
+            removeChapters(manga);
+        }
+        itr.close();
+    }
+
 
 }

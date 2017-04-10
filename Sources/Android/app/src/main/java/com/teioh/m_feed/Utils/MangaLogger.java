@@ -1,6 +1,7 @@
 package com.teioh.m_feed.Utils;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.teioh.m_feed.MFeedApplication;
 
@@ -76,6 +77,10 @@ public class MangaLogger
     public static List<String> getLogs()
     {
         return mCurrentLogs;
+    }
+
+    public static void makeToast(String aMessage){
+        Toast.makeText(MFeedApplication.getInstance(), aMessage, Toast.LENGTH_SHORT).show();
     }
 
 }
