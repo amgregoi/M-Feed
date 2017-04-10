@@ -84,7 +84,7 @@ public class ImagePageAdapter extends PagerAdapter
                 .animate(android.R.anim.fade_in)
                 .placeholder(mContext.getResources().getDrawable(R.drawable.ic_book_white_18dp))
                 .skipMemoryCache(true)
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(new GlideDrawableImageViewTarget(mImage)
         {
             @Override
@@ -96,6 +96,11 @@ public class ImagePageAdapter extends PagerAdapter
                 mImage.startFling(0, 100000f); //large fling to initialize the image to the top for long pages
             }
 
+            @Override public void onLoadFailed(Exception e, Drawable errorDrawable)
+            {
+                super.onLoadFailed(e, errorDrawable);
+                mImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_refresh_white_24dp));
+            }
         });
         (aContainer).addView(lView);
         mImageViews.put(aPosition, lView);
