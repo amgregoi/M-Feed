@@ -10,11 +10,11 @@ import com.teioh.m_feed.Utils.MangaLogger;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class LibraryFragment extends MainFragmentPresenterBase
+public class LibraryPresenter extends MainFragmentPresenterBase
 {
-    public final static String TAG = LibraryFragment.class.getSimpleName();
+    public final static String TAG = LibraryPresenter.class.getSimpleName();
 
-    public LibraryFragment(IMain.FragmentView aMap)
+    public LibraryPresenter(IMain.FragmentView aMap)
     {
         super(aMap);
     }
@@ -37,7 +37,7 @@ public class LibraryFragment extends MainFragmentPresenterBase
         try
         {
             mMangaListSubscription = MFDBHelper.getInstance()
-                                               .getLibraryList()
+                                               .getLibraryList().cache()
                                                .subscribeOn(Schedulers.io())
                                                .observeOn(AndroidSchedulers.mainThread())
                                                .doOnError(throwable -> Toast.makeText(MFeedApplication.getInstance(), throwable.getMessage(), Toast.LENGTH_SHORT))

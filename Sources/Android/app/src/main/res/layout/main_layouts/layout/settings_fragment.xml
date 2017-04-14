@@ -7,356 +7,344 @@
                                             android:clickable="true"
                                             android:orientation="vertical">
 
-	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	                android:layout_width="match_parent"
-	                android:layout_height="match_parent"
-	                android:background="@color/charcoal"
-	                android:clickable="true"
-	                android:orientation="vertical">
-		<!-- GENERAL GROUPING -->
-		<LinearLayout
-			android:id="@+id/general_group"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_margin="8dp"
-			android:elevation="10dp"
-			android:orientation="vertical"
-			>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/charcoal"
+                    android:clickable="true"
+                    android:orientation="vertical">
+        <!-- GENERAL GROUPING -->
+        <LinearLayout
+            android:id="@+id/general_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:elevation="10dp"
+            android:orientation="vertical"
+            >
 
-			<TextView
-				android:id="@+id/general_heading"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginBottom="@dimen/baseline_grid_unit_4dp"
-				android:text="General"
-				android:textColor="@color/ColorAccent"
-				android:textSize="16sp"
-				android:textStyle="bold"
-				/>
+            <TextView
+                android:id="@+id/general_heading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/baseline_grid_unit_4dp"
+                android:text="General"
+                android:textColor="@color/ColorAccent"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                />
 
-			<LinearLayout
-				android:id="@+id/google_play_pref"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@drawable/selector_settings"
-				android:clickable="true"
-				android:orientation="vertical"
-				>
+            <LinearLayout
+                android:id="@+id/contact_us"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_settings"
+                android:clickable="true"
+                android:orientation="vertical"
+                >
 
-				<TextView
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:text="View MFeed on Google Play"
-					android:textColor="@color/white"
-					android:textSize="16sp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Concat Us"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    />
 
-				<TextView
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:text="Please rate MFeed on Google Play or email the  developer"
-					android:textColor="@color/grey"
-					android:textSize="14sp"
-					/>
-			</LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Having a problem? Want to leave feedback?"
+                    android:textColor="@color/grey"
+                    android:textSize="14sp"
+                    />
+            </LinearLayout>
 
-			<View
-				android:layout_width="match_parent"
-				android:layout_height="1dp"
-				android:layout_marginBottom="8dp"
-				android:layout_marginTop="8dp"
-				android:background="@color/white"
-				/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/white"
+                />
 
-			<LinearLayout
-				android:id="@+id/contact_us"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@drawable/selector_settings"
-				android:clickable="true"
-				android:orientation="vertical"
-				>
+        </LinearLayout>
 
-				<TextView
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:text="Concat Us"
-					android:textColor="@color/white"
-					android:textSize="16sp"
-					/>
+        <!-- ACCOUNT GROUPING -->
+        <LinearLayout
+            android:id="@+id/account_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/general_group"
+            android:layout_margin="8dp"
+            android:elevation="10dp"
+            android:orientation="vertical"
+            >
 
-				<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Having a problem? Want to leave feedback?"
-					android:textColor="@color/grey"
-					android:textSize="14sp"
-					/>
-			</LinearLayout>
+            <TextView
+                android:id="@+id/account_heading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/baseline_grid_unit_4dp"
+                android:text="Account"
+                android:textColor="@color/ColorAccent"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                />
 
-			<View
-				android:layout_width="match_parent"
-				android:layout_height="1dp"
-				android:layout_marginBottom="8dp"
-				android:layout_marginTop="8dp"
-				android:background="@color/white"
-				/>
+            <LinearLayout
+                android:id="@+id/reset_followed_manga_pref"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_settings"
+                android:clickable="true"
+                android:orientation="vertical"
+                >
 
-		</LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Clear Library"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    />
 
-		<!-- ACCOUNT GROUPING -->
-		<LinearLayout
-			android:id="@+id/account_group"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_below="@id/general_group"
-			android:layout_margin="8dp"
-			android:elevation="10dp"
-			android:orientation="vertical"
-			>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Clear all followed manga from the followed list"
+                    android:textColor="@color/grey"
+                    android:textSize="14sp"
+                    />
 
-			<TextView
-				android:id="@+id/account_heading"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginBottom="@dimen/baseline_grid_unit_4dp"
-				android:text="Account"
-				android:textColor="@color/ColorAccent"
-				android:textSize="16sp"
-				android:textStyle="bold"
-				/>
+            </LinearLayout>
 
-			<LinearLayout
-				android:id="@+id/reset_followed_manga_pref"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@drawable/selector_settings"
-				android:clickable="true"
-				android:orientation="vertical"
-				>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/white"
+                />
 
-				<TextView
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:text="Clear Library"
-					android:textColor="@color/white"
-					android:textSize="16sp"
-					/>
+            <LinearLayout
+                android:id="@+id/reset_cached_chapters"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_settings"
+                android:clickable="true"
+                android:orientation="vertical"
+                >
 
-				<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Clear all followed manga from the followed list"
-					android:textColor="@color/grey"
-					android:textSize="14sp"
-					/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Clear cached chapters"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    />
 
-			</LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Clear all cached chapters from library"
+                    android:textColor="@color/grey"
+                    android:textSize="14sp"
+                    />
 
-			<View
-				android:layout_width="match_parent"
-				android:layout_height="1dp"
-				android:layout_marginBottom="8dp"
-				android:layout_marginTop="8dp"
-				android:background="@color/white"
-				/>
+            </LinearLayout>
 
-			<LinearLayout
-				android:id="@+id/reset_cached_chapters"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@drawable/selector_settings"
-				android:clickable="true"
-				android:orientation="vertical"
-				>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/white"
+                />
 
-				<TextView
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:text="Clear cached chapters"
-					android:textColor="@color/white"
-					android:textSize="16sp"
-					/>
+            <LinearLayout
+                android:id="@+id/reset_downloaded_chapters"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_settings"
+                android:clickable="true"
+                android:orientation="vertical"
+                >
 
-				<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Clear all cached chapters from library"
-					android:textColor="@color/grey"
-					android:textSize="14sp"
-					/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Clear downloaded chapters"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    />
 
-			</LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Delete all downloaded chapters from device"
+                    android:textColor="@color/grey"
+                    android:textSize="14sp"
+                    />
 
-			<View
-				android:layout_width="match_parent"
-				android:layout_height="1dp"
-				android:layout_marginBottom="8dp"
-				android:layout_marginTop="8dp"
-				android:background="@color/white"
-				/>
+            </LinearLayout>
 
-			<LinearLayout
-				android:id="@+id/reset_downloaded_chapters"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@drawable/selector_settings"
-				android:clickable="true"
-				android:orientation="vertical"
-				>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/white"
+                />
 
-				<TextView
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:text="Clear downloaded chapters"
-					android:textColor="@color/white"
-					android:textSize="16sp"
-					/>
+        </LinearLayout>
 
-				<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Delete all downloaded chapters from device"
-					android:textColor="@color/grey"
-					android:textSize="14sp"
-					/>
+        <!-- ADMIN GROUPING -->
+        <LinearLayout
+            android:id="@+id/admin_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/account_group"
+            android:layout_margin="8dp"
+            android:elevation="10dp"
+            android:orientation="vertical"
+            >
 
-			</LinearLayout>
+            <TextView
+                android:id="@+id/log_heading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/baseline_grid_unit_4dp"
+                android:text="Admin"
+                android:textColor="@color/ColorAccent"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                />
 
-			<View
-				android:layout_width="match_parent"
-				android:layout_height="1dp"
-				android:layout_marginBottom="8dp"
-				android:layout_marginTop="8dp"
-				android:background="@color/white"
-				/>
+            <LinearLayout
+                android:id="@+id/show_logs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_settings"
+                android:clickable="true"
+                android:orientation="vertical"
+                >
 
-		</LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Show current logs"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    />
 
-		<!-- ADMIN GROUPING -->
-		<LinearLayout
-			android:id="@+id/admin_group"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_below="@id/account_group"
-			android:layout_margin="8dp"
-			android:elevation="10dp"
-			android:orientation="vertical"
-			>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Show current logs"
+                    android:textColor="@color/grey"
+                    android:textSize="14sp"
+                    />
 
-			<TextView
-				android:id="@+id/log_heading"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginBottom="@dimen/baseline_grid_unit_4dp"
-				android:text="Admin"
-				android:textColor="@color/ColorAccent"
-				android:textSize="16sp"
-				android:textStyle="bold"
-				/>
+            </LinearLayout>
 
-			<LinearLayout
-				android:id="@+id/show_logs"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@drawable/selector_settings"
-				android:clickable="true"
-				android:orientation="vertical"
-				>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/white"
+                />
 
-				<TextView
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:text="Show current logs"
-					android:textColor="@color/white"
-					android:textSize="16sp"
-					/>
+            <LinearLayout
+                android:id="@+id/clear_logs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_settings"
+                android:clickable="true"
+                android:orientation="vertical"
+                >
 
-				<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Show current logs"
-					android:textColor="@color/grey"
-					android:textSize="14sp"
-					/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Clear Current Logs"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    />
 
-			</LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Clear Current Logs"
+                    android:textColor="@color/grey"
+                    android:textSize="14sp"
+                    />
+            </LinearLayout>
 
-			<View
-				android:layout_width="match_parent"
-				android:layout_height="1dp"
-				android:layout_marginBottom="8dp"
-				android:layout_marginTop="8dp"
-				android:background="@color/white"
-				/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/white"
+                />
 
-			<LinearLayout
-				android:id="@+id/clear_logs"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@drawable/selector_settings"
-				android:clickable="true"
-				android:orientation="vertical"
-				>
+            <RelativeLayout
+                android:id="@+id/toggle_logs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_settings"
+                android:clickable="true"
+                android:orientation="horizontal"
+                >
 
-				<TextView
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:text="Clear Current Logs"
-					android:textColor="@color/white"
-					android:textSize="16sp"
-					/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_toLeftOf="@+id/logging_toggle"
+                    >
 
-				<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Clear Current Logs"
-					android:textColor="@color/grey"
-					android:textSize="14sp"
-					/>
-			</LinearLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="toggle logging"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        />
 
-			<View
-				android:layout_width="match_parent"
-				android:layout_height="1dp"
-				android:layout_marginBottom="8dp"
-				android:layout_marginTop="8dp"
-				android:background="@color/white"
-				/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="toggle logging"
+                        android:textColor="@color/grey"
+                        android:textSize="14sp"
+                        />
+                </LinearLayout>
+                <ToggleButton
+                    android:id="@+id/logging_toggle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/single_line_height_48dp"
+                    android:textOn="On"
+                    android:textOff="Off"
+                    android:background="@color/charcoal"
+                    android:textColor="@color/ColorAccent"
+                    android:layout_gravity="end"
+                    android:layout_alignParentEnd="true"
+                    android:clickable="false"
+                    />
 
-			<LinearLayout
-				android:id="@+id/toggle_logs"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@drawable/selector_settings"
-				android:clickable="true"
-				android:orientation="vertical"
-				>
+            </RelativeLayout>
 
-				<TextView
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:text="toggle logging"
-					android:textColor="@color/white"
-					android:textSize="16sp"
-					/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/white"
+                />
 
-				<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="toggle logging"
-					android:textColor="@color/grey"
-					android:textSize="14sp"
-					/>
-			</LinearLayout>
-
-			<View
-				android:layout_width="match_parent"
-				android:layout_height="1dp"
-				android:layout_marginBottom="8dp"
-				android:layout_marginTop="8dp"
-				android:background="@color/white"
-				/>
-
-		</LinearLayout>
-	</RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>

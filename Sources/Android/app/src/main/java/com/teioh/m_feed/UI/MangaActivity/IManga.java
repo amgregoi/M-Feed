@@ -49,6 +49,8 @@ public interface IManga
         String getImageUrl();
 
         void onContinueReadingButtonClick();
+
+        void clearCachedChapters();
     }
 
 

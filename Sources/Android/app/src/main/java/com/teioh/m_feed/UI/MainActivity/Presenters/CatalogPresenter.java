@@ -37,7 +37,7 @@ public class CatalogPresenter extends MainFragmentPresenterBase
         try
         {
             mMangaListSubscription = MFDBHelper.getInstance()
-                                               .getCatalogList()
+                                               .getCatalogList().cache()
                                                .subscribeOn(Schedulers.io())
                                                .observeOn(AndroidSchedulers.mainThread())
                                                .doOnError(throwable -> Toast.makeText(MFeedApplication.getInstance(), throwable.getMessage(), Toast.LENGTH_SHORT))

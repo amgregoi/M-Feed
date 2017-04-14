@@ -31,6 +31,7 @@ import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.MainActivity;
 import com.teioh.m_feed.UI.MangaActivity.Fragments.FImageDialogFragment;
 import com.teioh.m_feed.UI.MangaActivity.Fragments.FRemoveDialogFragment;
+import com.teioh.m_feed.Utils.MFDBHelper;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -176,6 +177,8 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
             DialogFragment newFragment = FRemoveDialogFragment.getNewInstance(R.string.DialogFragmentRemove);
             newFragment.show(getSupportFragmentManager(), "dialog");
             return true;
+        }else if(lId == R.id.clear_chapters){
+            mMangaPresenter.clearCachedChapters();
         }
 
         return super.onOptionsItemSelected(aMenuItem);

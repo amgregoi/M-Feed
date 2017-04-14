@@ -306,7 +306,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     public void setupTabLayout()
     {
         mTabLayout.setDistributeEvenly(true); // To make the Tabs Fixed set this true, This makes the mTabLayout Space Evenly in Available width
-        mTabLayout.setCustomTabColorizer(position -> getResources().getColor(R.color.tabsScrollColor));
+        mTabLayout.setCustomTabColorizer(position -> getResources().getColor(R.color.red));
     }
 
     @Override

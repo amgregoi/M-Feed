@@ -37,7 +37,7 @@ public class RecentPresenter extends MainFragmentPresenterBase
             {
                 mViewMapper.startRefresh();
                 mMangaListSubscription = new SourceFactory().getSource()
-                                                            .getRecentUpdatesObservable()
+                                                            .getRecentUpdatesObservable().cache()
                                                             .subscribe(aManga -> updateMangaGridView(aManga));
 
             }

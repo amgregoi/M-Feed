@@ -7,12 +7,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ToggleButton;
 
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.LoggingActivity;
+import com.teioh.m_feed.Utils.MFDBHelper;
 import com.teioh.m_feed.Utils.MangaLogger;
 import com.teioh.m_feed.Utils.SharedPrefs;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -21,6 +24,7 @@ public class SettingsFragment extends Fragment
     public final static String TAG = SettingsFragment.class.getSimpleName();
 
     //TODO implement settings with shared prefs
+    @Bind(R.id.logging_toggle) ToggleButton mLoggingToggle;
 
     /***
      * TODO..
@@ -44,6 +48,9 @@ public class SettingsFragment extends Fragment
     {
         View lView = aInflater.inflate(R.layout.settings_fragment, aContainer, false);
         ButterKnife.bind(this, lView);
+
+        initializeLayout();
+
         return lView;
     }
 
@@ -99,10 +106,46 @@ public class SettingsFragment extends Fragment
     @OnClick(R.id.clear_logs)
     public void onClearLogsClick(){
         MangaLogger.clearLogs();
-    };
+        MangaLogger.makeToast("Clearing logs");
+    }
 
     @OnClick(R.id.toggle_logs)
     public void onToggleLogsClick(){
-        SharedPrefs.setLoggingStatus(!SharedPrefs.getLoggingStatus());
+        boolean lNewStatus = !SharedPrefs.getLoggingStatus();
+        SharedPrefs.setLoggingStatus(lNewStatus);
+        mLoggingToggle.setChecked(lNewStatus);
+        MangaLogger.makeToast("Toggling internal logger");
+    }
+
+    @OnClick(R.id.reset_downloaded_chapters)
+    public void onRemoveDownloadedChaptersClick(){
+        MangaLogger.logError(TAG, "onRemoveDownloadedChaptersClick", "Method not implemented");
+        MangaLogger.makeToast("Method not implemented");
+    }
+
+    @OnClick(R.id.reset_cached_chapters)
+    public void onResetChaptersClick(){
+        MangaLogger.logError(TAG, "onResetChaptersClick", "WATCH FOR SLOW PERFORMANCES, MAY NEED TO MOVE OFF MAIN THREAD");
+        MFDBHelper.getInstance().resetCachedChapters();
+        MangaLogger.makeToast("Clearing chapter cache");
+    }
+
+    @OnClick(R.id.reset_followed_manga_pref)
+    public void onResetLibraryClick(){
+        MangaLogger.logError(TAG, "onResetLibraryClick", "WATCH FOR SLOW PERFORMANCES, MAY NEED TO MOVE OFF MAIN THREAD");
+        MFDBHelper.getInstance().resetLibrary();
+        MangaLogger.makeToast("Resetting user library");
+    }
+
+    @OnClick(R.id.contact_us)
+    public void onContactUsClick(){
+        MangaLogger.logError(TAG, "onContactUsClick", "Method not implemented");
+        MangaLogger.makeToast("Method not implemented");
+    }
+
+    private void initializeLayout(){
+        mLoggingToggle.setChecked(SharedPrefs.getLoggingStatus());
+        MangaLogger.logInfo(TAG, "initializeLayout", "Finished initializing settings layout");
+
     }
 }

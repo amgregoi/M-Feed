@@ -288,10 +288,10 @@ public class ReaderPresenter implements IReader.ActivityPresenter
 
         try
         {
-            ChapterFragment lTempFragment;
-            if ((lTempFragment = ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition))) != null)
+            ChapterFragment lChapterFragment;
+            if ((lChapterFragment = ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition))) != null)
             {
-                lTempFragment.onRefresh();
+                lChapterFragment.onRefresh();
             }
         }
         catch (Exception lException)
