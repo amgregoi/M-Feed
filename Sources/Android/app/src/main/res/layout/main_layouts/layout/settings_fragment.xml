@@ -332,6 +332,7 @@
                     android:textColor="@color/ColorAccent"
                     android:layout_gravity="end"
                     android:layout_alignParentEnd="true"
+                    android:clickable="false"
                     />
 
             </RelativeLayout>

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.teioh.m_feed.R;
+import com.teioh.m_feed.UI.MainActivity.Presenters.LibraryPresenter;
 
 import butterknife.ButterKnife;
 
@@ -40,7 +41,7 @@ public class LibraryFragment extends MainFragmentBase
         View lView = aInflater.inflate(R.layout.main_tab_relative, aContainer, false);
         ButterKnife.bind(this, lView);
 
-        mFragmentPresenter = new com.teioh.m_feed.UI.MainActivity.Presenters.LibraryFragment(this);
+        mFragmentPresenter = new LibraryPresenter(this);
         return lView;
     }
 

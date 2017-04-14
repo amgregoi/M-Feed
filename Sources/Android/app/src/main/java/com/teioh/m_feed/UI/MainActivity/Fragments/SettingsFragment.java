@@ -48,6 +48,9 @@ public class SettingsFragment extends Fragment
     {
         View lView = aInflater.inflate(R.layout.settings_fragment, aContainer, false);
         ButterKnife.bind(this, lView);
+
+        initializeLayout();
+
         return lView;
     }
 
@@ -108,8 +111,9 @@ public class SettingsFragment extends Fragment
 
     @OnClick(R.id.toggle_logs)
     public void onToggleLogsClick(){
-        SharedPrefs.setLoggingStatus(!SharedPrefs.getLoggingStatus());
-        mLoggingToggle.setChecked(SharedPrefs.getLoggingStatus());
+        boolean lNewStatus = !SharedPrefs.getLoggingStatus();
+        SharedPrefs.setLoggingStatus(lNewStatus);
+        mLoggingToggle.setChecked(lNewStatus);
         MangaLogger.makeToast("Toggling internal logger");
     }
 
@@ -137,5 +141,11 @@ public class SettingsFragment extends Fragment
     public void onContactUsClick(){
         MangaLogger.logError(TAG, "onContactUsClick", "Method not implemented");
         MangaLogger.makeToast("Method not implemented");
+    }
+
+    private void initializeLayout(){
+        mLoggingToggle.setChecked(SharedPrefs.getLoggingStatus());
+        MangaLogger.logInfo(TAG, "initializeLayout", "Finished initializing settings layout");
+
     }
 }

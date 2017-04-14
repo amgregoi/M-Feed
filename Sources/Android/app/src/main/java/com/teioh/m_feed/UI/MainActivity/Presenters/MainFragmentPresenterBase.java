@@ -38,7 +38,7 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     protected RecycleSearchAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
 
-    protected boolean mNeedsItemDecoration;
+    protected boolean mNeedsItemDecoration, mMangaSubFlag = false;
     protected Subscription mMangaListSubscription;
     protected IMain.FragmentView mViewMapper;
 
@@ -352,6 +352,7 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
 
         try
         {
+
             if (mViewMapper.getContext() != null)
             {
                 if (aMangaList != null)
@@ -385,6 +386,8 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
                 mMangaListSubscription = null;
 
                 Glide.get(mViewMapper.getContext()).clearMemory();
+
+                mMangaSubFlag = true;
             }
         }
         catch (Exception lException)

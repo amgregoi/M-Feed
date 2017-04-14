@@ -33,7 +33,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
     private ArrayList<Chapter> mChapterList;
     private ChapterListAdapter mAdapter;
     private boolean mChapterOrderDescending;
-    private boolean mRestoreActivity;
+    private boolean mRestoreActivity, mChapterFlag = false;
     private Manga mManga;
 
     private IManga.ActivityView mMangaMapper;
@@ -376,7 +376,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
                 if (mManga.getInitialized() == 0)
                 {
                     mObservableMangaSubscription = new SourceFactory().getSource()
-                                                                      .updateMangaObservable(new RequestWrapper(mManga))
+                                                                      .updateMangaObservable(new RequestWrapper(mManga)).cache()
                                                                       .doOnError(throwable -> MangaLogger.logError(TAG, lMethod, throwable.getMessage()))
                                                                       .observeOn(AndroidSchedulers.mainThread())
                                                                       .subscribe(manga -> updateMangaView(manga));
@@ -449,16 +449,17 @@ public class MangaPresenter implements IManga.ActivityPresenter
         {
             if (NetworkService.isNetworkAvailable())
             {
-                if (mChapterList == null)
+                if (!mChapterFlag)
                 {
                     mChapterListSubscription = new SourceFactory().getSource()
-                                                                  .getChapterListObservable(new RequestWrapper(mManga))
+                                                                  .getChapterListObservable(new RequestWrapper(mManga)).cache()
                                                                   .doOnError(throwable -> MangaLogger.logError(TAG, lMethod, throwable.getMessage()))
                                                                   .subscribe(chapters -> updateChapterList(chapters));
                 }
                 else
                 {
                     MangaLogger.logInfo(TAG, lMethod, "Chapter list is already initialized");
+                    updateChapterList(mChapterList);
                 }
             }
             else
@@ -491,6 +492,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
                 mMangaMapper.registerAdapter(mAdapter);
                 mMangaMapper.stopRefresh();
                 mMangaMapper.showCoverLayout();
+                mChapterFlag = true;
             }
         }
         catch (Exception aException)

@@ -69,7 +69,8 @@ public class MainPresenter implements IMain.ActivityPresenter
         {
             //setup base layout first
             mMainMapper.setupTabLayout();
-            mViewPagerAdapterMain = new ViewPagerAdapterMain(((FragmentActivity) mMainMapper.getContext()).getSupportFragmentManager(), mTabTitles, 3);
+            mViewPagerAdapterMain = new ViewPagerAdapterMain(((FragmentActivity) mMainMapper.getContext())
+                                                                     .getSupportFragmentManager(), mTabTitles, 3);
             mMainMapper.registerAdapter(mViewPagerAdapterMain);
 
             //init rest of the layout
@@ -110,7 +111,8 @@ public class MainPresenter implements IMain.ActivityPresenter
 
         try
         {
-            mViewPagerAdapterMain = new ViewPagerAdapterMain(((FragmentActivity) mMainMapper.getContext()).getSupportFragmentManager(), mTabTitles, 3);
+            mViewPagerAdapterMain = new ViewPagerAdapterMain(((FragmentActivity) mMainMapper.getContext())
+                                                                     .getSupportFragmentManager(), mTabTitles, 3);
             mMainMapper.registerAdapter(mViewPagerAdapterMain);
         }
         catch (Exception aException)
@@ -530,7 +532,7 @@ public class MainPresenter implements IMain.ActivityPresenter
         try
         {
             mMainMapper.toggleToolbarElements();
-            mSettingsFragment = new SettingsFragment();
+            mSettingsFragment = SettingsFragment.getnewInstance();
             ((MainActivity) mMainMapper.getContext()).getSupportFragmentManager()
                                                      .beginTransaction()
                                                      .add(R.id.main_activity_content, mSettingsFragment, SettingsFragment.TAG)
