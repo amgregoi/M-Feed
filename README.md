@@ -1,5 +1,4 @@
-<center>M-Feed</center>
-==============
+## M-Feed
 
 __TODO:__
 * Offline reader option
@@ -35,10 +34,9 @@ __Home Screen__
 <br>
 <img src="https://raw.githubusercontent.com/amgregoi/M-Feed/master/Sources/Android/images/Home.png" height="500">
 <br><br>
-
 __Manga information page__
 <br>
-<img src="https://raw.githubusercontent.com/amgregoi/M-Feed/master/Sources/Android/images/Manga.png" height="500"><br><br>
+<img src="https://raw.githubusercontent.com/amgregoi/M-Feed/master/Sources/Android/images/manga.png" height="500"><br><br>
 
 __Manga Reader Page 1__
 <br>
