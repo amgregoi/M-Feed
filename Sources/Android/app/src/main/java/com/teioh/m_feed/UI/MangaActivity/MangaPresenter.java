@@ -357,6 +357,11 @@ public class MangaPresenter implements IManga.ActivityPresenter
         }
     }
 
+    @Override public void clearCachedChapters()
+    {
+        MFDBHelper.getInstance().resetCachedChapters();
+    }
+
     /***
      * TODO...
      */
