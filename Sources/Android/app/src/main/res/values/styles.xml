@@ -31,10 +31,8 @@
     </style>
 
 	<style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
-		<item name="android:popupBackground">@color/ColorPrimary</item>
+        <item name="android:popupBackground">@drawable/dark_border_style</item>
 	</style>
-
-
 
 	<!-- Dialog Fragment in Manga Activity -->
     <style name="MyCustomTheme" parent="@android:style/Theme.Panel">

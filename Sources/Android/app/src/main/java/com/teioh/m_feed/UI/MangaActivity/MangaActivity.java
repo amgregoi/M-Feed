@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
@@ -281,7 +282,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
             mGenresText.setText(aManga.getmGenre());
             mAlternateText.setText(aManga.getAlternate());
             mStatusText.setText(aManga.getStatus());
-            Glide.with(getContext()).load(aManga.getPicUrl()).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(mMangaImage);
+            Glide.with(getContext()).load(aManga.getPicUrl()).apply(new RequestOptions().skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.RESOURCE)).into(mMangaImage);
             mChapterList.addHeaderView(mMangaInfoHeader, null, false);
             mChapterList.addHeaderView(mChapterHeader, null, false);
 

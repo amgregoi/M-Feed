@@ -319,7 +319,7 @@ public class MFDBHelper extends SQLiteOpenHelper
         lValues.put("currentPage", aChapter.getCurrentPage());
         lValues.put("totalPages", aChapter.getTotalPages());
 
-        cupboard().withDatabase(getWritableDatabase()).update(Chapter.class, lValues, "link = ?", aChapter.getChapterUrl());
+        cupboard().withDatabase(getWritableDatabase()).update(Chapter.class, lValues, "url = ?", aChapter.getChapterUrl());
 
     }
 

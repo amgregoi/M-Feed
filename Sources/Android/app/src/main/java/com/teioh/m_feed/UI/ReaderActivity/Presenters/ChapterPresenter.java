@@ -1,10 +1,10 @@
 package com.teioh.m_feed.UI.ReaderActivity.Presenters;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.UI.ReaderActivity.Adapters.ImagePageAdapter;
@@ -546,7 +546,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
                 {
                     mLoadImageUrlSubscription = new SourceFactory().getSource()
                                                                    .cacheFromImagesOfSize(mChapterUrlList)
-                                                                   .subscribe(new Observer<GlideDrawable>()
+                                                                   .subscribe(new Observer<Drawable>()
                                                                    {
                                                                        @Override
                                                                        public void onCompleted()
@@ -562,7 +562,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
                                                                        }
 
                                                                        @Override
-                                                                       public void onNext(GlideDrawable glideDrawable)
+                                                                       public void onNext(Drawable glideDrawable)
                                                                        {
                                                                        }
                                                                    });

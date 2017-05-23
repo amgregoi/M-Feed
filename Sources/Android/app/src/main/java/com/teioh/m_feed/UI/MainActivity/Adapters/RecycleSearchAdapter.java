@@ -2,6 +2,8 @@ package com.teioh.m_feed.UI.MainActivity.Adapters;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,21 +13,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.DrawableImageViewTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.futuremind.recyclerviewfastscroll.SectionTitleProvider;
 import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
+import com.teioh.m_feed.Utils.MangaLogger;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdapter.ViewHolder> implements SectionTitleProvider
 {
+    private final static String TAG = RecycleSearchAdapter.class.getSimpleName();
 
     private final ItemSelectedListener mListener;
     private ArrayList<Manga> mOriginalData = null;
@@ -106,19 +111,29 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
                 aHolder.mTextView.setTextColor(lContext.getResources().getColor(R.color.black));
         }
 
+        RequestOptions lOptions = new RequestOptions();
+        lOptions.skipMemoryCache(true)
+                .placeholder(R.drawable.clear_button_background)
+                .diskCacheStrategy(DiskCacheStrategy.NONE);
+
         Glide.with(lContext)
              .load(lMangaItem.getPicUrl())
-             .animate(android.R.anim.fade_in)
-             .skipMemoryCache(true)
-             .diskCacheStrategy(DiskCacheStrategy.NONE)
-             .into(new GlideDrawableImageViewTarget(aHolder.mImageView)
+             .apply(lOptions)
+             .transition(new GenericTransitionOptions<>().transition(android.R.anim.fade_in))
+             .into(new DrawableImageViewTarget(aHolder.mImageView)
              {
                  @Override
-                 public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation)
+                 public void onResourceReady(Drawable resource, Transition<? super Drawable> animation)
                  {
                      super.onResourceReady(resource, animation);
                      aHolder.mImageView.setScaleType(ImageView.ScaleType.FIT_XY);
 
+                 }
+
+                 @Override public void onLoadFailed(@Nullable Drawable errorDrawable)
+                 {
+                     super.onLoadFailed(errorDrawable);
+                     MangaLogger.logError(TAG, "OnBindViewHolder.OnLoadFailed()", errorDrawable.toString(), "url=" + lMangaItem.getPicUrl());
                  }
              });
 
@@ -156,7 +171,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
     public void onViewRecycled(ViewHolder aHolder)
     {
         super.onViewRecycled(aHolder);
-        Glide.clear(aHolder.mImageView);
+        Glide.with(aHolder.mImageView.getContext()).clear(aHolder.mImageView);
     }
 
     /***

@@ -1,24 +1,37 @@
 package com.teioh.m_feed.UI.ReaderActivity.Adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
+import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
+import android.transition.TransitionSet;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.TransitionOptions;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.Option;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.ViewTarget;
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory;
+import com.bumptech.glide.request.transition.Transition;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.bumptech.glide.request.transition.TransitionFactory;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.ReaderActivity.Widgets.GestureImageView;
+import com.teioh.m_feed.Utils.MFDBHelper;
 import com.teioh.m_feed.Utils.MangaLogger;
 
 import java.util.List;
@@ -84,25 +97,37 @@ public class ImagePageAdapter extends PagerAdapter
         View lView = mInflater.inflate(R.layout.reader_chapter_item, aContainer, false);
 
         GestureImageView mImage = (GestureImageView) lView.findViewById(R.id.chapterPageImageView);
-        Glide.with(mContext).load(mImageUrlList.get(aPosition)).asBitmap()
-             .override(1024, 8192) //OpenGLRenderer max image size, if larger in X or Y it will scale the image
-             .animate(android.R.anim.fade_in)
-             .placeholder(mContext.getResources().getDrawable(R.drawable.ic_book_white_18dp))
-             .skipMemoryCache(true)
-             .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+
+        RequestOptions lOptions = new RequestOptions();
+        lOptions.fitCenter()
+                .override(1024, 8192)//OpenGLRenderer max image size, if larger in X or Y it will scale the image
+                .placeholder(mContext.getResources().getDrawable(R.drawable.ic_book_white_18dp))
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE);
+
+        Glide.with(mContext)
+             .asBitmap()
+             .load(mImageUrlList.get(aPosition))
+             .apply(lOptions)
+             .transition(new GenericTransitionOptions<>().transition(android.R.anim.fade_in))
              .into(new BitmapImageViewTarget(mImage)
              {
-                 @Override public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation)
+                 @Override public void onResourceReady(Bitmap resource, Transition<? super Bitmap> glideAnimation)
                  {
                      super.onResourceReady(resource, glideAnimation);
                      mImage.initializeView();
-                     mImage.setTag(TAG + ":" + aPosition);
+                     try
+                     {
+                         mImage.setTag(TAG + ":" + aPosition);
+                     }catch (Exception aException){
+                         MangaLogger.logError(TAG, "instantiateItem()", aException.toString(), "Position: " + aPosition);
+                     }
                      mImage.startFling(0, 100000f); //large fling to initialize the image to the top for long pages
                  }
 
-                 @Override public void onLoadFailed(Exception e, Drawable errorDrawable)
+                 @Override public void onLoadFailed(@Nullable Drawable errorDrawable)
                  {
-                     super.onLoadFailed(e, errorDrawable);
+                     super.onLoadFailed(errorDrawable);
                      mImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_refresh_white_24dp));
                  }
              });
