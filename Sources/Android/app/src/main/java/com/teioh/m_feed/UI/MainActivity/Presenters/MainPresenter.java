@@ -78,7 +78,6 @@ public class MainPresenter implements IMain.ActivityPresenter
             setupDrawerLayouts();
             mMainMapper.setupSearchView();
             mMainMapper.setupToolbar();
-            mMainMapper.setupSourceFilterMenu();
             mMainMapper.setDrawerLayoutListener();
 
             mGenreFilterActive = false;

@@ -35,8 +35,6 @@ public interface IMain
 
         void setupSearchView();
 
-        void setupSourceFilterMenu();
-
         void setActivityTitle(String aTitle);
 
         void setPageAdapterItem(int aPosition);
