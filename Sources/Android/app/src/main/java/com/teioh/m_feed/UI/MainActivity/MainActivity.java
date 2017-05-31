@@ -498,13 +498,13 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     }
 
     @Override
-    public void updateRecentSelection(Manga aManga)
+    public boolean updateRecentSelection(Manga aManga)
     {
-        mMainPresenter.getRecentManga();
+       return mMainPresenter.updateRecentManga();
     }
 
     @Override
-    public void removeFilters()
+    public boolean removeFilters()
     {
         //reset genre filter and UI
         mMainPresenter.onClearGenreFilter();
@@ -514,6 +514,8 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         //reset
         mMainPresenter.onFilterSelected(MangaEnums.eFilterStatus.NONE);
         mSearchView.clearFocus();
+
+        return true;  //update
     }
 
     @Override

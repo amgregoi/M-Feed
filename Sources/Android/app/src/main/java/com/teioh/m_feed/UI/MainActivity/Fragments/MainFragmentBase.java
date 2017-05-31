@@ -156,18 +156,18 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
      * @param aMangaList
      */
     @Override
-    public void onGenreFilterSelected(ArrayList<Manga> aMangaList)
+    public boolean onGenreFilterSelected(ArrayList<Manga> aMangaList)
     {
-        mFragmentPresenter.onGenreFilterSelected(aMangaList);
+        return mFragmentPresenter.onGenreFilterSelected(aMangaList);
     }
 
     /***
      * TODO...
      */
     @Override
-    public void onClearGenreFilter()
+    public boolean onClearGenreFilter()
     {
-        mFragmentPresenter.onClearGenreFilter();
+        return mFragmentPresenter.onClearGenreFilter();
     }
 
     /***
@@ -218,9 +218,9 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
      * @param aManga
      */
     @Override
-    public void updateRecentSelection(Manga aManga)
+    public boolean updateRecentSelection(Manga aManga)
     {
-        mFragmentPresenter.updateSelection(aManga);
+        return mFragmentPresenter.updateSelection(aManga);
     }
 
     /***

@@ -13,9 +13,9 @@ public interface Listeners
 
         boolean setRecentSelection(Long aId);
 
-        void updateRecentSelection(Manga aManga);
+        boolean updateRecentSelection(Manga aManga);
 
-        void removeFilters();
+        boolean removeFilters();
     }
 
     /**

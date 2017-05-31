@@ -1,6 +1,7 @@
 package com.teioh.m_feed.UI.MainActivity.Adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
@@ -17,9 +18,11 @@ import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.futuremind.recyclerviewfastscroll.SectionTitleProvider;
+import com.teioh.m_feed.BuildConfig;
 import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
@@ -117,13 +120,13 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
                 .diskCacheStrategy(DiskCacheStrategy.NONE);
 
         Glide.with(lContext)
+             .asBitmap()
              .load(lMangaItem.getPicUrl())
              .apply(lOptions)
              .transition(new GenericTransitionOptions<>().transition(android.R.anim.fade_in))
-             .into(new DrawableImageViewTarget(aHolder.mImageView)
+             .into(new BitmapImageViewTarget(aHolder.mImageView)
              {
-                 @Override
-                 public void onResourceReady(Drawable resource, Transition<? super Drawable> animation)
+                 @Override public void onResourceReady(Bitmap resource, Transition<? super Bitmap> animation)
                  {
                      super.onResourceReady(resource, animation);
                      aHolder.mImageView.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -295,11 +298,22 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
         getFilter().filter(mFilter.mLastQuery);
     }
 
-    public void filterByStatus(MangaEnums.eFilterStatus aFilterType)
+    public boolean filterByStatus(MangaEnums.eFilterStatus aFilterType)
     {
+        boolean lResult = true;
+
         mFilter.filterByStatus(aFilterType);
         mFilter.filter(mFilter.mLastQuery);
         notifyDataSetChanged();
+
+        if (BuildConfig.DEBUG){
+            if(mFilteredData.size() == mOriginalData.size() && aFilterType != MangaEnums.eFilterStatus.NONE)
+            {
+                lResult = false;
+            }
+        }
+
+        return lResult;
     }
 
     /***

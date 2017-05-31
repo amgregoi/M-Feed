@@ -38,19 +38,19 @@ public interface IManga
     interface ActivityPresenter extends LifeCycleMap
     {
 
-        void chapterOrderButtonClick();
+        boolean chapterOrderButtonClick();
 
-        void onFollowButtonClick(int aValue);
+        boolean onFollowButtonClick(int aValue);
 
-        void onUnfollowButtonClick();
+        boolean onUnfollowButtonClick();
 
-        void onChapterClicked(Chapter aChapter);
+        boolean onChapterClicked(Chapter aChapter);
 
         String getImageUrl();
 
-        void onContinueReadingButtonClick();
+        boolean onContinueReadingButtonClick();
 
-        void clearCachedChapters();
+        boolean clearCachedChapters();
     }
 
 

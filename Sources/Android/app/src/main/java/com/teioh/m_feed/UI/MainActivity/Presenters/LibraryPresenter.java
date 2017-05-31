@@ -1,11 +1,14 @@
 package com.teioh.m_feed.UI.MainActivity.Presenters;
 
+import android.os.Bundle;
 import android.widget.Toast;
 
 import com.teioh.m_feed.MFeedApplication;
 import com.teioh.m_feed.UI.MainActivity.IMain;
 import com.teioh.m_feed.Utils.MFDBHelper;
 import com.teioh.m_feed.Utils.MangaLogger;
+
+import java.util.ArrayList;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
