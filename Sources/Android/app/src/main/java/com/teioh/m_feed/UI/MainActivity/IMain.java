@@ -1,18 +1,20 @@
 package com.teioh.m_feed.UI.MainActivity;
 
 import android.content.Intent;
+import android.support.v7.widget.RecyclerView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Manga;
+import com.teioh.m_feed.UI.MainActivity.Adapters.RecycleSearchAdapter;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
 import com.teioh.m_feed.UI.Maps.BaseContextMap;
 import com.teioh.m_feed.UI.Maps.DrawerLayoutMap;
 import com.teioh.m_feed.UI.Maps.LifeCycleMap;
 import com.teioh.m_feed.UI.Maps.Listeners;
 import com.teioh.m_feed.UI.Maps.MangaFilterMap;
-import com.teioh.m_feed.UI.Maps.MoPubAdapterMap;
 import com.teioh.m_feed.UI.Maps.SearchViewListenerMap;
 import com.teioh.m_feed.UI.Maps.SignInMap;
 import com.teioh.m_feed.UI.Maps.SwipeRefreshMap;
@@ -76,8 +78,15 @@ public interface IMain
     /***
      * TODO..
      */
-    interface FragmentView extends MoPubAdapterMap, SwipeRefreshMap, SearchViewListenerMap, BaseContextMap, MangaFilterMap
+    interface FragmentView extends SwipeRefreshMap, SearchViewListenerMap, BaseContextMap, MangaFilterMap, Listeners.MainFragmentListener
     {
+        void registerAdapter(RecyclerView.Adapter aAdapter, RecyclerView.LayoutManager aLayout, boolean aNeedsDecoration);
+
+        void updateSelection(Manga aManga);
+
+        boolean updateRecentSelection(Manga aManga);
+
+        boolean setRecentSelection(Long aId);
 
     }
 

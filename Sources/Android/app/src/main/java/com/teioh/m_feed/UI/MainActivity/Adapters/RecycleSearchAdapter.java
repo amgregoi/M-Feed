@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,17 +22,19 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.futuremind.recyclerviewfastscroll.SectionTitleProvider;
+import com.l4digital.fastscroll.FastScroller;
 import com.teioh.m_feed.BuildConfig;
 import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.Utils.MangaLogger;
 
+import org.jsoup.helper.StringUtil;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdapter.ViewHolder> implements SectionTitleProvider
+public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdapter.ViewHolder> implements FastScroller.SectionIndexer
 {
     private final static String TAG = RecycleSearchAdapter.class.getSimpleName();
 
@@ -51,18 +54,6 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
         mFilteredData = new ArrayList<>(aData);
         mOriginalData = new ArrayList<>(aData);
         mListener = aListener;
-    }
-
-    /***
-     * TODO..
-     *
-     * @param position
-     * @return
-     */
-    @Override
-    public String getSectionTitle(int position)
-    {
-        return mFilteredData.get(position).toString().substring(0, 1);
     }
 
     /***
@@ -136,7 +127,8 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
                  @Override public void onLoadFailed(@Nullable Drawable errorDrawable)
                  {
                      super.onLoadFailed(errorDrawable);
-                     MangaLogger.logError(TAG, "OnBindViewHolder.OnLoadFailed()", errorDrawable.toString(), "url=" + lMangaItem.getPicUrl());
+                     MangaLogger
+                             .logError(TAG, "OnBindViewHolder.OnLoadFailed()", errorDrawable.toString(), "url=" + lMangaItem.getPicUrl());
                  }
              });
 
@@ -306,14 +298,29 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
         mFilter.filter(mFilter.mLastQuery);
         notifyDataSetChanged();
 
-        if (BuildConfig.DEBUG){
-            if(mFilteredData.size() == mOriginalData.size() && aFilterType != MangaEnums.eFilterStatus.NONE)
+        if (BuildConfig.DEBUG)
+        {
+            if (mFilteredData.size() == mOriginalData.size() && aFilterType != MangaEnums.eFilterStatus.NONE)
             {
                 lResult = false;
             }
         }
 
         return lResult;
+    }
+
+    /***
+     * This function returns the character shown in the fast scroller bubble
+     *
+     * @param position The current position in the recycler view
+     * @return The character to the be displayed in the fast scroll bubble
+     */
+    @Override public String getSectionText(int position)
+    {
+        char lChar = mFilteredData.get(position).getTitle().charAt(0);
+        if (!Character.isLetterOrDigit(lChar))
+            return "#";
+        return Character.toString(lChar);
     }
 
     /***
@@ -473,7 +480,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
          * @param aFilterText
          * @param aFilterResult
          */
-        @SuppressWarnings( "unchecked" )
+        @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence aFilterText, FilterResults aFilterResult)
         {

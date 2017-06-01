@@ -2,15 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
 	<item
-		android:id="@+id/reading"
+		android:id="@+id/reading_menu"
 		android:title="Reading"/>
 
 	<item
-		android:id="@+id/complete"
+		android:id="@+id/complete_menu"
 		android:title="Completed"/>
 
 	<item
-		android:id="@+id/hold"
+		android:id="@+id/hold_menu"
 		android:title="On Hold"/>
 
 </menu>

@@ -1,21 +1,13 @@
 package com.teioh.m_feed.UI.MainActivity;
 
 
-import android.support.annotation.IdRes;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.ViewInteraction;
-import android.support.test.espresso.action.EspressoKey;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v7.widget.RecyclerView;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.view.KeyEvent;
-import android.view.View;
-import android.widget.Adapter;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MangaActivity.MangaActivity;
@@ -197,7 +189,6 @@ public class MainActivityTests
         //Performs click on action menu for status filter
         //performs click on various filter options
         onView(withId(R.id.fab_expand_menu_button)).perform(click());
-
         onView(withId(R.id.fab_on_hold)).check(matches(isDisplayed())).perform(click());
 
         onView(withId(R.id.fab_expand_menu_button)).perform(click());
@@ -213,7 +204,6 @@ public class MainActivityTests
 
         onView(withId(R.id.fab_expand_menu_button)).perform(click());
         onView(withId(R.id.fab_all)).check(matches(isDisplayed())).perform(click());
-
 
     }
 

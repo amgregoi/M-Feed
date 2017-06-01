@@ -3,7 +3,6 @@ package com.teioh.m_feed.Utils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.gson.internal.bind.DateTypeAdapter;
 import com.teioh.m_feed.MFeedApplication;
 
 import java.text.MessageFormat;
