@@ -76,8 +76,10 @@ public class LibraryFragment extends MainFragmentBase
      * TOOD..
      */
     @Override
-    public void removeFilters()
+    public boolean removeFilters()
     {
+        //left blank
+        return true;
 
     }
 }

@@ -1,10 +1,14 @@
 package com.teioh.m_feed.UI.MainActivity.Presenters;
 
+import android.os.Bundle;
+
 import com.teioh.m_feed.UI.MainActivity.Fragments.RecentFragment;
 import com.teioh.m_feed.UI.MainActivity.IMain;
 import com.teioh.m_feed.Utils.MangaLogger;
 import com.teioh.m_feed.Utils.NetworkService;
 import com.teioh.m_feed.WebSources.SourceFactory;
+
+import java.util.ArrayList;
 
 
 public class RecentPresenter extends MainFragmentPresenterBase

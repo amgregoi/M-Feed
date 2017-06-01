@@ -1,5 +1,6 @@
 package com.teioh.m_feed.UI.MainActivity.Presenters;
 
+import android.os.Bundle;
 import android.widget.Toast;
 
 import com.teioh.m_feed.MFeedApplication;
@@ -49,4 +50,5 @@ public class CatalogPresenter extends MainFragmentPresenterBase
 
         }
     }
+
 }

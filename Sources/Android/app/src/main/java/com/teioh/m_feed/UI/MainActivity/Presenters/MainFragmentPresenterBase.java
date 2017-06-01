@@ -48,21 +48,22 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     }
 
     /***
-     * TODO...
+     * This function performs the Async task of querying, parsing a sources front page and building
+     * a list of manga objects for the user to view
      */
     @Override
     public abstract void updateMangaList();
 
     /***
-     * TODO...
+     * This function sets the specific query text to search in the three core adapters
      *
-     * @param aQueryText
+     * @param aQueryText The text used for a search.
      */
     @Override
-    public void onQueryTextChange(String aQueryText)
+    public boolean onQueryTextChange(String aQueryText)
     {
         String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
+        boolean lResult = true;
         try
         {
             if (mAdapter != null)
@@ -73,17 +74,20 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
         catch (Exception lException)
         {
             MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            lResult = false;
         }
 
+        return lResult;
     }
 
     /***
-     * TODO...
+     * This function clears the view and refreshes the Recent Adapter with new(er) data.
      */
     @Override
-    public void updateSource()
+    public boolean updateSource()
     {
         String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+        boolean lResult = false;
 
         try
         {
@@ -97,30 +101,33 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
 
                 mViewMapper.startRefresh();
                 updateMangaList();
+                lResult = true;
             }
         }
         catch (Exception lException)
         {
             MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            lResult = false;
         }
 
+        return lResult;
     }
 
     /***
-     * TODO...
+     * This function sets the filter type specified by the user
      *
-     * @param aFilter
+     * @param aFilter The filter type that has been selected
      */
     @Override
-    public void onFilterSelected(MangaEnums.eFilterStatus aFilter)
+    public boolean onFilterSelected(MangaEnums.eFilterStatus aFilter)
     {
         String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
+        boolean lResult = false;
         try
         {
             if (mAdapter != null)
             {
-                mAdapter.filterByStatus(aFilter);
+                lResult = mAdapter.filterByStatus(aFilter);
             }
         }
         catch (Exception lException)
@@ -128,17 +135,19 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
             MangaLogger.logError(TAG, lMethod, lException.getMessage());
         }
 
+        return lResult;
     }
 
     /***
-     * TODO...
+     * This function sets refreshes the GenreFilter list based on the specified list that has been filtered.
      *
-     * @param aMangaList
+     * @param aMangaList The object list that has been filtered.
      */
     @Override
-    public void onGenreFilterSelected(ArrayList<Manga> aMangaList)
+    public boolean onGenreFilterSelected(ArrayList<Manga> aMangaList)
     {
         String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+        boolean lResult = true;
 
         try
         {
@@ -152,38 +161,44 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
         catch (Exception lException)
         {
             MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            lResult = false;
         }
 
+        return lResult;
     }
 
     /***
-     * TODO...
+     * This function will clear any set Genre Filter by refreshing the adapters "original data"
      */
     @Override
-    public void onClearGenreFilter()
+    public boolean onClearGenreFilter()
     {
         String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+        boolean lResult = true;
 
         try
         {
             mAdapter.setOriginalData(mMangaList);
-
         }
         catch (Exception lException)
         {
             MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            lResult = false;
         }
+
+        return lResult;
     }
 
     /***
-     * TODO...
+     * This function updates the specified object in the three core adapters.
      *
-     * @param aManga
+     * @param aManga The object that is being updated.
      */
     @Override
-    public void updateSelection(Manga aManga)
+    public boolean updateSelection(Manga aManga)
     {
         String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+        boolean lResult = true;
 
         try
         {
@@ -198,12 +213,14 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
         catch (Exception lException)
         {
             MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            lResult = false;
         }
 
+        return lResult;
     }
 
     /***
-     * TODO...
+     * This function initializes the MainFragmentPresenterBase object, as well as the users view.
      *
      * @param aBundle
      */
@@ -221,8 +238,15 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
                 @Override
                 public int getSpanSize(int position)
                 {
-                    if (mAdAdapter.isAd(position)) return 3; // ads take up 3 columns
-                    else return 1;
+                    if (NATIVE_AD_1_UNIT_ID == null)
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        if (mAdAdapter.isAd(position)) return 3; // ads take up 3 columns
+                        else return 1;
+                    }
                 }
             });
 
@@ -237,55 +261,29 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     }
 
     /***
-     * TODO...
+     * This function saves relevant data that needs to persist between device state changes.
      *
-     * @param aSave
+     * @param aSave The object that will hold the saved data.
      */
     @Override
     public void onSaveState(Bundle aSave)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
-        try
-        {
-            if (mMangaList != null)
-            {
-                aSave.putParcelableArrayList(MANGA_LIST_KEY, mMangaList);
-            }
-        }
-        catch (Exception lException)
-        {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
-        }
 
     }
 
     /***
-     * TODO...
+     * This function restores data that needed to persist between device state changes.
      *
-     * @param aRestore
+     * @param aRestore The object containing the relevant data.
      */
     @Override
     public void onRestoreState(Bundle aRestore)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
-        try
-        {
-            if (aRestore.containsKey(MANGA_LIST_KEY))
-            {
-                mMangaList = new ArrayList<>(aRestore.getParcelableArrayList(MANGA_LIST_KEY));
-            }
-        }
-        catch (Exception lException)
-        {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
-        }
 
     }
 
     /***
-     * TODO...
+     * This function is called when a fragment or activities onPause() is called in their life cycle chain.
      */
     @Override
     public void onPause()
@@ -294,7 +292,7 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     }
 
     /***
-     * TODO...
+     * This function is called when a fragment or activities onResume() is called in their life cycle chain.
      */
     @Override
     public void onResume()
@@ -302,7 +300,8 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     }
 
     /***
-     * TODO...
+     * This function is called when a fragment or activities onDestroy is called in their life cycle chain.
+     * It will clean up any items that shouldn't persist.
      */
     @Override
     public void onDestroy()
@@ -317,17 +316,25 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     }
 
     /***
-     * TODO...
+     * This function starts a Manga Activity when a click is performed on a Manga Object
      *
-     * @param pos
+     * @param aPos This is the position of the selected object
      */
-    protected void onItemClick(int pos)
+    protected void onItemClick(int aPos)
     {
         String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
 
         try
         {
-            Manga manga = mAdapter.getItemAt(mAdAdapter.getOriginalPosition(pos));
+            Manga manga;
+            if (NATIVE_AD_1_UNIT_ID == null)
+            {
+                manga = mAdapter.getItemAt(aPos);
+            }
+            else
+            {
+                manga = mAdapter.getItemAt(mAdAdapter.getOriginalPosition(aPos));
+            }
             if (mViewMapper.setRecentSelection(manga.get_id()))
             {
                 Intent intent = MangaActivity.getNewInstance(mViewMapper.getContext(), manga.getMangaURL());
@@ -342,9 +349,9 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     }
 
     /***
-     * TODO...
+     * This function updates the users view when the application is finished processing the Source HTML
      *
-     * @param aMangaList
+     * @param aMangaList This is the list of objects created after parsing the HTML
      */
     protected void updateMangaGridView(List<Manga> aMangaList)
     {
@@ -372,7 +379,14 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
                 {
                     mAdapter = new RecycleSearchAdapter(mMangaList, (pos) -> onItemClick(pos));
                     mAdapter.setHasStableIds(true);
-                    setupMoPubAdapter();
+                    if (NATIVE_AD_1_UNIT_ID == null)
+                    {
+                        mViewMapper.registerAdapter(mAdapter, mLayoutManager, mNeedsItemDecoration);
+                    }
+                    else
+                    {
+                        setupMoPubAdapter();
+                    }
                 }
                 else
                 {
@@ -397,7 +411,8 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     }
 
     /***
-     * TODO...
+     * This function sets up the MoPub adapter.
+     * This function is only called if NATIVE_AD_1_UNIT_ID is initialized
      */
     protected void setupMoPubAdapter()
     {
@@ -409,11 +424,12 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
 
             mAdAdapter = new MoPubRecyclerAdapter(((Fragment) mViewMapper).getActivity(), mAdapter, lAdPositioning);
 
-            MoPubStaticNativeAdRenderer lRenderer = new MoPubStaticNativeAdRenderer(new ViewBinder.Builder(R.layout.ad_layout).titleId(R.id.native_ad_title)
-                                                                                                                              .textId(R.id.native_ad_text)
-                                                                                                                              .mainImageId(R.id.native_ad_main_image)
-                                                                                                                              .iconImageId(R.id.native_ad_icon_image)
-                                                                                                                              .build());
+            MoPubStaticNativeAdRenderer lRenderer = new MoPubStaticNativeAdRenderer(new ViewBinder.Builder(R.layout.ad_layout)
+                                                                                            .titleId(R.id.native_ad_title)
+                                                                                            .textId(R.id.native_ad_text)
+                                                                                            .mainImageId(R.id.native_ad_main_image)
+                                                                                            .iconImageId(R.id.native_ad_icon_image)
+                                                                                            .build());
 
             mAdAdapter.registerAdRenderer(lRenderer);
             if (NATIVE_AD_1_UNIT_ID != null) mAdAdapter.loadAds(NATIVE_AD_1_UNIT_ID);

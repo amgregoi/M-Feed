@@ -4,13 +4,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.os.TraceCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
-import com.futuremind.recyclerviewfastscroll.FastScroller;
+import com.l4digital.fastscroll.FastScroller;
 import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Manga;
@@ -30,7 +31,6 @@ import butterknife.ButterKnife;
 public abstract class MainFragmentBase extends Fragment implements IMain.FragmentView
 {
     @Bind(R.id.manga_recycle_view) RecyclerView mGridView;
-    @Bind(R.id.fastscroll) FastScroller mFastScroller;
 
     protected IMain.FragmentPresenter mFragmentPresenter;
     protected Listeners.MainFragmentListener mListener;
@@ -58,10 +58,6 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
             mFragmentPresenter.onRestoreState(aSave);
         }
         mFragmentPresenter.init(getArguments());
-        mFastScroller.setRecyclerView(mGridView);
-        mFastScroller.setBubbleColor(0xffff0000);
-        mFastScroller.setHandleColor(0xffff0000);
-        mFastScroller.setBubbleTextAppearance(R.style.StyledScrollerTextAppearance);
     }
 
     /***
@@ -156,18 +152,18 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
      * @param aMangaList
      */
     @Override
-    public void onGenreFilterSelected(ArrayList<Manga> aMangaList)
+    public boolean onGenreFilterSelected(ArrayList<Manga> aMangaList)
     {
-        mFragmentPresenter.onGenreFilterSelected(aMangaList);
+        return mFragmentPresenter.onGenreFilterSelected(aMangaList);
     }
 
     /***
      * TODO...
      */
     @Override
-    public void onClearGenreFilter()
+    public boolean onClearGenreFilter()
     {
-        mFragmentPresenter.onClearGenreFilter();
+        return mFragmentPresenter.onClearGenreFilter();
     }
 
     /***
@@ -178,14 +174,22 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
      * @param aNeedsDecoration
      */
     @Override
-    public void registerAdapter(MoPubRecyclerAdapter aAdapter, RecyclerView.LayoutManager aLayout, boolean aNeedsDecoration)
+    public void registerAdapter(RecyclerView.Adapter aAdapter, RecyclerView.LayoutManager aLayout, boolean aNeedsDecoration)
     {
         if (aAdapter != null)
         {
-            mGridView.swapAdapter(aAdapter, true);
             mGridView.setLayoutManager(aLayout);
 
-            if (aNeedsDecoration) mGridView.addItemDecoration(new RecycleSearchAdapter.SpacesItemDecoration(20));
+            if (aNeedsDecoration)
+            {
+                mGridView.setAdapter(aAdapter);
+                mGridView.addItemDecoration(new RecycleSearchAdapter.SpacesItemDecoration(20));
+            }
+            else
+            {
+                mGridView.swapAdapter(aAdapter, true);
+            }
+
         }
     }
 
@@ -218,9 +222,9 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
      * @param aManga
      */
     @Override
-    public void updateRecentSelection(Manga aManga)
+    public boolean updateRecentSelection(Manga aManga)
     {
-        mFragmentPresenter.updateSelection(aManga);
+        return mFragmentPresenter.updateSelection(aManga);
     }
 
     /***

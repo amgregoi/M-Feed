@@ -1,9 +1,13 @@
 package com.teioh.m_feed.WebSources;
 
+import android.graphics.drawable.Drawable;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.resource.bitmap.BitmapDrawableResource;
+import com.bumptech.glide.load.resource.drawable.DrawableResource;
 import com.bumptech.glide.request.FutureTarget;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.teioh.m_feed.MFeedApplication;
 import com.teioh.m_feed.MangaEnums;
@@ -91,12 +95,12 @@ public abstract class SourceBase
      * @param aImageUrls
      * @return
      */
-    public Observable<GlideDrawable> cacheFromImagesOfSize(final List<String> aImageUrls)
+    public Observable<Drawable> cacheFromImagesOfSize(final List<String> aImageUrls)
     {
-        return Observable.create(new Observable.OnSubscribe<GlideDrawable>()
+        return Observable.create(new Observable.OnSubscribe<Drawable>()
         {
             @Override
-            public void call(Subscriber<? super GlideDrawable> subscriber)
+            public void call(Subscriber<? super Drawable> subscriber)
             {
                 try
                 {
@@ -104,7 +108,11 @@ public abstract class SourceBase
                     {
                         if (!subscriber.isUnsubscribed())
                         {
-                            FutureTarget<GlideDrawable> cacheFuture = Glide.with(MFeedApplication.getInstance()).load(imageUrl).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
+                            RequestOptions lOptions = new RequestOptions();
+                            lOptions.skipMemoryCache(true)
+                                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE);
+
+                            FutureTarget<Drawable> cacheFuture = Glide.with(MFeedApplication.getInstance()).load(imageUrl).into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
 
                             subscriber.onNext(cacheFuture.get(30, TimeUnit.SECONDS));
                         }

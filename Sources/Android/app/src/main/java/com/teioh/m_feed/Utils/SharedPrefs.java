@@ -10,6 +10,11 @@ import com.teioh.m_feed.MFeedApplication;
 import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.R;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class SharedPrefs
 {
 
@@ -49,7 +54,8 @@ public class SharedPrefs
     public static String getGoogleEmail()
     {
         Context lContext = MFeedApplication.getInstance();
-        return PreferenceManager.getDefaultSharedPreferences(lContext).getString(lContext.getString(R.string.PREF_GOOGLE_EMAIL), "Guest (Sign in)");
+        return PreferenceManager.getDefaultSharedPreferences(lContext)
+                                .getString(lContext.getString(R.string.PREF_GOOGLE_EMAIL), "Guest (Sign in)");
     }
 
     /**
@@ -62,7 +68,6 @@ public class SharedPrefs
 //        Context lContext = MFeedApplication.getInstance();
 //        return PreferenceManager.getDefaultSharedPreferences(lContext).getString(lContext.getString(R.string.PREF_MAL_PASSWORD), null);
 //    }
-
     public static boolean isSignedIn()
     {
         if (getGoogleEmail().contains("Guest")) return false;
@@ -96,7 +101,8 @@ public class SharedPrefs
     public static boolean getLayoutFormat()
     {
         Context lContext = MFeedApplication.getInstance();
-        return PreferenceManager.getDefaultSharedPreferences(lContext).getBoolean(lContext.getString(R.string.PREF_APP_LAYOUT_IS_GRID), true);
+        return PreferenceManager.getDefaultSharedPreferences(lContext)
+                                .getBoolean(lContext.getString(R.string.PREF_APP_LAYOUT_IS_GRID), true);
     }
 
     /**
@@ -124,7 +130,8 @@ public class SharedPrefs
     public static boolean getLayoutTheme()
     {
         Context lContext = MFeedApplication.getInstance();
-        return PreferenceManager.getDefaultSharedPreferences(lContext).getBoolean(lContext.getString(R.string.PREF_APP_THEME_IS_LIGHT), false);
+        return PreferenceManager.getDefaultSharedPreferences(lContext)
+                                .getBoolean(lContext.getString(R.string.PREF_APP_THEME_IS_LIGHT), false);
     }
 
     /***
@@ -148,7 +155,8 @@ public class SharedPrefs
     public static String getSavedSource()
     {
         Context lContext = MFeedApplication.getInstance();
-        return PreferenceManager.getDefaultSharedPreferences(lContext).getString(lContext.getString(R.string.PREF_USER_SOURCE), MangaEnums.eSource.MangaJoy.name());
+        return PreferenceManager.getDefaultSharedPreferences(lContext)
+                                .getString(lContext.getString(R.string.PREF_USER_SOURCE), MangaEnums.eSource.MangaJoy.name());
     }
 
     /***
@@ -172,7 +180,8 @@ public class SharedPrefs
     public static boolean getChapterScrollVertical()
     {
         Context lContext = MFeedApplication.getInstance();
-        return PreferenceManager.getDefaultSharedPreferences(lContext).getBoolean(lContext.getString(R.string.PREF_CHAPTER_SCROLL_VERTICAL), false);
+        return PreferenceManager.getDefaultSharedPreferences(lContext)
+                                .getBoolean(lContext.getString(R.string.PREF_CHAPTER_SCROLL_VERTICAL), false);
     }
 
     /***
@@ -196,7 +205,8 @@ public class SharedPrefs
     public static boolean getChapterScreenOrientation()
     {
         Context lContext = MFeedApplication.getInstance();
-        return PreferenceManager.getDefaultSharedPreferences(lContext).getBoolean(lContext.getString(R.string.PREF_CHAPTER_SCREEN_ORIENTATION), false);
+        return PreferenceManager.getDefaultSharedPreferences(lContext)
+                                .getBoolean(lContext.getString(R.string.PREF_CHAPTER_SCREEN_ORIENTATION), false);
     }
 
     /***
@@ -207,7 +217,7 @@ public class SharedPrefs
     public static boolean getLoggingStatus()
     {
         Context lContext = MFeedApplication.getInstance();
-        return PreferenceManager.getDefaultSharedPreferences(lContext).getBoolean(lContext.getString(R.string.PREF_LOGGING_STATUS), false);
+        return PreferenceManager.getDefaultSharedPreferences(lContext).getBoolean(lContext.getString(R.string.PREF_LOGGING_STATUS), true);
     }
 
     /***
@@ -221,6 +231,22 @@ public class SharedPrefs
         SharedPreferences.Editor lEditor = PreferenceManager.getDefaultSharedPreferences(lContext).edit();
         lEditor.putBoolean(lContext.getString(R.string.PREF_LOGGING_STATUS), aLogging);
         lEditor.apply();
+    }
+
+    public static void saveLogs()
+    {
+        Context lContext = MFeedApplication.getInstance();
+        SharedPreferences.Editor lEditor = PreferenceManager.getDefaultSharedPreferences(lContext).edit();
+        lEditor.putStringSet(lContext.getString(R.string.PREF_SAVE_LOGS), new HashSet<>(MangaLogger.getLogs()));
+        lEditor.apply();
+    }
+
+    public static List<String> getLogs()
+    {
+        Context lContext = MFeedApplication.getInstance();
+        Set lLogSet = PreferenceManager.getDefaultSharedPreferences(lContext).getStringSet(lContext.getString(R.string.PREF_SAVE_LOGS), new HashSet<>(0));
+
+        return new ArrayList<>(lLogSet);
     }
 
 

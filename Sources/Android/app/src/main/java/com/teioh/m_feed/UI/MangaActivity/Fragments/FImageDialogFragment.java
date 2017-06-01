@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.teioh.m_feed.R;
 
 import butterknife.Bind;
@@ -72,7 +73,13 @@ public class FImageDialogFragment extends DialogFragment
     {
         if (mImageUrl != null)
         {
-            Glide.with(getActivity()).load(mImageUrl).animate(android.R.anim.fade_in).fitCenter().skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.ALL).into(mImage);
+            RequestOptions lOptions = new RequestOptions();
+            lOptions.fitCenter().skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL);
+
+            Glide.with(getActivity()).load(mImageUrl)
+                 .apply(lOptions)
+                 .into(mImage);
         }
         super.onActivityCreated(savedInstanceState);
     }

@@ -76,8 +76,9 @@ public class CatalogFragment extends MainFragmentBase
      * TODO..
      */
     @Override
-    public void removeFilters()
+    public boolean removeFilters()
     {
-
+        //left blank
+        return true;
     }
 }

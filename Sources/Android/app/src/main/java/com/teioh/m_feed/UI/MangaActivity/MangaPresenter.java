@@ -207,9 +207,10 @@ public class MangaPresenter implements IManga.ActivityPresenter
      * TODO...
      */
     @Override
-    public void chapterOrderButtonClick()
+    public boolean chapterOrderButtonClick()
     {
         String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+        boolean lResult = true;
 
         try
         {
@@ -223,7 +224,10 @@ public class MangaPresenter implements IManga.ActivityPresenter
         catch (Exception aException)
         {
             MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            lResult = false;
         }
+
+        return lResult;
     }
 
     /***
@@ -232,9 +236,10 @@ public class MangaPresenter implements IManga.ActivityPresenter
      * @param aValue
      */
     @Override
-    public void onFollowButtonClick(int aValue)
+    public boolean onFollowButtonClick(int aValue)
     {
         String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+        boolean lResult = true;
 
         try
         {
@@ -244,16 +249,20 @@ public class MangaPresenter implements IManga.ActivityPresenter
         catch (Exception lException)
         {
             MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            lResult = false;
         }
+
+        return lResult;
     }
 
     /***
      * TODO...
      */
     @Override
-    public void onUnfollowButtonClick()
+    public boolean onUnfollowButtonClick()
     {
         String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+        boolean lResult = true;
 
         try
         {
@@ -264,7 +273,10 @@ public class MangaPresenter implements IManga.ActivityPresenter
         catch (Exception lException)
         {
             MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            lResult = false;
         }
+
+        return lResult;
     }
 
     /***
@@ -273,10 +285,10 @@ public class MangaPresenter implements IManga.ActivityPresenter
      * @param aChapter
      */
     @Override
-    public void onChapterClicked(Chapter aChapter)
+    public boolean onChapterClicked(Chapter aChapter)
     {
         String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
+        boolean lResult = true;
         try
         {
             ArrayList<Chapter> lNewChapterList = new ArrayList<>(mChapterList);
@@ -292,7 +304,10 @@ public class MangaPresenter implements IManga.ActivityPresenter
         catch (Exception aException)
         {
             MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            lResult = false;
         }
+
+        return lResult;
     }
 
     /***
@@ -321,13 +336,15 @@ public class MangaPresenter implements IManga.ActivityPresenter
      * TODO..
      */
     @Override
-    public void onContinueReadingButtonClick()
+    public boolean onContinueReadingButtonClick()
     {
         String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+        boolean lResult = true;
 
         try
         {
-            if (mManga.getRecentChapter() == null) mManga.setRecentChapter(""); //TODO.. Remove when updates to database fix this default null
+            if (mManga.getRecentChapter() == null)
+                mManga.setRecentChapter(""); //TODO.. Remove when updates to database fix this default null
 
             Chapter lChapter = null;
             ArrayList<Chapter> lNewChapterList = new ArrayList<>(mChapterList);
@@ -354,12 +371,30 @@ public class MangaPresenter implements IManga.ActivityPresenter
         catch (Exception aException)
         {
             MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            lResult = false;
         }
+
+        return lResult;
     }
 
-    @Override public void clearCachedChapters()
+    /***
+     * TODO...
+     */
+    @Override public boolean clearCachedChapters()
     {
-        MFDBHelper.getInstance().resetCachedChapters();
+        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+        boolean lResult = true;
+        try
+        {
+            MFDBHelper.getInstance().resetCachedChapters();
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            lResult = false;
+        }
+
+        return lResult;
     }
 
     /***
@@ -377,7 +412,8 @@ public class MangaPresenter implements IManga.ActivityPresenter
                 {
                     mObservableMangaSubscription = new SourceFactory().getSource()
                                                                       .updateMangaObservable(new RequestWrapper(mManga)).cache()
-                                                                      .doOnError(throwable -> MangaLogger.logError(TAG, lMethod, throwable.getMessage()))
+                                                                      .doOnError(throwable -> MangaLogger
+                                                                              .logError(TAG, lMethod, throwable.getMessage()))
                                                                       .observeOn(AndroidSchedulers.mainThread())
                                                                       .subscribe(manga -> updateMangaView(manga));
                 }
@@ -453,7 +489,8 @@ public class MangaPresenter implements IManga.ActivityPresenter
                 {
                     mChapterListSubscription = new SourceFactory().getSource()
                                                                   .getChapterListObservable(new RequestWrapper(mManga)).cache()
-                                                                  .doOnError(throwable -> MangaLogger.logError(TAG, lMethod, throwable.getMessage()))
+                                                                  .doOnError(throwable -> MangaLogger
+                                                                          .logError(TAG, lMethod, throwable.getMessage()))
                                                                   .subscribe(chapters -> updateChapterList(chapters));
                 }
                 else

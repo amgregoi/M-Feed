@@ -24,7 +24,7 @@ android:clickable="true">
         />
 
     <com.teioh.m_feed.UI.ReaderActivity.Widgets.NoScrollViewPager
-        android:id="@+id/pager"
+        android:id="@+id/no_scroll_pager"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         />
