@@ -1,12 +1,10 @@
 package com.teioh.m_feed.UI.MainActivity;
 
-
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.LargeTest;
 import android.view.KeyEvent;
 
 import com.teioh.m_feed.R;
@@ -30,7 +28,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.not;
 
-@LargeTest
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTests
 {
@@ -42,7 +39,7 @@ public class MainActivityTests
      * This Test verifies a Manga Activity is successfully loaded when a Manga item is selected.
      */
     @Test
-    public void recentFragmentItemSelect()
+    public void testRecentFragmentItemSelect()
     {
         //Verify RecyclerView is displayed
         ViewInteraction lRecyclerView = onView(allOf(withId(R.id.manga_recycle_view), isDisplayed()));
@@ -58,7 +55,7 @@ public class MainActivityTests
      * This Test verifies that the filter search performs successfully.
      */
     @Test
-    public void textFilterSearch()
+    public void testTextFilterSearch()
     {
         //Verifies RecyclerView is displayed
         onView(allOf(withId(R.id.manga_recycle_view), isDisplayed()));
@@ -75,7 +72,7 @@ public class MainActivityTests
      * the button icon in the header.
      */
     @Test
-    public void genreFilterDialog()
+    public void testGenreFilterDialog()
     {
         //Verifies RecycleView is displayed
         onView(allOf(withId(R.id.manga_recycle_view), isDisplayed()));
@@ -91,24 +88,10 @@ public class MainActivityTests
     }
 
     /***
-     * This function performs the neccessary steps to open the Navigation Drawer
-     */
-    private void openNavigationDrawer()
-    {
-        //Opens Navigation Drawer
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
-        //Verifies drawer was opened by searching for Text in drawer
-        onView(withText("Guest (Sign in)")).check(matches(isDisplayed()));
-
-        onView(allOf(withId(R.id.drawerLayoutListView), isDisplayed()));
-
-    }
-
-    /***
      * This Test verifies the navigation drawer opens and closes successfully.
      */
     @Test
-    public void navigationDrawerToggle()
+    public void testNavigationDrawerToggle()
     {
         //Verifies RecycleView is displayed
         onView(allOf(withId(R.id.manga_recycle_view), isDisplayed()));
@@ -127,7 +110,7 @@ public class MainActivityTests
      * This Test verifies the navigation drawer functionality performs successfully.
      */
     @Test
-    public void navigationDrawerOptions()
+    public void testNavigationDrawerOptions()
     {
         /***
          * Init
@@ -178,8 +161,11 @@ public class MainActivityTests
 
     }
 
+    /***
+     * This Test verifies the various status filters can be set successfully.
+     */
     @Test
-    public void statusFilterToggle()
+    public void testStatusFilterToggle()
     {
         //Verifies RecycleView is displayed
         onView(allOf(withId(R.id.manga_recycle_view), isDisplayed()));
@@ -204,6 +190,19 @@ public class MainActivityTests
 
         onView(withId(R.id.fab_expand_menu_button)).perform(click());
         onView(withId(R.id.fab_all)).check(matches(isDisplayed())).perform(click());
+    }
+
+    /***
+     * This function performs the neccessary steps to open the Navigation Drawer
+     */
+    private void openNavigationDrawer()
+    {
+        //Opens Navigation Drawer
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        //Verifies drawer was opened by searching for Text in drawer
+        onView(withText("Guest (Sign in)")).check(matches(isDisplayed()));
+
+        onView(allOf(withId(R.id.drawerLayoutListView), isDisplayed()));
 
     }
 

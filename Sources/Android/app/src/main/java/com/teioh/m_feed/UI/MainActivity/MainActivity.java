@@ -23,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -56,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     @Bind(R.id.search_view) SearchView mSearchView;
     @Bind(R.id.filter_view) ImageView mFilterView;
     @Bind(R.id.activityTitle) TextView mActivityTitle;
-    @Bind(R.id.pager) ViewPager mViewPager;
+    @Bind(R.id.no_scroll_pager) ViewPager mViewPager;
     @Bind(R.id.tabs) SlidingTabLayout mTabLayout;
     @Bind(R.id.tool_bar) Toolbar mToolBar;
     @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
@@ -70,6 +69,9 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     private IMain.ActivityPresenter mMainPresenter;
     private GoogleApiClient mGoogleApiClient;
 
+    public IMain.ActivityPresenter getPresenter(){
+        return mMainPresenter;
+    }
     /***
      * TODO..
      *

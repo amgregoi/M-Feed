@@ -409,7 +409,8 @@ public class MainPresenter implements IMain.ActivityPresenter
             MangaLogger.logError(TAG, lMethod, aException.getMessage());
         }
 
-        if(BuildConfig.DEBUG){
+        if (BuildConfig.DEBUG)
+        {
             if (mSettingsFragment != null) lResult = false;
         }
 

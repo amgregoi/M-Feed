@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,13 +33,16 @@ import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.MainActivity;
 import com.teioh.m_feed.UI.MangaActivity.Fragments.FImageDialogFragment;
 import com.teioh.m_feed.UI.MangaActivity.Fragments.FRemoveDialogFragment;
+import com.teioh.m_feed.UI.Maps.Listeners;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
 
-public class MangaActivity extends AppCompatActivity implements IManga.ActivityView
+
+
+public class MangaActivity extends AppCompatActivity implements IManga.ActivityView, Listeners.DialogYesNoListener
 {
     final public static String TAG = MangaActivity.class.getSimpleName();
 
@@ -182,34 +186,6 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
         }
 
         return super.onOptionsItemSelected(aMenuItem);
-    }
-
-    /***
-     * TODO..
-     *
-     * @param aResultCode
-     * @param aData
-     */
-    @Override
-    public void onActivityReenter(int aResultCode, Intent aData)
-    {
-        super.onActivityReenter(aResultCode, aData);
-        if (aResultCode == Activity.RESULT_OK)
-        {
-            if (aData == null)
-            {
-                // After Ok code.
-                mFollowButton.setVisibility(View.VISIBLE);
-                mReadingStatusButton.setVisibility(View.GONE);
-                mContinueReadingButton.setVisibility(View.GONE);
-                mMangaPresenter.onUnfollowButtonClick();
-                invalidateOptionsMenu();
-            }
-        }
-        else if (aResultCode == Activity.RESULT_CANCELED)
-        {
-            // After Cancel code.
-        }
     }
 
     /***
@@ -394,7 +370,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
         //Follow Button
         mFollowButton.setOnClickListener(v -> {
             mMangaPresenter.onFollowButtonClick(1);
-            mFollowButton.setVisibility(View.GONE); //uncomment after menu remove is  put in
+            mFollowButton.setVisibility(View.GONE);
             mContinueReadingButton.setVisibility(View.VISIBLE);
             mReadingStatusButton.setVisibility(View.VISIBLE);
             invalidateOptionsMenu();
@@ -494,4 +470,19 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
         Glide.get(this).clearMemory();
     }
 
+    @Override public void positive()
+    {
+        // After Ok code.
+        Log.i("rawr", "AS;LDKFJA;LSDFKJA;SLDKFJA;SDLFKJAS;DLFKJASDF");
+        mFollowButton.setVisibility(View.VISIBLE);
+        mReadingStatusButton.setVisibility(View.GONE);
+        mContinueReadingButton.setVisibility(View.GONE);
+        mMangaPresenter.onUnfollowButtonClick();
+        invalidateOptionsMenu();
+    }
+
+    @Override public void negative()
+    {
+        //Do nothing
+    }
 }

@@ -33,7 +33,7 @@ import butterknife.OnClick;
 public class ReaderActivity extends AppCompatActivity implements IReader.ActivityView
 {
 
-    @Bind(R.id.pager) NoScrollViewPager mViewPager;
+    @Bind(R.id.no_scroll_pager) NoScrollViewPager mViewPager;
     @Bind(R.id.chapter_header) Toolbar mToolbarHeader;
     @Bind(R.id.chapter_header_2) Toolbar mToolbarHeader2;
     @Bind(R.id.vertical_scroll_toggle) ImageButton mVerticalScrollButton;

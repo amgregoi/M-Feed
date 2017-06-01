@@ -109,6 +109,5 @@ public interface IMain
         boolean onClearGenreFilter();
 
         boolean updateSelection(Manga aManga);
-
     }
 }

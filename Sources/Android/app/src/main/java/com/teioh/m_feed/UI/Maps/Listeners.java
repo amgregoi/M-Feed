@@ -5,6 +5,12 @@ import com.teioh.m_feed.Models.Manga;
 public interface Listeners
 {
 
+    interface DialogYesNoListener
+    {
+        void positive();
+        void negative();
+    }
+
     /**
      * Home screen fragments communicate with activity
      */
