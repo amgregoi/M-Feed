@@ -36,6 +36,8 @@
 	<string name="Email">E-Mail</string>
 	<string name="PREF_USER_SOURCE">SAVED_SOURCE</string>
 	<string name="PREF_LOGGING_STATUS">PREF_LOGGING_STATUS</string>
+	<string name="PREF_SAVE_LOGS">SAVE_LOGS</string>
+	<string name="glide_tag">Glide_TAG</string>
 
 
 </resources>

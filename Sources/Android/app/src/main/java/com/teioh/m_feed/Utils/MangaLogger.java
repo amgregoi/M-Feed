@@ -7,6 +7,7 @@ import com.teioh.m_feed.MFeedApplication;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -19,6 +20,11 @@ public class MangaLogger
 
     private static List<String> mCurrentLogs = new ArrayList<>();
 
+
+    public static void initialize(){
+        mCurrentLogs = new ArrayList<>(SharedPrefs.getLogs());
+    }
+
     /***
      * TODO..
      *
@@ -29,7 +35,7 @@ public class MangaLogger
     public static void logInfo(String aTag, String aMethod, String aMessage)
     {
         String lMessage = "INFO >> " + MessageFormat.format("{0}.class >> {1}() > {2}", aTag, aMethod, aMessage);
-        if (SharedPrefs.getLoggingStatus()) mCurrentLogs.add(lMessage);
+        addMessage(lMessage);
         Log.i(mApplication, lMessage);
     }
 
@@ -43,7 +49,7 @@ public class MangaLogger
     public static void logError(String aTag, String aMethod, String aError)
     {
         String lMessage = "ERROR >> " + MessageFormat.format("{0}.class >> {1}() > {2}", aTag, aMethod, aError);
-        if (SharedPrefs.getLoggingStatus()) mCurrentLogs.add(lMessage);
+        addMessage(lMessage);
         Log.e(mApplication, lMessage);
     }
 
@@ -58,15 +64,24 @@ public class MangaLogger
     public static void logError(String aTag, String aMethod, String aError, String aExtra)
     {
         String lMessage = "ERROR >> " + MessageFormat.format("{0}.class >> {1}() > {2} > {3}", aTag, aMethod, aExtra, aError);
-        if (SharedPrefs.getLoggingStatus()) mCurrentLogs.add(lMessage);
+        addMessage(lMessage);
         Log.e(mApplication, lMessage);
     }
 
     public static void logDebug(String aTag, String aMethod, String aMessage)
     {
         String lMessage = "DEBUG >> " + MessageFormat.format("{0}.class >> {1}() > {2}", aTag, aMethod, aMessage);
-        if (SharedPrefs.getLoggingStatus()) mCurrentLogs.add(lMessage);
+        addMessage(lMessage);
         Log.i(mApplication, lMessage);
+    }
+
+    private static void addMessage(String aMessage){
+        if (SharedPrefs.getLoggingStatus())
+        {
+            String lResult = new Date().toString() + " | " + aMessage;
+
+            mCurrentLogs.add(lResult);
+        }
     }
 
     public static void clearLogs()

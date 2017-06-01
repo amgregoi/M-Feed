@@ -5,6 +5,12 @@ import com.teioh.m_feed.Models.Manga;
 public interface Listeners
 {
 
+    interface DialogYesNoListener
+    {
+        void positive();
+        void negative();
+    }
+
     /**
      * Home screen fragments communicate with activity
      */
@@ -13,9 +19,9 @@ public interface Listeners
 
         boolean setRecentSelection(Long aId);
 
-        void updateRecentSelection(Manga aManga);
+        boolean updateRecentSelection(Manga aManga);
 
-        void removeFilters();
+        boolean removeFilters();
     }
 
     /**

@@ -6,6 +6,7 @@
 	>
 
 	<LinearLayout
+		android:id="@+id/info_header_container"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:layout_marginEnd="5dp"
@@ -54,7 +55,7 @@
 
 				<!-- when synced with MAL-->
 				<Button
-					android:id="@+id/read_status_mal"
+					android:id="@+id/read_status_button"
 					android:layout_width="fill_parent"
 					android:layout_height="wrap_content"
 					android:layout_marginBottom="@dimen/baseline_grid_unit_4dp"

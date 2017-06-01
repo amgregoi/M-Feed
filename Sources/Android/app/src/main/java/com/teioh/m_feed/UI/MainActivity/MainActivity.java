@@ -23,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -47,31 +46,22 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity implements IMain.ActivityView, GoogleApiClient.OnConnectionFailedListener
 {
     public final static String TAG = MainActivity.class.getSimpleName();
 
-    @Bind( R.id.search_view )
-    SearchView mSearchView;
-    @Bind( R.id.filter_view )
-    ImageView mFilterView;
-    @Bind( R.id.activityTitle )
-    TextView mActivityTitle;
-    @Bind( R.id.pager )
-    ViewPager mViewPager;
-    @Bind( R.id.tabs )
-    SlidingTabLayout mTabLayout;
-    @Bind( R.id.tool_bar )
-    Toolbar mToolBar;
-    @Bind( R.id.drawer_layout )
-    DrawerLayout mDrawerLayout;
-    @Bind( R.id.drawerLayoutListView )
-    ExpandableListView mDrawerList;
+    @Bind(R.id.search_view) SearchView mSearchView;
+    @Bind(R.id.filter_view) ImageView mFilterView;
+    @Bind(R.id.activityTitle) TextView mActivityTitle;
+    @Bind(R.id.no_scroll_pager) ViewPager mViewPager;
+    @Bind(R.id.tabs) SlidingTabLayout mTabLayout;
+    @Bind(R.id.tool_bar) Toolbar mToolBar;
+    @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+    @Bind(R.id.drawerLayoutListView) ExpandableListView mDrawerList;
 
-    //TODO.. see if I can make this action menu and the button inits in a layout vs manually doing it here
-    @Bind( R.id.actionMenu )
-    FloatingActionsMenu mMultiActionMenu;
+    @Bind(R.id.actionMenu) FloatingActionsMenu mMultiActionMenu;
 
     private View mDrawerHeader;
     private Toast mToast;
@@ -79,6 +69,9 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     private IMain.ActivityPresenter mMainPresenter;
     private GoogleApiClient mGoogleApiClient;
 
+    public IMain.ActivityPresenter getPresenter(){
+        return mMainPresenter;
+    }
     /***
      * TODO..
      *
@@ -287,26 +280,28 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         setSupportActionBar(mToolBar);
         mActivityTitle.setText(new SourceFactory().getSourceName());
 
-        mFilterView.setOnClickListener(v -> {
-            if (!mMainPresenter.genreFilterActive())
-            {
-                DialogFragment dialog = FilterDialogFragment.getnewInstance();
-                dialog.show(getSupportFragmentManager(), null);
-            }
-            else
-            {
-                mMainPresenter.onClearGenreFilter();
-                mFilterView.setImageDrawable(getResources().getDrawable(R.drawable.filter_outline_24dp));
-                mActivityTitle.setText(new SourceFactory().getSourceName());
-            }
-        });
+        mFilterView.setOnClickListener(v ->
+                                       {
+                                           if (!mMainPresenter.genreFilterActive())
+                                           {
+                                               DialogFragment dialog = FilterDialogFragment.getnewInstance();
+                                               dialog.show(getSupportFragmentManager(), null);
+                                           }
+                                           else
+                                           {
+                                               mMainPresenter.onClearGenreFilter();
+                                               mFilterView.setImageDrawable(getResources().getDrawable(R.drawable.filter_outline_24dp));
+                                               mActivityTitle.setText(new SourceFactory().getSourceName());
+                                           }
+                                       });
     }
 
     @Override
     public void setupTabLayout()
     {
-        mTabLayout.setDistributeEvenly(true); // To make the Tabs Fixed set this true, This makes the mTabLayout Space Evenly in Available width
-        mTabLayout.setCustomTabColorizer(position -> getResources().getColor(R.color.red));
+        mTabLayout
+                .setDistributeEvenly(true); // To make the Tabs Fixed set this true, This makes the mTabLayout Space Evenly in Available width
+        mTabLayout.setCustomTabColorizer(position -> getResources().getColor(R.color.ColorAccent));
     }
 
     @Override
@@ -314,82 +309,21 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     {
         mSearchView.setOnQueryTextListener(this);
         mSearchView.setSubmitButtonEnabled(true);
-        mSearchView.setOnQueryTextFocusChangeListener((view, queryTextFocused) -> {
-            if (!queryTextFocused)
-            {
-                mActivityTitle.setVisibility(View.VISIBLE);
-                mFilterView.setVisibility(View.VISIBLE);
-                mSearchView.setIconified(true);
-                mSearchView.setQuery("", true);
-            }
-            else
-            {
-                mActivityTitle.setVisibility(View.GONE);
-                mFilterView.setVisibility(View.GONE);
-            }
-        });
-    }
-
-    @Override
-    public void setupSourceFilterMenu()
-    {
-        FloatingActionButton lFAB1 = new FloatingActionButton(getBaseContext());
-        lFAB1.setTitle("Reading");
-        lFAB1.setSize(FloatingActionButton.SIZE_MINI);
-        lFAB1.setColorNormalResId(R.color.ColorAccent);
-        lFAB1.setIcon(R.drawable.ic_book_white_18dp);
-        lFAB1.setOnClickListener(v -> {
-            mMultiActionMenu.collapse();
-            mMainPresenter.onFilterSelected(MangaEnums.eFilterStatus.READING);
-        });
-
-        FloatingActionButton lFAB2 = new FloatingActionButton(getBaseContext());
-        lFAB2.setTitle("All");
-        lFAB2.setIcon(R.drawable.ic_all_inclusive_white_18dp);
-        lFAB2.setSize(FloatingActionButton.SIZE_MINI);
-        lFAB2.setColorNormalResId(R.color.ColorAccent);
-        lFAB2.setOnClickListener(v -> {
-            mSearchView.clearFocus();
-            mMultiActionMenu.collapse();
-            mMainPresenter.onFilterSelected(MangaEnums.eFilterStatus.NONE);
-        });
-
-        FloatingActionButton lFAB3 = new FloatingActionButton(getBaseContext());
-        lFAB3.setTitle("Completed");
-        lFAB3.setSize(FloatingActionButton.SIZE_MINI);
-        lFAB3.setColorNormalResId(R.color.ColorAccent);
-        lFAB3.setIcon(R.drawable.ic_done_white_18dp);
-        lFAB3.setOnClickListener(v -> {
-            mMultiActionMenu.collapse();
-            mMainPresenter.onFilterSelected(MangaEnums.eFilterStatus.COMPLETE);
-        });
-
-        FloatingActionButton lFAB4 = new FloatingActionButton(getBaseContext());
-        lFAB4.setTitle("On Hold");
-        lFAB4.setSize(FloatingActionButton.SIZE_MINI);
-        lFAB4.setColorNormalResId(R.color.ColorAccent);
-        lFAB4.setIcon(R.drawable.ic_block_white_18dp);
-        lFAB4.setOnClickListener(v -> {
-            mMultiActionMenu.collapse();
-            mMainPresenter.onFilterSelected(MangaEnums.eFilterStatus.ON_HOLD);
-        });
-
-        FloatingActionButton lFAB5 = new FloatingActionButton(getBaseContext());
-        lFAB5.setTitle("Library");
-        lFAB5.setSize(FloatingActionButton.SIZE_MINI);
-        lFAB5.setColorNormalResId(R.color.ColorAccent);
-        lFAB5.setIcon(R.drawable.ic_favorite_white_18dp);
-        lFAB5.setOnClickListener(v -> {
-            mMultiActionMenu.collapse();
-            mMainPresenter.onFilterSelected(MangaEnums.eFilterStatus.FOLLOWING);
-        });
-
-        mMultiActionMenu.addButton(lFAB4);
-        mMultiActionMenu.addButton(lFAB3);
-        mMultiActionMenu.addButton(lFAB1);
-        mMultiActionMenu.addButton(lFAB5);
-        mMultiActionMenu.addButton(lFAB2);
-
+        mSearchView.setOnQueryTextFocusChangeListener((view, queryTextFocused) ->
+                                                      {
+                                                          if (!queryTextFocused)
+                                                          {
+                                                              mActivityTitle.setVisibility(View.VISIBLE);
+                                                              mFilterView.setVisibility(View.VISIBLE);
+                                                              mSearchView.setIconified(true);
+                                                              mSearchView.setQuery("", true);
+                                                          }
+                                                          else
+                                                          {
+                                                              mActivityTitle.setVisibility(View.GONE);
+                                                              mFilterView.setVisibility(View.GONE);
+                                                          }
+                                                      });
     }
 
     @Override
@@ -474,15 +408,17 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         mDrawerList.addHeaderView(mDrawerHeader);
         mDrawerList.setAdapter(adapter);
 
-        mDrawerList.setOnGroupClickListener((aParent, aView, aGroupPosition, aId) -> {
-            mMainPresenter.onDrawerItemSelected(aGroupPosition);
-            return false;
-        });
+        mDrawerList.setOnGroupClickListener((aParent, aView, aGroupPosition, aId) ->
+                                            {
+                                                mMainPresenter.onDrawerItemSelected(aGroupPosition);
+                                                return false;
+                                            });
 
-        mDrawerList.setOnChildClickListener((aParent, aView, aGroupPosition, aChildPosition, aId) -> {
-            mMainPresenter.onSourceItemChosen(aChildPosition);
-            return true;
-        });
+        mDrawerList.setOnChildClickListener((aParent, aView, aGroupPosition, aChildPosition, aId) ->
+                                            {
+                                                mMainPresenter.onSourceItemChosen(aChildPosition);
+                                                return true;
+                                            });
     }
 
     @Override
@@ -498,13 +434,13 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     }
 
     @Override
-    public void updateRecentSelection(Manga aManga)
+    public boolean updateRecentSelection(Manga aManga)
     {
-        mMainPresenter.getRecentManga();
+        return mMainPresenter.updateRecentManga();
     }
 
     @Override
-    public void removeFilters()
+    public boolean removeFilters()
     {
         //reset genre filter and UI
         mMainPresenter.onClearGenreFilter();
@@ -514,6 +450,8 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         //reset
         mMainPresenter.onFilterSelected(MangaEnums.eFilterStatus.NONE);
         mSearchView.clearFocus();
+
+        return true;  //update
     }
 
     @Override
@@ -625,5 +563,41 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     {
         super.onResume();
         mMainPresenter.onResume();
+    }
+
+    @OnClick(R.id.fab_all)
+    public void onFABAll()
+    {
+        mSearchView.clearFocus();
+        mMultiActionMenu.collapse();
+        mMainPresenter.onFilterSelected(MangaEnums.eFilterStatus.NONE);
+    }
+
+    @OnClick(R.id.fab_complete)
+    public void onFABComplete()
+    {
+        mMultiActionMenu.collapse();
+        mMainPresenter.onFilterSelected(MangaEnums.eFilterStatus.COMPLETE);
+    }
+
+    @OnClick(R.id.fab_library)
+    public void onFABLibrary()
+    {
+        mMultiActionMenu.collapse();
+        mMainPresenter.onFilterSelected(MangaEnums.eFilterStatus.FOLLOWING);
+    }
+
+    @OnClick(R.id.fab_on_hold)
+    public void onFABHold()
+    {
+        mMultiActionMenu.collapse();
+        mMainPresenter.onFilterSelected(MangaEnums.eFilterStatus.ON_HOLD);
+    }
+
+    @OnClick(R.id.fab_reading)
+    public void onFABReading()
+    {
+        mMultiActionMenu.collapse();
+        mMainPresenter.onFilterSelected(MangaEnums.eFilterStatus.READING);
     }
 }

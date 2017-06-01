@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
@@ -31,14 +33,16 @@ import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.MainActivity;
 import com.teioh.m_feed.UI.MangaActivity.Fragments.FImageDialogFragment;
 import com.teioh.m_feed.UI.MangaActivity.Fragments.FRemoveDialogFragment;
-import com.teioh.m_feed.Utils.MFDBHelper;
+import com.teioh.m_feed.UI.Maps.Listeners;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
 
-public class MangaActivity extends AppCompatActivity implements IManga.ActivityView
+
+
+public class MangaActivity extends AppCompatActivity implements IManga.ActivityView, Listeners.DialogYesNoListener
 {
     final public static String TAG = MangaActivity.class.getSimpleName();
 
@@ -58,7 +62,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     private TextView mAlternateText;
     private TextView mStatusText;
     private Button mFollowButton;
-    private Button mMALStatusButton;
+    private Button mReadingStatusButton;
     private Button mContinueReadingButton;
 
     private View mMangaInfoHeader;
@@ -187,34 +191,6 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     /***
      * TODO..
      *
-     * @param aResultCode
-     * @param aData
-     */
-    @Override
-    public void onActivityReenter(int aResultCode, Intent aData)
-    {
-        super.onActivityReenter(aResultCode, aData);
-        if (aResultCode == Activity.RESULT_OK)
-        {
-            if (aData == null)
-            {
-                // After Ok code.
-                mFollowButton.setVisibility(View.VISIBLE);
-                mMALStatusButton.setVisibility(View.GONE);
-                mContinueReadingButton.setVisibility(View.GONE);
-                mMangaPresenter.onUnfollowButtonClick();
-                invalidateOptionsMenu();
-            }
-        }
-        else if (aResultCode == Activity.RESULT_CANCELED)
-        {
-            // After Cancel code.
-        }
-    }
-
-    /***
-     * TODO..
-     *
      * @param aTitle
      */
     @Override
@@ -281,7 +257,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
             mGenresText.setText(aManga.getmGenre());
             mAlternateText.setText(aManga.getAlternate());
             mStatusText.setText(aManga.getStatus());
-            Glide.with(getContext()).load(aManga.getPicUrl()).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(mMangaImage);
+            Glide.with(getContext()).load(aManga.getPicUrl()).apply(new RequestOptions().skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.RESOURCE)).into(mMangaImage);
             mChapterList.addHeaderView(mMangaInfoHeader, null, false);
             mChapterList.addHeaderView(mChapterHeader, null, false);
 
@@ -289,8 +265,8 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
             {
                 mFollowButton.setVisibility(View.GONE);
                 mContinueReadingButton.setVisibility(View.VISIBLE);
-                mMALStatusButton.setVisibility(View.VISIBLE);
-                mMALStatusButton.setText(MangaEnums.eFollowType.values()[aManga.getFollowingValue() - 1].toString());
+                mReadingStatusButton.setVisibility(View.VISIBLE);
+                mReadingStatusButton.setText(MangaEnums.eFollowType.values()[aManga.getFollowingValue() - 1].toString());
                 invalidateOptionsMenu();
             }
         }
@@ -374,7 +350,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
 
 
         mFollowButton = (Button) mMangaInfoHeader.findViewById(R.id.followButton);
-        mMALStatusButton = (Button) mMangaInfoHeader.findViewById(R.id.read_status_mal);
+        mReadingStatusButton = (Button) mMangaInfoHeader.findViewById(R.id.read_status_button);
         mContinueReadingButton = (Button) mMangaInfoHeader.findViewById(R.id.continue_reading_button);
     }
 
@@ -394,41 +370,41 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
         //Follow Button
         mFollowButton.setOnClickListener(v -> {
             mMangaPresenter.onFollowButtonClick(1);
-            mFollowButton.setVisibility(View.GONE); //uncomment after menu remove is  put in
+            mFollowButton.setVisibility(View.GONE);
             mContinueReadingButton.setVisibility(View.VISIBLE);
-            mMALStatusButton.setVisibility(View.VISIBLE);
+            mReadingStatusButton.setVisibility(View.VISIBLE);
             invalidateOptionsMenu();
         });
 
         //Change follow status (Reading, Plan to read, on hold, etc..) MAL
-        mMALStatusButton.setOnClickListener(v -> {
+        mReadingStatusButton.setOnClickListener(v -> {
             //Creating the instance of PopupMenu
-            PopupMenu popup = new PopupMenu(MangaActivity.this, mMALStatusButton);
+            PopupMenu lPopupMenu = new PopupMenu(MangaActivity.this, mReadingStatusButton);
             //Inflating the Popup using xml file
-            popup.getMenuInflater().inflate(R.menu.menu_follow, popup.getMenu());
+            lPopupMenu.getMenuInflater().inflate(R.menu.menu_follow, lPopupMenu.getMenu());
 
-            //registering popup with OnMenuItemClickListener
-            popup.setOnMenuItemClickListener(item -> {
+            //registering lPopupMenu with OnMenuItemClickListener
+            lPopupMenu.setOnMenuItemClickListener(item -> {
                 MangaEnums.eFollowType lValues[] = MangaEnums.eFollowType.values();
                 switch (item.getItemId())
                 {
-                    case R.id.reading:
+                    case R.id.reading_menu:
                         mMangaPresenter.onFollowButtonClick(1);
-                        mMALStatusButton.setText(lValues[0].toString());
+                        mReadingStatusButton.setText(lValues[0].toString());
                         break;
-                    case R.id.complete:
+                    case R.id.complete_menu:
                         mMangaPresenter.onFollowButtonClick(2);
-                        mMALStatusButton.setText(lValues[1].toString());
+                        mReadingStatusButton.setText(lValues[1].toString());
                         break;
-                    case R.id.hold:
+                    case R.id.hold_menu:
                         mMangaPresenter.onFollowButtonClick(3);
-                        mMALStatusButton.setText(lValues[2].toString());
+                        mReadingStatusButton.setText(lValues[2].toString());
                         break;
                 }
                 return true;
             });
 
-            popup.show(); //showing popup menu
+            lPopupMenu.show(); //showing lPopupMenu menu
 
 
         });
@@ -494,4 +470,19 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
         Glide.get(this).clearMemory();
     }
 
+    @Override public void positive()
+    {
+        // After Ok code.
+        Log.i("rawr", "AS;LDKFJA;LSDFKJA;SLDKFJA;SDLFKJAS;DLFKJASDF");
+        mFollowButton.setVisibility(View.VISIBLE);
+        mReadingStatusButton.setVisibility(View.GONE);
+        mContinueReadingButton.setVisibility(View.GONE);
+        mMangaPresenter.onUnfollowButtonClick();
+        invalidateOptionsMenu();
+    }
+
+    @Override public void negative()
+    {
+        //Do nothing
+    }
 }

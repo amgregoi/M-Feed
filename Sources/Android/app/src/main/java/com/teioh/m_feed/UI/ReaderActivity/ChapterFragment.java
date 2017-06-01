@@ -25,8 +25,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     public final static String TAG = ChapterFragment.class.getSimpleName();
 
 
-    @Bind( R.id.pager )
-    GestureViewPager mViewPager;
+    @Bind( R.id.gesture_pager) GestureViewPager mViewPager;
     private IReader.FragmentPresenter mChapterPresenter;
     private Listeners.ReaderListener listener;
 

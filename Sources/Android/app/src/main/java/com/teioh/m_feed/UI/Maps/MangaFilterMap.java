@@ -11,7 +11,7 @@ public interface MangaFilterMap
 
     void onFilterSelected(MangaEnums.eFilterStatus aFilter);
 
-    void onGenreFilterSelected(ArrayList<Manga> aMangaList);
+    boolean onGenreFilterSelected(ArrayList<Manga> aMangaList);
 
-    void onClearGenreFilter();
+    boolean onClearGenreFilter();
 }

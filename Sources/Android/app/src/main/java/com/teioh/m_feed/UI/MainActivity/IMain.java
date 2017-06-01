@@ -1,18 +1,20 @@
 package com.teioh.m_feed.UI.MainActivity;
 
 import android.content.Intent;
+import android.support.v7.widget.RecyclerView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Manga;
+import com.teioh.m_feed.UI.MainActivity.Adapters.RecycleSearchAdapter;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
 import com.teioh.m_feed.UI.Maps.BaseContextMap;
 import com.teioh.m_feed.UI.Maps.DrawerLayoutMap;
 import com.teioh.m_feed.UI.Maps.LifeCycleMap;
 import com.teioh.m_feed.UI.Maps.Listeners;
 import com.teioh.m_feed.UI.Maps.MangaFilterMap;
-import com.teioh.m_feed.UI.Maps.MoPubAdapterMap;
 import com.teioh.m_feed.UI.Maps.SearchViewListenerMap;
 import com.teioh.m_feed.UI.Maps.SignInMap;
 import com.teioh.m_feed.UI.Maps.SwipeRefreshMap;
@@ -35,8 +37,6 @@ public interface IMain
 
         void setupSearchView();
 
-        void setupSourceFilterMenu();
-
         void setActivityTitle(String aTitle);
 
         void setPageAdapterItem(int aPosition);
@@ -52,34 +52,41 @@ public interface IMain
     interface ActivityPresenter extends LifeCycleMap
     {
 
-        void updateQueryChange(String aNewTest);
+        boolean updateQueryChange(String aNewTest);
 
         void onDrawerItemSelected(int aPosition);
 
-        void onSourceItemChosen(int aPosition);
+        boolean onSourceItemChosen(int aPosition);
 
         void onFilterSelected(MangaEnums.eFilterStatus aFilter);
 
-        void removeSettingsFragment();
+        boolean removeSettingsFragment();
 
-        void onGenreFilterSelected(Intent aIntent);
+        boolean onGenreFilterSelected(Intent aIntent);
 
-        void onClearGenreFilter();
+        boolean onClearGenreFilter();
 
         boolean genreFilterActive();
 
-        void getRecentManga();
+        boolean updateRecentManga();
 
         void setRecentManga(long aMangaId);
 
-        void updateSignIn(GoogleSignInResult aAccount);
+        boolean updateSignIn(GoogleSignInResult aAccount);
     }
 
     /***
      * TODO..
      */
-    interface FragmentView extends MoPubAdapterMap, SwipeRefreshMap, SearchViewListenerMap, BaseContextMap, MangaFilterMap
+    interface FragmentView extends SwipeRefreshMap, SearchViewListenerMap, BaseContextMap, MangaFilterMap, Listeners.MainFragmentListener
     {
+        void registerAdapter(RecyclerView.Adapter aAdapter, RecyclerView.LayoutManager aLayout, boolean aNeedsDecoration);
+
+        void updateSelection(Manga aManga);
+
+        boolean updateRecentSelection(Manga aManga);
+
+        boolean setRecentSelection(Long aId);
 
     }
 
@@ -91,17 +98,16 @@ public interface IMain
 
         void updateMangaList();
 
-        void onQueryTextChange(String aQueryText);
+        boolean onQueryTextChange(String aQueryText);
 
-        void updateSource();
+        boolean updateSource();
 
-        void onFilterSelected(MangaEnums.eFilterStatus aFilter);
+        boolean onFilterSelected(MangaEnums.eFilterStatus aFilter);
 
-        void onGenreFilterSelected(ArrayList<Manga> aMangaList);
+        boolean onGenreFilterSelected(ArrayList<Manga> aMangaList);
 
-        void onClearGenreFilter();
+        boolean onClearGenreFilter();
 
-        void updateSelection(Manga aManga);
-
+        boolean updateSelection(Manga aManga);
     }
 }
