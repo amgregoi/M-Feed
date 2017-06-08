@@ -11,7 +11,7 @@
 	<com.teioh.m_feed.UI.MainActivity.Widgets.SlidingTabLayout
 		android:id="@+id/tabs"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
+		android:layout_height="@dimen/single_line_height_48dp"
 		android:background="@color/ColorPrimary"
 		android:elevation="2dp"
 		/>
