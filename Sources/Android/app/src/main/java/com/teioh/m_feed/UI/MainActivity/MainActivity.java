@@ -69,9 +69,11 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     private IMain.ActivityPresenter mMainPresenter;
     private GoogleApiClient mGoogleApiClient;
 
-    public IMain.ActivityPresenter getPresenter(){
+    public IMain.ActivityPresenter getPresenter()
+    {
         return mMainPresenter;
     }
+
     /***
      * TODO..
      *
@@ -299,8 +301,8 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     @Override
     public void setupTabLayout()
     {
-        mTabLayout
-                .setDistributeEvenly(true); // To make the Tabs Fixed set this true, This makes the mTabLayout Space Evenly in Available width
+        // To make the Tabs Fixed set this true, This makes the mTabLayout Space Evenly in Available width
+        mTabLayout.setDistributeEvenly(true);
         mTabLayout.setCustomTabColorizer(position -> getResources().getColor(R.color.ColorAccent));
     }
 

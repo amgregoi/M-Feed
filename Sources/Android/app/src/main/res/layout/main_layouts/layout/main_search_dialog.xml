@@ -54,7 +54,7 @@
 
 		<include
 			android:id="@+id/search_content"
-			layout="@layout/main_search_footer"
+			layout="@layout/main_search_dialog_footer"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignParentBottom="true"

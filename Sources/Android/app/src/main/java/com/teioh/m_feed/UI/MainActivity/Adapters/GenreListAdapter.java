@@ -142,7 +142,7 @@ public class GenreListAdapter extends BaseAdapter
 
         if (lRowView == null)
         {
-            lRowView = mInflater.inflate(R.layout.main_genre_grid_item, null);
+            lRowView = mInflater.inflate(R.layout.main_search_dialog_grid_item, null);
 
             lGenreHolder = new GenreHolder();
             lGenreHolder.lTextView = (TextView) lRowView.findViewById(R.id.genre_title);
