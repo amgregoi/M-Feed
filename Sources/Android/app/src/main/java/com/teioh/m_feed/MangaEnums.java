@@ -93,8 +93,8 @@ public class MangaEnums
         Batoto(new Batoto()),
         MangaEden(new MangaEden()),
         MangaHere(new MangaHere()),
-        MangaJoy(new MangaJoy()),
-        MangaPark(new MangaPark());
+        MangaJoy(new MangaJoy());
+//        MangaPark(new MangaPark());
 
         SourceBase lSource;
 

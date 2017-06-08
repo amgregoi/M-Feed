@@ -417,6 +417,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         mDrawerList.setOnChildClickListener((aParent, aView, aGroupPosition, aChildPosition, aId) ->
                                             {
                                                 mMainPresenter.onSourceItemChosen(aChildPosition);
+                                                aParent.invalidateViews();
                                                 return true;
                                             });
     }
