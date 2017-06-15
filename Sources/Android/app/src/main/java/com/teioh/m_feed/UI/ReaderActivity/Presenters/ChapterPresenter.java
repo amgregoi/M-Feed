@@ -9,7 +9,7 @@ import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.UI.ReaderActivity.Adapters.ImagePageAdapter;
 import com.teioh.m_feed.UI.ReaderActivity.IReader;
-import com.teioh.m_feed.Utils.MFDBHelper;
+import com.teioh.m_feed.Utils.MangaDB;
 import com.teioh.m_feed.Utils.MangaLogger;
 import com.teioh.m_feed.WebSources.RequestWrapper;
 import com.teioh.m_feed.WebSources.SourceFactory;
@@ -184,7 +184,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
 
         try
         {
-            MFDBHelper.getInstance().updateChapter(mChapter);
+            MangaDB.getInstance().updateChapter(mChapter);
             Glide.get(mChapterReaderMapper.getContext()).clearMemory();
         }
         catch (Exception aException)
@@ -490,11 +490,11 @@ public class ChapterPresenter implements IReader.FragmentPresenter
 
         try
         {
-            Chapter viewedChapter = MFDBHelper.getInstance().getChapter(mChapter.getChapterUrl());
+            Chapter viewedChapter = MangaDB.getInstance().getChapter(mChapter.getChapterUrl());
 
             if (mChapterParentFollowing && viewedChapter == null)
             {
-                MFDBHelper.getInstance().addChapter(mChapter);
+                MangaDB.getInstance().addChapter(mChapter);
             }
 
         }

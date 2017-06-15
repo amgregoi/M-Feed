@@ -1,6 +1,5 @@
 package com.teioh.m_feed.UI.MangaActivity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -10,7 +9,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,9 +28,9 @@ import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
+import com.teioh.m_feed.UI.MainActivity.Fragments.FYesNoDialog;
 import com.teioh.m_feed.UI.MainActivity.MainActivity;
 import com.teioh.m_feed.UI.MangaActivity.Fragments.FImageDialogFragment;
-import com.teioh.m_feed.UI.MangaActivity.Fragments.FRemoveDialogFragment;
 import com.teioh.m_feed.UI.Maps.Listeners;
 
 import butterknife.Bind;
@@ -178,7 +176,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
         if (lId == R.id.remove_list)
         {
             //popup dialog
-            DialogFragment newFragment = FRemoveDialogFragment.getNewInstance(R.string.DialogFragmentRemove);
+            DialogFragment newFragment = FYesNoDialog.getNewInstance(R.string.DialogFragmentRemove, "Delete from library?", 0);
             newFragment.show(getSupportFragmentManager(), "dialog");
             return true;
         }else if(lId == R.id.clear_chapters){
@@ -470,10 +468,9 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
         Glide.get(this).clearMemory();
     }
 
-    @Override public void positive()
+    @Override public void positive(int aAction)
     {
         // After Ok code.
-        Log.i("rawr", "AS;LDKFJA;LSDFKJA;SLDKFJA;SDLFKJAS;DLFKJASDF");
         mFollowButton.setVisibility(View.VISIBLE);
         mReadingStatusButton.setVisibility(View.GONE);
         mContinueReadingButton.setVisibility(View.GONE);
@@ -481,7 +478,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
         invalidateOptionsMenu();
     }
 
-    @Override public void negative()
+    @Override public void negative(int aAction)
     {
         //Do nothing
     }

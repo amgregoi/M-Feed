@@ -8,7 +8,7 @@ import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.ReaderActivity.ReaderActivity;
-import com.teioh.m_feed.Utils.MFDBHelper;
+import com.teioh.m_feed.Utils.MangaDB;
 import com.teioh.m_feed.Utils.MangaLogger;
 import com.teioh.m_feed.Utils.NetworkService;
 import com.teioh.m_feed.WebSources.RequestWrapper;
@@ -59,7 +59,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
             if (mManga == null)
             {
                 String lMangaUrl = aBundle.getString(Manga.TAG);
-                mManga = MFDBHelper.getInstance().getManga(lMangaUrl);
+                mManga = MangaDB.getInstance().getManga(lMangaUrl);
             }
             if (!mRestoreActivity) mChapterOrderDescending = true;
             mMangaMapper.setActivityTitle(mManga.getTitle());
@@ -174,7 +174,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
         try
         {
             if (mAdapter != null) mAdapter.notifyDataSetChanged();
-            mManga = MFDBHelper.getInstance().getManga(mManga.getMangaURL()); //get updates manga object
+            mManga = MangaDB.getInstance().getManga(mManga.getMangaURL()); //get updates manga object
 
         }
         catch (Exception lException)
@@ -243,7 +243,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
 
         try
         {
-            MFDBHelper.getInstance().updateMangaFollow(mManga.getTitle(), aValue);
+            MangaDB.getInstance().updateMangaFollow(mManga.getTitle(), aValue);
             mManga.setFollowing(aValue);
         }
         catch (Exception lException)
@@ -267,8 +267,8 @@ public class MangaPresenter implements IManga.ActivityPresenter
         try
         {
             mManga.setFollowing(0);
-            MFDBHelper.getInstance().updateMangaUnfollow(mManga.getTitle());
-            MFDBHelper.getInstance().removeChapters(mManga);
+            MangaDB.getInstance().updateMangaUnfollow(mManga.getTitle());
+            MangaDB.getInstance().removeChapters(mManga);
         }
         catch (Exception lException)
         {
@@ -296,7 +296,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
             int lPosition = lNewChapterList.indexOf(aChapter);
 
             mManga.setRecentChapter(aChapter.getChapterUrl());
-            MFDBHelper.getInstance().updateManga(mManga);
+            MangaDB.getInstance().updateManga(mManga);
 
             Intent lIntent = ReaderActivity.getNewInstance(mMangaMapper.getContext(), lNewChapterList, lPosition, mManga.getMangaURL());
             mMangaMapper.getContext().startActivity(lIntent);
@@ -386,7 +386,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
         boolean lResult = true;
         try
         {
-            MFDBHelper.getInstance().resetCachedChapters();
+            MangaDB.getInstance().resetCachedChapters();
         }
         catch (Exception lException)
         {
@@ -460,7 +460,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
                     mManga.setInitialized(1);
                 }
 
-                MFDBHelper.getInstance().putManga(aManga);
+                MangaDB.getInstance().putManga(aManga);
                 if (mChapterListSubscription != null)
                 {
                     mObservableMangaSubscription.unsubscribe();

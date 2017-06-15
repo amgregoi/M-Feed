@@ -1,10 +1,8 @@
 package com.teioh.m_feed.WebSources.Sources;
 
-import android.content.ContentValues;
-
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
-import com.teioh.m_feed.Utils.MFDBHelper;
+import com.teioh.m_feed.Utils.MangaDB;
 import com.teioh.m_feed.Utils.MangaLogger;
 import com.teioh.m_feed.Utils.NetworkService;
 import com.teioh.m_feed.WebSources.RequestWrapper;
@@ -169,7 +167,7 @@ public class MangaHere extends SourceBase
             {
                 String mangaTitle = usefulElement.select("a").attr("rel");
                 String mangaUrl = usefulElement.select("a").attr("href");
-                Manga lManga = MFDBHelper.getInstance().getManga(mangaTitle);
+                Manga lManga = MangaDB.getInstance().getManga(mangaTitle);
                 if (lManga != null)
                 {
                     mangaList.add(lManga);
@@ -178,7 +176,7 @@ public class MangaHere extends SourceBase
                 {
                     lManga = new Manga(mangaTitle, mangaUrl, SourceKey);
                     mangaList.add(lManga);
-                    MFDBHelper.getInstance().putManga(lManga);
+                    MangaDB.getInstance().putManga(lManga);
                     updateMangaObservable(new RequestWrapper(lManga)).subscribeOn(Schedulers.computation())
                                                                      .doOnError(aThrowable -> MangaLogger.logError(TAG, lMethod, aThrowable.getMessage()))
                                                                      .subscribe();
@@ -333,7 +331,7 @@ public class MangaHere extends SourceBase
         lManga.setMangaUrl(aRequest.getMangaUrl());
 
 
-        MFDBHelper.getInstance().updateManga(lManga);
-        return MFDBHelper.getInstance().getManga(aRequest.getMangaUrl());
+        MangaDB.getInstance().updateManga(lManga);
+        return MangaDB.getInstance().getManga(aRequest.getMangaUrl());
     }
 }

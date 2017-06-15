@@ -3,7 +3,7 @@ package com.teioh.m_feed.WebSources.Sources;
 import com.squareup.okhttp.Headers;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
-import com.teioh.m_feed.Utils.MFDBHelper;
+import com.teioh.m_feed.Utils.MangaDB;
 import com.teioh.m_feed.Utils.MangaLogger;
 import com.teioh.m_feed.Utils.NetworkService;
 import com.teioh.m_feed.WebSources.RequestWrapper;
@@ -173,7 +173,7 @@ public class Batoto extends SourceBase
 
                 String lMangaUrl = lUrlElement.attr("href");
                 String lMangaTitle = lNameElement.text().trim();
-                Manga lManga = MFDBHelper.getInstance().getManga(lMangaUrl);
+                Manga lManga = MangaDB.getInstance().getManga(lMangaUrl);
 
 
                 if (lManga != null)
@@ -184,7 +184,7 @@ public class Batoto extends SourceBase
                 {
                     lManga = new Manga(lMangaTitle, lMangaUrl, SourceKey);
                     aList.add(lManga);
-                    MFDBHelper.getInstance().putManga(lManga);
+                    MangaDB.getInstance().putManga(lManga);
                     updateMangaObservable(new RequestWrapper(lManga)).subscribeOn(Schedulers.computation())
                                                                      .doOnError(aThrowable -> MangaLogger.logError(TAG, lMethod, aThrowable.getMessage()))
                                                                      .subscribe();
@@ -311,7 +311,7 @@ public class Batoto extends SourceBase
         Elements genreElements = parsedDocument.select("img[src=http://bato.to/forums/public/style_images/master/bullet_black.png]");
         Element thumbnailUrlElement = parsedDocument.select("img[src^=http://img.bato.to/forums/uploads/]").first();
 
-        Manga newManga = MFDBHelper.getInstance().getManga(request.getMangaUrl());
+        Manga newManga = MangaDB.getInstance().getManga(request.getMangaUrl());
 
         if (newManga == null) newManga = new Manga(request.getMangaTitle(), request.getMangaUrl(), SourceKey);
 
@@ -356,7 +356,7 @@ public class Batoto extends SourceBase
 
         newManga.setInitialized(1);
 
-        MFDBHelper.getInstance().putManga(newManga);
+        MangaDB.getInstance().putManga(newManga);
         return newManga;
 
     }

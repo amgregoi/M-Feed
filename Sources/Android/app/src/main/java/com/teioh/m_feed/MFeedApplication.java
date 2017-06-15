@@ -3,12 +3,11 @@ package com.teioh.m_feed;
 import android.app.Application;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.ViewTarget;
 import com.crashlytics.android.Crashlytics;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
-import com.teioh.m_feed.Utils.MFDBHelper;
+import com.teioh.m_feed.Utils.MangaDB;
 import com.teioh.m_feed.Utils.MangaLogger;
 import com.teioh.m_feed.Utils.SharedPrefs;
 
@@ -47,7 +46,7 @@ public class MFeedApplication extends Application
         super.onCreate();
 
         //creates database if fresh install
-        MFDBHelper.getInstance().createDatabase();
+        MangaDB.getInstance().createDatabase();
         SharedPrefs.initializePreferences();
 
         ViewTarget.setTagId(R.id.glide_tag);

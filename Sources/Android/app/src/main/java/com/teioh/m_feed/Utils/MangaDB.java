@@ -24,17 +24,17 @@ import rx.Subscriber;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
-public class MFDBHelper extends SQLiteOpenHelper
+public class MangaDB extends SQLiteOpenHelper
 {
-    public static final String TAG = MFDBHelper.class.getSimpleName();
+    public static final String TAG = MangaDB.class.getSimpleName();
 
     public static final int sDATABASE_VERSION = 1;
     private static final String sDB_PATH = "/data/data/com.teioh.m_feed/databases/";
     private static final String sDB_NAME = "MangaFeed.db";
-    private static MFDBHelper sInstance;
+    private static MangaDB sInstance;
     private Context mContext;
 
-    public MFDBHelper(Context aContext)
+    public MangaDB(Context aContext)
     {
         super(aContext, sDB_NAME, null, sDATABASE_VERSION);
         mContext = aContext;
@@ -43,11 +43,11 @@ public class MFDBHelper extends SQLiteOpenHelper
     /***
      * TODO...
      */
-    public static synchronized MFDBHelper getInstance()
+    public static synchronized MangaDB getInstance()
     {
         if (sInstance == null)
         {
-            sInstance = new MFDBHelper(MFeedApplication.getInstance());
+            sInstance = new MangaDB(MFeedApplication.getInstance());
         }
         return sInstance;
     }
@@ -340,7 +340,7 @@ public class MFDBHelper extends SQLiteOpenHelper
     public void resetLibrary(){
         QueryResultIterable<Manga> itr = cupboard().withDatabase(getReadableDatabase())
                                                    .query(Manga.class)
-                                                   .withSelection("NOT following = ? AND source = ?", "0", new SourceFactory().getSourceName())
+                                                   .withSelection("NOT following = ?", "0")
                                                    .query();
 
         for (Manga manga : itr)
