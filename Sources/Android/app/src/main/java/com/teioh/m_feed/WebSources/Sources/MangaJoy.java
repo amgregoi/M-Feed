@@ -200,30 +200,30 @@ public class MangaJoy extends SourceBase
     /***
      * TODO...
      *
-     * @param parsedDocument
-     * @param title
+     * @param aParsedDocument
+     * @param aTitle
      * @return
      */
-    private List<Chapter> scrapeChaptersFromParsedDocument(final Document parsedDocument, final String title)
+
+    private List<Chapter> scrapeChaptersFromParsedDocument(final Document aParsedDocument, final String aTitle)
     {
-        List<Chapter> chapterList = new ArrayList<>();
-        Elements chapterElements = parsedDocument.select("ul.chapter-list").select("li");
-        int numChapters = chapterElements.size();
+        List<Chapter> lChapterList = new ArrayList<>();
+        Elements lChapterElements = aParsedDocument.select("ul.chapter-list").select("li");
+        int lNumChapters = lChapterElements.size();
 
+        String lChapterUrl, lChapterTitle, lChapterDate;
 
-        for (Element chapterElement : chapterElements)
+        for (Element iChapterElement : lChapterElements)
         {
-            String chapterUrl = chapterElement.select("a").attr("href");
-            String cTitle = chapterElement.select("span").first().text();
+            lChapterUrl = iChapterElement.select("a").attr("href");
+            lChapterTitle = iChapterElement.select("span").first().text();
+            lChapterDate = iChapterElement.select("span").get(1).text();
 
-            String chapterDate = chapterElement.select("span").get(1).text();
+            lChapterList.add(new Chapter(lChapterUrl, aTitle, lChapterTitle, lChapterDate, lNumChapters));
 
-            Chapter curChapter = new Chapter(chapterUrl, title, cTitle, chapterDate, numChapters);
-            numChapters--;
-
-            chapterList.add(curChapter);
+            lNumChapters--;
         }
-        return chapterList;
+        return lChapterList;
     }
 
     /***
