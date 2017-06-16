@@ -10,8 +10,7 @@
 	android:theme="@style/Base.ThemeOverlay.AppCompat.Dark">
 
 	<RelativeLayout
-		android:id="@+id/searchBar"
-		android:layout_width="fill_parent"
+        android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:background="@color/ColorPrimary"
 		android:paddingBottom="5dp">

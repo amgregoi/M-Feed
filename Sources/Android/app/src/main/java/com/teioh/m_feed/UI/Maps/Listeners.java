@@ -7,8 +7,8 @@ public interface Listeners
 
     interface DialogYesNoListener
     {
-        void positive();
-        void negative();
+        void positive(int aAction);
+        void negative(int aAction);
     }
 
     /**

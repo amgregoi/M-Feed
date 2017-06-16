@@ -2,7 +2,7 @@ package com.teioh.m_feed.WebSources.Sources;
 
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
-import com.teioh.m_feed.Utils.MFDBHelper;
+import com.teioh.m_feed.Utils.MangaDB;
 import com.teioh.m_feed.Utils.MangaLogger;
 import com.teioh.m_feed.Utils.NetworkService;
 import com.teioh.m_feed.WebSources.RequestWrapper;
@@ -175,7 +175,7 @@ public class MangaEden extends SourceBase
             String mangaTitle = nameElement.text();
             String mangaUrl = "https://www.mangaeden.com/api/manga/" + urlElement.id().substring(0, 24) + "/";
 
-            Manga lManga = MFDBHelper.getInstance().getManga(mangaUrl);
+            Manga lManga = MangaDB.getInstance().getManga(mangaUrl);
             if (lManga != null)
             {
                 mangaList.add(lManga);
@@ -184,7 +184,7 @@ public class MangaEden extends SourceBase
             {
                 lManga = new Manga(mangaTitle, mangaUrl, SourceKey);
                 mangaList.add(lManga);
-                MFDBHelper.getInstance().putManga(lManga);
+                MangaDB.getInstance().putManga(lManga);
                 updateMangaObservable(new RequestWrapper(lManga)).subscribeOn(Schedulers.computation())
                                                                  .doOnError(aThrowable -> MangaLogger.logError(TAG, lMethod, aThrowable.getMessage()))
                                                                  .subscribe();
@@ -339,7 +339,7 @@ public class MangaEden extends SourceBase
             }
         }
 
-        Manga newManga = MFDBHelper.getInstance().getManga(request.getMangaUrl());
+        Manga newManga = MangaDB.getInstance().getManga(request.getMangaUrl());
 
         newManga.setArtist(parsedJsonObject.getString("artist"));
         newManga.setAuthor(parsedJsonObject.getString("author"));
@@ -348,7 +348,7 @@ public class MangaEden extends SourceBase
         newManga.setPicUrl("https://cdn.mangaeden.com/mangasimg/" + parsedJsonObject.getString("image"));
         newManga.setInitialized(1);
 
-        MFDBHelper.getInstance().putManga(newManga);
+        MangaDB.getInstance().putManga(newManga);
         return newManga;
     }
 }

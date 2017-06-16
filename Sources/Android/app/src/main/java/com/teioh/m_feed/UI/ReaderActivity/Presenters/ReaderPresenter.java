@@ -1,20 +1,15 @@
 package com.teioh.m_feed.UI.ReaderActivity.Presenters;
 
-import android.content.ComponentCallbacks2;
 import android.os.Bundle;
 
-import com.bumptech.glide.Glide;
-import com.teioh.m_feed.MFeedApplication;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
-import com.teioh.m_feed.UI.MainActivity.MainActivity;
-import com.teioh.m_feed.UI.MangaActivity.MangaActivity;
 import com.teioh.m_feed.UI.MangaActivity.MangaPresenter;
 import com.teioh.m_feed.UI.ReaderActivity.Adapters.ChapterPageAdapter;
 import com.teioh.m_feed.UI.ReaderActivity.ChapterFragment;
 import com.teioh.m_feed.UI.ReaderActivity.IReader;
 import com.teioh.m_feed.UI.ReaderActivity.ReaderActivity;
-import com.teioh.m_feed.Utils.MFDBHelper;
+import com.teioh.m_feed.Utils.MangaDB;
 import com.teioh.m_feed.Utils.MangaLogger;
 import com.teioh.m_feed.Utils.SharedPrefs;
 
@@ -106,7 +101,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
             }
 
             String lParentUrl = aBundle.getString(PARENT_URL);
-            mParentManga = MFDBHelper.getInstance().getManga(lParentUrl);
+            mParentManga = MangaDB.getInstance().getManga(lParentUrl);
             mChapterPagerAdapter = new ChapterPageAdapter(((ReaderActivity) mReaderMap).getSupportFragmentManager(), mChapterList, mParentManga.getFollowing());
             mReaderMap.registerAdapter(mChapterPagerAdapter);
             mReaderMap.setCurrentChapter(mChapterPosition);
@@ -346,7 +341,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
             if (aPosition < mChapterList.size() && aPosition > 0)
             {
                 mParentManga.setRecentChapter(mChapterList.get(aPosition).getChapterUrl());
-                MFDBHelper.getInstance().updateManga(mParentManga);
+                MangaDB.getInstance().updateManga(mParentManga);
             }
         }
         catch (Exception lException)

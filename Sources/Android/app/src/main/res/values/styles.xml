@@ -45,7 +45,18 @@
     <style name="MyAnimation.Window" parent="@android:style/Animation.Activity">
         <item name="android:windowEnterAnimation">@transition/anim_in</item>
         <item name="android:windowExitAnimation">@transition/anim_out</item>
+        <item name="colorPrimary">@color/ColorPrimaryDark</item>
     </style>
+
+    <!-- group -->
+    <style name="MyTitleTextStyle">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
+    </style>
+
+    <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowTitleStyle">@style/MyTitleTextStyle</item>
+    </style>
+    <!-- end group -->
 
     <style name="menu_labels_style">
         <item name="android:background">@drawable/dark_border_style</item>

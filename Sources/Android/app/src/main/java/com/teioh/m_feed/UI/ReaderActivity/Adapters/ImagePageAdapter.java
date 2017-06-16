@@ -1,37 +1,24 @@
 package com.teioh.m_feed.UI.ReaderActivity.Adapters;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
-import android.transition.TransitionSet;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.TransitionOptions;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.Option;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.ViewTarget;
-import com.bumptech.glide.request.transition.DrawableCrossFadeFactory;
 import com.bumptech.glide.request.transition.Transition;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.bumptech.glide.request.transition.TransitionFactory;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.ReaderActivity.Widgets.GestureImageView;
-import com.teioh.m_feed.Utils.MFDBHelper;
 import com.teioh.m_feed.Utils.MangaLogger;
 
 import java.util.List;

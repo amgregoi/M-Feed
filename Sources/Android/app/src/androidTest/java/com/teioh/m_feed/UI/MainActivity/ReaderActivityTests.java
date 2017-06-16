@@ -43,7 +43,7 @@ public class ReaderActivityTests
      * while in the reader activity.
      */
     @Test
-    public void testChapterForwareAndPrevious()
+    public void testChapterForwardAndPrevious()
     {
         open("Naruto");
 

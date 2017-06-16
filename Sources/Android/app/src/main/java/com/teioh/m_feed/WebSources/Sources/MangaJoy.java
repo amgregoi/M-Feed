@@ -1,10 +1,8 @@
 package com.teioh.m_feed.WebSources.Sources;
 
-import android.content.ContentValues;
-
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
-import com.teioh.m_feed.Utils.MFDBHelper;
+import com.teioh.m_feed.Utils.MangaDB;
 import com.teioh.m_feed.Utils.MangaLogger;
 import com.teioh.m_feed.Utils.NetworkService;
 import com.teioh.m_feed.WebSources.RequestWrapper;
@@ -153,7 +151,7 @@ public class MangaJoy extends SourceBase
                     String lMangaUrl = usefulElement.select("a").attr("href");
 
                     if (lMangaUrl.charAt(lMangaUrl.length() - 1) != '/') lMangaUrl += "/"; //add ending slash to url if missing
-                    Manga lManga = MFDBHelper.getInstance().getManga(lMangaUrl);
+                    Manga lManga = MangaDB.getInstance().getManga(lMangaUrl);
                     if (lManga != null)
                     {
                         lMangaList.add(lManga);
@@ -162,7 +160,7 @@ public class MangaJoy extends SourceBase
                     {
                         lManga = new Manga(lMangaTitle, lMangaUrl, SourceKey);
                         lMangaList.add(lManga);
-                        MFDBHelper.getInstance().putManga(lManga);
+                        MangaDB.getInstance().putManga(lManga);
 
                         updateMangaObservable(new RequestWrapper(lManga)).subscribeOn(Schedulers.computation())
                                                                          .doOnError(aThrowable -> MangaLogger.logError(TAG, lMethod, aThrowable.getMessage()))
@@ -328,8 +326,8 @@ public class MangaJoy extends SourceBase
             lManga.setSource(SourceKey);
             lManga.setMangaUrl(aRequest.getMangaUrl());
 
-            MFDBHelper.getInstance().updateManga(lManga);
-            return MFDBHelper.getInstance().getManga(aRequest.getMangaUrl());
+            MangaDB.getInstance().updateManga(lManga);
+            return MangaDB.getInstance().getManga(aRequest.getMangaUrl());
         }
         catch (Exception aException)
         {

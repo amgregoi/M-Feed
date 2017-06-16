@@ -9,13 +9,11 @@ import android.widget.TextView;
 
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.R;
-import com.teioh.m_feed.Utils.MFDBHelper;
+import com.teioh.m_feed.Utils.MangaDB;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 public class ChapterListAdapter extends ArrayAdapter
 {
@@ -78,7 +76,7 @@ public class ChapterListAdapter extends ArrayAdapter
             return lRowView;
         }
 
-        Chapter lViewedChapter = MFDBHelper.getInstance().getChapter(lChapter.getChapterUrl());
+        Chapter lViewedChapter = MangaDB.getInstance().getChapter(lChapter.getChapterUrl());
 
 
         if (lViewedChapter != null)

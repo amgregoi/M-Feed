@@ -63,6 +63,7 @@ public class RecentFragment extends MainFragmentBase
     {
         mWifiView.setVisibility(View.GONE);
         mGridView.setVisibility(View.GONE);
+        mGridView.setHideScrollbar(true);
         mSwipeContainer.post(() -> mSwipeContainer.setRefreshing(true));
     }
 
@@ -75,6 +76,7 @@ public class RecentFragment extends MainFragmentBase
         mSwipeContainer.setRefreshing(false);
         mWifiView.setVisibility(View.GONE);
         mGridView.setVisibility(View.VISIBLE);
+        mGridView.setHideScrollbar(false);
     }
 
     /***

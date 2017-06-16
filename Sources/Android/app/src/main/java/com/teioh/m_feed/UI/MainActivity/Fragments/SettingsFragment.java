@@ -3,6 +3,7 @@ package com.teioh.m_feed.UI.MainActivity.Fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,8 @@ import android.widget.ToggleButton;
 
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.LoggingActivity;
-import com.teioh.m_feed.Utils.MFDBHelper;
+import com.teioh.m_feed.UI.Maps.Listeners;
+import com.teioh.m_feed.Utils.MangaDB;
 import com.teioh.m_feed.Utils.MangaLogger;
 import com.teioh.m_feed.Utils.SharedPrefs;
 
@@ -19,7 +21,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SettingsFragment extends Fragment
+public class SettingsFragment extends Fragment implements Listeners.DialogYesNoListener
 {
     public final static String TAG = SettingsFragment.class.getSimpleName();
 
@@ -93,9 +95,10 @@ public class SettingsFragment extends Fragment
     }
 
     @OnClick(R.id.show_logs)
-    public void onShowLogsClick(){
+    public void onShowLogsClick()
+    {
         //open logs fragment
-        if(SharedPrefs.getLoggingStatus())
+        if (SharedPrefs.getLoggingStatus())
         {
             Intent lLogActivity = LoggingActivity.getNewInstance(getContext());
             startActivity(lLogActivity);
@@ -104,48 +107,100 @@ public class SettingsFragment extends Fragment
     }
 
     @OnClick(R.id.clear_logs)
-    public void onClearLogsClick(){
-        MangaLogger.clearLogs();
-        MangaLogger.makeToast("Clearing logs");
+    public void onClearLogsClick()
+    {
+        launchYesNoDialog(R.string.logs, getString(R.string.settings_clear_logs), 99);
     }
 
     @OnClick(R.id.toggle_logs)
-    public void onToggleLogsClick(){
+    public void onToggleLogsClick()
+    {
         boolean lNewStatus = !SharedPrefs.getLoggingStatus();
         SharedPrefs.setLoggingStatus(lNewStatus);
         mLoggingToggle.setChecked(lNewStatus);
         MangaLogger.makeToast("Toggling internal logger");
     }
 
-    @OnClick(R.id.reset_downloaded_chapters)
-    public void onRemoveDownloadedChaptersClick(){
-        MangaLogger.logError(TAG, "onRemoveDownloadedChaptersClick", "Method not implemented");
-        MangaLogger.makeToast("Method not implemented");
-    }
-
     @OnClick(R.id.reset_cached_chapters)
-    public void onResetChaptersClick(){
-        MangaLogger.logError(TAG, "onResetChaptersClick", "WATCH FOR SLOW PERFORMANCES, MAY NEED TO MOVE OFF MAIN THREAD");
-        MFDBHelper.getInstance().resetCachedChapters();
-        MangaLogger.makeToast("Clearing chapter cache");
+    public void onResetChaptersClick()
+    {
+        launchYesNoDialog(R.string.chapter_cache, getString(R.string.settings_chapter_cache), 0);
     }
 
     @OnClick(R.id.reset_followed_manga_pref)
-    public void onResetLibraryClick(){
-        MangaLogger.logError(TAG, "onResetLibraryClick", "WATCH FOR SLOW PERFORMANCES, MAY NEED TO MOVE OFF MAIN THREAD");
-        MFDBHelper.getInstance().resetLibrary();
-        MangaLogger.makeToast("Resetting user library");
+    public void onResetLibraryClick()
+    {
+        launchYesNoDialog(R.string.library, getString(R.string.settings_library), 1);
+    }
+
+    @OnClick(R.id.reset_downloaded_chapters)
+    public void onRemoveDownloadedChaptersClick()
+    {
+        launchYesNoDialog(R.string.downloaded_chapters, getString(R.string.settings_downloaded_chapters), 2);
     }
 
     @OnClick(R.id.contact_us)
-    public void onContactUsClick(){
-        MangaLogger.logError(TAG, "onContactUsClick", "Method not implemented");
-        MangaLogger.makeToast("Method not implemented");
+    public void onContactUsClick()
+    {
+        launchYesNoDialog(R.string.contact_us, getString(R.string.settings_contact_us), 3);
     }
 
-    private void initializeLayout(){
+    private void initializeLayout()
+    {
         mLoggingToggle.setChecked(SharedPrefs.getLoggingStatus());
         MangaLogger.logInfo(TAG, "initializeLayout", "Finished initializing settings layout");
 
+    }
+
+    @Override public void positive(int aAction)
+    {
+        switch (aAction)
+        {
+            case 0://Clear Chapter Cache
+                MangaLogger.logError(TAG, "positive", "WATCH FOR SLOW PERFORMANCES, MAY NEED TO MOVE OFF MAIN THREAD");
+                MangaDB.getInstance().resetCachedChapters();
+                MangaLogger.makeToast("Clearing chapter cache");
+                break;
+
+            case 1://Clear User Library
+                //TODO... definitely need to move off main thread, and reset Main Activity reviews
+                MangaLogger.logError(TAG, "positive", "WATCH FOR SLOW PERFORMANCES, MAY NEED TO MOVE OFF MAIN THREAD");
+                MangaDB.getInstance().resetLibrary();
+                MangaLogger.makeToast("Resetting user library");
+                break;
+
+            case 2: //Remove Downloaded Chapters
+                MangaLogger.logError(TAG, "positive", getString(R.string.method_not_implemented));
+                MangaLogger.makeToast(getString(R.string.method_not_implemented));
+                break;
+
+            case 3://Contact Us
+                MangaLogger.logError(TAG, "positive", getString(R.string.method_not_implemented));
+                MangaLogger.makeToast(getString(R.string.method_not_implemented));
+                break;
+
+            case 99://Logs
+                MangaLogger.clearLogs();
+                MangaLogger.makeToast("Clearing logs");
+                break;
+
+            default:
+                MangaLogger.logError(TAG, "positive", "Action not implemented");
+                MangaLogger.makeToast("Action not implemented");
+
+        }
+    }
+
+    @Override public void negative(int aAction)
+    {
+        MangaLogger.makeToast("NEGATIVE");
+
+    }
+
+    private void launchYesNoDialog(int aTitleRes, String aMessage, int aAction)
+    {
+        DialogFragment newFragment = FYesNoDialog.getNewInstance(aTitleRes, aMessage, aAction, false);
+        newFragment.setTargetFragment(this, 1);
+        newFragment.show(getActivity().getSupportFragmentManager(), "dialog");
     }
 }

@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.Adapters.GenreListAdapter;
-import com.teioh.m_feed.Utils.MFDBHelper;
+import com.teioh.m_feed.Utils.MangaDB;
 import com.teioh.m_feed.Utils.MangaLogger;
 import com.teioh.m_feed.WebSources.SourceFactory;
 
@@ -150,7 +150,7 @@ public class FilterDialogFragment extends DialogFragment
                 lSelectionArgs.add("%" + iString.replaceAll("\\s", "") + "%"); //genres have been stripped of spaces in the database
             }
 
-            QueryResultIterable<Manga> iFilteredManga = cupboard().withDatabase(MFDBHelper.getInstance().getReadableDatabase())
+            QueryResultIterable<Manga> iFilteredManga = cupboard().withDatabase(MangaDB.getInstance().getReadableDatabase())
                                                                   .query(Manga.class)
                                                                   .withSelection(lSelection.toString(), lSelectionArgs.toArray(new String[lSelectionArgs
                                                                           .size()]))

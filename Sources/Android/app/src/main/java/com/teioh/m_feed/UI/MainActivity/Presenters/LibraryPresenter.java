@@ -1,14 +1,11 @@
 package com.teioh.m_feed.UI.MainActivity.Presenters;
 
-import android.os.Bundle;
 import android.widget.Toast;
 
 import com.teioh.m_feed.MFeedApplication;
 import com.teioh.m_feed.UI.MainActivity.IMain;
-import com.teioh.m_feed.Utils.MFDBHelper;
+import com.teioh.m_feed.Utils.MangaDB;
 import com.teioh.m_feed.Utils.MangaLogger;
-
-import java.util.ArrayList;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -39,12 +36,12 @@ public class LibraryPresenter extends MainFragmentPresenterBase
 
         try
         {
-            mMangaListSubscription = MFDBHelper.getInstance()
-                                               .getLibraryList().cache()
-                                               .subscribeOn(Schedulers.io())
-                                               .observeOn(AndroidSchedulers.mainThread())
-                                               .doOnError(throwable -> Toast.makeText(MFeedApplication.getInstance(), throwable.getMessage(), Toast.LENGTH_SHORT))
-                                               .subscribe(aManga -> updateMangaGridView(aManga));
+            mMangaListSubscription = MangaDB.getInstance()
+                                            .getLibraryList().cache()
+                                            .subscribeOn(Schedulers.io())
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .doOnError(throwable -> Toast.makeText(MFeedApplication.getInstance(), throwable.getMessage(), Toast.LENGTH_SHORT))
+                                            .subscribe(aManga -> updateMangaGridView(aManga));
         }
         catch (Exception aException)
         {

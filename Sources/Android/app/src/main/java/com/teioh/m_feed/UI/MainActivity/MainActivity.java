@@ -192,13 +192,6 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     @Override
     public boolean onOptionsItemSelected(MenuItem aItem)
     {
-        int lId = aItem.getItemId();
-
-        if (lId == R.id.settings)
-        {
-            return true;
-        }
-
         return super.onOptionsItemSelected(aItem);
     }
 
@@ -366,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     @Override
     public void setDrawerLayoutListener()
     {
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolBar, R.string.app_name, R.string.Login)
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolBar, R.string.app_name, R.string.app_name)
         {
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView)
@@ -419,6 +412,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         mDrawerList.setOnChildClickListener((aParent, aView, aGroupPosition, aChildPosition, aId) ->
                                             {
                                                 mMainPresenter.onSourceItemChosen(aChildPosition);
+                                                aParent.invalidateViews();
                                                 return true;
                                             });
     }

@@ -1,6 +1,5 @@
 package com.teioh.m_feed.UI.MangaActivity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -10,7 +9,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,16 +28,15 @@ import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
+import com.teioh.m_feed.UI.MainActivity.Fragments.FYesNoDialog;
 import com.teioh.m_feed.UI.MainActivity.MainActivity;
 import com.teioh.m_feed.UI.MangaActivity.Fragments.FImageDialogFragment;
-import com.teioh.m_feed.UI.MangaActivity.Fragments.FRemoveDialogFragment;
 import com.teioh.m_feed.UI.Maps.Listeners;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
-
 
 
 public class MangaActivity extends AppCompatActivity implements IManga.ActivityView, Listeners.DialogYesNoListener
@@ -178,10 +175,13 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
         if (lId == R.id.remove_list)
         {
             //popup dialog
-            DialogFragment newFragment = FRemoveDialogFragment.getNewInstance(R.string.DialogFragmentRemove);
+            DialogFragment newFragment = FYesNoDialog
+                    .getNewInstance(R.string.remove_from_library_title, getString(R.string.remove_from_library_text), 0, true);
             newFragment.show(getSupportFragmentManager(), "dialog");
             return true;
-        }else if(lId == R.id.clear_chapters){
+        }
+        else if (lId == R.id.clear_chapters)
+        {
             mMangaPresenter.clearCachedChapters();
         }
 
@@ -257,7 +257,8 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
             mGenresText.setText(aManga.getmGenre());
             mAlternateText.setText(aManga.getAlternate());
             mStatusText.setText(aManga.getStatus());
-            Glide.with(getContext()).load(aManga.getPicUrl()).apply(new RequestOptions().skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.RESOURCE)).into(mMangaImage);
+            Glide.with(getContext()).load(aManga.getPicUrl())
+                 .apply(new RequestOptions().skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.RESOURCE)).into(mMangaImage);
             mChapterList.addHeaderView(mMangaInfoHeader, null, false);
             mChapterList.addHeaderView(mChapterHeader, null, false);
 
@@ -362,66 +363,83 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     {
 
         //Image Click
-        mMangaImage.setOnClickListener(v -> {
-            DialogFragment dialog = FImageDialogFragment.getNewInstance(mMangaPresenter.getImageUrl());
-            dialog.show(getSupportFragmentManager(), null);
-        });
+        mMangaImage.setOnClickListener(v ->
+                                       {
+                                           DialogFragment dialog = FImageDialogFragment.getNewInstance(mMangaPresenter.getImageUrl());
+                                           dialog.show(getSupportFragmentManager(), null);
+                                       });
 
         //Follow Button
-        mFollowButton.setOnClickListener(v -> {
-            mMangaPresenter.onFollowButtonClick(1);
-            mFollowButton.setVisibility(View.GONE);
-            mContinueReadingButton.setVisibility(View.VISIBLE);
-            mReadingStatusButton.setVisibility(View.VISIBLE);
-            invalidateOptionsMenu();
-        });
+        mFollowButton.setOnClickListener(v ->
+                                         {
+                                             mMangaPresenter.onFollowButtonClick(1);
+                                             mFollowButton.setVisibility(View.GONE);
+                                             mContinueReadingButton.setVisibility(View.VISIBLE);
+                                             mReadingStatusButton.setVisibility(View.VISIBLE);
+                                             invalidateOptionsMenu();
+                                         });
 
         //Change follow status (Reading, Plan to read, on hold, etc..) MAL
-        mReadingStatusButton.setOnClickListener(v -> {
-            //Creating the instance of PopupMenu
-            PopupMenu lPopupMenu = new PopupMenu(MangaActivity.this, mReadingStatusButton);
-            //Inflating the Popup using xml file
-            lPopupMenu.getMenuInflater().inflate(R.menu.menu_follow, lPopupMenu.getMenu());
+        mReadingStatusButton.setOnClickListener(v ->
+                                                {
+                                                    //Creating the instance of PopupMenu
+                                                    PopupMenu lPopupMenu = new PopupMenu(MangaActivity.this, mReadingStatusButton);
+                                                    //Inflating the Popup using xml file
+                                                    lPopupMenu.getMenuInflater().inflate(R.menu.menu_follow, lPopupMenu.getMenu());
 
-            //registering lPopupMenu with OnMenuItemClickListener
-            lPopupMenu.setOnMenuItemClickListener(item -> {
-                MangaEnums.eFollowType lValues[] = MangaEnums.eFollowType.values();
-                switch (item.getItemId())
-                {
-                    case R.id.reading_menu:
-                        mMangaPresenter.onFollowButtonClick(1);
-                        mReadingStatusButton.setText(lValues[0].toString());
-                        break;
-                    case R.id.complete_menu:
-                        mMangaPresenter.onFollowButtonClick(2);
-                        mReadingStatusButton.setText(lValues[1].toString());
-                        break;
-                    case R.id.hold_menu:
-                        mMangaPresenter.onFollowButtonClick(3);
-                        mReadingStatusButton.setText(lValues[2].toString());
-                        break;
-                }
-                return true;
-            });
+                                                    //registering lPopupMenu with OnMenuItemClickListener
+                                                    lPopupMenu.setOnMenuItemClickListener(item ->
+                                                                                          {
+                                                                                              MangaEnums.eFollowType lValues[] = MangaEnums.eFollowType
+                                                                                                      .values();
+                                                                                              switch (item.getItemId())
+                                                                                              {
+                                                                                                  case R.id.reading_menu:
+                                                                                                      mMangaPresenter
+                                                                                                              .onFollowButtonClick(1);
+                                                                                                      mReadingStatusButton
+                                                                                                              .setText(lValues[0]
+                                                                                                                               .toString());
+                                                                                                      break;
+                                                                                                  case R.id.complete_menu:
+                                                                                                      mMangaPresenter
+                                                                                                              .onFollowButtonClick(2);
+                                                                                                      mReadingStatusButton
+                                                                                                              .setText(lValues[1]
+                                                                                                                               .toString());
+                                                                                                      break;
+                                                                                                  case R.id.hold_menu:
+                                                                                                      mMangaPresenter
+                                                                                                              .onFollowButtonClick(3);
+                                                                                                      mReadingStatusButton
+                                                                                                              .setText(lValues[2]
+                                                                                                                               .toString());
+                                                                                                      break;
+                                                                                              }
+                                                                                              return true;
+                                                                                          });
 
-            lPopupMenu.show(); //showing lPopupMenu menu
+                                                    lPopupMenu.show(); //showing lPopupMenu menu
 
 
-        });
+                                                });
 
-        mContinueReadingButton.setOnClickListener(v -> {
-            mMangaPresenter.onContinueReadingButtonClick();
-        });
+        mContinueReadingButton.setOnClickListener(v ->
+                                                  {
+                                                      mMangaPresenter.onContinueReadingButtonClick();
+                                                  });
     }
 
     /***
      * TODO..
      */
     @Override
-    public void showFailedToLoad(){
+    public void showFailedToLoad()
+    {
         mFailedToLoad.setVisibility(View.VISIBLE);
         mChapterList.setVisibility(View.GONE);
     }
+
     /***
      * TODO..
      *
@@ -470,10 +488,9 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
         Glide.get(this).clearMemory();
     }
 
-    @Override public void positive()
+    @Override public void positive(int aAction)
     {
         // After Ok code.
-        Log.i("rawr", "AS;LDKFJA;LSDFKJA;SLDKFJA;SDLFKJAS;DLFKJASDF");
         mFollowButton.setVisibility(View.VISIBLE);
         mReadingStatusButton.setVisibility(View.GONE);
         mContinueReadingButton.setVisibility(View.GONE);
@@ -481,7 +498,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
         invalidateOptionsMenu();
     }
 
-    @Override public void negative()
+    @Override public void negative(int aAction)
     {
         //Do nothing
     }

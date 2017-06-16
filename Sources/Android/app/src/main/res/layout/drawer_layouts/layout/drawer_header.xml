@@ -11,8 +11,7 @@
 		android:minHeight="@dimen/triple_line_height_88dp">
 
 		<ImageView
-			android:id="@+id/user_image"
-			android:layout_width="wrap_content"
+            android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center_vertical"
 			android:layout_marginStart="@dimen/baseline_content_unit_16dp"

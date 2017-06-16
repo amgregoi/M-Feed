@@ -23,7 +23,7 @@ import com.teioh.m_feed.UI.MainActivity.Fragments.RecentFragment;
 import com.teioh.m_feed.UI.MainActivity.Fragments.SettingsFragment;
 import com.teioh.m_feed.UI.MainActivity.IMain;
 import com.teioh.m_feed.UI.MainActivity.MainActivity;
-import com.teioh.m_feed.Utils.MFDBHelper;
+import com.teioh.m_feed.Utils.MangaDB;
 import com.teioh.m_feed.Utils.MangaLogger;
 import com.teioh.m_feed.Utils.SharedPrefs;
 import com.teioh.m_feed.WebSources.SourceBase;
@@ -497,7 +497,7 @@ public class MainPresenter implements IMain.ActivityPresenter
 
         try
         {
-            Manga lManga = MFDBHelper.getInstance().getManga(mRecentMangaId);
+            Manga lManga = MangaDB.getInstance().getManga(mRecentMangaId);
 
             if (lManga != null)
             {

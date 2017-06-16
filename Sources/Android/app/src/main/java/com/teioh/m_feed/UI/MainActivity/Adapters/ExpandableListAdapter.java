@@ -11,6 +11,8 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
 import com.teioh.m_feed.R;
+import com.teioh.m_feed.WebSources.SourceBase;
+import com.teioh.m_feed.WebSources.SourceFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -82,6 +84,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter
 
         TextView lSourceTextView = (TextView) aConvertView.findViewById(R.id.sourceTitle);
         lSourceTextView.setText(lSource);
+
+        if (lSource.equals(new SourceFactory().getSourceName()))
+        {
+            lSourceTextView.setTextColor(mContext.getResources().getColor(R.color.ColorAccent));
+        }
+        else
+        {
+            lSourceTextView.setTextColor(mContext.getResources().getColor(R.color.white));
+        }
+        
         return aConvertView;
     }
 

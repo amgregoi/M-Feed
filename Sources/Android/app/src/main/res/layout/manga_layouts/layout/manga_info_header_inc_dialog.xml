@@ -20,8 +20,7 @@
 			android:textSize="15sp"/>
 
 		<EditText
-			android:id="@+id/chapter_counter"
-			android:layout_width="fill_parent"
+            android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
 			android:layout_gravity="center"
 			android:gravity="center_vertical"
@@ -40,8 +39,7 @@
 			android:textSize="15sp"/>
 
 		<TextView
-			android:id="@+id/chapter_max"
-			android:layout_width="fill_parent"
+            android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
 			android:gravity="center_vertical"
 			android:text="100"
@@ -64,8 +62,7 @@
 			android:textSize="15sp"/>
 
 		<EditText
-			android:id="@+id/volume_counter"
-			android:layout_width="fill_parent"
+            android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
 			android:layout_gravity="center"
 			android:gravity="center_vertical"
@@ -84,8 +81,7 @@
 			android:textSize="15sp"/>
 
 		<TextView
-			android:id="@+id/volume_max"
-			android:layout_width="fill_parent"
+            android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
 			android:gravity="center_vertical"
 			android:text="100"
