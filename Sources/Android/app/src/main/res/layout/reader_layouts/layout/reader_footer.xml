@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.Toolbar
-	android:id="@+id/readerToolbarFooter"
-	xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="@dimen/half_line_height_32dp"
 	android:layout_gravity="bottom"
@@ -58,8 +57,7 @@
 
 
 		<LinearLayout
-			android:id="@+id/pageTracker"
-			android:layout_width="wrap_content"
+            android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:gravity="center"
 			android:layout_centerHorizontal="true"
@@ -81,8 +79,7 @@
 				/>
 
 			<TextView
-				android:id="@+id/Divider"
-				android:layout_width="wrap_content"
+                android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_gravity="center_horizontal"
 				android:ellipsize="end"

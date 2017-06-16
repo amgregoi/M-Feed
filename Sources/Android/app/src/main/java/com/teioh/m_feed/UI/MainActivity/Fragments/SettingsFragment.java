@@ -109,7 +109,7 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
     @OnClick(R.id.clear_logs)
     public void onClearLogsClick()
     {
-        launchYesNoDialog(R.string.logs, "Are you sure you want to clear the logs?", 99);
+        launchYesNoDialog(R.string.logs, getString(R.string.settings_clear_logs), 99);
     }
 
     @OnClick(R.id.toggle_logs)
@@ -124,25 +124,25 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
     @OnClick(R.id.reset_cached_chapters)
     public void onResetChaptersClick()
     {
-        launchYesNoDialog(R.string.chapter_cache, "Are you sure you want to reset your chapter history?", 0);
+        launchYesNoDialog(R.string.chapter_cache, getString(R.string.settings_chapter_cache), 0);
     }
 
     @OnClick(R.id.reset_followed_manga_pref)
     public void onResetLibraryClick()
     {
-        launchYesNoDialog(R.string.library, "Are you sure you want to clear your library?", 1);
+        launchYesNoDialog(R.string.library, getString(R.string.settings_library), 1);
     }
 
     @OnClick(R.id.reset_downloaded_chapters)
     public void onRemoveDownloadedChaptersClick()
     {
-        launchYesNoDialog(R.string.downloaded_chapters, "Are you sure you want to delete all downloaded chapters?", 2);
+        launchYesNoDialog(R.string.downloaded_chapters, getString(R.string.settings_downloaded_chapters), 2);
     }
 
     @OnClick(R.id.contact_us)
     public void onContactUsClick()
     {
-        launchYesNoDialog(R.string.contact_us, "Go ahead to contact us?", 3);
+        launchYesNoDialog(R.string.contact_us, getString(R.string.settings_contact_us), 3);
     }
 
     private void initializeLayout()
@@ -170,13 +170,13 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
                 break;
 
             case 2: //Remove Downloaded Chapters
-                MangaLogger.logError(TAG, "positive", "Method not implemented");
-                MangaLogger.makeToast("Method not implemented");
+                MangaLogger.logError(TAG, "positive", getString(R.string.method_not_implemented));
+                MangaLogger.makeToast(getString(R.string.method_not_implemented));
                 break;
 
             case 3://Contact Us
-                MangaLogger.logError(TAG, "positive", "Method not implemented");
-                MangaLogger.makeToast("Method not implemented");
+                MangaLogger.logError(TAG, "positive", getString(R.string.method_not_implemented));
+                MangaLogger.makeToast(getString(R.string.method_not_implemented));
                 break;
 
             case 99://Logs
@@ -199,7 +199,7 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
 
     private void launchYesNoDialog(int aTitleRes, String aMessage, int aAction)
     {
-        DialogFragment newFragment = FYesNoDialog.getNewInstance(aTitleRes, aMessage, aAction);
+        DialogFragment newFragment = FYesNoDialog.getNewInstance(aTitleRes, aMessage, aAction, false);
         newFragment.setTargetFragment(this, 1);
         newFragment.show(getActivity().getSupportFragmentManager(), "dialog");
     }

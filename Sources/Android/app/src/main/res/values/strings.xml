@@ -1,48 +1,42 @@
 <resources>
 	<string name="app_name">Manga Feed</string>
-	<string name="Settings">Settings</string>
 
-	<string name="title_activity_main">MainActivity</string>
+
+    <!-- Activity Titles -->
 	<string name="title_activity_manga">MangaActivity</string>
-	<string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_reader">ReaderActivity</string>
+    <string name="title_activity_log">LoggingActivity</string>
+    <string name="title_activity_main">MainActivity</string>
 
+    <!-- MISC -->
+    <string name="filter_active">Filter Active</string>
 
-	<string name="Username">Username</string>
-	<string name="Password">Password</string>
-	<string name="Login">Login</string>
-	<string name="SignUp">Sign Up</string>
-	<string name="Logout">Log out</string>
-	<string name="Welcome">Welcome!</string>
-	<string name="drawerlayout_general_heading">General</string>
-	<string name="drawerlayout_sources_heading">Sources</string>
-	<string name="drawerlayout_general_search">Advanced Search</string>
-	<string name="drawerlayout_general_logout">Logout</string>
-	<string name="drawerlayout_general_home">Home</string>
-	<string name="drawer_item_icon">DrawerLayout Item Icon</string>
-
-	<string-array name="library_item_menu">
-		<item>Remove</item>
-		<item>Cancel</item>
-	</string-array>
+	<!-- DEBUG Messages -->
+	<string name="method_not_implemented">Method not implemented</string>
 
 	<!-- TAG Resources-->
 	<string name="ChapterListAdapterHolder">1</string>
 	<string name="ChapterListAdapterTAG">2</string>
-	<string name="com.appsee.apikey" translatable="false">9f9af3c86f7441d486152cc00cdc55ee</string>
 
-
-	<string name="DialogFragmentRemove">Remove from list?</string>
-
-	<string name="Email">E-Mail</string>
+	<!-- Preferences -->
 	<string name="PREF_USER_SOURCE">SAVED_SOURCE</string>
 	<string name="PREF_LOGGING_STATUS">PREF_LOGGING_STATUS</string>
 	<string name="PREF_SAVE_LOGS">SAVE_LOGS</string>
-	<string name="glide_tag">Glide_TAG</string>
+	<string name="PREF_CHAPTER_SCROLL_VERTICAL">CHAPTER_SCROLL_VERTICAL</string>
+
+	<!-- Settings -->
     <string name="chapter_cache">Chapter Cache</string>
     <string name="library">Library</string>
 	<string name="logs">Logs</string>
 	<string name="downloaded_chapters">Downloaded Chapters</string>
 	<string name="contact_us">Contact Us</string>
-
+	<string name="settings_chapter_cache">Are you sure you want to reset your chapter history?</string>
+	<string name="settings_library">Are you sure you want to clear your library?</string>
+	<string name="settings_downloaded_chapters">Are you sure you want to delete all downloaded chapters?</string>
+	<string name="settings_contact_us">Go ahead to contact us?</string>
+	<string name="settings_clear_logs">Are you sure you want to clear the logs?</string>
+	<string name="remove_from_library_title">Remove Manga</string>
+    <string name="remove_from_library_text">Are you sure you want to remove this item from your library?</string>
+    <!-- Next Section -->
 
 </resources>

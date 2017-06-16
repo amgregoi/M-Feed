@@ -24,7 +24,6 @@
             >
 
             <TextView
-                android:id="@+id/general_heading"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/baseline_grid_unit_4dp"
@@ -82,7 +81,6 @@
             >
 
             <TextView
-                android:id="@+id/account_heading"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/baseline_grid_unit_4dp"
@@ -201,7 +199,6 @@
 
         <!-- ADMIN GROUPING -->
         <LinearLayout
-            android:id="@+id/admin_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/account_group"
@@ -211,7 +208,6 @@
             >
 
             <TextView
-                android:id="@+id/log_heading"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/baseline_grid_unit_4dp"

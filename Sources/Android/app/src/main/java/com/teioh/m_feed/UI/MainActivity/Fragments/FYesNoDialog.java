@@ -15,6 +15,7 @@ public class FYesNoDialog extends DialogFragment
     public final static String TITLE_KEY = TAG + ":" + "TITLE";
     public final static String MESSAGE_KEY = TAG + ":" + "MESSAGE";
     public final static String ACTION_KEY = TAG + ":" + "ACTION";
+    public final static String PARENT_KEY = TAG + ":" + "PARENT";
 
     private Listeners.DialogYesNoListener mListener;
 
@@ -24,12 +25,13 @@ public class FYesNoDialog extends DialogFragment
      * @param aTitleRes
      * @return
      */
-    public static DialogFragment getNewInstance(int aTitleRes, String aMessage, int aActionId)
+    public static DialogFragment getNewInstance(int aTitleRes, String aMessage, int aActionId, boolean aParentActivity)
     {
         Bundle args = new Bundle();
         args.putInt(TITLE_KEY, aTitleRes);
         args.putString(MESSAGE_KEY, aMessage);
         args.putInt(ACTION_KEY, aActionId);
+        args.putBoolean(PARENT_KEY, aParentActivity);
 
         FYesNoDialog lFragment = new FYesNoDialog();
         lFragment.setArguments(args);
@@ -46,10 +48,30 @@ public class FYesNoDialog extends DialogFragment
     public Dialog onCreateDialog(Bundle aSavedInstanceState)
     {
         int lTitle = getArguments().getInt(TITLE_KEY);
-        String lMessage = getArguments().getString(MESSAGE_KEY);
         int lAction = getArguments().getInt(ACTION_KEY);
+        String lMessage = getArguments().getString(MESSAGE_KEY);
+        boolean lParentActivity = getArguments().getBoolean(PARENT_KEY);
 
         AlertDialog.Builder lBuilder = new AlertDialog.Builder(getContext(), R.style.MyAlertDialogStyle);
+
+        /***
+         * Builds Dialog for activity
+         */
+        if (lParentActivity)
+        {
+            return lBuilder.setTitle(lTitle)
+                           .setMessage(lMessage)
+                           .setNegativeButton("No", (arg0, arg1) ->
+                                   ((Listeners.DialogYesNoListener) getActivity()).negative(lAction))
+                           .setPositiveButton("Yes", (arg0, arg1) ->
+                                   ((Listeners.DialogYesNoListener) getActivity()).positive(lAction))
+                           .create();
+
+        }
+
+        /***
+         * Builds Dialog for fragments
+         */
         return lBuilder.setTitle(lTitle)
                        .setMessage(lMessage)
                        .setNegativeButton("No", (arg0, arg1) ->

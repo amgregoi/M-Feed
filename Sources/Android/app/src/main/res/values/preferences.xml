@@ -1,34 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<!-- Pref Categories -->
-	<string name="PREF_CATEGORY_SOURCE">preference_category_catalogue</string>
-	<string name="PREF_CATEGORY_SOURCE_TITLE">Catalogue</string>
 
-	<!-- MAL -->
+    <!-- MAL -->
 	<string name="PREF_GOOGLE_EMAIL">MAL_USERNAME</string>
-	<string name="PREF_MAL_PASSWORD">MAL_PASSWORD</string>
 
-	<!-- Pref Screen -->
+    <!-- Pref Screen -->
 	<string name="PREF_APP_LAYOUT_IS_GRID">APP_LAYOUT_IS_GRID</string>
 	<string name="PREF_APP_THEME_IS_LIGHT">APP_THEME_IS_LIGHT</string>
 
-	<string name="PREF_DEFAULT_SOURCE">MangaPark</string>
-	<string name="PREF_STORAGE_LOCATION">MangaPark</string>
-
-
-	<string name="PREF_SOURCE_KEY">TBD</string>
-	<string name="PREF_SOURCE_TITLE">Current Source</string>
-	<string name="PREF_SOURCE_SUMMARY">Choose the current manga source to use for reading</string>
-	<string-array name="PREF_SOURCE_ENTIRES">
-		<item>MangaHere</item>
-		<item>MangaPark</item>
-		<item>MangaJoy</item>
-	</string-array>
-	<string-array name="PREF_SOURCE_VALUES">
-		<item>MangaHere</item>
-		<item>MangaPark</item>
-		<item>MangaJoy</item>
-	</string-array>
+    <string name="PREF_STORAGE_LOCATION">MangaPark</string>
 
 
 </resources>

@@ -6,8 +6,7 @@
 	>
 
 	<LinearLayout
-		android:id="@+id/info_header_container"
-		android:layout_width="match_parent"
+        android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:layout_marginEnd="5dp"
 		android:layout_marginStart="10dp"
@@ -69,8 +68,7 @@
 					android:layout_height="wrap_content">
 
 					<TextView
-						android:id="@+id/chapter_tracker"
-						android:layout_width="wrap_content"
+                        android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:layout_alignParentStart="true"
 						android:layout_marginStart="@dimen/baseline_grid_unit_4dp"
@@ -80,8 +78,7 @@
 						/>
 
 					<TextView
-						android:id="@+id/volume_tracker"
-						android:layout_width="wrap_content"
+                        android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:layout_alignParentEnd="true"
 						android:layout_marginEnd="@dimen/baseline_grid_unit_4dp"
@@ -113,8 +110,7 @@
 		</RelativeLayout>
 
 		<LinearLayout
-			android:id="@+id/manga_info"
-			android:layout_width="match_parent"
+            android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:layout_below="@+id/top"
 			android:orientation="vertical">
@@ -140,8 +136,7 @@
 				/>
 
 			<RelativeLayout
-				android:id="@+id/summary_layout"
-				android:layout_width="match_parent"
+                android:layout_width="match_parent"
 				android:layout_height="match_parent"
 				android:layout_marginBottom="5dp"
 				android:layout_marginTop="5dp"
@@ -166,8 +161,7 @@
 			</RelativeLayout>
 
 			<RelativeLayout
-				android:id="@+id/author_layout"
-				android:layout_width="wrap_content"
+                android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				>
 
@@ -197,8 +191,7 @@
 			</RelativeLayout>
 
 			<RelativeLayout
-				android:id="@+id/artist_layout"
-				android:layout_width="match_parent"
+                android:layout_width="match_parent"
 				android:layout_height="match_parent">
 
 				<TextView
@@ -228,8 +221,7 @@
 			</RelativeLayout>
 
 			<RelativeLayout
-				android:id="@+id/genre_layout"
-				android:layout_width="match_parent"
+                android:layout_width="match_parent"
 				android:layout_height="match_parent">
 
 				<TextView
@@ -257,8 +249,7 @@
 			</RelativeLayout>
 
 			<RelativeLayout
-				android:id="@+id/alternate_layout"
-				android:layout_width="match_parent"
+                android:layout_width="match_parent"
 				android:layout_height="match_parent">
 
 				<TextView
@@ -286,8 +277,7 @@
 			</RelativeLayout>
 
 			<RelativeLayout
-				android:id="@+id/status_layout"
-				android:layout_width="match_parent"
+                android:layout_width="match_parent"
 				android:layout_height="match_parent">
 
 				<TextView
