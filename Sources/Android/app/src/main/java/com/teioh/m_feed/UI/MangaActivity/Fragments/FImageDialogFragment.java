@@ -74,7 +74,7 @@ public class FImageDialogFragment extends DialogFragment
         if (mImageUrl != null)
         {
             RequestOptions lOptions = new RequestOptions();
-            lOptions.fitCenter().skipMemoryCache(true)
+            lOptions.skipMemoryCache(true)
                     .diskCacheStrategy(DiskCacheStrategy.ALL);
 
             Glide.with(getActivity()).load(mImageUrl)

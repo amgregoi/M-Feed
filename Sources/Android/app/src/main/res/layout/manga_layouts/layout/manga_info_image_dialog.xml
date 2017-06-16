@@ -9,6 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:minHeight="350dp"
+        android:minWidth="300dp"
         android:maxHeight="500dp"
 		android:layout_gravity="center"/>
 
