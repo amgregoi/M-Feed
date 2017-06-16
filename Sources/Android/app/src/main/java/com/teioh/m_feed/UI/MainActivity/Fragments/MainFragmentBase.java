@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.l4digital.fastscroll.FastScrollRecyclerView;
 import com.l4digital.fastscroll.FastScroller;
 import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.teioh.m_feed.MangaEnums;
@@ -30,7 +31,7 @@ import butterknife.ButterKnife;
  */
 public abstract class MainFragmentBase extends Fragment implements IMain.FragmentView
 {
-    @Bind(R.id.manga_recycle_view) RecyclerView mGridView;
+    @Bind(R.id.manga_recycle_view) FastScrollRecyclerView mGridView;
 
     protected IMain.FragmentPresenter mFragmentPresenter;
     protected Listeners.MainFragmentListener mListener;
