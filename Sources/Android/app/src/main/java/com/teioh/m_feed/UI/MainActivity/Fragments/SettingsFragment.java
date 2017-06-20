@@ -1,6 +1,7 @@
 package com.teioh.m_feed.UI.MainActivity.Fragments;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -174,8 +175,24 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
                 break;
 
             case 3://Contact Us
-                MangaLogger.logError(TAG, "positive", getString(R.string.method_not_implemented));
-                MangaLogger.makeToast(getString(R.string.method_not_implemented));
+                Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+
+                String aEmailList[] = {"teioh08@gmail.com"};
+                emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, aEmailList);
+                emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "MangaFeed Contact:");
+                emailIntent.setType("plain/text");
+
+                PackageManager packageManager = getActivity().getPackageManager();
+                if (emailIntent.resolveActivity(packageManager) != null)
+                {
+                    startActivity(emailIntent);
+                }
+                else
+                {
+                    MangaLogger.logInfo(TAG, "positive", "There is no activity to support email intent");
+                    MangaLogger.makeToast("No application available to send an email.");
+                }
+
                 break;
 
             case 99://Logs
