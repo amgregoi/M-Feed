@@ -17,7 +17,7 @@ public class ViewPagerAdapterMain extends FragmentStatePagerAdapter
     private SparseArray<Fragment> mRegisteredFragments = new SparseArray<Fragment>();
 
     /***
-     * TODO..
+     * This is the constructor for the View Pager Adapter.
      *
      * @param aFragmentManager
      * @param aTabTitles
@@ -85,7 +85,7 @@ public class ViewPagerAdapterMain extends FragmentStatePagerAdapter
     }
 
     /***
-     * TODO..
+     * This method returns the registered fragment specified by its position.
      *
      * @param aPosition
      * @return
@@ -96,7 +96,7 @@ public class ViewPagerAdapterMain extends FragmentStatePagerAdapter
     }
 
     /***
-     * TODO..
+     * This function verifies that the adapter contains any registered fragments.
      *
      * @return
      */

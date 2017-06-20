@@ -35,7 +35,7 @@ public class ImagePageAdapter extends PagerAdapter
     private SparseArray<View> mImageViews = new SparseArray<>();
 
     /***
-     * TODO..
+     * This is the constructor for the Image Page Adapter.
      *
      * @param aContext
      * @param aImageUrls
@@ -47,7 +47,7 @@ public class ImagePageAdapter extends PagerAdapter
     }
 
     /***
-     * TODO..
+     * This function returns the count of pages in the chapter.
      *
      * @return
      */
@@ -58,7 +58,7 @@ public class ImagePageAdapter extends PagerAdapter
     }
 
     /***
-     * TODO..
+     *
      *
      * @param aView
      * @param aObject
@@ -71,7 +71,7 @@ public class ImagePageAdapter extends PagerAdapter
     }
 
     /***
-     * TODO..
+     * This function instantiates the item specified by its position.
      *
      * @param aContainer
      * @param aPosition
@@ -124,7 +124,7 @@ public class ImagePageAdapter extends PagerAdapter
     }
 
     /***
-     * TODO..
+     * This function destroys the item specified by its position.
      *
      * @param aContainer
      * @param aPosition
@@ -138,7 +138,7 @@ public class ImagePageAdapter extends PagerAdapter
     }
 
     /***
-     * TODO..
+     * This function adds an item to the adapter specified by it string url.
      *
      * @param aImage
      */

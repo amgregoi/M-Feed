@@ -30,7 +30,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     private Manga mParentManga;
 
     /***
-     * TODO..
+     * This is the constructor for the reader presenter.
      *
      * @param aMap
      */
@@ -40,7 +40,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     }
 
     /***
-     * TODO..
+     * This function saves relevant data that needs to persist between device state changes.
      *
      * @param aSave
      */
@@ -61,7 +61,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     }
 
     /***
-     * TODO..
+     * This function restores data that needed to persist between device state changes.
      *
      * @param aRestore
      */
@@ -83,7 +83,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     }
 
     /***
-     * TODO..
+     * This function initializes the reader presenter.
      *
      * @param aBundle
      */
@@ -116,7 +116,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     }
 
     /***
-     * TODO..
+     * This function is called when a fragment or activities onPause() is called in their life cycle chain.
      */
     @Override
     public void onPause()
@@ -135,7 +135,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     }
 
     /***
-     * TODO..
+     * This function is called when a fragment or activities onResume() is called in their life cycle chain.
      */
     @Override
     public void onResume()
@@ -153,7 +153,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     }
 
     /***
-     * TODO..
+     * This function is called when a fragment or activities onDestroy is called in their life cycle chain.
      */
     @Override
     public void onDestroy()
@@ -172,7 +172,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     }
 
     /***
-     * TODO..
+     * This function updates the activity toolbar.
      *
      * @param aPosition
      */
@@ -197,7 +197,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     }
 
     /***
-     * TODO..
+     * This function increments the current chapter.
      *
      * @param aPosition
      */
@@ -222,7 +222,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     }
 
     /***
-     * TODO..
+     * This function decrements the current page.
      *
      * @param aPosition
      */
@@ -247,7 +247,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     }
 
     /***
-     * TODO..
+     * This function updates the chapter view status.
      *
      * @param aPosition
      */
@@ -272,7 +272,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     }
 
     /***
-     * TODO..
+     * This function performs the chapter refresh.
      *
      * @param aPosition
      */
@@ -297,7 +297,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     }
 
     /***
-     * TODO..
+     * This function toggles the vertical scrolling setting.
      *
      * @param aPosition
      */
@@ -331,6 +331,10 @@ public class ReaderPresenter implements IReader.ActivityPresenter
         }
     }
 
+    /***
+     * This function updates the recent chapter.
+     * @param aPosition
+     */
     @Override
     public void updateRecentChapter(int aPosition)
     {
@@ -351,7 +355,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     }
 
     /***
-     * TODO..
+     * This function toggles the reader orientation.
      */
     @Override
     public void toggleOrientation()

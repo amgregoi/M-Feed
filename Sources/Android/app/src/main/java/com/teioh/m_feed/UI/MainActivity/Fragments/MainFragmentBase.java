@@ -37,7 +37,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     protected Listeners.MainFragmentListener mListener;
 
     /***
-     * TODO.
+     * This function initializes the view of the fragment.
      * @param aInflater
      * @param aContainer
      * @param aSavedInstanceState
@@ -46,7 +46,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     public abstract View onCreateView(LayoutInflater aInflater, @Nullable ViewGroup aContainer, @Nullable Bundle aSavedInstanceState);
 
     /***
-     * TODO...
+     * This function restores/initializes the fragment presenter layer.
      *
      * @param aSave
      */
@@ -62,7 +62,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * This function saves the state of the fragment when a transition is invoked.
      *
      * @param aRestore
      */
@@ -74,7 +74,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * This function is called in the fragment lifecycle
      */
     @Override
     public void onResume()
@@ -84,7 +84,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * This function is called in the fragment lifecycle
      */
     @Override
     public void onPause()
@@ -94,7 +94,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * This function is called in the fragment lifecycle
      */
     @Override
     public void onDestroyView()
@@ -105,7 +105,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * This function is called in the fragment lifecycle
      *
      * @param aContext
      */
@@ -119,7 +119,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * This function clears the Glide cache to cleanup memory when necessary.
      */
     @Override
     public void onLowMemory()
@@ -129,7 +129,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * This function updates the current source.
      */
     @Override
     public void updateSource()
@@ -138,7 +138,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * This function performs the filter by status filter.
      *
      * @param aFilter
      */
@@ -148,7 +148,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * This function performs the Genre query filter.
      *
      * @param aMangaList
      */
@@ -159,7 +159,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * This function clears the genre query filter.
      */
     @Override
     public boolean onClearGenreFilter()
@@ -168,7 +168,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * This function registers the adapter to the recycler view.
      *
      * @param aAdapter
      * @param aLayout
@@ -195,7 +195,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * This function updates the specified object in the fragment.
      *
      * @param aManga
      */
@@ -206,7 +206,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * This function sets the recently selected item according to is ID
      *
      * @param aId
      * @return
@@ -218,7 +218,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * This function updates the recently selected item according to the object.
      *
      * @param aManga
      */
@@ -229,7 +229,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * Not implemented
      *
      * @param aQueryText
      * @return
@@ -241,7 +241,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * This function performs the text query filter.
      *
      * @param aQueryText
      * @return
@@ -254,17 +254,17 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * This function starts the swipe refresh layout refresh animation.
      */
     public abstract void startRefresh();
 
     /***
-     * TODO...
+     * This function stops the swipe refresh layout refresh animation.
      */
     public abstract void stopRefresh();
 
     /***
-     * TODO...
+     * This function initializes the swipe refresh layout.
      */
     public abstract void setupSwipeRefresh();
 

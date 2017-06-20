@@ -47,7 +47,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     private IReader.ActivityPresenter mReaderPresenter;
 
     /***
-     * TODO..
+     * This function creates and returns a new intent for the activity.
      *
      * @param aContext
      * @return
@@ -63,7 +63,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function initializes the view for the activity.
      *
      * @param aSavedInstanceState
      */
@@ -84,7 +84,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function saves relevant data that needs to persist between device state changes.
      *
      * @param aSave
      */
@@ -96,7 +96,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function is called when a fragment or activities onResume() is called in their life cycle chain.
      */
     @Override
     protected void onResume()
@@ -106,7 +106,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function is called when a fragment or activities onPause() is called in their life cycle chain.
      */
     @Override
     protected void onPause()
@@ -116,7 +116,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function is called when a fragment or activities onDestroy is called in their life cycle chain.
      */
     @Override
     protected void onDestroy()
@@ -127,7 +127,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function returns the activity's context.
      *
      * @return
      */
@@ -138,7 +138,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function registers the adapter to the viewpager.
      *
      * @param aAdapter
      */
@@ -154,7 +154,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function sets the current viewpager position.
      *
      * @param aPosition
      */
@@ -165,7 +165,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function increments the viewpager position.
      */
     @Override
     public void incrementChapter()
@@ -176,7 +176,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function decrements the viewpager position.
      */
     @Override
     public void decrementChapter()
@@ -186,7 +186,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function hides the header and footer toolbars.
      *
      * @param aDelay
      */
@@ -202,7 +202,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function shows the header and footer tool bars.
      */
     @Override
     public void showToolbar()
@@ -215,7 +215,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function updates the header toolbar.
      *
      * @param aTitle
      * @param aChapterTitle
@@ -232,7 +232,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function initializes the header toolbar.
      */
     @Override
     public void setupToolbar()
@@ -263,7 +263,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function gets the navigation bar height of the device.
      *
      * @return
      */
@@ -280,7 +280,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function handles when a page is scrolled.
      *
      * @param aPosition
      * @param aPositionOffset
@@ -293,7 +293,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function handles when a page is selected.
      *
      * @param aPosition
      */
@@ -305,7 +305,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function handles when a page scroll state has changed.
      *
      * @param aState
      */
@@ -316,7 +316,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function updates the current page counter in the footer toolbar.
      *
      * @param aPosition
      */
@@ -327,7 +327,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function verifies if this is the active (visible) chapter.
      *
      * @param aChapter
      * @return
@@ -340,7 +340,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function handles skip to previous chapter.
      */
     @OnClick(R.id.skipPreviousButton)
     public void onSkipPreviousClick()
@@ -350,7 +350,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function handles go back one chapter page.
      */
     @OnClick(R.id.backPageButton)
     public void onBackPageClick()
@@ -359,7 +359,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function handles refresh chapter button.
      */
     @OnClick(R.id.refresh_button)
     public void onRefreshClicked()
@@ -369,7 +369,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function handles go forward one chapter page.
      */
     @OnClick(R.id.forwardPageButton)
     public void onForwardPageClick()
@@ -378,7 +378,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function handles skip to next chapter.
      */
     @OnClick(R.id.skipForwardButton)
     public void onSkipForwardClick()
@@ -389,17 +389,17 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function handles screen orient toggle.
      */
     @OnClick(R.id.screen_orient_button)
     public void onScreenOrientClick()
     {
         mReaderPresenter.toggleOrientation();
-        //toggleicon
+        //TODO.. toggle icon
     }
 
     /***
-     * TODO..
+     * This function handles vertical scroll toggle.
      */
     @OnClick(R.id.vertical_scroll_toggle)
     public void onVerticalScrollToggle()
@@ -410,7 +410,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function sets the screen orientation.
      *
      * @param isLandscape
      */
@@ -427,7 +427,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function trims Glide cache when low memory
      *
      * @param aLevel
      */
@@ -439,7 +439,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function clears Glide cache when low memory.
      */
     @Override
     public void onLowMemory()
@@ -449,7 +449,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function toggles vertical scroll icon accordingly.
      */
     private void toggleVerticalScrollIcon()
     {

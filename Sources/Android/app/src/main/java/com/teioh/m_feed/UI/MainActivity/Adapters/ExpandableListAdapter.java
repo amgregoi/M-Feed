@@ -25,7 +25,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter
     private List<String> mDrawerItems;
 
     /***
-     * TODO..
+     * This is the constructor for the Expandable List Adapter.
      *
      * @param aContext
      * @param aDrawerItems
@@ -39,10 +39,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter
     }
 
     /***
-     * TODO..
+     * This function returns the child of a parent item in the adapter.
      *
-     * @param aGroupPosition
-     * @param aChildPosition
+     * @param aGroupPosition The position of the parent view.
+     * @param aChildPosition The position of the child view to be returned.
      * @return
      */
     public Object getChild(int aGroupPosition, int aChildPosition)
@@ -51,7 +51,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter
     }
 
     /***
-     * TODO..
+     * This function returns the ID of the child item in the adapter..
      *
      * @param aGroupPosition
      * @param aChildPosition
@@ -63,7 +63,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter
     }
 
     /***
-     * TODO..
+     * This function returns the view of a child item in the adapter.
      *
      * @param aGroupPosition
      * @param aChildPosition
@@ -98,7 +98,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter
     }
 
     /***
-     * TODO..
+     * This function gets the child item count in a specified parent group.
      *
      * @param aGroupPosition
      * @return
@@ -109,7 +109,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter
     }
 
     /***
-     * TODO..
+     * This function returns the group (parent) item in the adapter.
      *
      * @param aGroupPosition
      * @return
@@ -120,7 +120,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter
     }
 
     /***
-     * TODO..
+     * This function returns the group (parent) item count in the adapter.
      *
      * @return
      */
@@ -130,7 +130,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter
     }
 
     /***
-     * TODO..
+     * This function returns the group (parent) ID in the adapter.
      *
      * @param aGroupPosition
      * @return
@@ -141,7 +141,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter
     }
 
     /***
-     * TODO..
+     * This function returns the view of the group (parent) in the adapter.
      *
      * @param aGroupPosition
      * @param aExpanded
@@ -166,7 +166,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter
     }
 
     /***
-     * TODO..
+     * This function returns whether the adapter has stable Ids.
      *
      * @return
      */
@@ -176,7 +176,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter
     }
 
     /***
-     * TODO..
+     * This function returns whether a child item is selectable specified by the group and child position.
      *
      * @param aGroupPosition
      * @param aChildPosition

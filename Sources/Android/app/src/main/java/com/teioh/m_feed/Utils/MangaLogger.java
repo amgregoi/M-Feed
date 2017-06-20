@@ -26,7 +26,7 @@ public class MangaLogger
     }
 
     /***
-     * TODO..
+     * This function logs info to the console as well as to the in app logger.
      *
      * @param aTag
      * @param aMethod
@@ -40,7 +40,7 @@ public class MangaLogger
     }
 
     /***
-     * TODO..
+     * This function logs errors to the console as well as to the in app logger.
      *
      * @param aTag
      * @param aMethod
@@ -54,7 +54,7 @@ public class MangaLogger
     }
 
     /***
-     * TODO..
+     * This function logs errors to the console as well as to the in app logger.
      *
      * @param aTag
      * @param aMethod
@@ -68,6 +68,12 @@ public class MangaLogger
         Log.e(mApplication, lMessage);
     }
 
+    /***
+     * This function logs debug info to the console as well as to the in app logger.
+     * @param aTag
+     * @param aMethod
+     * @param aMessage
+     */
     public static void logDebug(String aTag, String aMethod, String aMessage)
     {
         String lMessage = "DEBUG >> " + MessageFormat.format("{0}.class >> {1}() > {2}", aTag, aMethod, aMessage);
@@ -75,6 +81,10 @@ public class MangaLogger
         Log.i(mApplication, lMessage);
     }
 
+    /***
+     * This function adds a message to the in app logger.
+     * @param aMessage
+     */
     private static void addMessage(String aMessage){
         if (SharedPrefs.getLoggingStatus())
         {
@@ -84,16 +94,27 @@ public class MangaLogger
         }
     }
 
+    /***
+     * This function clears the in app log.
+     */
     public static void clearLogs()
     {
         mCurrentLogs = new ArrayList<>();
     }
 
+    /***
+     * This function retrieves the in app logs.
+     * @return
+     */
     public static List<String> getLogs()
     {
         return mCurrentLogs;
     }
 
+    /***
+     * This function creates a toast.
+     * @param aMessage
+     */
     public static void makeToast(String aMessage){
         Toast.makeText(MFeedApplication.getInstance(), aMessage, Toast.LENGTH_SHORT).show();
     }

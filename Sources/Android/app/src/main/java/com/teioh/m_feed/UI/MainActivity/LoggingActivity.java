@@ -23,12 +23,21 @@ public class LoggingActivity extends AppCompatActivity
     private ArrayAdapter<String> mAdapter;
     private FloatingActionButton mRefresh;
 
+    /***
+     * This function creates and returns a new intent for this activity.
+     * @param aContext
+     * @return
+     */
     public static Intent getNewInstance(Context aContext)
     {
         Intent lIntent = new Intent(aContext, LoggingActivity.class);
         return lIntent;
     }
 
+    /***
+     * This function initializes the view of the activity.
+     * @param aSavedInstanceState
+     */
     @Override
     protected void onCreate(@Nullable Bundle aSavedInstanceState)
     {

@@ -45,7 +45,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function initializes the presenter.
      *
      * @param aBundle
      */
@@ -80,7 +80,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function saves relevant data that needs to persist between device state changes.
      *
      * @param aSave
      */
@@ -104,7 +104,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function restores data that needed to persist between device state changes.
      *
      * @param aRestore
      */
@@ -134,7 +134,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function is called when a fragment or activities onPause() is called in their life cycle chain.
      */
     @Override
     public void onPause()
@@ -164,7 +164,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function is called when a fragment or activities onResume() is called in their life cycle chain.
      */
     @Override
     public void onResume()
@@ -184,7 +184,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function is called when a fragment or activities onDestroy is called in their life cycle chain.
      */
     @Override
     public void onDestroy()
@@ -204,7 +204,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function reverses the chapter list items.
      */
     @Override
     public boolean chapterOrderButtonClick()
@@ -231,7 +231,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function adds the current item to the user library.
      *
      * @param aValue
      */
@@ -256,7 +256,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function removes the current item from the user library.
      */
     @Override
     public boolean onUnfollowButtonClick()
@@ -280,7 +280,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function handles when a chapter is selected.
      *
      * @param aChapter
      */
@@ -311,7 +311,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function retrieves the current items image url.
      *
      * @return
      */
@@ -333,7 +333,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
     }
 
     /***
-     * TODO..
+     * This function handles the continue reading button click.
      */
     @Override
     public boolean onContinueReadingButtonClick()
@@ -378,7 +378,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function clears the chapter cache for the current item.
      */
     @Override public boolean clearCachedChapters()
     {
@@ -398,7 +398,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function retrieves the current items information
      */
     private void getMangaViewInfo()
     {
@@ -436,7 +436,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function updates the manga view.
      *
      * @param aManga
      */
@@ -475,7 +475,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function retrieves the current items chapter list.
      */
     private void getChapterList()
     {
@@ -512,7 +512,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function updates the chapter list class variable.
      *
      * @param aChapterList
      */

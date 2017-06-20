@@ -57,7 +57,7 @@ public class MainPresenter implements IMain.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function initializes the presenter.
      *
      * @param aBundle
      */
@@ -89,7 +89,7 @@ public class MainPresenter implements IMain.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function saves relevant data that needs to persist between device state changes.
      *
      * @param aSave
      */
@@ -100,7 +100,7 @@ public class MainPresenter implements IMain.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function restores data that needed to persist between device state changes.
      *
      * @param aRestore
      */
@@ -122,7 +122,7 @@ public class MainPresenter implements IMain.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function is called when a fragment or activities onResume() is called in their life cycle chain.
      */
     @Override
     public void onResume()
@@ -142,7 +142,7 @@ public class MainPresenter implements IMain.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function is called when a fragment or activities onPause() is called in their life cycle chain.
      */
     @Override
     public void onPause()
@@ -151,7 +151,7 @@ public class MainPresenter implements IMain.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function updates the text query filter.
      *
      * @param aNewTest
      */
@@ -179,7 +179,7 @@ public class MainPresenter implements IMain.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function is called when a fragment or activities onDestroy is called in their life cycle chain.
      */
     @Override
     public void onDestroy()
@@ -189,7 +189,7 @@ public class MainPresenter implements IMain.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function performs the various actions when a drawer item is selected specified by the item position.
      *
      * @param aPosition
      */
@@ -253,7 +253,7 @@ public class MainPresenter implements IMain.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function updates the source when a new source is chosen specified by its position.
      *
      * @param aPosition
      */
@@ -307,7 +307,7 @@ public class MainPresenter implements IMain.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function performs the filter by status filter specified by the FilterStatus.
      *
      * @param aFilter
      */
@@ -332,7 +332,7 @@ public class MainPresenter implements IMain.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function performs the Genre filter.
      *
      * @param aIntent
      */
@@ -364,7 +364,7 @@ public class MainPresenter implements IMain.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function clears the genre filter.
      */
     @Override
     public boolean onClearGenreFilter()
@@ -392,7 +392,7 @@ public class MainPresenter implements IMain.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function removes the settings fragment from view.
      */
     @Override
     public boolean removeSettingsFragment()
@@ -418,7 +418,7 @@ public class MainPresenter implements IMain.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function returns whether the GenreFilter is active.
      *
      * @return
      */
@@ -429,7 +429,7 @@ public class MainPresenter implements IMain.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function updates the last clicked manga.
      *
      * @param aMangaId
      */
@@ -440,7 +440,7 @@ public class MainPresenter implements IMain.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function performs the google sign in
      *
      * @param aAccount
      */
@@ -487,7 +487,7 @@ public class MainPresenter implements IMain.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function updates the recently selected manga.
      */
     @Override
     public boolean updateRecentManga()
@@ -517,7 +517,7 @@ public class MainPresenter implements IMain.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function initializes the drawer layout.
      */
 
     private void setupDrawerLayouts()
@@ -558,7 +558,7 @@ public class MainPresenter implements IMain.ActivityPresenter
     }
 
     /***
-     * TODO...
+     * This function brings the settings fragments into view.
      */
     private void addSettingsFragment()
     {

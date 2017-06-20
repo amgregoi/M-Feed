@@ -25,13 +25,13 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     public final static String TAG = ChapterFragment.class.getSimpleName();
 
 
-    @Bind( R.id.gesture_pager) GestureViewPager mViewPager;
+    @Bind(R.id.gesture_pager) GestureViewPager mViewPager;
     private IReader.FragmentPresenter mChapterPresenter;
     private Listeners.ReaderListener listener;
 
 
     /***
-     * TODO..
+     * This function creates and returns a new instance of the fragment.
      *
      * @return
      */
@@ -49,7 +49,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function registers the adapter to the viewpager.
      *
      * @param aAdapter
      */
@@ -68,7 +68,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function updates the scroll offset for going to the next or previous chapter.
      *
      * @param aPosition
      * @param aPositionOffset
@@ -81,7 +81,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function handles when a page in the viewpager is selected or changed.
      *
      * @param aPosition
      */
@@ -92,7 +92,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function handles scroll state changes in the view pager.
      *
      * @param aState
      */
@@ -103,7 +103,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function handles single taps on images in the viewpager.
      */
     @Override
     public void onSingleTap()
@@ -112,7 +112,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function initializes the viewpager single tap listener.
      */
     @Override
     public void setupOnSingleTapListener()
@@ -121,7 +121,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function updates the toolbar.
      */
     @Override
     public void updateToolbar()
@@ -134,7 +134,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function increments the current page of the viewpager.
      */
     @Override
     public void incrementChapterPage()
@@ -146,7 +146,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function decrements the current page of the view pager.
      */
     @Override
     public void decrementChapterPage()
@@ -158,7 +158,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * this function updates the chapter view status.
      */
     @Override
     public void updateChapterViewStatus()
@@ -174,7 +174,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function increments the chapter.
      */
     @Override
     public void incrementChapter()
@@ -183,7 +183,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function decrements the chapter.
      */
     @Override
     public void decrementChapter()
@@ -192,7 +192,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function hides the header and footer toolbars.
      *
      * @param aDelay
      */
@@ -203,7 +203,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function shows the header and footer tool bars.
      */
     @Override
     public void showToolbar()
@@ -212,7 +212,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function updates the header toolbar.
      *
      * @param aMangaTitle
      * @param aChapterTitle
@@ -226,7 +226,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function updates the current page.
      *
      * @param aPosition
      */
@@ -237,7 +237,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function handles the viewpager refresh.
      */
     @Override
     public void onRefresh()
@@ -247,7 +247,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function closes the activity when it fails to load.
      */
     @Override
     public void failedLoadChapter()
@@ -256,7 +256,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function verifies this is the active (visible) chapter.
      *
      * @param aChapter
      * @return
@@ -268,7 +268,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function sets the current page of the view pager.
      *
      * @param aPosition
      */
@@ -279,7 +279,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function sets the current page of the view pager.
      *
      * @param aPage
      */
@@ -293,7 +293,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function toggles the vertical scrolling setting.
      */
     @Override
     public void toggleVerticalScrollSettings()
@@ -309,7 +309,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function is called in the fragment lifecycle.
      *
      * @param aContext
      */
@@ -323,7 +323,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function creates the fragment.
      *
      * @param aSavedInstanceState
      */
@@ -335,7 +335,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function initializes the view of the fragment.
      *
      * @param aInflater
      * @param aContainer
@@ -352,7 +352,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function is called in the fragment lifecycle.
      *
      * @param aSavedInstanceState
      */
@@ -367,7 +367,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function is called in the fragment lifecycle.
      */
     @Override
     public void onStart()
@@ -377,7 +377,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function is called when a fragment or activities onResume() is called in their life cycle chain.
      */
     @Override
     public void onResume()
@@ -387,7 +387,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function saves relevant data that needs to persist between device state changes.
      *
      * @param aSave
      */
@@ -402,7 +402,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function is called when a fragment or activities onPause() is called in their life cycle chain.
      */
     @Override
     public void onPause()
@@ -412,7 +412,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function trims Glide cache when low memory.
      */
     @Override
     public void onLowMemory()
@@ -422,7 +422,7 @@ public class ChapterFragment extends Fragment implements IReader.FragmentView
     }
 
     /***
-     * TODO..
+     * This function is called when a fragment or activities onDestroy is called in their life cycle chain.
      */
     @Override
     public void onDestroyView()

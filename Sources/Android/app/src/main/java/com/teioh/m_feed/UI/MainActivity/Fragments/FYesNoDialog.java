@@ -17,10 +17,8 @@ public class FYesNoDialog extends DialogFragment
     public final static String ACTION_KEY = TAG + ":" + "ACTION";
     public final static String PARENT_KEY = TAG + ":" + "PARENT";
 
-    private Listeners.DialogYesNoListener mListener;
-
     /***
-     * TODO..
+     * This function creates and returns a new instance of the fragment.
      *
      * @param aTitleRes
      * @return
@@ -39,7 +37,7 @@ public class FYesNoDialog extends DialogFragment
     }
 
     /***
-     * TODO..
+     * This function creates the dialog for the fragment.
      *
      * @param aSavedInstanceState
      * @return

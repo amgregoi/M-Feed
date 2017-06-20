@@ -23,7 +23,7 @@ public class GenreListAdapter extends BaseAdapter
     private LayoutInflater mInflater;
 
     /***
-     * TODO..
+     * This is the constructor for the Genre List Adapter.
      *
      * @param aContext
      * @param aGenres
@@ -36,7 +36,7 @@ public class GenreListAdapter extends BaseAdapter
     }
 
     /***
-     * TODO..
+     * This function will return the count of Genre List.
      *
      * @return
      */
@@ -46,9 +46,9 @@ public class GenreListAdapter extends BaseAdapter
     }
 
     /***
-     * TODO..
+     * This function returns an item in the Genre List at the specified location.
      *
-     * @param aPosition
+     * @param aPosition The position of an item to be retrieved.
      * @return
      */
     public Object getItem(int aPosition)
@@ -57,9 +57,9 @@ public class GenreListAdapter extends BaseAdapter
     }
 
     /***
-     * TODO..
+     * This function returns the ID of an item in the Genre List at the specified location.
      *
-     * @param aPosition
+     * @param aPosition The position of an item to retrieve its ID.
      * @return
      */
     public long getItemId(int aPosition)
@@ -68,10 +68,10 @@ public class GenreListAdapter extends BaseAdapter
     }
 
     /***
-     * TODO..
+     * This function updates and invalidates the view of a specific item at the specified position.
      *
-     * @param aPosition
-     * @param aConvertView
+     * @param aPosition The position of the item to be updated.
+     * @param aConvertView The view of the item to be refreshed.
      */
     public void updateItem(int aPosition, View aConvertView)
     {
@@ -79,31 +79,32 @@ public class GenreListAdapter extends BaseAdapter
 
         if (aPosition >= 0)
         {
-            View row = aConvertView;
-            GenreHolder holder = (GenreHolder) row.getTag();
+            View lRow = aConvertView;
+            GenreHolder lHolder = (GenreHolder) lRow.getTag();
             mGenreSearchStatus[aPosition] = (mGenreSearchStatus[aPosition] + 1) % 3;
 
             if (mGenreSearchStatus[aPosition] == 0)
             {
-                holder.lSymbolImageView.setImageDrawable(null);
-                holder.lLayout.setBackgroundColor(lContext.getResources().getColor(R.color.light_charcoal));
+                lHolder.lSymbolImageView.setImageDrawable(null);
+                lHolder.lLayout.setBackgroundColor(lContext.getResources().getColor(R.color.light_charcoal));
             }
             else if (mGenreSearchStatus[aPosition] == 1)
             {
-                holder.lSymbolImageView.setImageDrawable(lContext.getDrawable(R.drawable.ic_add_white_18dp));
-                holder.lLayout.setBackgroundColor(lContext.getResources().getColor(R.color.green));
+                lHolder.lSymbolImageView.setImageDrawable(lContext.getDrawable(R.drawable.ic_add_white_18dp));
+                lHolder.lLayout.setBackgroundColor(lContext.getResources().getColor(R.color.green));
             }
             else
             {
-                holder.lSymbolImageView.setImageDrawable(lContext.getDrawable(R.drawable.ic_remove_white_18dp));
-                holder.lLayout.setBackgroundColor(lContext.getResources().getColor(R.color.red));
+                lHolder.lSymbolImageView.setImageDrawable(lContext.getDrawable(R.drawable.ic_remove_white_18dp));
+                lHolder.lLayout.setBackgroundColor(lContext.getResources().getColor(R.color.red));
             }
-            row.invalidate();
+
+            lRow.invalidate();
         }
     }
 
     /***
-     * TODO..
+     * This function will re-initialize the Genre status array.
      */
     public void resetGenreFilters()
     {
@@ -111,7 +112,7 @@ public class GenreListAdapter extends BaseAdapter
     }
 
     /***
-     * TODO..
+     * This function returns the list of genres based on their status (INCLUDE, EXCLUDE, NEUTRAL)
      *
      * @param aStatus
      * @return
@@ -127,7 +128,7 @@ public class GenreListAdapter extends BaseAdapter
     }
 
     /***
-     * TODO..
+     * This function gets the view of an item at the specified position.
      *
      * @param aPosition
      * @param aConvertView
@@ -184,7 +185,7 @@ public class GenreListAdapter extends BaseAdapter
     }
 
     /***
-     * TODO..
+     * This class acts as holder for Genre item data.
      */
     static class GenreHolder
     {

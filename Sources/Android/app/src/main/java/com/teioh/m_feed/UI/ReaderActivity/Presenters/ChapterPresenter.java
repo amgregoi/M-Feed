@@ -51,7 +51,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
 
 
     /***
-     * TODO..
+     * This is the constructor for the Chapter Presenter.
      *
      * @param aMap
      * @param aBundle
@@ -68,7 +68,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     }
 
     /***
-     * TODO..
+     * This function initializes the chapter presenter.
      *
      * @param aBundle
      */
@@ -96,7 +96,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     }
 
     /***
-     * TODO..
+     * This function saves relevant data that needs to persist between device state changes.
      *
      * @param aSave
      */
@@ -130,7 +130,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     }
 
     /***
-     * TODO..
+     * This function restores data that needed to persist between device state changes.
      *
      * @param aRestore
      */
@@ -174,7 +174,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     }
 
     /***
-     * TODO..
+     * This function is called when a fragment or activities onPause() is called in their life cycle chain.
      */
     @Override
     public void onPause()
@@ -194,7 +194,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     }
 
     /***
-     * TODO..
+     * This function is called when a fragment or activities onResume() is called in their life cycle chain.
      */
     @Override
     public void onResume()
@@ -203,7 +203,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     }
 
     /***
-     * TODO..
+     * This function is called when a fragment or activities onDestroy is called in their life cycle chain.
      */
     @Override
     public void onDestroy()
@@ -213,7 +213,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     }
 
     /***
-     * TODO..
+     * This function retrieves the image urls of the current chapter.
      */
     @Override
     public void getImageUrls()
@@ -225,60 +225,51 @@ public class ChapterPresenter implements IReader.FragmentPresenter
             if (mChapterUrlList == null) mChapterUrlList = new ArrayList<>();
             updateReaderToolbar();
 
-            mImageListSubscription = new SourceFactory().getSource().getChapterImageListObservable(new RequestWrapper(mChapter)).cache().subscribeOn(Schedulers.io())
-                                                  .observeOn(AndroidSchedulers.mainThread())
-                                                  .subscribe(new Observer<String>()
-                                            {
-                                                /***
-                                                 * TODO..
-                                                 */
-                                                @Override
-                                                public void onCompleted()
-                                                {
-                                                    preLoadImagesToCache();
-                                                    mChapterPageAdapter = new ImagePageAdapter(mChapterReaderMapper
-                                                                                                       .getContext(), mChapterUrlList);
-                                                    mChapterReaderMapper.registerAdapter(mChapterPageAdapter);
-                                                    mChapter.setTotalPages(mChapterUrlList.size());
-                                                    mLoadingStatus = MangaEnums.eLoadingStatus.COMPLETE;
-                                                    MangaLogger.logInfo(TAG, lMethod, "Completed image url retrieval");
-                                                    updateReaderToolbar();
-                                                    mChapterReaderMapper.setCurrentChapterPage(mChapter.getCurrentPage());
+            mImageListSubscription = new SourceFactory().getSource().getChapterImageListObservable(new RequestWrapper(mChapter)).cache()
+                                                        .subscribeOn(Schedulers.io())
+                                                        .observeOn(AndroidSchedulers.mainThread())
+                                                        .subscribe(new Observer<String>()
+                                                        {
 
-                                                    mImageSubFlag = true;
+                                                            @Override
+                                                            public void onCompleted()
+                                                            {
+                                                                preLoadImagesToCache();
+                                                                mChapterPageAdapter = new ImagePageAdapter(mChapterReaderMapper
+                                                                                                                   .getContext(), mChapterUrlList);
+                                                                mChapterReaderMapper.registerAdapter(mChapterPageAdapter);
+                                                                mChapter.setTotalPages(mChapterUrlList.size());
+                                                                mLoadingStatus = MangaEnums.eLoadingStatus.COMPLETE;
+                                                                MangaLogger.logInfo(TAG, lMethod, "Completed image url retrieval");
+                                                                updateReaderToolbar();
+                                                                mChapterReaderMapper.setCurrentChapterPage(mChapter.getCurrentPage());
 
-                                                }
+                                                                mImageSubFlag = true;
 
-                                                /***
-                                                 * TODO..
-                                                 * @param aThrowable
-                                                 */
-                                                @Override
-                                                public void onError(Throwable aThrowable)
-                                                {
-                                                    mLoadingStatus = MangaEnums.eLoadingStatus.ERROR;
-                                                    MangaLogger.logError(TAG, lMethod, aThrowable.getMessage());
-                                                    updateReaderToolbar();
-                                                    Toast.makeText(mChapterReaderMapper
-                                                                           .getContext(), "Failed, please try refreshing.", Toast.LENGTH_SHORT)
-                                                         .show();
-                                                }
+                                                            }
 
-                                                /***
-                                                 * TODO..
-                                                 * @param imageUrl
-                                                 */
-                                                @Override
-                                                public void onNext(String imageUrl)
-                                                {
-                                                    if (imageUrl != null)
-                                                    {
-                                                        mLoadingStatus = MangaEnums.eLoadingStatus.LOADING;
-                                                        mChapterUrlList.add(imageUrl);
-                                                        updateReaderToolbar();
-                                                    }
-                                                }
-                                            });
+                                                            @Override
+                                                            public void onError(Throwable aThrowable)
+                                                            {
+                                                                mLoadingStatus = MangaEnums.eLoadingStatus.ERROR;
+                                                                MangaLogger.logError(TAG, lMethod, aThrowable.getMessage());
+                                                                updateReaderToolbar();
+                                                                Toast.makeText(mChapterReaderMapper
+                                                                                       .getContext(), "Failed, please try refreshing.", Toast.LENGTH_SHORT)
+                                                                     .show();
+                                                            }
+
+                                                            @Override
+                                                            public void onNext(String imageUrl)
+                                                            {
+                                                                if (imageUrl != null)
+                                                                {
+                                                                    mLoadingStatus = MangaEnums.eLoadingStatus.LOADING;
+                                                                    mChapterUrlList.add(imageUrl);
+                                                                    updateReaderToolbar();
+                                                                }
+                                                            }
+                                                        });
         }
         catch (Exception lException)
         {
@@ -288,7 +279,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     }
 
     /***
-     * TODO..
+     * This function toggles the header and footers of the reader.
      */
     @Override
     public void toggleToolbar()
@@ -315,7 +306,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     }
 
     /***
-     * TODO..
+     * This function increments the current chapter.
      */
     @Override
     public void setToNextChapter()
@@ -333,7 +324,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     }
 
     /***
-     * TODO..
+     * This function decrements the current chapter.
      */
     @Override
     public void setToPreviousChapter()
@@ -351,7 +342,8 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     }
 
     /***
-     * TODO..
+     * This function updates the drag offset.
+     * This is used to go to the next or previous chapter.
      *
      * @param aOffset
      * @param aPosition
@@ -378,7 +370,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     }
 
     /***
-     * TODO..
+     * This function updates the state of the drag.
      *
      * @param aState
      */
@@ -404,7 +396,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     }
 
     /***
-     * TODO..
+     * This function updates the header.
      */
     @Override
     public void updateReaderToolbar()
@@ -439,7 +431,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     }
 
     /***
-     * TODO..
+     * This function sets the current page of the chapter.
      *
      * @param aPosition
      */
@@ -461,7 +453,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     }
 
     /***
-     * TODO..
+     * This function sets the active chapter.
      */
     @Override
     public void updateActiveChapter()
@@ -481,7 +473,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     }
 
     /***
-     * TODO..
+     * This function updates the current chapters view status.
      */
     @Override
     public void updateChapterViewStatus()
@@ -504,6 +496,10 @@ public class ChapterPresenter implements IReader.FragmentPresenter
         }
     }
 
+    /***
+     * This function performs the chapter refresh.
+     * @param aPosition
+     */
     @Override
     public void onRefresh(int aPosition)
     {
@@ -526,7 +522,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     }
 
     /***
-     * TODO..
+     * This function pre loads the images of the chapter to the cache for quick loading.
      */
     private void preLoadImagesToCache()
     {
@@ -577,7 +573,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     }
 
     /***
-     * TODO..
+     * This function cleans up all used subscribers.
      */
     private void cleanupSubscribers()
     {
@@ -605,7 +601,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     }
 
     /***
-     * TODO..
+     * This function updates the image url list.
      *
      * @param aUrlList
      */

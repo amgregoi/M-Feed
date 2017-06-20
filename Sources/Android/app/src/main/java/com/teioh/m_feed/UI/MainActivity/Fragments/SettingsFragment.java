@@ -25,11 +25,10 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
 {
     public final static String TAG = SettingsFragment.class.getSimpleName();
 
-    //TODO implement settings with shared prefs
     @Bind(R.id.logging_toggle) ToggleButton mLoggingToggle;
 
     /***
-     * TODO..
+     * This function creates and returns a new instance of the fragment.
      * @return
      */
     public static Fragment getnewInstance()
@@ -39,7 +38,7 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
     }
 
     /***
-     * TODO..
+     * This function initializes the view of the fragment.
      * @param aInflater
      * @param aContainer
      * @param aSavedInstanceState
@@ -57,35 +56,7 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
     }
 
     /***
-     * TODO..
-     * @param aSave
-     */
-    @Override
-    public void onActivityCreated(@Nullable Bundle aSave)
-    {
-        super.onActivityCreated(aSave);
-    }
-
-    /***
-     * TODO..
-     */
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-    }
-
-    /***
-     * TODO..
-     */
-    @Override
-    public void onPause()
-    {
-        super.onPause();
-    }
-
-    /***
-     * TODO..
+     * This function is called in the fragment lifecycle
      */
     @Override
     public void onDestroyView()
@@ -94,6 +65,9 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
         ButterKnife.unbind(this);
     }
 
+    /***
+     * This function performs the show logs item select.
+     */
     @OnClick(R.id.show_logs)
     public void onShowLogsClick()
     {
@@ -106,12 +80,18 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
 
     }
 
+    /***
+     * This function performs the clear logs item select.
+     */
     @OnClick(R.id.clear_logs)
     public void onClearLogsClick()
     {
         launchYesNoDialog(R.string.logs, getString(R.string.settings_clear_logs), 99);
     }
 
+    /***
+     * This function performs the toggle logs item select.
+     */
     @OnClick(R.id.toggle_logs)
     public void onToggleLogsClick()
     {
@@ -121,30 +101,45 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
         MangaLogger.makeToast("Toggling internal logger");
     }
 
+    /***
+     * This function performs the clear chapter cache item select.
+     */
     @OnClick(R.id.reset_cached_chapters)
     public void onResetChaptersClick()
     {
         launchYesNoDialog(R.string.chapter_cache, getString(R.string.settings_chapter_cache), 0);
     }
 
+    /***
+     * This function performs the clear user library item select.
+     */
     @OnClick(R.id.reset_followed_manga_pref)
     public void onResetLibraryClick()
     {
         launchYesNoDialog(R.string.library, getString(R.string.settings_library), 1);
     }
 
+    /***
+     * This function performs the delete all downloaded chapters item select.
+     */
     @OnClick(R.id.reset_downloaded_chapters)
     public void onRemoveDownloadedChaptersClick()
     {
         launchYesNoDialog(R.string.downloaded_chapters, getString(R.string.settings_downloaded_chapters), 2);
     }
 
+    /***
+     * This function performs the contact us item select.
+     */
     @OnClick(R.id.contact_us)
     public void onContactUsClick()
     {
         launchYesNoDialog(R.string.contact_us, getString(R.string.settings_contact_us), 3);
     }
 
+    /***
+     * This function intializes relavent parts of the layout based on saved SharedPrefs.
+     */
     private void initializeLayout()
     {
         mLoggingToggle.setChecked(SharedPrefs.getLoggingStatus());
@@ -152,6 +147,10 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
 
     }
 
+    /***
+     * This function performs various (above) operations based on the action ID specified.
+     * @param aAction
+     */
     @Override public void positive(int aAction)
     {
         switch (aAction)
@@ -191,12 +190,21 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
         }
     }
 
+    /***
+     * This function is called and logged when an action is declined by the user.
+     * @param aAction
+     */
     @Override public void negative(int aAction)
     {
-        MangaLogger.makeToast("NEGATIVE");
-
+        MangaLogger.logInfo(TAG, "negative", "No was selected for action (" + aAction + ")");
     }
 
+    /***
+     * This function launches the YesNo dialog to verify by the user an action should be executed.
+     * @param aTitleRes
+     * @param aMessage
+     * @param aAction
+     */
     private void launchYesNoDialog(int aTitleRes, String aMessage, int aAction)
     {
         DialogFragment newFragment = FYesNoDialog.getNewInstance(aTitleRes, aMessage, aAction, false);

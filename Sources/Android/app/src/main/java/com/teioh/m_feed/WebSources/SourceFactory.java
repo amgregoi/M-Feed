@@ -6,7 +6,7 @@ import com.teioh.m_feed.Utils.SharedPrefs;
 public class SourceFactory
 {
     /***
-     * TODO..
+     * This function retrieves the current source.
      * @return
      */
     public SourceBase getSource()
@@ -15,7 +15,7 @@ public class SourceFactory
     }
 
     /***
-     * TODO..
+     * This function retrieves the current sources name.
      * @return
      */
     public String getSourceName()

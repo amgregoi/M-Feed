@@ -19,6 +19,9 @@ public class SharedPrefs
 {
 
 
+    /***
+     * This function initializes the shared prefs.
+     */
     public static void initializePreferences()
     {
         Context lContext = MFeedApplication.getInstance();
@@ -58,16 +61,11 @@ public class SharedPrefs
                                 .getString(lContext.getString(R.string.PREF_GOOGLE_EMAIL), "Guest (Sign in)");
     }
 
-    /**
-     * Get the users MAL password
-     *
-     * @return The users MAL password
+
+    /***
+     * This function verifies if a user is signed into google.
+     * @return
      */
-//    public static String getMALPassword()
-//    {
-//        Context lContext = MFeedApplication.getInstance();
-//        return PreferenceManager.getDefaultSharedPreferences(lContext).getString(lContext.getString(R.string.PREF_MAL_PASSWORD), null);
-//    }
     public static boolean isSignedIn()
     {
         if (getGoogleEmail().contains("Guest")) return false;
@@ -135,7 +133,7 @@ public class SharedPrefs
     }
 
     /***
-     * TODO...
+     * This function sets the current source.
      *
      * @param aSource
      */
@@ -148,7 +146,7 @@ public class SharedPrefs
     }
 
     /***
-     * TODO...
+     * This function retrieves the current source.
      *
      * @return
      */
@@ -160,7 +158,7 @@ public class SharedPrefs
     }
 
     /***
-     * TODO...
+     * This function sets the chapter vertical scroll setting.
      *
      * @param aVertical
      */
@@ -173,7 +171,7 @@ public class SharedPrefs
     }
 
     /***
-     * TODO...
+     * This function returns the chapter vertical scroll setting.
      *
      * @return
      */
@@ -185,7 +183,7 @@ public class SharedPrefs
     }
 
     /***
-     * TODO...
+     * This function sets the chapter screen orientation setting.
      *
      * @param aLandscape
      */
@@ -198,7 +196,7 @@ public class SharedPrefs
     }
 
     /***
-     * TODO...
+     * This function returns the chapter screen orientation setting.
      *
      * @return true if LandScape, false otherwise
      */
@@ -210,7 +208,7 @@ public class SharedPrefs
     }
 
     /***
-     * TODO...
+     * This function gets the in app logging status.
      *
      * @return true if logging, false otherwise
      */
@@ -221,7 +219,7 @@ public class SharedPrefs
     }
 
     /***
-     * TODO...
+     * This function sets the in app logging status.
      *
      * @param aLogging
      */
@@ -233,6 +231,9 @@ public class SharedPrefs
         lEditor.apply();
     }
 
+    /***
+     * This function saves a set of in app logs to persist over multiple application launches.
+     */
     public static void saveLogs()
     {
         Context lContext = MFeedApplication.getInstance();
@@ -241,6 +242,10 @@ public class SharedPrefs
         lEditor.apply();
     }
 
+    /***
+     * this function returns a set of in app logs to persist over multiple application launches.
+     * @return
+     */
     public static List<String> getLogs()
     {
         Context lContext = MFeedApplication.getInstance();

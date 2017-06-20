@@ -20,7 +20,7 @@ public class LibraryPresenter extends MainFragmentPresenterBase
     }
 
     /***
-     * TODO...
+     * This function performs the update to the presenter data list.
      */
     @Override
     public void updateMangaList()

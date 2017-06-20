@@ -54,7 +54,7 @@ public class RequestWrapper implements Parcelable
     }
 
     /***
-     * TODO...
+     * This function returns the manga item source
      *
      * @return
      */
@@ -64,7 +64,7 @@ public class RequestWrapper implements Parcelable
     }
 
     /***
-     * TODO...
+     * This function returns the manga item url
      *
      * @return
      */
@@ -74,7 +74,7 @@ public class RequestWrapper implements Parcelable
     }
 
     /***
-     * TODO...
+     * This function returns the manga item title
      *
      * @return
      */
@@ -84,7 +84,7 @@ public class RequestWrapper implements Parcelable
     }
 
     /***
-     * TODO...
+     * This function returns the chapter item url
      *
      * @return
      */

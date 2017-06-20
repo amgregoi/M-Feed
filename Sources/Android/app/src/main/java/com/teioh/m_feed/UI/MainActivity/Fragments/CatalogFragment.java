@@ -28,7 +28,7 @@ public class CatalogFragment extends MainFragmentBase
     }
 
     /***
-     * TODO..
+     * This function initializes and creats the Catalog Fragment View.
      *
      * @param aInflater
      * @param aContainer
@@ -46,7 +46,7 @@ public class CatalogFragment extends MainFragmentBase
     }
 
     /***
-     * TODO..
+     * Not implemented for this class
      */
     @Override
     public void startRefresh()
@@ -55,7 +55,7 @@ public class CatalogFragment extends MainFragmentBase
     }
 
     /***
-     * TODO..
+     * Not implemented for this class
      */
     @Override
     public void stopRefresh()
@@ -64,7 +64,7 @@ public class CatalogFragment extends MainFragmentBase
     }
 
     /***
-     * TODO..
+     * Not implemented for this class
      */
     @Override
     public void setupSwipeRefresh()
@@ -73,12 +73,12 @@ public class CatalogFragment extends MainFragmentBase
     }
 
     /***
-     * TODO..
+     * Not implemented for this class
      */
     @Override
     public boolean removeFilters()
     {
-        //left blank
+        //do nothing
         return true;
     }
 }

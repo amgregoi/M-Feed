@@ -144,9 +144,9 @@ public class Anime implements Parcelable
         }
 
         @Override
-        public Anime[] newArray(int size)
+        public Anime[] newArray(int aSize)
         {
-            return new Anime[size];
+            return new Anime[aSize];
         }
     };
 

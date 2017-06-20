@@ -41,7 +41,7 @@ public class MangaDB extends SQLiteOpenHelper
     }
 
     /***
-     * TODO...
+     * This function gets an instance of the MangaDB helper.
      */
     public static synchronized MangaDB getInstance()
     {
@@ -53,7 +53,7 @@ public class MangaDB extends SQLiteOpenHelper
     }
 
     /***
-     * TODO...
+     * This function creates the database tables.
      */
     public void onCreate(SQLiteDatabase aDb)
     {
@@ -61,7 +61,7 @@ public class MangaDB extends SQLiteOpenHelper
     }
 
     /***
-     * TODO...
+     * This function upgrades the databse.
      */
     public void onUpgrade(SQLiteDatabase aDb, int aOldVersion, int aNewVersion)
     {
@@ -69,7 +69,7 @@ public class MangaDB extends SQLiteOpenHelper
     }
 
     /***
-     * TODO...
+     * This function creates the database.
      */
     public void createDatabase()
     {
@@ -77,7 +77,7 @@ public class MangaDB extends SQLiteOpenHelper
     }
 
     /***
-     * TODO...
+     * This function verifies if the app needs to copy the shipped database.
      */
     private void createDB()
     {
@@ -90,7 +90,7 @@ public class MangaDB extends SQLiteOpenHelper
     }
 
     /***
-     * TODO...
+     * This function verifies if the database has been copied already.
      *
      * @return true if database exists
      */
@@ -123,7 +123,7 @@ public class MangaDB extends SQLiteOpenHelper
     }
 
     /***
-     * TODO...
+     * This function copies the database provided with the apk.
      */
     private void copyDBFromResource()
     {
@@ -153,7 +153,7 @@ public class MangaDB extends SQLiteOpenHelper
     }
 
     /***
-     * TODO...
+     * This function updates the follow status of an item in the database
      *
      * @param aTitle
      * @param aValue
@@ -166,7 +166,7 @@ public class MangaDB extends SQLiteOpenHelper
     }
 
     /***
-     * TODO...
+     * This function updates the follow status of an item in the database (unfollow)
      *
      * @param aTitle
      */
@@ -178,82 +178,76 @@ public class MangaDB extends SQLiteOpenHelper
     }
 
     /**
-     * TODO...
+     * This function retrieves the list of followed items from the database.
      *
      * @return Observable arraylist of users followed manga
      */
     public Observable<ArrayList<Manga>> getLibraryList()
     {
-        return Observable.create(new Observable.OnSubscribe<ArrayList<Manga>>()
-        {
-            @Override
-            public void call(Subscriber<? super ArrayList<Manga>> subscriber)
-            {
-                try
-                {
-                    ArrayList<Manga> mangaList = new ArrayList<>();
-                    QueryResultIterable<Manga> itr = cupboard().withDatabase(getReadableDatabase())
-                                                               .query(Manga.class)
-                                                               .withSelection("NOT following = ? AND source = ?", "0", new SourceFactory().getSourceName())
-                                                               .query();
+        return Observable.create(subscriber ->
+                                 {
+                                     try
+                                     {
+                                         ArrayList<Manga> mangaList = new ArrayList<>();
+                                         QueryResultIterable<Manga> itr = cupboard().withDatabase(getReadableDatabase())
+                                                                                    .query(Manga.class)
+                                                                                    .withSelection("NOT following = ? AND source = ?", "0", new SourceFactory()
+                                                                                            .getSourceName())
+                                                                                    .query();
 
-                    for (Manga manga : itr)
-                    {
-                        mangaList.add(manga);
-                    }
-                    itr.close();
+                                         for (Manga manga : itr)
+                                         {
+                                             mangaList.add(manga);
+                                         }
+                                         itr.close();
 
-                    subscriber.onNext(mangaList);
-                    subscriber.onCompleted();
-                }
-                catch (Exception lException)
-                {
-                    subscriber.onError(lException);
-                }
-            }
-        });
+                                         subscriber.onNext(mangaList);
+                                         subscriber.onCompleted();
+                                     }
+                                     catch (Exception lException)
+                                     {
+                                         subscriber.onError(lException);
+                                     }
+                                 });
     }
 
 
     /**
-     * TODO...
+     * This function retrieves the source catalog from the database.
      *
      * @return Observable arraylist of sources manga
      */
     public Observable<ArrayList<Manga>> getCatalogList()
     {
-        return Observable.create(new Observable.OnSubscribe<ArrayList<Manga>>()
-        {
-            @Override
-            public void call(Subscriber<? super ArrayList<Manga>> subscriber)
-            {
-                try
-                {
-                    ArrayList<Manga> mangaList = new ArrayList<>();
-                    QueryResultIterable<Manga> itr = cupboard().withDatabase(getReadableDatabase())
-                                                               .query(Manga.class)
-                                                               .withSelection("source = ?", SharedPrefs.getSavedSource())
-                                                               .query();
+        return Observable.create(subscriber ->
+                                 {
+                                     try
+                                     {
+                                         ArrayList<Manga> mangaList = new ArrayList<>();
+                                         QueryResultIterable<Manga> itr = cupboard().withDatabase(getReadableDatabase())
+                                                                                    .query(Manga.class)
+                                                                                    .withSelection("source = ?", SharedPrefs
+                                                                                            .getSavedSource())
+                                                                                    .query();
 
-                    for (Manga manga : itr)
-                    {
-                        mangaList.add(manga);
-                    }
-                    itr.close();
+                                         for (Manga manga : itr)
+                                         {
+                                             mangaList.add(manga);
+                                         }
+                                         itr.close();
 
-                    subscriber.onNext(mangaList);
-                    subscriber.onCompleted();
-                }
-                catch (Exception lException)
-                {
-                    subscriber.onError(lException);
-                }
-            }
-        });
+                                         subscriber.onNext(mangaList);
+                                         subscriber.onCompleted();
+                                     }
+                                     catch (Exception lException)
+                                     {
+                                         subscriber.onError(lException);
+                                     }
+                                 });
     }
 
     /***
-     * TODO...
+     * This function retrieves an item from the database specified by its url.
      *
      * @param aUrl
      * @return
@@ -264,7 +258,7 @@ public class MangaDB extends SQLiteOpenHelper
     }
 
     /***
-     * TODO...
+     * This function retrieves an item from the dtabase specified by its id.
      *
      * @param aId
      * @return
@@ -275,7 +269,7 @@ public class MangaDB extends SQLiteOpenHelper
     }
 
     /***
-     * TODO...
+     * This function adds an item to the database.
      *
      * @param aManga
      */
@@ -285,7 +279,7 @@ public class MangaDB extends SQLiteOpenHelper
     }
 
     /***
-     * TODO...
+     * This function updates a manga item from the database.
      *
      * @param aManga
      */
@@ -306,6 +300,10 @@ public class MangaDB extends SQLiteOpenHelper
         cupboard().withDatabase(getWritableDatabase()).update(Manga.class, lValues, "link = ?", aManga.getMangaURL());
     }
 
+    /***
+     * This function updates an chapter item from the database.
+     * @param aChapter
+     */
     public void updateChapter(Chapter aChapter)
     {
         MangaLogger.logInfo(TAG, "updateChapter", "Not yet implemented");
@@ -323,21 +321,39 @@ public class MangaDB extends SQLiteOpenHelper
 
     }
 
+    /***
+     * This function retrieves a chapter item from the database specified by its url
+     * @param aUrl
+     * @return
+     */
     public Chapter getChapter(String aUrl)
     {
         return cupboard().withDatabase(getReadableDatabase()).query(Chapter.class).withSelection("url = ?", aUrl).get();
     }
 
+    /***
+     * This function adds a chapter item to the database.
+     * @param aChapter
+     */
     public void addChapter(Chapter aChapter)
     {
         cupboard().withDatabase(getWritableDatabase()).put(aChapter);
     }
 
-    public void removeChapters(Manga aManga){
+    /***
+     * This function removes chapters from a specified manga from the database.
+     * @param aManga
+     */
+    public void removeChapters(Manga aManga)
+    {
         cupboard().withDatabase(getWritableDatabase()).delete(Chapter.class, "mangaTitle = ?", aManga.getTitle());
     }
 
-    public void resetLibrary(){
+    /***
+     * This function unfollows all items from database.
+     */
+    public void resetLibrary()
+    {
         QueryResultIterable<Manga> itr = cupboard().withDatabase(getReadableDatabase())
                                                    .query(Manga.class)
                                                    .withSelection("NOT following = ?", "0")
@@ -350,10 +366,15 @@ public class MangaDB extends SQLiteOpenHelper
         itr.close();
     }
 
-    public void resetCachedChapters(){
+    /***
+     * This function removes all chapter items from the database.
+     */
+    public void resetCachedChapters()
+    {
         QueryResultIterable<Manga> itr = cupboard().withDatabase(getReadableDatabase())
                                                    .query(Manga.class)
-                                                   .withSelection("NOT following = ? AND source = ?", "0", new SourceFactory().getSourceName())
+                                                   .withSelection("NOT following = ? AND source = ?", "0", new SourceFactory()
+                                                           .getSourceName())
                                                    .query();
 
         for (Manga manga : itr)

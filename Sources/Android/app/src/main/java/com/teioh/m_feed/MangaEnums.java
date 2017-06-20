@@ -13,7 +13,7 @@ import com.teioh.m_feed.WebSources.Sources.MangaPark;
 public class MangaEnums
 {
     /***
-     * TODO..
+     * This enum is for the various manga filter status'
      */
     public enum eFilterStatus
     {
@@ -42,7 +42,7 @@ public class MangaEnums
 
 
     /***
-     * TODO..
+     * This enum is for the various loading status'
      */
     public enum eLoadingStatus
     {
@@ -86,7 +86,7 @@ public class MangaEnums
     }
 
     /***
-     * TODO..
+     * This enum is for the various sources.
      */
     public enum eSource
     {
@@ -110,7 +110,7 @@ public class MangaEnums
     }
 
     /***
-     * TODO..
+     * This enum is for the various follow status types.
      */
     public enum eFollowType
     {

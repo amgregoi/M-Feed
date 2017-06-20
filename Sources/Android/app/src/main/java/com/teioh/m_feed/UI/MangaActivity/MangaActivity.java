@@ -68,7 +68,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     private IManga.ActivityPresenter mMangaPresenter;
 
     /***
-     * TODO..
+     * This function creates and returns a new intent for the activity.
      *
      * @param aContext
      * @param aUrl
@@ -82,7 +82,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
-     * TODO..
+     * This function initializes the view of the activity.
      *
      * @param aSavedInstanceState
      */
@@ -103,7 +103,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
-     * TODO..
+     * This function saves relevant data that needs to persist between device state changes.
      *
      * @param aOutState
      */
@@ -115,7 +115,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
-     * TODO..
+     * This function is called when a fragment or activities onResume() is called in their life cycle chain.
      */
     @Override
     protected void onResume()
@@ -125,7 +125,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
-     * TODO..
+     * This function is called when a fragment or activities onPause() is called in their life cycle chain.
      */
     @Override
     protected void onPause()
@@ -135,7 +135,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
-     * TODO..
+     * This function is called when a fragment or activities onDestroy is called in their life cycle chain.
      */
     @Override
     protected void onDestroy()
@@ -146,7 +146,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
-     * TODO..
+     * This function inflates an overflow context menu if the current item is being followed.
      *
      * @param aMenu
      * @return
@@ -163,7 +163,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
-     * TODO..
+     * This function handles overflow menu selections.
      *
      * @param aMenuItem
      * @return
@@ -189,7 +189,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
-     * TODO..
+     * This function sets the activity title.
      *
      * @param aTitle
      */
@@ -200,7 +200,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
-     * TODO..
+     * This function initializes the toolbar.
      */
     @Override
     public void setupToolBar()
@@ -211,7 +211,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
-     * TODO..
+     * This function returns the activity's context.
      *
      * @return
      */
@@ -222,7 +222,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
-     * TODO..
+     * This function handles backPress' for the activity.
      */
     @Override
     public void onBackPressed()
@@ -240,7 +240,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
-     * TODO..
+     * This function initializes the current item information views.
      *
      * @param aManga
      */
@@ -274,7 +274,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
-     * TODO..
+     * This function starts the swipe refresh layout refresh animation.
      */
     @Override
     public void startRefresh()
@@ -284,7 +284,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
-     * TODO..
+     * This function stops the swipe refresh layout refresh animation.
      */
     @Override
     public void stopRefresh()
@@ -294,7 +294,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
-     * TODO..
+     * This function initializes the swipe refresh layout.
      */
     @Override
     public void setupSwipeRefresh()
@@ -303,7 +303,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
-     * TODO..
+     * This function hides the chapter list view.
      */
     @Override
     public void hideCoverLayout()
@@ -312,7 +312,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
-     * TODO..
+     * This function shows the chapter list view.
      */
     @Override
     public void showCoverLayout()
@@ -321,7 +321,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
-     * TODO..
+     * This function registers the adapter to the list view.
      *
      * @param aAdapter
      */
@@ -332,7 +332,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
-     * TODO..
+     * This function initializes the header view.
      */
     @Override
     public void initializeHeaderViews()
@@ -356,7 +356,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
-     * TODO..
+     * This function initializes information header button listeners.
      */
     @Override
     public void setupHeaderButtons()
@@ -431,7 +431,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
-     * TODO..
+     * This function shows the failed to load view.
      */
     @Override
     public void showFailedToLoad()
@@ -441,7 +441,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
-     * TODO..
+     * This function performs chapter item selections.
      *
      * @param aAdapter
      * @param aView
@@ -454,7 +454,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
-     * TODO..
+     * This function reverses the chapter list items.
      *
      * @param aView
      */
@@ -467,7 +467,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
 
 
     /***
-     * TODO..
+     * This function trims the Glide cache when low on memory.
      *
      * @param aLevel
      */
@@ -479,7 +479,7 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
-     * TODO..
+     * This function clears the Glide cache when low on memory.
      */
     @Override
     public void onLowMemory()
@@ -488,6 +488,10 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
         Glide.get(this).clearMemory();
     }
 
+    /***
+     * This function unfollows the current item if the user verifies they want this by the YesNo dialog.
+     * @param aAction
+     */
     @Override public void positive(int aAction)
     {
         // After Ok code.
@@ -498,6 +502,11 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
         invalidateOptionsMenu();
     }
 
+    /***
+     * This function is the negative response from the YesNo Dialog.
+     * No action is taken.
+     * @param aAction
+     */
     @Override public void negative(int aAction)
     {
         //Do nothing

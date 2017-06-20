@@ -26,14 +26,14 @@ public abstract class SourceBase
 {
 
     /***
-     * TODO...
+     * This function retrieves a list of recent updates from the current source.
      *
      * @return
      */
     public abstract Observable<List<Manga>> getRecentUpdatesObservable();
 
     /***
-     * TODO...
+     * This function retrieves a list of chapter image urls from the specified request.
      *
      * @param aRequest
      * @return
@@ -41,7 +41,7 @@ public abstract class SourceBase
     public abstract Observable<String> getChapterImageListObservable(final RequestWrapper aRequest);
 
     /***
-     * TODO...
+     * This function retrieves a list of chapters from the specified request.
      *
      * @param aRequest
      * @return
@@ -49,7 +49,7 @@ public abstract class SourceBase
     public abstract Observable<List<Chapter>> getChapterListObservable(final RequestWrapper aRequest);
 
     /***
-     * TODO...
+     * This function updates a manga item based on the specified request.
      *
      * @param aRequest
      * @return
@@ -57,7 +57,7 @@ public abstract class SourceBase
     public abstract Observable<Manga> updateMangaObservable(final RequestWrapper aRequest);
 
     /***
-     * TODO...
+     * This function returns the current source.
      *
      * @return
      */
@@ -67,7 +67,7 @@ public abstract class SourceBase
     }
 
     /***
-     * TODO...
+     * This function sets the current source.
      *
      * @param aSource
      */
@@ -77,7 +77,7 @@ public abstract class SourceBase
     }
 
     /***
-     * TODO...
+     * This function returns a source specified by its position in the source enum.
      *
      * @param aPosition
      * @return
@@ -90,43 +90,40 @@ public abstract class SourceBase
     }
 
     /***
-     * TODO...
+     * This function caches images.
      *
      * @param aImageUrls
      * @return
      */
     public Observable<Drawable> cacheFromImagesOfSize(final List<String> aImageUrls)
     {
-        return Observable.create(new Observable.OnSubscribe<Drawable>()
+        return Observable.create((Observable.OnSubscribe<Drawable>) subscriber ->
         {
-            @Override
-            public void call(Subscriber<? super Drawable> subscriber)
+            try
             {
-                try
+                for (String imageUrl : aImageUrls)
                 {
-                    for (String imageUrl : aImageUrls)
+                    if (!subscriber.isUnsubscribed())
                     {
-                        if (!subscriber.isUnsubscribed())
-                        {
-                            RequestOptions lOptions = new RequestOptions();
-                            lOptions.skipMemoryCache(true)
-                                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE);
+                        RequestOptions lOptions = new RequestOptions();
+                        lOptions.skipMemoryCache(true)
+                                .diskCacheStrategy(DiskCacheStrategy.RESOURCE);
 
-                            FutureTarget<Drawable> cacheFuture = Glide.with(MFeedApplication.getInstance()).load(imageUrl).into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
+                        FutureTarget<Drawable> cacheFuture = Glide.with(MFeedApplication.getInstance()).load(imageUrl).into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
 
-                            subscriber.onNext(cacheFuture.get(30, TimeUnit.SECONDS));
-                        }
+                        subscriber.onNext(cacheFuture.get(30, TimeUnit.SECONDS));
                     }
-                    subscriber.onCompleted();
                 }
-                catch (Throwable e)
-                {
-                    subscriber.onError(e);
-                }
+                subscriber.onCompleted();
+            }
+            catch (Throwable e)
+            {
+                subscriber.onError(e);
             }
         }).subscribeOn(Schedulers.newThread());
     }
 
+    //TODO..
     //This is temporary, will be moved back to MangaJoy at a later time when I have lists for all sources
     final public String genres[] = {"Action", "Adult", "Adventure", "Comedy", "Doujinshi", "Drama", "Ecchi", "Fantasy", "Gender Bender", "Harem", "Historical", "Horror", "Josei", "Lolicon", "Manga", "Manhua", "Manhwa", "Martial Arts", "Mature", "Mecha", "Mystery", "One shot", "Psychological", "Romance", "School Life", "Sci fi", "Seinen", "Shotacon", "Shoujo", "Shoujo Ai", "Shounen", "Shounen Ai", "Slice of Life", "Smut", "Sports", "Supernatural", "Tragedy", "Yaoi", "Yuri"};
 }

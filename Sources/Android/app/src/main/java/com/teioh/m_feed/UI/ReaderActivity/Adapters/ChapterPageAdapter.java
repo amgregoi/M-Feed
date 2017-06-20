@@ -24,8 +24,9 @@ public class ChapterPageAdapter extends FragmentStatePagerAdapter
     private SparseArray<WeakReference<Fragment>> mPageReferenceMap = new SparseArray<WeakReference<Fragment>>();
 
     private boolean mParentFollowing;
+
     /***
-     * TODO..
+     * This is the constructor for the Chapter Page Adapter
      * @param aFragmentManager
      * @param aChapterList
      */
@@ -37,7 +38,7 @@ public class ChapterPageAdapter extends FragmentStatePagerAdapter
     }
 
     /***
-     * TODO..
+     * This function returns the chapter fragment specified by its position.
      * @param aPosition
      * @return
      */
@@ -67,7 +68,7 @@ public class ChapterPageAdapter extends FragmentStatePagerAdapter
     }
 
     /***
-     * TODO..
+     * This function destroys the chapter fragment item specified by its position.
      * @param aContainer
      * @param aPosition
      * @param aObject
@@ -80,7 +81,7 @@ public class ChapterPageAdapter extends FragmentStatePagerAdapter
     }
 
     /***
-     * TODO..
+     * This function instantiates the item specified by its position.
      * @param aContainer
      * @param aPosition
      * @return
@@ -105,7 +106,7 @@ public class ChapterPageAdapter extends FragmentStatePagerAdapter
     }
 
     /***
-     * TODO..
+     * This function returns the chapter count.
      * @return
      */
     @Override
