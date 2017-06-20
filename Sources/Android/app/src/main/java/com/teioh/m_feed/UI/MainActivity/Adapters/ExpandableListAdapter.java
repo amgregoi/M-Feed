@@ -82,16 +82,19 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter
             aConvertView = lInflater.inflate(R.layout.drawer_source_list_item, null);
         }
 
+        View lBar = aConvertView.findViewById(R.id.bar);
         TextView lSourceTextView = (TextView) aConvertView.findViewById(R.id.sourceTitle);
         lSourceTextView.setText(lSource);
 
         if (lSource.equals(new SourceFactory().getSourceName()))
         {
             lSourceTextView.setTextColor(mContext.getResources().getColor(R.color.ColorAccent));
+            lBar.setBackgroundColor(mContext.getResources().getColor(R.color.ColorAccent));
         }
         else
         {
             lSourceTextView.setTextColor(mContext.getResources().getColor(R.color.white));
+            lBar.setBackgroundColor(mContext.getResources().getColor(R.color.white));
         }
         
         return aConvertView;
