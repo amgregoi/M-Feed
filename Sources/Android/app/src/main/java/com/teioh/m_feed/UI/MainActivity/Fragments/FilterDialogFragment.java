@@ -119,8 +119,6 @@ public class FilterDialogFragment extends DialogFragment
      */
     private void performSearch()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         StringBuilder lSelection = new StringBuilder();
         List<String> lSelectionArgs = new ArrayList<>();
 
@@ -138,7 +136,7 @@ public class FilterDialogFragment extends DialogFragment
         }
         else
         {
-            MangaLogger.logInfo(TAG, lMethod, "Starting filter search");
+            MangaLogger.logInfo(TAG, "Starting filter search");
 
             for (String iString : lKeepList)
             {
@@ -174,7 +172,7 @@ public class FilterDialogFragment extends DialogFragment
                 Toast.makeText(getContext(), "Search result empty", Toast.LENGTH_SHORT).show();
             }
 
-            MangaLogger.logInfo(TAG, lMethod, "Finished filter search");
+            MangaLogger.logInfo(TAG, "Finished filter search");
 
         }
 

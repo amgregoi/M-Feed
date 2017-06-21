@@ -47,8 +47,6 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     @Override
     public void onSaveState(Bundle aSave)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             if (mChapterList != null) aSave.putParcelableArrayList(CHAPTER_LIST_KEY, mChapterList);
@@ -56,7 +54,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
     }
 
@@ -68,8 +66,6 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     @Override
     public void onRestoreState(Bundle aRestore)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             if (aRestore.containsKey(CHAPTER_LIST_KEY)) mChapterList = new ArrayList<>(aRestore.getParcelableArrayList(CHAPTER_LIST_KEY));
@@ -78,7 +74,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
     }
 
@@ -90,8 +86,6 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     @Override
     public void init(Bundle aBundle)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             if (mChapterList == null)
@@ -111,7 +105,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
     }
 
@@ -121,17 +115,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     @Override
     public void onPause()
     {
-
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
-        try
-        {
-
-        }
-        catch (Exception lException)
-        {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
-        }
+        //do nothing
     }
 
     /***
@@ -140,16 +124,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     @Override
     public void onResume()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
-        try
-        {
-
-        }
-        catch (Exception lException)
-        {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
-        }
+        //do nothing
     }
 
     /***
@@ -158,16 +133,13 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     @Override
     public void onDestroy()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             mReaderMap = null;
-
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
     }
 
@@ -179,8 +151,6 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     @Override
     public void updateToolbar(int aPosition)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             ChapterFragment lTempFragment;
@@ -191,7 +161,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
 
     }
@@ -204,8 +174,6 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     @Override
     public void incrementChapterPage(int aPosition)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             ChapterFragment lTempFragment;
@@ -216,7 +184,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
 
     }
@@ -229,8 +197,6 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     @Override
     public void decrementChapterPage(int aPosition)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             ChapterFragment lTempFragment;
@@ -241,7 +207,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
 
     }
@@ -254,8 +220,6 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     @Override
     public void updateChapterViewStatus(int aPosition)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             ChapterFragment lTempFragment;
@@ -266,7 +230,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
 
     }
@@ -279,8 +243,6 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     @Override
     public void onRefreshButton(int aPosition)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             ChapterFragment lChapterFragment;
@@ -291,7 +253,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
 
     }
@@ -304,8 +266,6 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     @Override
     public void toggleVerticalScrollSettings(int aPosition)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             boolean lCurrentValue = SharedPrefs.getChapterScrollVertical();
@@ -327,7 +287,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
     }
 
@@ -338,8 +298,6 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     @Override
     public void updateRecentChapter(int aPosition)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             if (aPosition < mChapterList.size() && aPosition > 0)
@@ -350,7 +308,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
     }
 
@@ -360,8 +318,6 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     @Override
     public void toggleOrientation()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             boolean lCurrentValue = SharedPrefs.getChapterScreenOrientation();
@@ -371,7 +327,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
     }
 }

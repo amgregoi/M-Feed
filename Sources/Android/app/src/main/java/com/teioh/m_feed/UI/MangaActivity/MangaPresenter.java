@@ -52,8 +52,6 @@ public class MangaPresenter implements IManga.ActivityPresenter
     @Override
     public void init(Bundle aBundle)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             if (mManga == null)
@@ -61,6 +59,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
                 String lMangaUrl = aBundle.getString(Manga.TAG);
                 mManga = MangaDB.getInstance().getManga(lMangaUrl);
             }
+
             if (!mRestoreActivity) mChapterOrderDescending = true;
             mMangaMapper.setActivityTitle(mManga.getTitle());
             mMangaMapper.setupToolBar();
@@ -75,7 +74,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
         }
     }
 
@@ -87,8 +86,6 @@ public class MangaPresenter implements IManga.ActivityPresenter
     @Override
     public void onSaveState(Bundle aSave)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             if (mManga != null) aSave.putParcelable(MANGA_KEY, mManga);
@@ -98,7 +95,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
 
     }
@@ -111,8 +108,6 @@ public class MangaPresenter implements IManga.ActivityPresenter
     @Override
     public void onRestoreState(Bundle aRestore)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             mRestoreActivity = true;
@@ -128,7 +123,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
 
     }
@@ -139,8 +134,6 @@ public class MangaPresenter implements IManga.ActivityPresenter
     @Override
     public void onPause()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
 
@@ -158,7 +151,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
 
     }
@@ -169,8 +162,6 @@ public class MangaPresenter implements IManga.ActivityPresenter
     @Override
     public void onResume()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             if (mAdapter != null) mAdapter.notifyDataSetChanged();
@@ -179,7 +170,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
     }
 
@@ -189,8 +180,6 @@ public class MangaPresenter implements IManga.ActivityPresenter
     @Override
     public void onDestroy()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             Glide.get(mMangaMapper.getContext()).clearMemory();
@@ -199,7 +188,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
     }
 
@@ -209,7 +198,6 @@ public class MangaPresenter implements IManga.ActivityPresenter
     @Override
     public boolean chapterOrderButtonClick()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
         boolean lResult = true;
 
         try
@@ -223,7 +211,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
             lResult = false;
         }
 
@@ -238,7 +226,6 @@ public class MangaPresenter implements IManga.ActivityPresenter
     @Override
     public boolean onFollowButtonClick(int aValue)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
         boolean lResult = true;
 
         try
@@ -248,7 +235,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
             lResult = false;
         }
 
@@ -261,7 +248,6 @@ public class MangaPresenter implements IManga.ActivityPresenter
     @Override
     public boolean onUnfollowButtonClick()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
         boolean lResult = true;
 
         try
@@ -272,7 +258,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
             lResult = false;
         }
 
@@ -287,7 +273,6 @@ public class MangaPresenter implements IManga.ActivityPresenter
     @Override
     public boolean onChapterClicked(Chapter aChapter)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
         boolean lResult = true;
         try
         {
@@ -303,7 +288,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
             lResult = false;
         }
 
@@ -318,7 +303,6 @@ public class MangaPresenter implements IManga.ActivityPresenter
     @Override
     public String getImageUrl()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
 
         try
         {
@@ -327,7 +311,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
         return "";
     }
@@ -338,7 +322,6 @@ public class MangaPresenter implements IManga.ActivityPresenter
     @Override
     public boolean onContinueReadingButtonClick()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
         boolean lResult = true;
 
         try
@@ -370,7 +353,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
             lResult = false;
         }
 
@@ -382,7 +365,6 @@ public class MangaPresenter implements IManga.ActivityPresenter
      */
     @Override public boolean clearCachedChapters()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
         boolean lResult = true;
         try
         {
@@ -390,7 +372,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
             lResult = false;
         }
 
@@ -402,8 +384,6 @@ public class MangaPresenter implements IManga.ActivityPresenter
      */
     private void getMangaViewInfo()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             if (NetworkService.isNetworkAvailable())
@@ -413,25 +393,25 @@ public class MangaPresenter implements IManga.ActivityPresenter
                     mObservableMangaSubscription = new SourceFactory().getSource()
                                                                       .updateMangaObservable(new RequestWrapper(mManga)).cache()
                                                                       .doOnError(throwable -> MangaLogger
-                                                                              .logError(TAG, lMethod, throwable.getMessage()))
+                                                                              .logError(TAG, throwable.getMessage()))
                                                                       .observeOn(AndroidSchedulers.mainThread())
                                                                       .subscribe(manga -> updateMangaView(manga));
                 }
                 else
                 {
                     updateMangaView(mManga);
-                    MangaLogger.logInfo(TAG, lMethod, "Manga was previously initialized");
+                    MangaLogger.logInfo(TAG, "Manga was previously initialized");
                 }
             }
             else
             {
                 updateMangaView(mManga);
-                MangaLogger.logInfo(TAG, lMethod, "No internet access ");
+                MangaLogger.logInfo(TAG, "No internet access ");
             }
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
     }
 
@@ -442,8 +422,6 @@ public class MangaPresenter implements IManga.ActivityPresenter
      */
     private void updateMangaView(Manga aManga)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             if (aManga != null)
@@ -470,7 +448,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
         }
     }
 
@@ -479,8 +457,6 @@ public class MangaPresenter implements IManga.ActivityPresenter
      */
     private void getChapterList()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             if (NetworkService.isNetworkAvailable())
@@ -490,24 +466,24 @@ public class MangaPresenter implements IManga.ActivityPresenter
                     mChapterListSubscription = new SourceFactory().getSource()
                                                                   .getChapterListObservable(new RequestWrapper(mManga)).cache()
                                                                   .doOnError(throwable -> MangaLogger
-                                                                          .logError(TAG, lMethod, throwable.getMessage()))
+                                                                          .logError(TAG, throwable.getMessage()))
                                                                   .subscribe(chapters -> updateChapterList(chapters));
                 }
                 else
                 {
-                    MangaLogger.logInfo(TAG, lMethod, "Chapter list is already initialized");
+                    MangaLogger.logInfo(TAG, "Chapter list is already initialized");
                     updateChapterList(mChapterList);
                 }
             }
             else
             {
-                MangaLogger.logInfo(TAG, lMethod, "No internet access");
+                MangaLogger.logInfo(TAG, "No internet access");
                 updateChapterList(new ArrayList<>());
             }
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
         }
     }
 
@@ -518,8 +494,6 @@ public class MangaPresenter implements IManga.ActivityPresenter
      */
     private void updateChapterList(List<Chapter> aChapterList)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             if (mMangaMapper.getContext() != null)
@@ -534,7 +508,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
         }
     }
 

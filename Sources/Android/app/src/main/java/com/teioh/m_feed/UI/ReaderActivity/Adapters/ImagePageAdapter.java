@@ -106,8 +106,10 @@ public class ImagePageAdapter extends PagerAdapter
                      try
                      {
                          mImage.setTag(TAG + ":" + aPosition);
-                     }catch (Exception aException){
-                         MangaLogger.logError(TAG, "instantiateItem()", aException.toString(), "Position: " + aPosition);
+                     }
+                     catch (Exception aException)
+                     {
+                         MangaLogger.logError(TAG, aException.toString(), "Position: " + aPosition);
                      }
                      mImage.startFling(0, 100000f); //large fling to initialize the image to the top for long pages
                  }

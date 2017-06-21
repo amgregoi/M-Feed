@@ -144,7 +144,7 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
     private void initializeLayout()
     {
         mLoggingToggle.setChecked(SharedPrefs.getLoggingStatus());
-        MangaLogger.logInfo(TAG, "initializeLayout", "Finished initializing settings layout");
+        MangaLogger.logInfo(TAG, "Finished initializing settings layout");
 
     }
 
@@ -189,7 +189,7 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
                 }
                 else
                 {
-                    MangaLogger.logInfo(TAG, "positive", "There is no activity to support email intent");
+                    MangaLogger.logInfo(TAG, "There is no activity to support email intent");
                     MangaLogger.makeToast("No application available to send an email.");
                 }
 
@@ -213,7 +213,7 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
      */
     @Override public void negative(int aAction)
     {
-        MangaLogger.logInfo(TAG, "negative", "No was selected for action (" + aAction + ")");
+        MangaLogger.logInfo(TAG, "No was selected for action (" + aAction + ")");
     }
 
     /***

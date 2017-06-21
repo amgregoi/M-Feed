@@ -25,9 +25,6 @@ public class LibraryPresenter extends MainFragmentPresenterBase
     @Override
     public void updateMangaList()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
-
         if (mMangaListSubscription != null)
         {
             mMangaListSubscription.unsubscribe();
@@ -45,7 +42,7 @@ public class LibraryPresenter extends MainFragmentPresenterBase
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
 
         }
 

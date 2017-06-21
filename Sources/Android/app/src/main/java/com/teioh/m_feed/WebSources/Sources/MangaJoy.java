@@ -4,7 +4,6 @@ import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.Utils.MangaDB;
 import com.teioh.m_feed.Utils.MangaLogger;
-import com.teioh.m_feed.Utils.NetworkService;
 import com.teioh.m_feed.WebSources.RequestWrapper;
 import com.teioh.m_feed.WebSources.SourceBase;
 
@@ -16,8 +15,6 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class MangaJoy extends SourceBase
@@ -25,124 +22,30 @@ public class MangaJoy extends SourceBase
     final public static String TAG = MangaJoy.class.getSimpleName();
 
     final public static String SourceKey = "MangaJoy";
-    final public static String genres[] = {"Action", "Adult", "Adventure", "Comedy", "Doujinshi", "Drama", "Ecchi", "Fantasy", "Gender Bender", "Harem", "Historical", "Horror", "Josei", "Lolicon", "Manga", "Manhua", "Manhwa", "Martial Arts", "Mature", "Mecha", "Mystery", "One shot", "Psychological", "Romance", "School Life", "Sci fi", "Seinen", "Shotacon", "Shoujo", "Shoujo Ai", "Shounen", "Shounen Ai", "Slice of Life", "Smut", "Sports", "Supernatural", "Tragedy", "Yaoi", "Yuri"};
+    final public static String mGenres[] = {"Action", "Adult", "Adventure", "Comedy", "Doujinshi", "Drama", "Ecchi", "Fantasy", "Gender Bender", "Harem", "Historical", "Horror", "Josei", "Lolicon", "Manga", "Manhua", "Manhwa", "Martial Arts", "Mature", "Mecha", "Mystery", "One shot", "Psychological", "Romance", "School Life", "Sci fi", "Seinen", "Shotacon", "Shoujo", "Shoujo Ai", "Shounen", "Shounen Ai", "Slice of Life", "Smut", "Sports", "Supernatural", "Tragedy", "Yaoi", "Yuri"};
     final static String mBaseUrl = "http://funmanga.com/";
-    final static String mUpdatesUrl = "http://funmanga.com/latest-chapters";
+    static String mUpdatesUrl = "http://funmanga.com/latest-chapters";
 
-    /***
-     * builds list of manga for recently updated page
-     *
-     * @return
+    /**
+     * {@inheritDoc}
      */
-    public Observable<List<Manga>> getRecentUpdatesObservable()
+    @Override
+    public String getRecentUpdatesUrl()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-        return NetworkService.getTemporaryInstance()
-                             .getResponse(mUpdatesUrl)
-                             .flatMap(aResponse -> NetworkService.mapResponseToString(aResponse))
-                             .flatMap(aHtml -> Observable.just(scrapeUpdatestoManga(aHtml)))
-                             .subscribeOn(Schedulers.io())
-                             .observeOn(AndroidSchedulers.mainThread())
-                             .retry(3)
-                             .doOnError(aThrowable -> MangaLogger.logError(TAG, lMethod, aThrowable.getMessage()))
-                             .onErrorReturn(null);
+        return mUpdatesUrl;
     }
 
-    /***
-     * TODO...
-     *
-     * @param aWrapper
-     * @return
+    /**
+     * {@inheritDoc}
      */
-    public Observable<String> getChapterImageListObservable(final RequestWrapper aWrapper)
+    @Override
+    public List<Manga> parseResponseToRecentList(final String aResponseBody)
     {
-        final List<String> lTemporaryCachedImageUrls = new ArrayList<>();
-        final NetworkService lCurrentService = NetworkService.getTemporaryInstance();
-
-        return lCurrentService.getResponse(aWrapper.getChapterUrl())
-                             .flatMap(aResponse -> NetworkService.mapResponseToString(aResponse))
-                             .flatMap(aUnparsedHtml -> Observable.just(parseHtmlToPageUrls(aUnparsedHtml)))
-                             .flatMap(aPageUrls -> Observable.from(aPageUrls.toArray(new String[aPageUrls.size()])))
-                             .buffer(10)
-                             .concatMap(batchedPageUrls ->
-                                        {
-                                            List<Observable<String>> lImageUrlObservables = new ArrayList<>();
-                                            for (String iPageUrl : batchedPageUrls)
-                                            {
-                                                Observable<String> lTemporaryObservable = lCurrentService.getResponse(iPageUrl)
-                                                                                                       .subscribeOn(Schedulers.io())
-                                                                                                       .flatMap(aResponse -> NetworkService
-                                                                                                               .mapResponseToString(aResponse))
-                                                                                                       .flatMap(unparsedHtml -> Observable
-                                                                                                               .just(parseHtmlToImageUrl(unparsedHtml)));
-                                                lImageUrlObservables.add(lTemporaryObservable);
-                                            }
-
-                                            return Observable.zip(lImageUrlObservables, args ->
-                                            {
-                                                List<String> lImageUrls = new ArrayList<>();
-                                                for (Object iUncastImageUrl : args)
-                                                {
-                                                    lImageUrls.add(String.valueOf(iUncastImageUrl));
-                                                }
-                                                return lImageUrls;
-                                            });
-                                        })
-                             .concatMap(batchedImageUrls -> Observable.from(batchedImageUrls.toArray(new String[batchedImageUrls.size()])))
-                             .doOnNext(imageUrl -> lTemporaryCachedImageUrls.add(imageUrl))
-                             .onBackpressureBuffer();
-    }
-
-    /***
-     * builds list of chapters for manga object
-     *
-     * @param request
-     * @return
-     */
-    public Observable<List<Chapter>> getChapterListObservable(RequestWrapper request)
-    {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-        MangaLogger.logInfo(TAG, lMethod, "Entering");
-
-        return NetworkService.getTemporaryInstance()
-                             .getResponse(request.getMangaUrl())
-                             .flatMap(response -> NetworkService.mapResponseToString(response))
-                             .flatMap(html -> Observable.just(parseHtmlToChapters(request, html)))
-                             .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    /***
-     * Adds new Manga and
-     * gets missing manga information and updates database
-     *
-     * @param aRequest
-     * @return
-     */
-    public Observable<Manga> updateMangaObservable(RequestWrapper aRequest)
-    {
-        NetworkService lCurService = NetworkService.getTemporaryInstance();
-
-        return lCurService.getResponse(aRequest.getMangaUrl())
-                         .flatMap(response -> lCurService.mapResponseToString(response))
-                         .flatMap(html -> Observable.just(scrapeAndUpdateManga(html, aRequest)))
-                         .subscribeOn(Schedulers.io())
-                         .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    /***
-     * TODO...
-     *
-     * @param aUnparsedHtml
-     * @return
-     */
-    private List<Manga> scrapeUpdatestoManga(final String aUnparsedHtml)
-    {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
         List<Manga> lMangaList = new ArrayList<>();
 
         try
         {
-            Document lParsedDocument = Jsoup.parse(aUnparsedHtml);
+            Document lParsedDocument = Jsoup.parse(aResponseBody);
             Elements lMangaElements = lParsedDocument.select("div.manga_updates").select("dl");
 
             for (Element iWholeElement : lMangaElements)
@@ -168,19 +71,19 @@ public class MangaJoy extends SourceBase
 
                         updateMangaObservable(new RequestWrapper(lManga)).subscribeOn(Schedulers.computation())
                                                                          .doOnError(aThrowable -> MangaLogger
-                                                                                 .logError(TAG, lMethod, aThrowable.getMessage()))
+                                                                                 .logError(TAG, aThrowable.getMessage()))
                                                                          .onErrorReturn(null)
                                                                          .subscribe();
                     }
                 }
             }
-
-            MangaLogger.logInfo(TAG, lMethod, "Finished parsing recent updates");
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, " Failed to parse recent updates: ");
+            MangaLogger.logError(TAG, " Failed to parse recent updates: ");
         }
+
+        MangaLogger.logInfo(TAG, "Finished parsing recent updates");
 
         if (lMangaList.size() == 0) return null;
         return lMangaList;
@@ -188,63 +91,27 @@ public class MangaJoy extends SourceBase
 
     }
 
-    /***
-     * TODO...
-     *
-     * @param aRequest
-     * @param aUnparsedHtml
-     * @return
+    /**
+     * {@inheritDoc}
      */
-    private List<Chapter> parseHtmlToChapters(RequestWrapper aRequest, String aUnparsedHtml)
+    @Override
+    public List<Chapter> parseResponseToChapters(RequestWrapper aRequest, String aResponseBody)
     {
-        Document lParsedDocument = Jsoup.parse(aUnparsedHtml);
-        List<Chapter> lChapterList = scrapeChaptersFromParsedDocument(lParsedDocument, aRequest.getMangaTitle());
+        Document lParsedDocument = Jsoup.parse(aResponseBody);
+        List<Chapter> lChapterList = resolveChaptersFromParsedDocument(lParsedDocument, aRequest.getMangaTitle());
 
         return lChapterList;
     }
 
-    /***
-     * TODO...
-     *
-     * @param aParsedDocument
-     * @param aTitle
-     * @return
+    /**
+     * {@inheritDoc}
      */
-
-    private List<Chapter> scrapeChaptersFromParsedDocument(final Document aParsedDocument, final String aTitle)
-    {
-        List<Chapter> lChapterList = new ArrayList<>();
-        Elements lChapterElements = aParsedDocument.select("ul.chapter-list").select("li");
-        int lNumChapters = lChapterElements.size();
-
-        String lChapterUrl, lChapterTitle, lChapterDate;
-
-        for (Element iChapterElement : lChapterElements)
-        {
-            lChapterUrl = iChapterElement.select("a").attr("href");
-            lChapterTitle = iChapterElement.select("span").first().text();
-            lChapterDate = iChapterElement.select("span").get(1).text();
-
-            lChapterList.add(new Chapter(lChapterUrl, aTitle, lChapterTitle, lChapterDate, lNumChapters));
-
-            lNumChapters--;
-        }
-
-        return lChapterList;
-    }
-
-    /***
-     * TODO...
-     *
-     * @param aHtml
-     * @return
-     */
-    public List<String> parseHtmlToPageUrls(String aHtml)
+    @Override
+    public List<String> parseResponseToPageUrls(final String aResponseBody)
     {
         List<String> lImages = new ArrayList<>();
 
-        Document lDoc = Jsoup.parse(aHtml);
-
+        Document lDoc = Jsoup.parse(aResponseBody);
         Elements lNav = lDoc.select("h5.widget-heading").select("select").select("option");
 
         int lPages = lNav.size();
@@ -258,43 +125,34 @@ public class MangaJoy extends SourceBase
         return lImages;
     }
 
-    /***
-     * TODO...
-     *
-     * @param aHtml
-     * @return
+    /**
+     * {@inheritDoc}
      */
-    public String parseHtmlToImageUrl(String aHtml)
+    @Override
+    public String parseResponseToImageUrls(final String aResponseBody, final String aResponseUrl)
     {
-        Document lParsedDocument = Jsoup.parse(aHtml);
+        Document lParsedDocument = Jsoup.parse(aResponseBody);
         String lLink = lParsedDocument.select("img.img-responsive").attr("src");
 
         return lLink;
     }
 
-    /***
-     * TODO...
-     *
-     * @param aUnparsedHtml
-     * @param aRequest
-     * @return
+    /**
+     * {@inheritDoc}
      */
-    private Manga scrapeAndUpdateManga(final String aUnparsedHtml, RequestWrapper aRequest)
+    @Override
+    public Manga parseResponseToManga(final RequestWrapper aRequest, final String aResponseBody)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
-        Document lHtml = Jsoup.parse(aUnparsedHtml);
+        Document lHtml = Jsoup.parse(aResponseBody);
 
         try
         {
-            //image url
             Element lImageElement = lHtml.body().select("img.img-responsive.mobile-img").first();
-            //summary
-            Element summaryElement = lHtml.body().select("div.note.note-default.margin-top-15").first();
-
+            Element lDescriptionElement = lHtml.body().select("div.note.note-default.margin-top-15").first();
             Elements lInfo = lHtml.body().select("dl.dl-horizontal").select("dd");
+
             String lImage = lImageElement.attr("src");
-            String lSummary = summaryElement.text();
+            String lDescription = lDescriptionElement.text();
             String lAlternate = null;
             String lAuthor = null;
             String lArtist = null;
@@ -325,10 +183,10 @@ public class MangaJoy extends SourceBase
                 }
             }
 
-            Manga lManga = new Manga();
+            Manga lManga = MangaDB.getInstance().getManga(aRequest.getMangaUrl());
             lManga.setAlternate(lAlternate);
             lManga.setPicUrl(lImage);
-            lManga.setDescription(lSummary);
+            lManga.setDescription(lDescription);
             lManga.setArtist(lArtist);
             lManga.setAuthor(lAuthor);
             lManga.setmGenre(lGenres);
@@ -337,14 +195,45 @@ public class MangaJoy extends SourceBase
             lManga.setMangaUrl(aRequest.getMangaUrl());
 
             MangaDB.getInstance().updateManga(lManga);
+
+            MangaLogger.logInfo(TAG, "Finished creating/updating manga (" + lManga.getTitle() + ")");
             return MangaDB.getInstance().getManga(aRequest.getMangaUrl());
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
+            return null;
+        }
+    }
+
+    /***
+     * This helper function resolves chapters from the specified document and returns a list of chapters.
+     * Parent - parseResponseToChapters();
+     *
+     * @param aParsedDocument
+     * @param aTitle
+     * @return
+     */
+    private List<Chapter> resolveChaptersFromParsedDocument(final Document aParsedDocument, final String aTitle)
+    {
+        List<Chapter> lChapterList = new ArrayList<>();
+        Elements lChapterElements = aParsedDocument.select("ul.chapter-list").select("li");
+        int lNumChapters = lChapterElements.size();
+
+        String lChapterUrl, lChapterTitle, lChapterDate;
+
+        for (Element iChapterElement : lChapterElements)
+        {
+            lChapterUrl = iChapterElement.select("a").attr("href");
+            lChapterTitle = iChapterElement.select("span").first().text();
+            lChapterDate = iChapterElement.select("span").get(1).text();
+
+            lChapterList.add(new Chapter(lChapterUrl, aTitle, lChapterTitle, lChapterDate, lNumChapters));
+
+            lNumChapters--;
         }
 
-        return null;
+        return lChapterList;
     }
 }
 

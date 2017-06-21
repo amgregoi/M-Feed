@@ -64,8 +64,6 @@ public class MainPresenter implements IMain.ActivityPresenter
     @Override
     public void init(Bundle aBundle)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             //setup base layout first
@@ -84,7 +82,7 @@ public class MainPresenter implements IMain.ActivityPresenter
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
         }
     }
 
@@ -107,8 +105,6 @@ public class MainPresenter implements IMain.ActivityPresenter
     @Override
     public void onRestoreState(Bundle aRestore)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             mViewPagerAdapterMain = new ViewPagerAdapterMain(((FragmentActivity) mMainMapper.getContext())
@@ -117,7 +113,7 @@ public class MainPresenter implements IMain.ActivityPresenter
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
         }
     }
 
@@ -127,8 +123,6 @@ public class MainPresenter implements IMain.ActivityPresenter
     @Override
     public void onResume()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             mMainMapper.closeDrawer();
@@ -137,7 +131,7 @@ public class MainPresenter implements IMain.ActivityPresenter
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
         }
     }
 
@@ -158,7 +152,6 @@ public class MainPresenter implements IMain.ActivityPresenter
     @Override
     public boolean updateQueryChange(String aNewTest)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
         boolean lResult = true;
         try
         {
@@ -171,7 +164,7 @@ public class MainPresenter implements IMain.ActivityPresenter
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
             lResult = false;
         }
 
@@ -196,8 +189,6 @@ public class MainPresenter implements IMain.ActivityPresenter
     @Override
     public void onDrawerItemSelected(int aPosition)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             switch (aPosition)
@@ -248,7 +239,7 @@ public class MainPresenter implements IMain.ActivityPresenter
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
         }
     }
 
@@ -260,7 +251,6 @@ public class MainPresenter implements IMain.ActivityPresenter
     @Override
     public boolean onSourceItemChosen(int aPosition)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
         boolean lResult = true;
 
         try
@@ -285,7 +275,7 @@ public class MainPresenter implements IMain.ActivityPresenter
             }
             else
             {
-                MangaLogger.logInfo(TAG, lMethod, "Fragment is null, cannot switch sources");
+                MangaLogger.logInfo(TAG, "Fragment is null, cannot switch sources");
                 Toast.makeText(mMainMapper.getContext(), "Fragment is null, cannot switch sources", Toast.LENGTH_SHORT).show();
                 lResult = false;
             }
@@ -299,7 +289,7 @@ public class MainPresenter implements IMain.ActivityPresenter
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
             lResult = false;
         }
 
@@ -314,8 +304,6 @@ public class MainPresenter implements IMain.ActivityPresenter
     @Override
     public void onFilterSelected(MangaEnums.eFilterStatus aFilter)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             if (mViewPagerAdapterMain.hasRegisteredFragments())
@@ -327,7 +315,7 @@ public class MainPresenter implements IMain.ActivityPresenter
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
         }
     }
 
@@ -339,7 +327,6 @@ public class MainPresenter implements IMain.ActivityPresenter
     @Override
     public boolean onGenreFilterSelected(Intent aIntent)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
         boolean lResult = true;
 
         try
@@ -356,7 +343,7 @@ public class MainPresenter implements IMain.ActivityPresenter
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
             lResult = false;
         }
 
@@ -369,7 +356,6 @@ public class MainPresenter implements IMain.ActivityPresenter
     @Override
     public boolean onClearGenreFilter()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
         boolean lResult = true;
 
         try
@@ -384,7 +370,7 @@ public class MainPresenter implements IMain.ActivityPresenter
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
             lResult = false;
         }
 
@@ -397,7 +383,6 @@ public class MainPresenter implements IMain.ActivityPresenter
     @Override
     public boolean removeSettingsFragment()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
         boolean lResult = true;
         try
         {
@@ -406,7 +391,7 @@ public class MainPresenter implements IMain.ActivityPresenter
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
         }
 
         if (BuildConfig.DEBUG)
@@ -447,7 +432,6 @@ public class MainPresenter implements IMain.ActivityPresenter
     @Override
     public boolean updateSignIn(GoogleSignInResult aAccount)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
         boolean lResult = false;
 
         try
@@ -467,20 +451,20 @@ public class MainPresenter implements IMain.ActivityPresenter
                 {
                     mGoogleAccount = null;
                     SharedPrefs.setGoogleEmail(null);
-                    MangaLogger.logInfo(TAG, lMethod, "Sign in failed, logging out: " + aAccount.getStatus());
+                    MangaLogger.logInfo(TAG, "Sign in failed, logging out: " + aAccount.getStatus());
                 }
             }
             else
             {
                 mGoogleAccount = null;
                 SharedPrefs.setGoogleEmail(null);
-                MangaLogger.logInfo(TAG, lMethod, "Sign in result was null, logging out");
+                MangaLogger.logInfo(TAG, "Sign in result was null, logging out");
 
             }
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
         }
 
         return lResult;
@@ -492,7 +476,6 @@ public class MainPresenter implements IMain.ActivityPresenter
     @Override
     public boolean updateRecentManga()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
         boolean lResult = true;
 
         try
@@ -509,7 +492,7 @@ public class MainPresenter implements IMain.ActivityPresenter
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
             lResult = false;
         }
 
@@ -522,8 +505,6 @@ public class MainPresenter implements IMain.ActivityPresenter
 
     private void setupDrawerLayouts()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             ArrayList<String> lDrawerItems = new ArrayList<>(Arrays.asList(mDrawerItems));
@@ -553,7 +534,7 @@ public class MainPresenter implements IMain.ActivityPresenter
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
         }
     }
 
@@ -562,8 +543,6 @@ public class MainPresenter implements IMain.ActivityPresenter
      */
     private void addSettingsFragment()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             mMainMapper.toggleToolbarElements();
@@ -575,7 +554,7 @@ public class MainPresenter implements IMain.ActivityPresenter
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
         }
     }
 }

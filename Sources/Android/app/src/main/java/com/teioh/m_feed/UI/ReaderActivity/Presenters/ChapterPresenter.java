@@ -75,8 +75,6 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     @Override
     public void init(Bundle aBundle)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             mLazyLoading = true;
@@ -91,7 +89,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
         }
     }
 
@@ -103,8 +101,6 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     @Override
     public void onSaveState(Bundle aSave)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             if (mChapterUrlList != null)
@@ -125,7 +121,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
     }
 
@@ -137,8 +133,6 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     @Override
     public void onRestoreState(Bundle aRestore)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             if (aRestore.containsKey(CURRENT_URL_LIST_PARCELABLE_KEY))
@@ -168,7 +162,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
 
     }
@@ -179,7 +173,6 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     @Override
     public void onPause()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
         //TODO.. Might be moving away from cupboard in the future
 
         try
@@ -189,7 +182,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
         }
     }
 
@@ -218,8 +211,6 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     @Override
     public void getImageUrls()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             if (mChapterUrlList == null) mChapterUrlList = new ArrayList<>();
@@ -240,7 +231,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
                                                                 mChapterReaderMapper.registerAdapter(mChapterPageAdapter);
                                                                 mChapter.setTotalPages(mChapterUrlList.size());
                                                                 mLoadingStatus = MangaEnums.eLoadingStatus.COMPLETE;
-                                                                MangaLogger.logInfo(TAG, lMethod, "Completed image url retrieval");
+                                                                MangaLogger.logInfo(TAG, "Completed image url retrieval");
                                                                 updateReaderToolbar();
                                                                 mChapterReaderMapper.setCurrentChapterPage(mChapter.getCurrentPage());
 
@@ -252,7 +243,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
                                                             public void onError(Throwable aThrowable)
                                                             {
                                                                 mLoadingStatus = MangaEnums.eLoadingStatus.ERROR;
-                                                                MangaLogger.logError(TAG, lMethod, aThrowable.getMessage());
+                                                                MangaLogger.logError(TAG, aThrowable.getMessage());
                                                                 updateReaderToolbar();
                                                                 Toast.makeText(mChapterReaderMapper
                                                                                        .getContext(), "Failed, please try refreshing.", Toast.LENGTH_SHORT)
@@ -273,7 +264,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
 
     }
@@ -284,8 +275,6 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     @Override
     public void toggleToolbar()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             if (mIsToolbarShowing)
@@ -301,7 +290,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
         }
     }
 
@@ -311,15 +300,13 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     @Override
     public void setToNextChapter()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             mChapterReaderMapper.incrementChapter();
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
         }
     }
 
@@ -329,15 +316,13 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     @Override
     public void setToPreviousChapter()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             mChapterReaderMapper.decrementChapter();
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
         }
     }
 
@@ -351,8 +336,6 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     @Override
     public void updateOffsetCounter(int aOffset, int aPosition)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             if (aPosition == 0 || aPosition == mChapterUrlList.size() - 1)
@@ -365,7 +348,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
     }
 
@@ -377,8 +360,6 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     @Override
     public void updateState(int aState)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             if (mPageOffsetCount > 40 && aState == 0)
@@ -391,7 +372,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
     }
 
@@ -401,7 +382,6 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     @Override
     public void updateReaderToolbar()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
         try
         {
             if (mActiveChapter)
@@ -426,7 +406,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
         }
     }
 
@@ -438,8 +418,6 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     @Override
     public void updateCurrentPage(int aPosition)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             mPosition = aPosition;
@@ -448,7 +426,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
         }
     }
 
@@ -458,8 +436,6 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     @Override
     public void updateActiveChapter()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             mActiveChapter = true;
@@ -468,7 +444,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
     }
 
@@ -478,8 +454,6 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     @Override
     public void updateChapterViewStatus()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             Chapter viewedChapter = MangaDB.getInstance().getChapter(mChapter.getChapterUrl());
@@ -492,7 +466,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
     }
 
@@ -503,8 +477,6 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     @Override
     public void onRefresh(int aPosition)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             mImageSubFlag = false; //resets flag to allow chapter to refresh
@@ -517,7 +489,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
         }
     }
 
@@ -526,8 +498,6 @@ public class ChapterPresenter implements IReader.FragmentPresenter
      */
     private void preLoadImagesToCache()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             if (mLazyLoading)
@@ -554,7 +524,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
                                                                        @Override
                                                                        public void onError(Throwable aThrowable)
                                                                        {
-                                                                           MangaLogger.logError(TAG, lMethod, aThrowable.getMessage());
+                                                                           MangaLogger.logError(TAG, aThrowable.getMessage());
                                                                        }
 
                                                                        @Override
@@ -567,7 +537,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
 
     }
@@ -577,8 +547,6 @@ public class ChapterPresenter implements IReader.FragmentPresenter
      */
     private void cleanupSubscribers()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             if (mImageListSubscription != null)
@@ -595,7 +563,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
 
     }
@@ -607,8 +575,6 @@ public class ChapterPresenter implements IReader.FragmentPresenter
      */
     private void updateImageUrlList(List<String> aUrlList)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             if (mChapterReaderMapper != null && mChapterReaderMapper.getContext() != null)
@@ -623,7 +589,7 @@ public class ChapterPresenter implements IReader.FragmentPresenter
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
         }
     }
 }

@@ -89,8 +89,6 @@ public class ChapterPageAdapter extends FragmentStatePagerAdapter
     @Override
     public Object instantiateItem(ViewGroup aContainer, int aPosition)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         Fragment lFragment = null;
         try
         {
@@ -99,7 +97,7 @@ public class ChapterPageAdapter extends FragmentStatePagerAdapter
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
         }
 
         return lFragment;

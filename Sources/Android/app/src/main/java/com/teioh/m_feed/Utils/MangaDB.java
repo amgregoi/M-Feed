@@ -20,7 +20,6 @@ import java.util.Locale;
 
 import nl.qbusict.cupboard.QueryResultIterable;
 import rx.Observable;
-import rx.Subscriber;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
@@ -34,10 +33,16 @@ public class MangaDB extends SQLiteOpenHelper
     private static MangaDB sInstance;
     private Context mContext;
 
+    private MangaTable mMangaTable;
+    private ChapterTable mChapterTable;
+
     public MangaDB(Context aContext)
     {
         super(aContext, sDB_NAME, null, sDATABASE_VERSION);
         mContext = aContext;
+
+        mMangaTable = new MangaTable();
+        mChapterTable = new ChapterTable();
     }
 
     /***
@@ -96,30 +101,28 @@ public class MangaDB extends SQLiteOpenHelper
      */
     private boolean DBExists()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
-        SQLiteDatabase db = null;
+        SQLiteDatabase lDb = null;
 
         try
         {
-            File database = mContext.getDatabasePath(sDB_NAME);
-            if (database.exists())
+            File lDatabase = mContext.getDatabasePath(sDB_NAME);
+            if (lDatabase.exists())
             {
-                db = SQLiteDatabase.openDatabase(database.getPath(), null, SQLiteDatabase.OPEN_READWRITE);
-                db.setLocale(Locale.getDefault());
-                db.setVersion(1);
+                lDb = SQLiteDatabase.openDatabase(lDatabase.getPath(), null, SQLiteDatabase.OPEN_READWRITE);
+                lDb.setLocale(Locale.getDefault());
+                lDb.setVersion(1);
             }
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage(), "Database not found");
+            MangaLogger.logError(TAG, aException.getMessage(), "Database not found");
         }
 
-        if (db != null)
+        if (lDb != null)
         {
-            db.close();
+            lDb.close();
         }
-        return db != null;
+        return lDb != null;
     }
 
     /***
@@ -127,28 +130,26 @@ public class MangaDB extends SQLiteOpenHelper
      */
     private void copyDBFromResource()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
-        String dbFilePath = sDB_PATH + sDB_NAME;
+        String lFilePath = sDB_PATH + sDB_NAME;
         try
         {
-            InputStream inputStream = MFeedApplication.getInstance().getAssets().open(sDB_NAME);
-            OutputStream outStream = new FileOutputStream(dbFilePath);
+            InputStream lInputStream = MFeedApplication.getInstance().getAssets().open(sDB_NAME);
+            OutputStream lOutStream = new FileOutputStream(lFilePath);
 
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = inputStream.read(buffer)) > 0)
+            byte[] lBuffer = new byte[1024];
+            int lLength;
+            while ((lLength = lInputStream.read(lBuffer)) > 0)
             {
-                outStream.write(buffer, 0, length);
+                lOutStream.write(lBuffer, 0, lLength);
             }
 
-            outStream.flush();
-            outStream.close();
-            inputStream.close();
+            lOutStream.flush();
+            lOutStream.close();
+            lInputStream.close();
         }
         catch (IOException aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
         }
     }
 
@@ -160,9 +161,9 @@ public class MangaDB extends SQLiteOpenHelper
      */
     public void updateMangaFollow(String aTitle, int aValue)
     {
-        ContentValues values = new ContentValues(1);
-        values.put("following", aValue);
-        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, values, "title = ?", aTitle);
+        ContentValues lValues = new ContentValues(1);
+        lValues.put(mMangaTable.Following, aValue);
+        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, lValues, mMangaTable.Title + " = ?", aTitle);
     }
 
     /***
@@ -172,9 +173,9 @@ public class MangaDB extends SQLiteOpenHelper
      */
     public void updateMangaUnfollow(String aTitle)
     {
-        ContentValues values = new ContentValues(1);
-        values.put("following", 0);
-        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, values, "title = ?", aTitle);
+        ContentValues lValues = new ContentValues(1);
+        lValues.put(mMangaTable.Following, 0);
+        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, lValues, mMangaTable.Title + " = ?", aTitle);
     }
 
     /**
@@ -188,25 +189,25 @@ public class MangaDB extends SQLiteOpenHelper
                                  {
                                      try
                                      {
-                                         ArrayList<Manga> mangaList = new ArrayList<>();
-                                         QueryResultIterable<Manga> itr = cupboard().withDatabase(getReadableDatabase())
-                                                                                    .query(Manga.class)
-                                                                                    .withSelection("NOT following = ? AND source = ?", "0", new SourceFactory()
-                                                                                            .getSourceName())
-                                                                                    .query();
+                                         ArrayList<Manga> lMangaList = new ArrayList<>();
+                                         QueryResultIterable<Manga> lQuery = cupboard().withDatabase(getReadableDatabase())
+                                                                                       .query(Manga.class)
+                                                                                       .withSelection("NOT " + mMangaTable.Following + " = ? AND " + mMangaTable.Source + " = ?", "0", new SourceFactory()
+                                                                                               .getSourceName())
+                                                                                       .query();
 
-                                         for (Manga manga : itr)
+                                         for (Manga iManga : lQuery)
                                          {
-                                             mangaList.add(manga);
+                                             lMangaList.add(iManga);
                                          }
-                                         itr.close();
+                                         lQuery.close();
 
-                                         subscriber.onNext(mangaList);
+                                         subscriber.onNext(lMangaList);
                                          subscriber.onCompleted();
                                      }
-                                     catch (Exception lException)
+                                     catch (Exception aException)
                                      {
-                                         subscriber.onError(lException);
+                                         subscriber.onError(aException);
                                      }
                                  });
     }
@@ -223,20 +224,20 @@ public class MangaDB extends SQLiteOpenHelper
                                  {
                                      try
                                      {
-                                         ArrayList<Manga> mangaList = new ArrayList<>();
-                                         QueryResultIterable<Manga> itr = cupboard().withDatabase(getReadableDatabase())
-                                                                                    .query(Manga.class)
-                                                                                    .withSelection("source = ?", SharedPrefs
-                                                                                            .getSavedSource())
-                                                                                    .query();
+                                         ArrayList<Manga> lMangaList = new ArrayList<>();
+                                         QueryResultIterable<Manga> lQuery = cupboard().withDatabase(getReadableDatabase())
+                                                                                       .query(Manga.class)
+                                                                                       .withSelection(mMangaTable.Source + " = ?", SharedPrefs
+                                                                                               .getSavedSource())
+                                                                                       .query();
 
-                                         for (Manga manga : itr)
+                                         for (Manga iManga : lQuery)
                                          {
-                                             mangaList.add(manga);
+                                             lMangaList.add(iManga);
                                          }
-                                         itr.close();
+                                         lQuery.close();
 
-                                         subscriber.onNext(mangaList);
+                                         subscriber.onNext(lMangaList);
                                          subscriber.onCompleted();
                                      }
                                      catch (Exception lException)
@@ -254,7 +255,7 @@ public class MangaDB extends SQLiteOpenHelper
      */
     public Manga getManga(String aUrl)
     {
-        return cupboard().withDatabase(getReadableDatabase()).query(Manga.class).withSelection("link = ?", aUrl).get();
+        return cupboard().withDatabase(getReadableDatabase()).query(Manga.class).withSelection(mMangaTable.URL + " = ?", aUrl).get();
     }
 
     /***
@@ -265,7 +266,8 @@ public class MangaDB extends SQLiteOpenHelper
      */
     public Manga getManga(long aId)
     {
-        return cupboard().withDatabase(getReadableDatabase()).query(Manga.class).withSelection("_id = ?", Long.toString(aId)).get();
+        return cupboard().withDatabase(getReadableDatabase()).query(Manga.class).withSelection(mMangaTable.ID + " = ?", Long.toString(aId))
+                         .get();
     }
 
     /***
@@ -286,18 +288,21 @@ public class MangaDB extends SQLiteOpenHelper
     public void updateManga(Manga aManga)
     {
         ContentValues lValues = new ContentValues(1);
-        lValues.put("alternate", aManga.getAlternate());
-        lValues.put("image", aManga.getPicUrl());
-        lValues.put("description", aManga.getDescription());
-        lValues.put("artist", aManga.getArtist());
-        lValues.put("author", aManga.getAuthor());
-        lValues.put("genres", aManga.getmGenre());
-        lValues.put("status", aManga.getStatus());
-        lValues.put("source", aManga.getSource());
-        lValues.put("recentChapter", aManga.getRecentChapter());
-        lValues.put("link", aManga.getMangaURL());
+        lValues.put(mMangaTable.Alternate, aManga.getAlternate());
+        lValues.put(mMangaTable.Image, aManga.getPicUrl());
+        lValues.put(mMangaTable.Description, aManga.getDescription());
+        lValues.put(mMangaTable.Artist, aManga.getArtist());
+        lValues.put(mMangaTable.Author, aManga.getAuthor());
+        lValues.put(mMangaTable.Genres, aManga.getmGenre());
+        lValues.put(mMangaTable.Status, aManga.getStatus());
+        lValues.put(mMangaTable.Source, aManga.getSource());
+        lValues.put(mMangaTable.RecentChapter, aManga.getRecentChapter());
+        lValues.put(mMangaTable.URL, aManga.getMangaURL());
 
-        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, lValues, "link = ?", aManga.getMangaURL());
+        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, lValues, mMangaTable.URL + " = ?", aManga.getMangaURL());
+
+        Manga test = getManga(aManga.getMangaURL());
+        test = null;
     }
 
     /***
@@ -306,19 +311,16 @@ public class MangaDB extends SQLiteOpenHelper
      */
     public void updateChapter(Chapter aChapter)
     {
-        MangaLogger.logInfo(TAG, "updateChapter", "Not yet implemented");
-
         ContentValues lValues = new ContentValues(1);
-        lValues.put("url", aChapter.getChapterUrl());
-        lValues.put("date", aChapter.getChapterDate());
-        lValues.put("mangaTitle", aChapter.getMangaTitle());
-        lValues.put("chapterTitle", aChapter.getChapterTitle());
-        lValues.put("chapterNumber", aChapter.getChapterNumber());
-        lValues.put("currentPage", aChapter.getCurrentPage());
-        lValues.put("totalPages", aChapter.getTotalPages());
+        lValues.put(mChapterTable.URL, aChapter.getChapterUrl());
+        lValues.put(mChapterTable.Date, aChapter.getChapterDate());
+        lValues.put(mChapterTable.MangaTitle, aChapter.getMangaTitle());
+        lValues.put(mChapterTable.ChapterTitle, aChapter.getChapterTitle());
+        lValues.put(mChapterTable.ChapterNumber, aChapter.getChapterNumber());
+        lValues.put(mChapterTable.CurrentPage, aChapter.getCurrentPage());
+        lValues.put(mChapterTable.TotalPages, aChapter.getTotalPages());
 
-        cupboard().withDatabase(getWritableDatabase()).update(Chapter.class, lValues, "url = ?", aChapter.getChapterUrl());
-
+        cupboard().withDatabase(getWritableDatabase()).update(Chapter.class, lValues, mChapterTable.URL + " = ?", aChapter.getChapterUrl());
     }
 
     /***
@@ -328,7 +330,7 @@ public class MangaDB extends SQLiteOpenHelper
      */
     public Chapter getChapter(String aUrl)
     {
-        return cupboard().withDatabase(getReadableDatabase()).query(Chapter.class).withSelection("url = ?", aUrl).get();
+        return cupboard().withDatabase(getReadableDatabase()).query(Chapter.class).withSelection(mChapterTable.URL + " = ?", aUrl).get();
     }
 
     /***
@@ -346,7 +348,7 @@ public class MangaDB extends SQLiteOpenHelper
      */
     public void removeChapters(Manga aManga)
     {
-        cupboard().withDatabase(getWritableDatabase()).delete(Chapter.class, "mangaTitle = ?", aManga.getTitle());
+        cupboard().withDatabase(getWritableDatabase()).delete(Chapter.class, mChapterTable.MangaTitle + " = ?", aManga.getTitle());
     }
 
     /***
@@ -354,16 +356,16 @@ public class MangaDB extends SQLiteOpenHelper
      */
     public void resetLibrary()
     {
-        QueryResultIterable<Manga> itr = cupboard().withDatabase(getReadableDatabase())
-                                                   .query(Manga.class)
-                                                   .withSelection("NOT following = ?", "0")
-                                                   .query();
+        QueryResultIterable<Manga> lQuery = cupboard().withDatabase(getReadableDatabase())
+                                                      .query(Manga.class)
+                                                      .withSelection("NOT " + mMangaTable.Following + " = ?", "0")
+                                                      .query();
 
-        for (Manga manga : itr)
+        for (Manga iManga : lQuery)
         {
-            updateMangaUnfollow(manga.getTitle());
+            updateMangaUnfollow(iManga.getTitle());
         }
-        itr.close();
+        lQuery.close();
     }
 
     /***
@@ -371,18 +373,51 @@ public class MangaDB extends SQLiteOpenHelper
      */
     public void resetCachedChapters()
     {
-        QueryResultIterable<Manga> itr = cupboard().withDatabase(getReadableDatabase())
-                                                   .query(Manga.class)
-                                                   .withSelection("NOT following = ? AND source = ?", "0", new SourceFactory()
-                                                           .getSourceName())
-                                                   .query();
+        QueryResultIterable<Manga> lQuery = cupboard().withDatabase(getReadableDatabase())
+                                                      .query(Manga.class)
+                                                      .withSelection("NOT" + mMangaTable.Following + " = ? AND " + mMangaTable.Source + " = ?", "0", new SourceFactory()
+                                                              .getSourceName())
+                                                      .query();
 
-        for (Manga manga : itr)
+        for (Manga iManga : lQuery)
         {
-            removeChapters(manga);
+            removeChapters(iManga);
         }
-        itr.close();
+        lQuery.close();
     }
 
+    /***
+     * This inner class defines the sql column names for the Manga Table
+     */
+    static class MangaTable
+    {
+        public String ID = "_id";
+        public String Title = "title";
+        public String Alternate = "alternate";
+        public String Image = "image";
+        public String Description = "description";
+        public String Artist = "artist";
+        public String Author = "author";
+        public String Genres = "genres";
+        public String Status = "status";
+        public String Source = "source";
+        public String RecentChapter = "recentChapter";
+        public String URL = "link";
+        public String Following = "following";
+    }
+
+    /***
+     * This inner class defines the sql column names for the Chapter Table
+     */
+    static class ChapterTable
+    {
+        public String TotalPages = "totalPages";
+        public String CurrentPage = "currentPage";
+        public String ChapterNumber = "chapterNumber";
+        public String ChapterTitle = "chapterTitle";
+        public String MangaTitle = "mangaTitle";
+        public String Date = "date";
+        public String URL = "url";
+    }
 
 }

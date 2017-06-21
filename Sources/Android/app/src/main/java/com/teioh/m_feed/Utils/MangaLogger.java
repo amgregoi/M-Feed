@@ -29,12 +29,12 @@ public class MangaLogger
      * This function logs info to the console as well as to the in app logger.
      *
      * @param aTag
-     * @param aMethod
      * @param aMessage
      */
-    public static void logInfo(String aTag, String aMethod, String aMessage)
+    public static void logInfo(String aTag, String aMessage)
     {
-        String lMessage = "INFO >> " + MessageFormat.format("{0}.class >> {1}() > {2}", aTag, aMethod, aMessage);
+        String lMethod = Thread.currentThread().getStackTrace()[3].getMethodName();
+        String lMessage = "INFO >> " + MessageFormat.format("{0}.class >> {1}() > {2}", aTag, lMethod, aMessage);
         addMessage(lMessage);
         Log.i(mApplication, lMessage);
     }
@@ -43,12 +43,12 @@ public class MangaLogger
      * This function logs errors to the console as well as to the in app logger.
      *
      * @param aTag
-     * @param aMethod
      * @param aError
      */
-    public static void logError(String aTag, String aMethod, String aError)
+    public static void logError(String aTag, String aError)
     {
-        String lMessage = "ERROR >> " + MessageFormat.format("{0}.class >> {1}() > {2}", aTag, aMethod, aError);
+        String lMethod = Thread.currentThread().getStackTrace()[3].getMethodName();
+        String lMessage = "ERROR >> " + MessageFormat.format("{0}.class >> {1}() > {2}", aTag, lMethod, aError);
         addMessage(lMessage);
         Log.e(mApplication, lMessage);
     }
@@ -57,13 +57,13 @@ public class MangaLogger
      * This function logs errors to the console as well as to the in app logger.
      *
      * @param aTag
-     * @param aMethod
      * @param aError
      * @param aExtra
      */
-    public static void logError(String aTag, String aMethod, String aError, String aExtra)
+    public static void logError(String aTag, String aError, String aExtra)
     {
-        String lMessage = "ERROR >> " + MessageFormat.format("{0}.class >> {1}() > {2} > {3}", aTag, aMethod, aExtra, aError);
+        String lMethod = Thread.currentThread().getStackTrace()[3].getMethodName();
+        String lMessage = "ERROR >> " + MessageFormat.format("{0}.class >> {1}() > {2} > {3}", aTag, lMethod, aExtra, aError);
         addMessage(lMessage);
         Log.e(mApplication, lMessage);
     }
@@ -71,12 +71,12 @@ public class MangaLogger
     /***
      * This function logs debug info to the console as well as to the in app logger.
      * @param aTag
-     * @param aMethod
      * @param aMessage
      */
-    public static void logDebug(String aTag, String aMethod, String aMessage)
+    public static void logDebug(String aTag, String aMessage)
     {
-        String lMessage = "DEBUG >> " + MessageFormat.format("{0}.class >> {1}() > {2}", aTag, aMethod, aMessage);
+        String lMethod = Thread.currentThread().getStackTrace()[3].getMethodName();
+        String lMessage = "DEBUG >> " + MessageFormat.format("{0}.class >> {1}() > {2}", aTag, lMethod, aMessage);
         addMessage(lMessage);
         Log.i(mApplication, lMessage);
     }

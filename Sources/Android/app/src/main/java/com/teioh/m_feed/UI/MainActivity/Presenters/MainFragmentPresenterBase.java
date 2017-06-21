@@ -62,7 +62,6 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     @Override
     public boolean onQueryTextChange(String aQueryText)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
         boolean lResult = true;
         try
         {
@@ -73,7 +72,7 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
             lResult = false;
         }
 
@@ -86,7 +85,6 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     @Override
     public boolean updateSource()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
         boolean lResult = false;
 
         try
@@ -106,7 +104,7 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
             lResult = false;
         }
 
@@ -121,7 +119,6 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     @Override
     public boolean onFilterSelected(MangaEnums.eFilterStatus aFilter)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
         boolean lResult = false;
         try
         {
@@ -132,7 +129,7 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
 
         return lResult;
@@ -146,7 +143,6 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     @Override
     public boolean onGenreFilterSelected(ArrayList<Manga> aMangaList)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
         boolean lResult = true;
 
         try
@@ -160,7 +156,7 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
             lResult = false;
         }
 
@@ -173,7 +169,6 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     @Override
     public boolean onClearGenreFilter()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
         boolean lResult = true;
 
         try
@@ -182,7 +177,7 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
             lResult = false;
         }
 
@@ -197,7 +192,6 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     @Override
     public boolean updateSelection(Manga aManga)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
         boolean lResult = true;
 
         try
@@ -212,7 +206,7 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
             lResult = false;
         }
 
@@ -227,8 +221,6 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     @Override
     public void init(Bundle aBundle)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             mViewMapper.setupSwipeRefresh();
@@ -255,7 +247,7 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
 
         }
     }
@@ -320,10 +312,8 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
      *
      * @param aPos This is the position of the selected object
      */
-    protected void onItemClick(int aPos)
+    protected void onItemSelected(int aPos)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             Manga manga;
@@ -343,7 +333,7 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
 
     }
@@ -355,8 +345,6 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
      */
     protected void updateMangaGridView(List<Manga> aMangaList)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
 
@@ -377,7 +365,7 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
 
                 if (mAdapter == null)
                 {
-                    mAdapter = new RecycleSearchAdapter(mMangaList, (pos) -> onItemClick(pos));
+                    mAdapter = new RecycleSearchAdapter(mMangaList, (pos) -> onItemSelected(pos));
                     mAdapter.setHasStableIds(true);
                     if (NATIVE_AD_1_UNIT_ID == null)
                     {
@@ -406,7 +394,7 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
     }
 
@@ -416,8 +404,6 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
      */
     protected void setupMoPubAdapter()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             MoPubNativeAdPositioning.MoPubServerPositioning lAdPositioning = MoPubNativeAdPositioning.serverPositioning();
@@ -439,7 +425,7 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
     }
 }

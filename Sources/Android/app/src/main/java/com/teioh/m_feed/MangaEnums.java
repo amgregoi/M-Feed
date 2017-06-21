@@ -5,7 +5,6 @@ import com.teioh.m_feed.WebSources.Sources.Batoto;
 import com.teioh.m_feed.WebSources.Sources.MangaEden;
 import com.teioh.m_feed.WebSources.Sources.MangaHere;
 import com.teioh.m_feed.WebSources.Sources.MangaJoy;
-import com.teioh.m_feed.WebSources.Sources.MangaPark;
 
 /**
  * Created by amgregoi on 11/19/16.
@@ -94,7 +93,6 @@ public class MangaEnums
         MangaEden(new MangaEden()),
         MangaHere(new MangaHere()),
         MangaJoy(new MangaJoy());
-//        MangaPark(new MangaPark());
 
         SourceBase lSource;
 

@@ -1,14 +1,10 @@
 package com.teioh.m_feed.UI.MainActivity.Presenters;
 
-import android.os.Bundle;
-
 import com.teioh.m_feed.UI.MainActivity.Fragments.RecentFragment;
 import com.teioh.m_feed.UI.MainActivity.IMain;
 import com.teioh.m_feed.Utils.MangaLogger;
 import com.teioh.m_feed.Utils.NetworkService;
 import com.teioh.m_feed.WebSources.SourceFactory;
-
-import java.util.ArrayList;
 
 
 public class RecentPresenter extends MainFragmentPresenterBase
@@ -26,9 +22,6 @@ public class RecentPresenter extends MainFragmentPresenterBase
     @Override
     public void updateMangaList()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
-
         if (mMangaListSubscription != null)
         {
             mMangaListSubscription.unsubscribe();
@@ -41,7 +34,8 @@ public class RecentPresenter extends MainFragmentPresenterBase
             {
                 mViewMapper.startRefresh();
                 mMangaListSubscription = new SourceFactory().getSource()
-                                                            .getRecentUpdatesObservable().cache()
+                                                            .getRecentMangaObservable()
+                                                            .cache()
                                                             .subscribe(aManga -> updateMangaGridView(aManga));
 
             }
@@ -52,7 +46,7 @@ public class RecentPresenter extends MainFragmentPresenterBase
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
 
         }
     }
