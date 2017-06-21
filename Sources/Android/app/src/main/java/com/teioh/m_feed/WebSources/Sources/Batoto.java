@@ -62,11 +62,7 @@ public class Batoto extends SourceBase
             "Shounen Ai",
             "Slice of Life",
             "Smut", "Sports",
-            "Supernatural",
-            "Tragedy",
-            "Webtoon",
-            "Yaoi",
-            "Yuri"
+            "Supernatural", "Tragedy", "Webtoon", "Yaoi", "Yuri"
     };
 
     /**
@@ -216,17 +212,14 @@ public class Batoto extends SourceBase
             Chapter lNewChapter = new Chapter();
 
             Element lUrlElement = iChapterElement.select("a").first();
-            Element lTitleElement = lUrlElement;
             Element lDateElement = iChapterElement.select("td").get(4);
 
             if (lUrlElement != null)
             {
                 String lUrl = lUrlElement.attr("href");
                 lNewChapter.setChapterUrl(lUrl);
-            }
-            if (lTitleElement != null)
-            {
-                String lTitle = lTitleElement.text().trim();
+
+                String lTitle = lUrlElement.text().trim();
                 lNewChapter.setChapterTitle(lTitle);
             }
             if (lDateElement != null)
