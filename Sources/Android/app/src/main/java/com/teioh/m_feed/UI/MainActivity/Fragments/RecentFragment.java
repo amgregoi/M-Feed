@@ -86,12 +86,13 @@ public class RecentFragment extends MainFragmentBase
     public void setupSwipeRefresh()
     {
         mSwipeContainer.setEnabled(true);
-        mSwipeContainer.setOnRefreshListener(() -> {
-            mGridView.setVisibility(View.GONE);
-            mFragmentPresenter.updateMangaList();
-            mListener.removeFilters();
+        mSwipeContainer.setOnRefreshListener(() ->
+                                             {
+                                                 mGridView.setVisibility(View.GONE);
+                                                 mFragmentPresenter.updateMangaList();
+                                                 mListener.removeFilters();
 
-        });
+                                             });
     }
 
     /***

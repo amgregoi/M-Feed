@@ -14,7 +14,6 @@ import com.teioh.m_feed.MFeedApplication;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.schedulers.Schedulers;
 
 public class NetworkService
@@ -59,13 +58,36 @@ public class NetworkService
     }
 
     /***
+     * This function returns an observable string converted from the response of a query.
+     *
+     * @param aResponse
+     * @return
+     */
+    public static Observable<String> mapResponseToString(final Response aResponse)
+    {
+        return Observable.create((Observable.OnSubscribe<String>) subscriber ->
+        {
+            try
+            {
+                subscriber.onNext(aResponse.body().string());
+                subscriber.onCompleted();
+            }
+            catch (Throwable e)
+            {
+                subscriber.onError(e);
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    /***
      * This function verifies if the network is available.
      *
      * @return
      */
     public static boolean isNetworkAvailable()
     {
-        ConnectivityManager connectivityManager = (ConnectivityManager) MFeedApplication.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager = (ConnectivityManager) MFeedApplication.getInstance()
+                                                                                        .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
@@ -87,7 +109,9 @@ public class NetworkService
         {
             try
             {
-                Request request = new Request.Builder().url(aUrl).header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.21").build();
+                Request request = new Request.Builder().url(aUrl)
+                                                       .header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.21")
+                                                       .build();
 
                 subscriber.onNext(mClient.newCall(request).execute());
                 subscriber.onCompleted();
@@ -120,28 +144,6 @@ public class NetworkService
                 Request request = new Request.Builder().url(aUrl).headers(aHeaders).build();
 
                 subscriber.onNext(mClient.newCall(request).execute());
-                subscriber.onCompleted();
-            }
-            catch (Throwable e)
-            {
-                subscriber.onError(e);
-            }
-        }).subscribeOn(Schedulers.io());
-    }
-
-    /***
-     * This function returns an observable string converted from the response of a query.
-     *
-     * @param aResponse
-     * @return
-     */
-    public static Observable<String> mapResponseToString(final Response aResponse)
-    {
-        return Observable.create((Observable.OnSubscribe<String>) subscriber ->
-        {
-            try
-            {
-                subscriber.onNext(aResponse.body().string());
                 subscriber.onCompleted();
             }
             catch (Throwable e)

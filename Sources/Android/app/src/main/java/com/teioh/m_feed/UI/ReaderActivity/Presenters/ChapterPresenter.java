@@ -27,11 +27,10 @@ public class ChapterPresenter implements IReader.FragmentPresenter
 {
     public static final String TAG = ChapterPresenter.class.getSimpleName();
     public static final String CHAPTER_PARENT_FOLLOWING = TAG + ":CHAPTER_PARENT_FOLLOWING";
-
-    private static final String CURRENT_URL_LIST_PARCELABLE_KEY = TAG + ":CURRENT";
     public static final String CHAPTER_POSITION_LIST_PARCELABLE_KEY = TAG + ":POSITION";
-    private static final String ACTIVE_CHAPTER = TAG + ":ACTIVE_CHAPTER";
     public static final String CHAPTER = TAG + ":CHAPTER";
+    private static final String CURRENT_URL_LIST_PARCELABLE_KEY = TAG + ":CURRENT";
+    private static final String ACTIVE_CHAPTER = TAG + ":ACTIVE_CHAPTER";
     private static final String LOADING_STATUS = TAG + ":LOADING";
     private static final String IMAGE_SUB_FLAG = TAG + ":IMAGE_SUB_FLAG";
 
@@ -203,6 +202,32 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     {
         cleanupSubscribers();
         mChapterReaderMapper = null;
+    }
+
+    /***
+     * This function cleans up all used subscribers.
+     */
+    private void cleanupSubscribers()
+    {
+        try
+        {
+            if (mImageListSubscription != null)
+            {
+                mImageListSubscription.unsubscribe();
+                mImageListSubscription = null;
+            }
+
+            if (mLoadImageUrlSubscription != null)
+            {
+                mLoadImageUrlSubscription.unsubscribe();
+                mLoadImageUrlSubscription = null;
+            }
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lException.getMessage());
+        }
+
     }
 
     /***
@@ -494,6 +519,31 @@ public class ChapterPresenter implements IReader.FragmentPresenter
     }
 
     /***
+     * This function updates the image url list.
+     *
+     * @param aUrlList
+     */
+    private void updateImageUrlList(List<String> aUrlList)
+    {
+        try
+        {
+            if (mChapterReaderMapper != null && mChapterReaderMapper.getContext() != null)
+            {
+                updateReaderToolbar();
+                mChapterUrlList = new ArrayList<>(aUrlList);
+                mChapterPageAdapter = new ImagePageAdapter(mChapterReaderMapper.getContext(), mChapterUrlList);
+                mChapterReaderMapper.registerAdapter(mChapterPageAdapter);
+                mChapterReaderMapper.setCurrentChapterPage(mChapter.getCurrentPage());
+                updateCurrentPage(mChapter.getCurrentPage());
+            }
+        }
+        catch (Exception aException)
+        {
+            MangaLogger.logError(TAG, aException.getMessage());
+        }
+    }
+
+    /***
      * This function pre loads the images of the chapter to the cache for quick loading.
      */
     private void preLoadImagesToCache()
@@ -540,56 +590,5 @@ public class ChapterPresenter implements IReader.FragmentPresenter
             MangaLogger.logError(TAG, lException.getMessage());
         }
 
-    }
-
-    /***
-     * This function cleans up all used subscribers.
-     */
-    private void cleanupSubscribers()
-    {
-        try
-        {
-            if (mImageListSubscription != null)
-            {
-                mImageListSubscription.unsubscribe();
-                mImageListSubscription = null;
-            }
-
-            if (mLoadImageUrlSubscription != null)
-            {
-                mLoadImageUrlSubscription.unsubscribe();
-                mLoadImageUrlSubscription = null;
-            }
-        }
-        catch (Exception lException)
-        {
-            MangaLogger.logError(TAG, lException.getMessage());
-        }
-
-    }
-
-    /***
-     * This function updates the image url list.
-     *
-     * @param aUrlList
-     */
-    private void updateImageUrlList(List<String> aUrlList)
-    {
-        try
-        {
-            if (mChapterReaderMapper != null && mChapterReaderMapper.getContext() != null)
-            {
-                updateReaderToolbar();
-                mChapterUrlList = new ArrayList<>(aUrlList);
-                mChapterPageAdapter = new ImagePageAdapter(mChapterReaderMapper.getContext(), mChapterUrlList);
-                mChapterReaderMapper.registerAdapter(mChapterPageAdapter);
-                mChapterReaderMapper.setCurrentChapterPage(mChapter.getCurrentPage());
-                updateCurrentPage(mChapter.getCurrentPage());
-            }
-        }
-        catch (Exception aException)
-        {
-            MangaLogger.logError(TAG, aException.getMessage());
-        }
     }
 }

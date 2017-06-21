@@ -40,6 +40,38 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     }
 
     /***
+     * This function initializes the reader presenter.
+     *
+     * @param aBundle
+     */
+    @Override
+    public void init(Bundle aBundle)
+    {
+        try
+        {
+            if (mChapterList == null)
+            {
+                mChapterList = new ArrayList<>(aBundle.getParcelableArrayList(MangaPresenter.CHAPTER_LIST_KEY));
+                mChapterPosition = aBundle.getInt(MangaPresenter.LIST_POSITION_KEY);
+            }
+
+            String lParentUrl = aBundle.getString(PARENT_URL);
+            mParentManga = MangaDB.getInstance().getManga(lParentUrl);
+            mChapterPagerAdapter = new ChapterPageAdapter(((ReaderActivity) mReaderMap)
+                                                                  .getSupportFragmentManager(), mChapterList, mParentManga.getFollowing());
+            mReaderMap.registerAdapter(mChapterPagerAdapter);
+            mReaderMap.setCurrentChapter(mChapterPosition);
+            mReaderMap.setupToolbar();
+            mReaderMap.setScreenOrientation(SharedPrefs.getChapterScreenOrientation());
+
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lException.getMessage());
+        }
+    }
+
+    /***
      * This function saves relevant data that needs to persist between device state changes.
      *
      * @param aSave
@@ -70,37 +102,6 @@ public class ReaderPresenter implements IReader.ActivityPresenter
         {
             if (aRestore.containsKey(CHAPTER_LIST_KEY)) mChapterList = new ArrayList<>(aRestore.getParcelableArrayList(CHAPTER_LIST_KEY));
             if (aRestore.containsKey(CHAPTER_POSITION)) mChapterPosition = aRestore.getInt(CHAPTER_POSITION);
-
-        }
-        catch (Exception lException)
-        {
-            MangaLogger.logError(TAG, lException.getMessage());
-        }
-    }
-
-    /***
-     * This function initializes the reader presenter.
-     *
-     * @param aBundle
-     */
-    @Override
-    public void init(Bundle aBundle)
-    {
-        try
-        {
-            if (mChapterList == null)
-            {
-                mChapterList = new ArrayList<>(aBundle.getParcelableArrayList(MangaPresenter.CHAPTER_LIST_KEY));
-                mChapterPosition = aBundle.getInt(MangaPresenter.LIST_POSITION_KEY);
-            }
-
-            String lParentUrl = aBundle.getString(PARENT_URL);
-            mParentManga = MangaDB.getInstance().getManga(lParentUrl);
-            mChapterPagerAdapter = new ChapterPageAdapter(((ReaderActivity) mReaderMap).getSupportFragmentManager(), mChapterList, mParentManga.getFollowing());
-            mReaderMap.registerAdapter(mChapterPagerAdapter);
-            mReaderMap.setCurrentChapter(mChapterPosition);
-            mReaderMap.setupToolbar();
-            mReaderMap.setScreenOrientation(SharedPrefs.getChapterScreenOrientation());
 
         }
         catch (Exception lException)
@@ -259,6 +260,25 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     }
 
     /***
+     * This function toggles the reader orientation.
+     */
+    @Override
+    public void toggleOrientation()
+    {
+        try
+        {
+            boolean lCurrentValue = SharedPrefs.getChapterScreenOrientation();
+            SharedPrefs.setChapterScreenOrientation(!lCurrentValue);
+            mReaderMap.setScreenOrientation(!lCurrentValue);
+
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lException.getMessage());
+        }
+    }
+
+    /***
      * This function toggles the vertical scrolling setting.
      *
      * @param aPosition
@@ -305,25 +325,6 @@ public class ReaderPresenter implements IReader.ActivityPresenter
                 mParentManga.setRecentChapter(mChapterList.get(aPosition).getChapterUrl());
                 MangaDB.getInstance().updateManga(mParentManga);
             }
-        }
-        catch (Exception lException)
-        {
-            MangaLogger.logError(TAG, lException.getMessage());
-        }
-    }
-
-    /***
-     * This function toggles the reader orientation.
-     */
-    @Override
-    public void toggleOrientation()
-    {
-        try
-        {
-            boolean lCurrentValue = SharedPrefs.getChapterScreenOrientation();
-            SharedPrefs.setChapterScreenOrientation(!lCurrentValue);
-            mReaderMap.setScreenOrientation(!lCurrentValue);
-
         }
         catch (Exception lException)
         {

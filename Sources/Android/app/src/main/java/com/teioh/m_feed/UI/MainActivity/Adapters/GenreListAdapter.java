@@ -68,6 +68,63 @@ public class GenreListAdapter extends BaseAdapter
     }
 
     /***
+     * This function gets the view of an item at the specified position.
+     *
+     * @param aPosition
+     * @param aConvertView
+     * @param aParent
+     * @return
+     */
+    public View getView(int aPosition, View aConvertView, ViewGroup aParent)
+    {
+        Context lContext = aParent.getContext();
+        View lRowView = aConvertView;
+        GenreHolder lGenreHolder;
+
+        if (lRowView == null)
+        {
+            lRowView = mInflater.inflate(R.layout.main_search_dialog_grid_item, null);
+
+            lGenreHolder = new GenreHolder();
+            lGenreHolder.lTextView = (TextView) lRowView.findViewById(R.id.genre_title);
+            lGenreHolder.lSymbolImageView = (ImageView) lRowView.findViewById(R.id.genre_symbol);
+            lGenreHolder.lLayout = (RelativeLayout) lRowView.findViewById(R.id.card_view_container);
+            lGenreHolder.lCard = (CardView) lRowView.findViewById(R.id.genre_card_view);
+            lRowView.setTag(lGenreHolder);
+        }
+        else
+        {
+            lGenreHolder = (GenreHolder) lRowView.getTag();
+        }
+
+        String lCurGenre = mGenreList.get(aPosition);
+
+        if (lCurGenre == null)
+        {
+            return lRowView;
+        }
+
+        if (mGenreSearchStatus[aPosition] == 0)
+        {
+            lGenreHolder.lSymbolImageView.setImageDrawable(null);
+            lGenreHolder.lLayout.setBackgroundColor(lContext.getResources().getColor(R.color.light_charcoal));
+        }
+        else if (mGenreSearchStatus[aPosition] == 1)
+        {
+            lGenreHolder.lSymbolImageView.setImageDrawable(lContext.getResources().getDrawable(R.drawable.ic_add_white_18dp));
+            lGenreHolder.lLayout.setBackgroundColor(lContext.getResources().getColor(R.color.green));
+        }
+        else
+        {
+            lGenreHolder.lSymbolImageView.setImageDrawable(lContext.getResources().getDrawable(R.drawable.ic_remove_white_18dp));
+            lGenreHolder.lLayout.setBackgroundColor(lContext.getResources().getColor(R.color.red));
+        }
+
+        lGenreHolder.lTextView.setText(lCurGenre);
+        return lRowView;
+    }
+
+    /***
      * This function updates and invalidates the view of a specific item at the specified position.
      *
      * @param aPosition The position of the item to be updated.
@@ -125,63 +182,6 @@ public class GenreListAdapter extends BaseAdapter
             if (mGenreSearchStatus[iIndex] == aStatus) result.add(mGenreList.get(iIndex));
         }
         return result;
-    }
-
-    /***
-     * This function gets the view of an item at the specified position.
-     *
-     * @param aPosition
-     * @param aConvertView
-     * @param aParent
-     * @return
-     */
-    public View getView(int aPosition, View aConvertView, ViewGroup aParent)
-    {
-        Context lContext = aParent.getContext();
-        View lRowView = aConvertView;
-        GenreHolder lGenreHolder;
-
-        if (lRowView == null)
-        {
-            lRowView = mInflater.inflate(R.layout.main_search_dialog_grid_item, null);
-
-            lGenreHolder = new GenreHolder();
-            lGenreHolder.lTextView = (TextView) lRowView.findViewById(R.id.genre_title);
-            lGenreHolder.lSymbolImageView = (ImageView) lRowView.findViewById(R.id.genre_symbol);
-            lGenreHolder.lLayout = (RelativeLayout) lRowView.findViewById(R.id.card_view_container);
-            lGenreHolder.lCard = (CardView) lRowView.findViewById(R.id.genre_card_view);
-            lRowView.setTag(lGenreHolder);
-        }
-        else
-        {
-            lGenreHolder = (GenreHolder) lRowView.getTag();
-        }
-
-        String lCurGenre = mGenreList.get(aPosition);
-
-        if (lCurGenre == null)
-        {
-            return lRowView;
-        }
-
-        if (mGenreSearchStatus[aPosition] == 0)
-        {
-            lGenreHolder.lSymbolImageView.setImageDrawable(null);
-            lGenreHolder.lLayout.setBackgroundColor(lContext.getResources().getColor(R.color.light_charcoal));
-        }
-        else if (mGenreSearchStatus[aPosition] == 1)
-        {
-            lGenreHolder.lSymbolImageView.setImageDrawable(lContext.getResources().getDrawable(R.drawable.ic_add_white_18dp));
-            lGenreHolder.lLayout.setBackgroundColor(lContext.getResources().getColor(R.color.green));
-        }
-        else
-        {
-            lGenreHolder.lSymbolImageView.setImageDrawable(lContext.getResources().getDrawable(R.drawable.ic_remove_white_18dp));
-            lGenreHolder.lLayout.setBackgroundColor(lContext.getResources().getColor(R.color.red));
-        }
-
-        lGenreHolder.lTextView.setText(lCurGenre);
-        return lRowView;
     }
 
     /***

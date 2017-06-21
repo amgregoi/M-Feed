@@ -84,6 +84,17 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
+     * This function is called when a fragment or activities onDestroy is called in their life cycle chain.
+     */
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        ButterKnife.unbind(this);
+        mReaderPresenter.onDestroy();
+    }
+
+    /***
      * This function saves relevant data that needs to persist between device state changes.
      *
      * @param aSave
@@ -93,37 +104,6 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     {
         super.onSaveInstanceState(aSave);
         if (mReaderPresenter != null) mReaderPresenter.onSaveState(aSave);
-    }
-
-    /***
-     * This function is called when a fragment or activities onResume() is called in their life cycle chain.
-     */
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-        mReaderPresenter.onResume();
-    }
-
-    /***
-     * This function is called when a fragment or activities onPause() is called in their life cycle chain.
-     */
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
-        mReaderPresenter.onPause();
-    }
-
-    /***
-     * This function is called when a fragment or activities onDestroy is called in their life cycle chain.
-     */
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
-        ButterKnife.unbind(this);
-        mReaderPresenter.onDestroy();
     }
 
     /***
@@ -165,73 +145,6 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * This function increments the viewpager position.
-     */
-    @Override
-    public void incrementChapter()
-    {
-        mViewPager.incrementCurrentItem();
-        mReaderPresenter.updateRecentChapter(mViewPager.getCurrentItem());
-
-    }
-
-    /***
-     * This function decrements the viewpager position.
-     */
-    @Override
-    public void decrementChapter()
-    {
-        mViewPager.decrememntCurrentItem();
-        mReaderPresenter.updateRecentChapter(mViewPager.getCurrentItem());
-    }
-
-    /***
-     * This function hides the header and footer toolbars.
-     *
-     * @param aDelay
-     */
-    @Override
-    public void hideToolbar(long aDelay)
-    {
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-
-
-        mToolbarHeader.animate().translationY(-mToolbarHeader.getHeight()).setInterpolator(new AccelerateInterpolator()).setStartDelay(10).start();
-        mToolbarHeader2.animate().translationY(-mToolbarHeader2.getHeight() - mToolbarHeader.getHeight()).setInterpolator(new AccelerateInterpolator()).setStartDelay(10).start();
-        mToolbarFooter.animate().translationY(mToolbarFooter.getHeight()).setInterpolator(new DecelerateInterpolator()).setStartDelay(20).start();
-    }
-
-    /***
-     * This function shows the header and footer tool bars.
-     */
-    @Override
-    public void showToolbar()
-    {
-        getWindow().getDecorView().setSystemUiVisibility(0);
-        mToolbarHeader.animate().translationY(mToolbarHeader.getScrollY()).setInterpolator(new DecelerateInterpolator()).setStartDelay(10).start();
-        mToolbarHeader2.animate().translationY(mToolbarHeader2.getScrollY() + mToolbarHeader.getScrollY()).setInterpolator(new DecelerateInterpolator()).setStartDelay(10).start();
-        mToolbarFooter.animate().translationY(-mToolbarFooter.getScrollY()).setInterpolator(new AccelerateInterpolator()).setStartDelay(10).start();
-
-    }
-
-    /***
-     * This function updates the header toolbar.
-     *
-     * @param aTitle
-     * @param aChapterTitle
-     * @param aSize
-     * @param aChapter
-     */
-    @Override
-    public void updateToolbar(String aTitle, String aChapterTitle, int aSize, int aChapter)
-    {
-        mMangaTitle.setText(aTitle);
-        mChapterTitle.setText(aChapterTitle);
-        mEndPage.setText(String.valueOf(aSize));
-        mReaderPresenter.updateChapterViewStatus(mViewPager.getCurrentItem());
-    }
-
-    /***
      * This function initializes the header toolbar.
      */
     @Override
@@ -242,6 +155,23 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
         mToolbarHeader.setNavigationOnClickListener(v -> onBackPressed());
         mToolbarHeader.setPadding(0, getStatusBarHeight(), 0, 0);
         mToolbarFooter.setPadding(0, 0, 0, getNavBarHeight());
+    }
+
+    /***
+     * This function sets the screen orientation.
+     *
+     * @param isLandscape
+     */
+    public void setScreenOrientation(boolean isLandscape)
+    {
+        if (isLandscape)
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
+        else
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
     }
 
     /***
@@ -277,6 +207,104 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
         }
 
         return lResult;
+    }
+
+    /***
+     * This function increments the viewpager position.
+     */
+    @Override
+    public void incrementChapter()
+    {
+        mViewPager.incrementCurrentItem();
+        mReaderPresenter.updateRecentChapter(mViewPager.getCurrentItem());
+
+    }
+
+    /***
+     * This function decrements the viewpager position.
+     */
+    @Override
+    public void decrementChapter()
+    {
+        mViewPager.decrememntCurrentItem();
+        mReaderPresenter.updateRecentChapter(mViewPager.getCurrentItem());
+    }
+
+    /***
+     * This function hides the header and footer toolbars.
+     *
+     * @param aDelay
+     */
+    @Override
+    public void hideToolbar(long aDelay)
+    {
+        getWindow().getDecorView()
+                   .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+
+
+        mToolbarHeader.animate().translationY(-mToolbarHeader.getHeight()).setInterpolator(new AccelerateInterpolator()).setStartDelay(10)
+                      .start();
+        mToolbarHeader2.animate().translationY(-mToolbarHeader2.getHeight() - mToolbarHeader.getHeight())
+                       .setInterpolator(new AccelerateInterpolator()).setStartDelay(10).start();
+        mToolbarFooter.animate().translationY(mToolbarFooter.getHeight()).setInterpolator(new DecelerateInterpolator()).setStartDelay(20)
+                      .start();
+    }
+
+    /***
+     * This function shows the header and footer tool bars.
+     */
+    @Override
+    public void showToolbar()
+    {
+        getWindow().getDecorView().setSystemUiVisibility(0);
+        mToolbarHeader.animate().translationY(mToolbarHeader.getScrollY()).setInterpolator(new DecelerateInterpolator()).setStartDelay(10)
+                      .start();
+        mToolbarHeader2.animate().translationY(mToolbarHeader2.getScrollY() + mToolbarHeader.getScrollY())
+                       .setInterpolator(new DecelerateInterpolator()).setStartDelay(10).start();
+        mToolbarFooter.animate().translationY(-mToolbarFooter.getScrollY()).setInterpolator(new AccelerateInterpolator()).setStartDelay(10)
+                      .start();
+
+    }
+
+    /***
+     * This function updates the header toolbar.
+     *
+     * @param aTitle
+     * @param aChapterTitle
+     * @param aSize
+     * @param aChapter
+     */
+    @Override
+    public void updateToolbar(String aTitle, String aChapterTitle, int aSize, int aChapter)
+    {
+        mMangaTitle.setText(aTitle);
+        mChapterTitle.setText(aChapterTitle);
+        mEndPage.setText(String.valueOf(aSize));
+        mReaderPresenter.updateChapterViewStatus(mViewPager.getCurrentItem());
+    }
+
+    /***
+     * This function updates the current page counter in the footer toolbar.
+     *
+     * @param aPosition
+     */
+    @Override
+    public void updateCurrentPage(int aPosition)
+    {
+        mCurrentPage.setText(String.valueOf(aPosition));
+    }
+
+    /***
+     * This function verifies if this is the active (visible) chapter.
+     *
+     * @param aChapter
+     * @return
+     */
+    @Override
+    public boolean checkActiveChapter(int aChapter)
+    {
+        if (mViewPager != null && aChapter == mViewPager.getCurrentItem()) return true;
+        return false;
     }
 
     /***
@@ -316,27 +344,18 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * This function updates the current page counter in the footer toolbar.
-     *
-     * @param aPosition
+     * This function toggles vertical scroll icon accordingly.
      */
-    @Override
-    public void updateCurrentPage(int aPosition)
+    private void toggleVerticalScrollIcon()
     {
-        mCurrentPage.setText(String.valueOf(aPosition));
-    }
-
-    /***
-     * This function verifies if this is the active (visible) chapter.
-     *
-     * @param aChapter
-     * @return
-     */
-    @Override
-    public boolean checkActiveChapter(int aChapter)
-    {
-        if (mViewPager != null && aChapter == mViewPager.getCurrentItem()) return true;
-        return false;
+        if (SharedPrefs.getChapterScrollVertical())
+        {
+            mVerticalScrollButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_swap_vert_white_24dp));
+        }
+        else
+        {
+            mVerticalScrollButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_swap_horiz_white_24dp));
+        }
     }
 
     /***
@@ -410,23 +429,6 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * This function sets the screen orientation.
-     *
-     * @param isLandscape
-     */
-    public void setScreenOrientation(boolean isLandscape)
-    {
-        if (isLandscape)
-        {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        }
-        else
-        {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
-    }
-
-    /***
      * This function trims Glide cache when low memory
      *
      * @param aLevel
@@ -449,18 +451,23 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * This function toggles vertical scroll icon accordingly.
+     * This function is called when a fragment or activities onPause() is called in their life cycle chain.
      */
-    private void toggleVerticalScrollIcon()
+    @Override
+    protected void onPause()
     {
-        if (SharedPrefs.getChapterScrollVertical())
-        {
-            mVerticalScrollButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_swap_vert_white_24dp));
-        }
-        else
-        {
-            mVerticalScrollButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_swap_horiz_white_24dp));
-        }
+        super.onPause();
+        mReaderPresenter.onPause();
+    }
+
+    /***
+     * This function is called when a fragment or activities onResume() is called in their life cycle chain.
+     */
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        mReaderPresenter.onResume();
     }
 
 

@@ -67,6 +67,16 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
     }
 
     /***
+     * This function intializes relavent parts of the layout based on saved SharedPrefs.
+     */
+    private void initializeLayout()
+    {
+        mLoggingToggle.setChecked(SharedPrefs.getLoggingStatus());
+        MangaLogger.logInfo(TAG, "Finished initializing settings layout");
+
+    }
+
+    /***
      * This function performs the show logs item select.
      */
     @OnClick(R.id.show_logs)
@@ -88,6 +98,19 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
     public void onClearLogsClick()
     {
         launchYesNoDialog(R.string.logs, getString(R.string.settings_clear_logs), 99);
+    }
+
+    /***
+     * This function launches the YesNo dialog to verify by the user an action should be executed.
+     * @param aTitleRes
+     * @param aMessage
+     * @param aAction
+     */
+    private void launchYesNoDialog(int aTitleRes, String aMessage, int aAction)
+    {
+        DialogFragment newFragment = FYesNoDialog.getNewInstance(aTitleRes, aMessage, aAction, false);
+        newFragment.setTargetFragment(this, 1);
+        newFragment.show(getActivity().getSupportFragmentManager(), "dialog");
     }
 
     /***
@@ -139,20 +162,11 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
     }
 
     /***
-     * This function intializes relavent parts of the layout based on saved SharedPrefs.
-     */
-    private void initializeLayout()
-    {
-        mLoggingToggle.setChecked(SharedPrefs.getLoggingStatus());
-        MangaLogger.logInfo(TAG, "Finished initializing settings layout");
-
-    }
-
-    /***
      * This function performs various (above) operations based on the action ID specified.
      * @param aAction
      */
-    @Override public void positive(int aAction)
+    @Override
+    public void positive(int aAction)
     {
         switch (aAction)
         {
@@ -211,21 +225,9 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
      * This function is called and logged when an action is declined by the user.
      * @param aAction
      */
-    @Override public void negative(int aAction)
+    @Override
+    public void negative(int aAction)
     {
         MangaLogger.logInfo(TAG, "No was selected for action (" + aAction + ")");
-    }
-
-    /***
-     * This function launches the YesNo dialog to verify by the user an action should be executed.
-     * @param aTitleRes
-     * @param aMessage
-     * @param aAction
-     */
-    private void launchYesNoDialog(int aTitleRes, String aMessage, int aAction)
-    {
-        DialogFragment newFragment = FYesNoDialog.getNewInstance(aTitleRes, aMessage, aAction, false);
-        newFragment.setTargetFragment(this, 1);
-        newFragment.show(getActivity().getSupportFragmentManager(), "dialog");
     }
 }

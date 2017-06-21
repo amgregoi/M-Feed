@@ -38,6 +38,15 @@ public class MFeedApplication extends Application
     }
 
     /***
+     * This function returns a synchronized isntance of the application.
+     * @return
+     */
+    public static synchronized MFeedApplication getInstance()
+    {
+        return aInstance;
+    }
+
+    /***
      * This function initializes various modules when the application is created.
      */
     @Override
@@ -59,13 +68,13 @@ public class MFeedApplication extends Application
     /***
      * This function saves the logs when the application terminates
      */
-    @Override public void onTerminate()
+    @Override
+    public void onTerminate()
     {
         super.onTerminate();
 
         SharedPrefs.saveLogs();
     }
-
 
     /***
      * This function clears Glide cache when low on memory.
@@ -87,16 +96,6 @@ public class MFeedApplication extends Application
         super.onTrimMemory(aLevel);
         Glide.get(this).trimMemory(aLevel);
     }
-
-    /***
-     * This function returns a synchronized isntance of the application.
-     * @return
-     */
-    public static synchronized MFeedApplication getInstance()
-    {
-        return aInstance;
-    }
-
 
 
 }

@@ -118,6 +118,15 @@ public class MainPresenter implements IMain.ActivityPresenter
     }
 
     /***
+     * This function is called when a fragment or activities onPause() is called in their life cycle chain.
+     */
+    @Override
+    public void onPause()
+    {
+
+    }
+
+    /***
      * This function is called when a fragment or activities onResume() is called in their life cycle chain.
      */
     @Override
@@ -136,12 +145,52 @@ public class MainPresenter implements IMain.ActivityPresenter
     }
 
     /***
-     * This function is called when a fragment or activities onPause() is called in their life cycle chain.
+     * This function is called when a fragment or activities onDestroy is called in their life cycle chain.
      */
     @Override
-    public void onPause()
+    public void onDestroy()
     {
+        ButterKnife.unbind(mMainMapper);
+        mMainMapper = null;
+    }
 
+    /***
+     * This function initializes the drawer layout.
+     */
+
+    private void setupDrawerLayouts()
+    {
+        try
+        {
+            ArrayList<String> lDrawerItems = new ArrayList<>(Arrays.asList(mDrawerItems));
+            //check if signed in or signed out
+            if (SharedPrefs.isSignedIn())
+            {
+                lDrawerItems.add("Sign out");
+            }
+            else
+            {
+                lDrawerItems.add("Sign in with Google");
+            }
+
+            Map<String, List<String>> lSourceCollections = new LinkedHashMap<>();
+            for (String iDrawerItem : lDrawerItems)
+            {
+                List<String> lDrawerChildren = new ArrayList<>();
+                if (iDrawerItem.equals("Sources"))
+                {
+                    for (MangaEnums.eSource iType : Arrays.asList(MangaEnums.eSource.values()))
+                        lDrawerChildren.add(iType.name());
+                }
+                lSourceCollections.put(iDrawerItem, lDrawerChildren);
+            }
+
+            mMainMapper.setupDrawerLayout(lDrawerItems, lSourceCollections);
+        }
+        catch (Exception aException)
+        {
+            MangaLogger.logError(TAG, aException.getMessage());
+        }
     }
 
     /***
@@ -169,16 +218,6 @@ public class MainPresenter implements IMain.ActivityPresenter
         }
 
         return lResult;
-    }
-
-    /***
-     * This function is called when a fragment or activities onDestroy is called in their life cycle chain.
-     */
-    @Override
-    public void onDestroy()
-    {
-        ButterKnife.unbind(mMainMapper);
-        mMainMapper = null;
     }
 
     /***
@@ -320,6 +359,31 @@ public class MainPresenter implements IMain.ActivityPresenter
     }
 
     /***
+     * This function removes the settings fragment from view.
+     */
+    @Override
+    public boolean removeSettingsFragment()
+    {
+        boolean lResult = true;
+        try
+        {
+            ((MainActivity) mMainMapper.getContext()).getSupportFragmentManager().beginTransaction().remove(mSettingsFragment).commit();
+            mSettingsFragment = null;
+        }
+        catch (Exception aException)
+        {
+            MangaLogger.logError(TAG, aException.getMessage());
+        }
+
+        if (BuildConfig.DEBUG)
+        {
+            if (mSettingsFragment != null) lResult = false;
+        }
+
+        return lResult;
+    }
+
+    /***
      * This function performs the Genre filter.
      *
      * @param aIntent
@@ -378,31 +442,6 @@ public class MainPresenter implements IMain.ActivityPresenter
     }
 
     /***
-     * This function removes the settings fragment from view.
-     */
-    @Override
-    public boolean removeSettingsFragment()
-    {
-        boolean lResult = true;
-        try
-        {
-            ((MainActivity) mMainMapper.getContext()).getSupportFragmentManager().beginTransaction().remove(mSettingsFragment).commit();
-            mSettingsFragment = null;
-        }
-        catch (Exception aException)
-        {
-            MangaLogger.logError(TAG, aException.getMessage());
-        }
-
-        if (BuildConfig.DEBUG)
-        {
-            if (mSettingsFragment != null) lResult = false;
-        }
-
-        return lResult;
-    }
-
-    /***
      * This function returns whether the GenreFilter is active.
      *
      * @return
@@ -411,6 +450,35 @@ public class MainPresenter implements IMain.ActivityPresenter
     public boolean genreFilterActive()
     {
         return mGenreFilterActive;
+    }
+
+    /***
+     * This function updates the recently selected manga.
+     */
+    @Override
+    public boolean updateRecentManga()
+    {
+        boolean lResult = true;
+
+        try
+        {
+            Manga lManga = MangaDB.getInstance().getManga(mRecentMangaId);
+
+            if (lManga != null)
+            {
+                lResult &= ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).updateRecentSelection(lManga);
+                lResult &= ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).updateRecentSelection(lManga);
+                lResult &= ((CatalogFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).updateRecentSelection(lManga);
+                mRecentMangaId = -1;
+            }
+        }
+        catch (Exception aException)
+        {
+            MangaLogger.logError(TAG, aException.getMessage());
+            lResult = false;
+        }
+
+        return lResult;
     }
 
     /***
@@ -468,74 +536,6 @@ public class MainPresenter implements IMain.ActivityPresenter
         }
 
         return lResult;
-    }
-
-    /***
-     * This function updates the recently selected manga.
-     */
-    @Override
-    public boolean updateRecentManga()
-    {
-        boolean lResult = true;
-
-        try
-        {
-            Manga lManga = MangaDB.getInstance().getManga(mRecentMangaId);
-
-            if (lManga != null)
-            {
-                lResult &= ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).updateRecentSelection(lManga);
-                lResult &= ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).updateRecentSelection(lManga);
-                lResult &= ((CatalogFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).updateRecentSelection(lManga);
-                mRecentMangaId = -1;
-            }
-        }
-        catch (Exception aException)
-        {
-            MangaLogger.logError(TAG, aException.getMessage());
-            lResult = false;
-        }
-
-        return lResult;
-    }
-
-    /***
-     * This function initializes the drawer layout.
-     */
-
-    private void setupDrawerLayouts()
-    {
-        try
-        {
-            ArrayList<String> lDrawerItems = new ArrayList<>(Arrays.asList(mDrawerItems));
-            //check if signed in or signed out
-            if (SharedPrefs.isSignedIn())
-            {
-                lDrawerItems.add("Sign out");
-            }
-            else
-            {
-                lDrawerItems.add("Sign in with Google");
-            }
-
-            Map<String, List<String>> lSourceCollections = new LinkedHashMap<>();
-            for (String iDrawerItem : lDrawerItems)
-            {
-                List<String> lDrawerChildren = new ArrayList<>();
-                if (iDrawerItem.equals("Sources"))
-                {
-                    for (MangaEnums.eSource iType : Arrays.asList(MangaEnums.eSource.values()))
-                        lDrawerChildren.add(iType.name());
-                }
-                lSourceCollections.put(iDrawerItem, lDrawerChildren);
-            }
-
-            mMainMapper.setupDrawerLayout(lDrawerItems, lSourceCollections);
-        }
-        catch (Exception aException)
-        {
-            MangaLogger.logError(TAG, aException.getMessage());
-        }
     }
 
     /***

@@ -94,15 +94,6 @@ public class ChapterListAdapter extends ArrayAdapter
     }
 
     /***
-     * This class is the view holder for items in the adapter.
-     */
-    static class ChapterHolder
-    {
-        TextView lMangaTitle;
-        TextView lChapterDate;
-    }
-
-    /***
      * This function reverses the order of the chapter list.
      * ASCENDING -> DESCENDING
      * DESCENDING -> ASCENDING
@@ -111,5 +102,14 @@ public class ChapterListAdapter extends ArrayAdapter
     {
         Collections.reverse(mChapterList);
         notifyDataSetChanged();
+    }
+
+    /***
+     * This class is the view holder for items in the adapter.
+     */
+    static class ChapterHolder
+    {
+        TextView lMangaTitle;
+        TextView lChapterDate;
     }
 }

@@ -67,18 +67,6 @@ public class GestureImageView extends ImageView implements ScaleGestureDetector.
     }
 
     @Override
-    public void setImageBitmap(Bitmap aBitmap)
-    {
-        super.setImageBitmap(aBitmap);
-
-        if (aBitmap != null)
-        {
-            mBitmapWidth = aBitmap.getWidth();
-            mBitmapHeight = aBitmap.getHeight();
-        }
-    }
-
-    @Override
     public void setImageDrawable(Drawable aDrawable)
     {
         super.setImageDrawable(aDrawable);
@@ -87,6 +75,18 @@ public class GestureImageView extends ImageView implements ScaleGestureDetector.
         {
             mBitmapWidth = aDrawable.getIntrinsicWidth();
             mBitmapHeight = aDrawable.getIntrinsicHeight();
+        }
+    }
+
+    @Override
+    public void setImageBitmap(Bitmap aBitmap)
+    {
+        super.setImageBitmap(aBitmap);
+
+        if (aBitmap != null)
+        {
+            mBitmapWidth = aBitmap.getWidth();
+            mBitmapHeight = aBitmap.getHeight();
         }
     }
 
@@ -112,60 +112,34 @@ public class GestureImageView extends ImageView implements ScaleGestureDetector.
     {
     }
 
-
-    public void initializeView()
+    public float getScale()
     {
-        if (!mInitialized)
+        return getScaleX(mSupplementaryMatrix);
+    }
+
+    public void zoomTo(float aScale, float aCenterX, float aCenterY)
+    {
+        if (aScale > MAX_SCALE)
         {
-            setScaleType(ScaleType.MATRIX);
-            initializeBaseMatrix();
-            setImageMatrix(getImageViewMatrix());
-            mInitialized = true;
+            aScale = MAX_SCALE;
         }
-    }
+        if (aScale < MIN_SCALE)
+        {
+            aScale = MIN_SCALE;
+        }
 
-    private void initializeBaseMatrix()
-    {
-        mBaseMatrix.reset();
-        float lWidthScale = Math.min(getWidth() / mBitmapWidth, 2.00f);
+        float lOldScale = getScaleX(mSupplementaryMatrix);
+        float lDeltaScale = aScale / lOldScale;
 
-        mBaseMatrix.postScale(lWidthScale, lWidthScale);
-        mBaseMatrix.postTranslate((getWidth() - mBitmapWidth * lWidthScale) / 2.00f, (getHeight() - mBitmapHeight * lWidthScale) / 2.00f);
-        mInitialized = true;
-    }
-
-    public boolean isInitialized()
-    {
-        return mInitialized;
-    }
-
-    private float getTransitionX(Matrix aMatrix)
-    {
-        aMatrix.getValues(mMatrixValues);
-        return mMatrixValues[Matrix.MTRANS_X];
-    }
-
-    private float getTransitionY(Matrix aMatrix)
-    {
-        aMatrix.getValues(mMatrixValues);
-        return mMatrixValues[Matrix.MTRANS_Y];
+        mSupplementaryMatrix.postScale(lDeltaScale, lDeltaScale, aCenterX, aCenterY);
+        setImageMatrix(getImageViewMatrix());
+        center(true, true);
     }
 
     private float getScaleX(Matrix aMatrix)
     {
         aMatrix.getValues(mMatrixValues);
         return mMatrixValues[Matrix.MSCALE_X];
-    }
-
-    private float getScaleY(Matrix aMatrix)
-    {
-        aMatrix.getValues(mMatrixValues);
-        return mMatrixValues[Matrix.MSCALE_Y];
-    }
-
-    public float getScale()
-    {
-        return getScaleX(mSupplementaryMatrix);
     }
 
     private Matrix getImageViewMatrix()
@@ -209,6 +183,32 @@ public class GestureImageView extends ImageView implements ScaleGestureDetector.
         setImageMatrix(getImageViewMatrix());
     }
 
+    public void initializeView()
+    {
+        if (!mInitialized)
+        {
+            setScaleType(ScaleType.MATRIX);
+            initializeBaseMatrix();
+            setImageMatrix(getImageViewMatrix());
+            mInitialized = true;
+        }
+    }
+
+    private void initializeBaseMatrix()
+    {
+        mBaseMatrix.reset();
+        float lWidthScale = Math.min(getWidth() / mBitmapWidth, 2.00f);
+
+        mBaseMatrix.postScale(lWidthScale, lWidthScale);
+        mBaseMatrix.postTranslate((getWidth() - mBitmapWidth * lWidthScale) / 2.00f, (getHeight() - mBitmapHeight * lWidthScale) / 2.00f);
+        mInitialized = true;
+    }
+
+    public boolean isInitialized()
+    {
+        return mInitialized;
+    }
+
     public void startFling(float aVelocityX, float aVelocityY)
     {
         if (mFlingable != null)
@@ -234,34 +234,15 @@ public class GestureImageView extends ImageView implements ScaleGestureDetector.
         center(true, true);
     }
 
-    public void zoomTo(float aScale, float aCenterX, float aCenterY)
+    public void zoomToPoint(float aScale, float aPointX, float aPointY)
     {
-        if (aScale > MAX_SCALE)
-        {
-            aScale = MAX_SCALE;
-        }
-        if (aScale < MIN_SCALE)
-        {
-            aScale = MIN_SCALE;
-        }
-
-        float lOldScale = getScaleX(mSupplementaryMatrix);
-        float lDeltaScale = aScale / lOldScale;
-
-        mSupplementaryMatrix.postScale(lDeltaScale, lDeltaScale, aCenterX, aCenterY);
-        setImageMatrix(getImageViewMatrix());
-        center(true, true);
+        zoomTo(aScale, aPointX, aPointY, ZOOM_DURATION);
     }
 
     private void zoomTo(float aScale, float aCenterX, float aCenterY, float aDurationMs)
     {
         mZoomable = new Zoomable(aScale, aCenterX, aCenterY, aDurationMs);
         postDelayed(mZoomable, RUNNABLE_DELAY_MS);
-    }
-
-    public void zoomToPoint(float aScale, float aPointX, float aPointY)
-    {
-        zoomTo(aScale, aPointX, aPointY, ZOOM_DURATION);
     }
 
     public boolean canScrollParent(boolean aVertical)
@@ -295,6 +276,24 @@ public class GestureImageView extends ImageView implements ScaleGestureDetector.
             }
         }
         return true;
+    }
+
+    private float getTransitionX(Matrix aMatrix)
+    {
+        aMatrix.getValues(mMatrixValues);
+        return mMatrixValues[Matrix.MTRANS_X];
+    }
+
+    private float getTransitionY(Matrix aMatrix)
+    {
+        aMatrix.getValues(mMatrixValues);
+        return mMatrixValues[Matrix.MTRANS_Y];
+    }
+
+    private float getScaleY(Matrix aMatrix)
+    {
+        aMatrix.getValues(mMatrixValues);
+        return mMatrixValues[Matrix.MSCALE_Y];
     }
 
     private class Flingable implements Runnable

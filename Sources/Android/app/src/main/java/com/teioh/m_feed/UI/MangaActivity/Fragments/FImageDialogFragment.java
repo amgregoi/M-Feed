@@ -39,7 +39,7 @@ public class FImageDialogFragment extends DialogFragment
 
         DialogFragment lFragment = new FImageDialogFragment();
         lFragment.setArguments(lBundle);
-        
+
         return lFragment;
     }
 

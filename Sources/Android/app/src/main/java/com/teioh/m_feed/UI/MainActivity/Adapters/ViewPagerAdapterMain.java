@@ -5,8 +5,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 
-import com.teioh.m_feed.UI.MainActivity.Fragments.LibraryFragment;
 import com.teioh.m_feed.UI.MainActivity.Fragments.CatalogFragment;
+import com.teioh.m_feed.UI.MainActivity.Fragments.LibraryFragment;
 import com.teioh.m_feed.UI.MainActivity.Fragments.RecentFragment;
 
 public class ViewPagerAdapterMain extends FragmentStatePagerAdapter
@@ -62,6 +62,17 @@ public class ViewPagerAdapterMain extends FragmentStatePagerAdapter
     }
 
     /***
+     * This method return the Number of tabs for the tabs Strip
+     *
+     * @return
+     */
+    @Override
+    public int getCount()
+    {
+        return mTabCount;
+    }
+
+    /***
      * This method return the titles for the Tabs in the Tab Strip
      *
      * @param aPosition
@@ -71,17 +82,6 @@ public class ViewPagerAdapterMain extends FragmentStatePagerAdapter
     public CharSequence getPageTitle(int aPosition)
     {
         return mTabTitles[aPosition];
-    }
-
-    /***
-     * This method return the Number of tabs for the tabs Strip
-     *
-     * @return
-     */
-    @Override
-    public int getCount()
-    {
-        return mTabCount;
     }
 
     /***

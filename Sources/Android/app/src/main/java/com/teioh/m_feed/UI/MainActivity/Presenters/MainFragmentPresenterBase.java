@@ -48,6 +48,100 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     }
 
     /***
+     * This function initializes the MainFragmentPresenterBase object, as well as the users view.
+     *
+     * @param aBundle
+     */
+    @Override
+    public void init(Bundle aBundle)
+    {
+        try
+        {
+            mViewMapper.setupSwipeRefresh();
+            mLayoutManager = new GridLayoutManager(mViewMapper.getContext(), 3);
+            ((GridLayoutManager) mLayoutManager).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup()
+            {
+                @Override
+                public int getSpanSize(int position)
+                {
+                    if (NATIVE_AD_1_UNIT_ID == null)
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        if (mAdAdapter.isAd(position)) return 3; // ads take up 3 columns
+                        else return 1;
+                    }
+                }
+            });
+
+            updateMangaList();
+            mNeedsItemDecoration = true;
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lException.getMessage());
+
+        }
+    }
+
+    /***
+     * This function saves relevant data that needs to persist between device state changes.
+     *
+     * @param aSave The object that will hold the saved data.
+     */
+    @Override
+    public void onSaveState(Bundle aSave)
+    {
+
+    }
+
+    /***
+     * This function restores data that needed to persist between device state changes.
+     *
+     * @param aRestore The object containing the relevant data.
+     */
+    @Override
+    public void onRestoreState(Bundle aRestore)
+    {
+
+    }
+
+    /***
+     * This function is called when a fragment or activities onPause() is called in their life cycle chain.
+     */
+    @Override
+    public void onPause()
+    {
+
+    }
+
+    /***
+     * This function is called when a fragment or activities onResume() is called in their life cycle chain.
+     */
+    @Override
+    public void onResume()
+    {
+    }
+
+    /***
+     * This function is called when a fragment or activities onDestroy is called in their life cycle chain.
+     * It will clean up any items that shouldn't persist.
+     */
+    @Override
+    public void onDestroy()
+    {
+        if (mMangaListSubscription != null)
+        {
+            mMangaListSubscription.unsubscribe();
+            mMangaListSubscription = null;
+        }
+
+        mViewMapper = null;
+    }
+
+    /***
      * This function performs the Async task of querying, parsing a sources front page and building
      * a list of manga objects for the user to view
      */
@@ -214,131 +308,6 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     }
 
     /***
-     * This function initializes the MainFragmentPresenterBase object, as well as the users view.
-     *
-     * @param aBundle
-     */
-    @Override
-    public void init(Bundle aBundle)
-    {
-        try
-        {
-            mViewMapper.setupSwipeRefresh();
-            mLayoutManager = new GridLayoutManager(mViewMapper.getContext(), 3);
-            ((GridLayoutManager) mLayoutManager).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup()
-            {
-                @Override
-                public int getSpanSize(int position)
-                {
-                    if (NATIVE_AD_1_UNIT_ID == null)
-                    {
-                        return 1;
-                    }
-                    else
-                    {
-                        if (mAdAdapter.isAd(position)) return 3; // ads take up 3 columns
-                        else return 1;
-                    }
-                }
-            });
-
-            updateMangaList();
-            mNeedsItemDecoration = true;
-        }
-        catch (Exception lException)
-        {
-            MangaLogger.logError(TAG, lException.getMessage());
-
-        }
-    }
-
-    /***
-     * This function saves relevant data that needs to persist between device state changes.
-     *
-     * @param aSave The object that will hold the saved data.
-     */
-    @Override
-    public void onSaveState(Bundle aSave)
-    {
-
-    }
-
-    /***
-     * This function restores data that needed to persist between device state changes.
-     *
-     * @param aRestore The object containing the relevant data.
-     */
-    @Override
-    public void onRestoreState(Bundle aRestore)
-    {
-
-    }
-
-    /***
-     * This function is called when a fragment or activities onPause() is called in their life cycle chain.
-     */
-    @Override
-    public void onPause()
-    {
-
-    }
-
-    /***
-     * This function is called when a fragment or activities onResume() is called in their life cycle chain.
-     */
-    @Override
-    public void onResume()
-    {
-    }
-
-    /***
-     * This function is called when a fragment or activities onDestroy is called in their life cycle chain.
-     * It will clean up any items that shouldn't persist.
-     */
-    @Override
-    public void onDestroy()
-    {
-        if (mMangaListSubscription != null)
-        {
-            mMangaListSubscription.unsubscribe();
-            mMangaListSubscription = null;
-        }
-
-        mViewMapper = null;
-    }
-
-    /***
-     * This function starts a Manga Activity when a click is performed on a Manga Object
-     *
-     * @param aPos This is the position of the selected object
-     */
-    protected void onItemSelected(int aPos)
-    {
-        try
-        {
-            Manga manga;
-            if (NATIVE_AD_1_UNIT_ID == null)
-            {
-                manga = mAdapter.getItemAt(aPos);
-            }
-            else
-            {
-                manga = mAdapter.getItemAt(mAdAdapter.getOriginalPosition(aPos));
-            }
-            if (mViewMapper.setRecentSelection(manga.get_id()))
-            {
-                Intent intent = MangaActivity.getNewInstance(mViewMapper.getContext(), manga.getMangaURL());
-                mViewMapper.getContext().startActivity(intent);
-            }
-        }
-        catch (Exception lException)
-        {
-            MangaLogger.logError(TAG, lException.getMessage());
-        }
-
-    }
-
-    /***
      * This function updates the users view when the application is finished processing the Source HTML
      *
      * @param aMangaList This is the list of objects created after parsing the HTML
@@ -399,6 +368,37 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     }
 
     /***
+     * This function starts a Manga Activity when a click is performed on a Manga Object
+     *
+     * @param aPos This is the position of the selected object
+     */
+    protected void onItemSelected(int aPos)
+    {
+        try
+        {
+            Manga manga;
+            if (NATIVE_AD_1_UNIT_ID == null)
+            {
+                manga = mAdapter.getItemAt(aPos);
+            }
+            else
+            {
+                manga = mAdapter.getItemAt(mAdAdapter.getOriginalPosition(aPos));
+            }
+            if (mViewMapper.setRecentSelection(manga.get_id()))
+            {
+                Intent intent = MangaActivity.getNewInstance(mViewMapper.getContext(), manga.getMangaURL());
+                mViewMapper.getContext().startActivity(intent);
+            }
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lException.getMessage());
+        }
+
+    }
+
+    /***
      * This function sets up the MoPub adapter.
      * This function is only called if NATIVE_AD_1_UNIT_ID is initialized
      */
@@ -428,4 +428,6 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
             MangaLogger.logError(TAG, lException.getMessage());
         }
     }
+
+
 }

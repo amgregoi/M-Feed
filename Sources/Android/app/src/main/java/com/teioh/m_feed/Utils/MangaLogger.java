@@ -21,7 +21,8 @@ public class MangaLogger
     private static List<String> mCurrentLogs = new ArrayList<>();
 
 
-    public static void initialize(){
+    public static void initialize()
+    {
         mCurrentLogs = new ArrayList<>(SharedPrefs.getLogs());
     }
 
@@ -37,6 +38,20 @@ public class MangaLogger
         String lMessage = "INFO >> " + MessageFormat.format("{0}.class >> {1}() > {2}", aTag, lMethod, aMessage);
         addMessage(lMessage);
         Log.i(mApplication, lMessage);
+    }
+
+    /***
+     * This function adds a message to the in app logger.
+     * @param aMessage
+     */
+    private static void addMessage(String aMessage)
+    {
+        if (SharedPrefs.getLoggingStatus())
+        {
+            String lResult = new Date().toString() + " | " + aMessage;
+
+            mCurrentLogs.add(lResult);
+        }
     }
 
     /***
@@ -82,19 +97,6 @@ public class MangaLogger
     }
 
     /***
-     * This function adds a message to the in app logger.
-     * @param aMessage
-     */
-    private static void addMessage(String aMessage){
-        if (SharedPrefs.getLoggingStatus())
-        {
-            String lResult = new Date().toString() + " | " + aMessage;
-
-            mCurrentLogs.add(lResult);
-        }
-    }
-
-    /***
      * This function clears the in app log.
      */
     public static void clearLogs()
@@ -115,7 +117,8 @@ public class MangaLogger
      * This function creates a toast.
      * @param aMessage
      */
-    public static void makeToast(String aMessage){
+    public static void makeToast(String aMessage)
+    {
         Toast.makeText(MFeedApplication.getInstance(), aMessage, Toast.LENGTH_SHORT).show();
     }
 

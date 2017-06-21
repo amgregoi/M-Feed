@@ -7,7 +7,6 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.bumptech.glide.request.target.ViewTarget;
 import com.teioh.m_feed.UI.ReaderActivity.Adapters.ImagePageAdapter;
 import com.teioh.m_feed.Utils.SharedPrefs;
 
@@ -32,6 +31,23 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
         super(aContext, aAttributeSet);
         mGestureDetector = new GestureDetector(getContext(), this);
         setScrollerType();
+    }
+
+    public boolean setScrollerType()
+    {
+        mVertical = SharedPrefs.getChapterScrollVertical();
+
+        if (mVertical)
+        {
+            setPageTransformer(true, new VerticalPageTransformer());
+            setOverScrollMode(OVER_SCROLL_IF_CONTENT_SCROLLS);
+            return true;
+        }
+        else
+        {
+            setPageTransformer(true, null);
+            return false;
+        }
     }
 
     @Override
@@ -60,23 +76,31 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
     }
 
     @Override
-    public boolean onDoubleTap(MotionEvent aEvent)
+    public boolean onTouchEvent(MotionEvent ev)
     {
-        if (mGestureImageView != null)
-        {
-            if (mGestureImageView.isInitialized())
-            {
-                if (mGestureImageView.getScale() > mGestureImageView.MIN_SCALE)
-                {
-                    mGestureImageView.zoomToPoint(mGestureImageView.MIN_SCALE, getWidth() / 2, getHeight() / 2);
-                }
-                else if (mGestureImageView.getScale() < mGestureImageView.MED_SCALE)
-                {
-                    mGestureImageView.zoomToPoint(mGestureImageView.MED_SCALE, aEvent.getX(), aEvent.getY());
-                }
-            }
-        }
-        return true;
+        if (mVertical) return super.onTouchEvent(swapXY(ev));
+        else return super.onTouchEvent(ev);
+    }
+
+    private void fetchGestureImageViewByTag()
+    {
+        mGestureImageView = (GestureImageView) findViewWithTag(ImagePageAdapter.TAG + ":" + getCurrentItem());
+    }
+
+    /**
+     * Swaps the X and Y coordinates of your touch event.
+     */
+    private MotionEvent swapXY(MotionEvent ev)
+    {
+        float width = getWidth();
+        float height = getHeight();
+
+        float newX = (ev.getY() / height) * width;
+        float newY = (ev.getX() / width) * height;
+
+        ev.setLocation(newX, newY);
+
+        return ev;
     }
 
     @Override
@@ -93,6 +117,17 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
     }
 
     @Override
+    public void onShowPress(MotionEvent aEvent)
+    {
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent aEvent)
+    {
+        return false;
+    }
+
+    @Override
     public boolean onScroll(MotionEvent aEvent, MotionEvent aEvent2, float aXDistance, float aYDistance)
     {
         if (mGestureImageView != null)
@@ -103,6 +138,11 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
             }
         }
         return true;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent aEvent)
+    {
     }
 
     @Override
@@ -143,35 +183,38 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
     }
 
     @Override
+    public boolean onDoubleTap(MotionEvent aEvent)
+    {
+        if (mGestureImageView != null)
+        {
+            if (mGestureImageView.isInitialized())
+            {
+                if (mGestureImageView.getScale() > mGestureImageView.MIN_SCALE)
+                {
+                    mGestureImageView.zoomToPoint(mGestureImageView.MIN_SCALE, getWidth() / 2, getHeight() / 2);
+                }
+                else if (mGestureImageView.getScale() < mGestureImageView.MED_SCALE)
+                {
+                    mGestureImageView.zoomToPoint(mGestureImageView.MED_SCALE, aEvent.getX(), aEvent.getY());
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
     public boolean onDoubleTapEvent(MotionEvent aEvent)
     {
         return false;
     }
 
-    @Override
-    public void onLongPress(MotionEvent aEvent)
+    public void decrememntCurrentItem()
     {
-    }
-
-    @Override
-    public void onShowPress(MotionEvent aEvent)
-    {
-    }
-
-    @Override
-    public boolean onSingleTapUp(MotionEvent aEvent)
-    {
-        return false;
-    }
-
-    private void fetchGestureImageViewByTag()
-    {
-        mGestureImageView = (GestureImageView) findViewWithTag(ImagePageAdapter.TAG + ":" + getCurrentItem());
-    }
-
-    public void setOnSingleTapListener(OnSingleTapListener singleTapListener)
-    {
-        mSingleTapListener = singleTapListener;
+        int position = getCurrentItem();
+        if (position != 0)
+        {
+            setCurrentItem(position - 1, true);
+        }
     }
 
     public void incrementCurrentItem()
@@ -186,41 +229,9 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
         }
     }
 
-    public void decrememntCurrentItem()
+    public void setOnSingleTapListener(OnSingleTapListener singleTapListener)
     {
-        int position = getCurrentItem();
-        if (position != 0)
-        {
-            setCurrentItem(position - 1, true);
-        }
-    }
-
-    public interface OnSingleTapListener
-    {
-        void onSingleTap();
-    }
-
-    /**
-     * Swaps the X and Y coordinates of your touch event.
-     */
-    private MotionEvent swapXY(MotionEvent ev)
-    {
-        float width = getWidth();
-        float height = getHeight();
-
-        float newX = (ev.getY() / height) * width;
-        float newY = (ev.getX() / width) * height;
-
-        ev.setLocation(newX, newY);
-
-        return ev;
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent ev)
-    {
-        if (mVertical) return super.onTouchEvent(swapXY(ev));
-        else return super.onTouchEvent(ev);
+        mSingleTapListener = singleTapListener;
     }
 
     public boolean toggleVerticalScroller()
@@ -228,21 +239,9 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
         return setScrollerType();
     }
 
-    public boolean setScrollerType()
+    public interface OnSingleTapListener
     {
-        mVertical = SharedPrefs.getChapterScrollVertical();
-
-        if (mVertical)
-        {
-            setPageTransformer(true, new VerticalPageTransformer());
-            setOverScrollMode(OVER_SCROLL_IF_CONTENT_SCROLLS);
-            return true;
-        }
-        else
-        {
-            setPageTransformer(true, null);
-            return false;
-        }
+        void onSingleTap();
     }
 }
 

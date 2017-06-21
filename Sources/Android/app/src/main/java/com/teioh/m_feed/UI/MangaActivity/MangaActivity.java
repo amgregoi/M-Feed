@@ -103,38 +103,6 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
-     * This function saves relevant data that needs to persist between device state changes.
-     *
-     * @param aOutState
-     */
-    @Override
-    protected void onSaveInstanceState(Bundle aOutState)
-    {
-        super.onSaveInstanceState(aOutState);
-        mMangaPresenter.onSaveState(aOutState);
-    }
-
-    /***
-     * This function is called when a fragment or activities onResume() is called in their life cycle chain.
-     */
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-        mMangaPresenter.onResume();
-    }
-
-    /***
-     * This function is called when a fragment or activities onPause() is called in their life cycle chain.
-     */
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
-        mMangaPresenter.onPause();
-    }
-
-    /***
      * This function is called when a fragment or activities onDestroy is called in their life cycle chain.
      */
     @Override
@@ -146,46 +114,15 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
-     * This function inflates an overflow context menu if the current item is being followed.
+     * This function saves relevant data that needs to persist between device state changes.
      *
-     * @param aMenu
-     * @return
+     * @param aOutState
      */
     @Override
-    public boolean onCreateOptionsMenu(Menu aMenu)
+    protected void onSaveInstanceState(Bundle aOutState)
     {
-        if (mFollowButton.getVisibility() == View.GONE)
-        {
-            getMenuInflater().inflate(R.menu.menu_chapter, aMenu);
-            return true;
-        }
-        return false;
-    }
-
-    /***
-     * This function handles overflow menu selections.
-     *
-     * @param aMenuItem
-     * @return
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem aMenuItem)
-    {
-        int lId = aMenuItem.getItemId();
-        if (lId == R.id.remove_list)
-        {
-            //popup dialog
-            DialogFragment newFragment = FYesNoDialog
-                    .getNewInstance(R.string.remove_from_library_title, getString(R.string.remove_from_library_text), 0, true);
-            newFragment.show(getSupportFragmentManager(), "dialog");
-            return true;
-        }
-        else if (lId == R.id.clear_chapters)
-        {
-            mMangaPresenter.clearCachedChapters();
-        }
-
-        return super.onOptionsItemSelected(aMenuItem);
+        super.onSaveInstanceState(aOutState);
+        mMangaPresenter.onSaveState(aOutState);
     }
 
     /***
@@ -208,35 +145,6 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
         setSupportActionBar(mToolBar);
         mToolBar.setNavigationIcon(R.drawable.ic_back);
         mToolBar.setNavigationOnClickListener(v -> onBackPressed());
-    }
-
-    /***
-     * This function returns the activity's context.
-     *
-     * @return
-     */
-    @Override
-    public Context getContext()
-    {
-        return this;
-    }
-
-    /***
-     * This function handles backPress' for the activity.
-     */
-    @Override
-    public void onBackPressed()
-    {
-        if (isTaskRoot())
-        {
-            Intent lIntent = MainActivity.getNewInstance(this);
-            startActivity(lIntent);
-            finish();
-        }
-        else
-        {
-            super.onBackPressed();
-        }
     }
 
     /***
@@ -271,88 +179,6 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
                 invalidateOptionsMenu();
             }
         }
-    }
-
-    /***
-     * This function starts the swipe refresh layout refresh animation.
-     */
-    @Override
-    public void startRefresh()
-    {
-        mSwipeRefresh.setRefreshing(true);
-
-    }
-
-    /***
-     * This function stops the swipe refresh layout refresh animation.
-     */
-    @Override
-    public void stopRefresh()
-    {
-        mSwipeRefresh.post(() -> mSwipeRefresh.setRefreshing(false));
-        mSwipeRefresh.setEnabled(false);
-    }
-
-    /***
-     * This function initializes the swipe refresh layout.
-     */
-    @Override
-    public void setupSwipeRefresh()
-    {
-        mSwipeRefresh.post(() -> mSwipeRefresh.setRefreshing(true));
-    }
-
-    /***
-     * This function hides the chapter list view.
-     */
-    @Override
-    public void hideCoverLayout()
-    {
-        mChapterList.setVisibility(View.GONE);
-    }
-
-    /***
-     * This function shows the chapter list view.
-     */
-    @Override
-    public void showCoverLayout()
-    {
-        mChapterList.setVisibility(View.VISIBLE);
-    }
-
-    /***
-     * This function registers the adapter to the list view.
-     *
-     * @param aAdapter
-     */
-    @Override
-    public void registerAdapter(BaseAdapter aAdapter)
-    {
-        mChapterList.setAdapter(aAdapter);
-    }
-
-    /***
-     * This function initializes the header view.
-     */
-    @Override
-    public void initializeHeaderViews()
-    {
-        mMangaInfoHeader = LayoutInflater.from(getContext()).inflate(R.layout.manga_info_header, null);
-        mChapterHeader = LayoutInflater.from(getContext()).inflate(R.layout.manga_chapter_list_header, null);
-
-        mMangaImage = (ImageView) mMangaInfoHeader.findViewById(R.id.manga_image);
-        mDescriptionText = (TextView) mMangaInfoHeader.findViewById(R.id.mangaDescription);
-        mTitleText = (TextView) mMangaInfoHeader.findViewById(R.id.title);
-        mAuthorText = (TextView) mMangaInfoHeader.findViewById(R.id.author);
-        mArtistText = (TextView) mMangaInfoHeader.findViewById(R.id.artist);
-        mGenresText = (TextView) mMangaInfoHeader.findViewById(R.id.genre);
-        mAlternateText = (TextView) mMangaInfoHeader.findViewById(R.id.alternate);
-        mStatusText = (TextView) mMangaInfoHeader.findViewById(R.id.status);
-
-
-        mFollowButton = (Button) mMangaInfoHeader.findViewById(R.id.followButton);
-        mReadingStatusButton = (Button) mMangaInfoHeader.findViewById(R.id.read_status_button);
-        mContinueReadingButton = (Button) mMangaInfoHeader.findViewById(R.id.continue_reading_button);
     }
 
     /***
@@ -431,6 +257,30 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
+     * This function initializes the header view.
+     */
+    @Override
+    public void initializeHeaderViews()
+    {
+        mMangaInfoHeader = LayoutInflater.from(getContext()).inflate(R.layout.manga_info_header, null);
+        mChapterHeader = LayoutInflater.from(getContext()).inflate(R.layout.manga_chapter_list_header, null);
+
+        mMangaImage = (ImageView) mMangaInfoHeader.findViewById(R.id.manga_image);
+        mDescriptionText = (TextView) mMangaInfoHeader.findViewById(R.id.mangaDescription);
+        mTitleText = (TextView) mMangaInfoHeader.findViewById(R.id.title);
+        mAuthorText = (TextView) mMangaInfoHeader.findViewById(R.id.author);
+        mArtistText = (TextView) mMangaInfoHeader.findViewById(R.id.artist);
+        mGenresText = (TextView) mMangaInfoHeader.findViewById(R.id.genre);
+        mAlternateText = (TextView) mMangaInfoHeader.findViewById(R.id.alternate);
+        mStatusText = (TextView) mMangaInfoHeader.findViewById(R.id.status);
+
+
+        mFollowButton = (Button) mMangaInfoHeader.findViewById(R.id.followButton);
+        mReadingStatusButton = (Button) mMangaInfoHeader.findViewById(R.id.read_status_button);
+        mContinueReadingButton = (Button) mMangaInfoHeader.findViewById(R.id.continue_reading_button);
+    }
+
+    /***
      * This function shows the failed to load view.
      */
     @Override
@@ -438,6 +288,123 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     {
         mFailedToLoad.setVisibility(View.VISIBLE);
         mChapterList.setVisibility(View.GONE);
+    }
+
+    /***
+     * This function handles backPress' for the activity.
+     */
+    @Override
+    public void onBackPressed()
+    {
+        if (isTaskRoot())
+        {
+            Intent lIntent = MainActivity.getNewInstance(this);
+            startActivity(lIntent);
+            finish();
+        }
+        else
+        {
+            super.onBackPressed();
+        }
+    }
+
+    /***
+     * This function clears the Glide cache when low on memory.
+     */
+    @Override
+    public void onLowMemory()
+    {
+        super.onLowMemory();
+        Glide.get(this).clearMemory();
+    }
+
+    /***
+     * This function is called when a fragment or activities onPause() is called in their life cycle chain.
+     */
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        mMangaPresenter.onPause();
+    }
+
+    /***
+     * This function is called when a fragment or activities onResume() is called in their life cycle chain.
+     */
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        mMangaPresenter.onResume();
+    }
+
+    /***
+     * This function returns the activity's context.
+     *
+     * @return
+     */
+    @Override
+    public Context getContext()
+    {
+        return this;
+    }
+
+    /***
+     * This function starts the swipe refresh layout refresh animation.
+     */
+    @Override
+    public void startRefresh()
+    {
+        mSwipeRefresh.setRefreshing(true);
+
+    }
+
+    /***
+     * This function stops the swipe refresh layout refresh animation.
+     */
+    @Override
+    public void stopRefresh()
+    {
+        mSwipeRefresh.post(() -> mSwipeRefresh.setRefreshing(false));
+        mSwipeRefresh.setEnabled(false);
+    }
+
+    /***
+     * This function initializes the swipe refresh layout.
+     */
+    @Override
+    public void setupSwipeRefresh()
+    {
+        mSwipeRefresh.post(() -> mSwipeRefresh.setRefreshing(true));
+    }
+
+    /***
+     * This function hides the chapter list view.
+     */
+    @Override
+    public void hideCoverLayout()
+    {
+        mChapterList.setVisibility(View.GONE);
+    }
+
+    /***
+     * This function shows the chapter list view.
+     */
+    @Override
+    public void showCoverLayout()
+    {
+        mChapterList.setVisibility(View.VISIBLE);
+    }
+
+    /***
+     * This function registers the adapter to the list view.
+     *
+     * @param aAdapter
+     */
+    @Override
+    public void registerAdapter(BaseAdapter aAdapter)
+    {
+        mChapterList.setAdapter(aAdapter);
     }
 
     /***
@@ -465,7 +432,6 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
         mChapterList.setSelection(1);
     }
 
-
     /***
      * This function trims the Glide cache when low on memory.
      *
@@ -479,20 +445,54 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     }
 
     /***
-     * This function clears the Glide cache when low on memory.
+     * This function inflates an overflow context menu if the current item is being followed.
+     *
+     * @param aMenu
+     * @return
      */
     @Override
-    public void onLowMemory()
+    public boolean onCreateOptionsMenu(Menu aMenu)
     {
-        super.onLowMemory();
-        Glide.get(this).clearMemory();
+        if (mFollowButton.getVisibility() == View.GONE)
+        {
+            getMenuInflater().inflate(R.menu.menu_chapter, aMenu);
+            return true;
+        }
+        return false;
+    }
+
+    /***
+     * This function handles overflow menu selections.
+     *
+     * @param aMenuItem
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem aMenuItem)
+    {
+        int lId = aMenuItem.getItemId();
+        if (lId == R.id.remove_list)
+        {
+            //popup dialog
+            DialogFragment newFragment = FYesNoDialog
+                    .getNewInstance(R.string.remove_from_library_title, getString(R.string.remove_from_library_text), 0, true);
+            newFragment.show(getSupportFragmentManager(), "dialog");
+            return true;
+        }
+        else if (lId == R.id.clear_chapters)
+        {
+            mMangaPresenter.clearCachedChapters();
+        }
+
+        return super.onOptionsItemSelected(aMenuItem);
     }
 
     /***
      * This function unfollows the current item if the user verifies they want this by the YesNo dialog.
      * @param aAction
      */
-    @Override public void positive(int aAction)
+    @Override
+    public void positive(int aAction)
     {
         // After Ok code.
         mFollowButton.setVisibility(View.VISIBLE);
@@ -507,7 +507,8 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
      * No action is taken.
      * @param aAction
      */
-    @Override public void negative(int aAction)
+    @Override
+    public void negative(int aAction)
     {
         //Do nothing
     }

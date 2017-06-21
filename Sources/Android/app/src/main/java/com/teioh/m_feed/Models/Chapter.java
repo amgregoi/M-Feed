@@ -6,13 +6,25 @@ import android.os.Parcelable;
 public class Chapter implements Parcelable
 {
     public final static String TAG = "CHAPTER";
+    public static final Creator<Chapter> CREATOR = new Creator<Chapter>()
+    {
+        @Override
+        public Chapter createFromParcel(Parcel in)
+        {
+            return new Chapter(in);
+        }
 
+        @Override
+        public Chapter[] newArray(int size)
+        {
+            return new Chapter[size];
+        }
+    };
     private String url;
     private String date;
     private String mangaTitle;
     private String chapterTitle;
     private int chapterNumber;
-
     private int currentPage;
     private int totalPages;
 
@@ -45,6 +57,17 @@ public class Chapter implements Parcelable
         chapterTitle = aChapterTitle;
     }
 
+    protected Chapter(Parcel aIn)
+    {
+        url = aIn.readString();
+        date = aIn.readString();
+        mangaTitle = aIn.readString();
+        chapterTitle = aIn.readString();
+        chapterNumber = aIn.readInt();
+        currentPage = aIn.readInt();
+        totalPages = aIn.readInt();
+    }
+
     @Override
     public int describeContents()
     {
@@ -62,32 +85,6 @@ public class Chapter implements Parcelable
         aDest.writeInt(currentPage);
         aDest.writeInt(totalPages);
     }
-
-    protected Chapter(Parcel aIn)
-    {
-        url = aIn.readString();
-        date = aIn.readString();
-        mangaTitle = aIn.readString();
-        chapterTitle = aIn.readString();
-        chapterNumber = aIn.readInt();
-        currentPage = aIn.readInt();
-        totalPages = aIn.readInt();
-    }
-
-    public static final Creator<Chapter> CREATOR = new Creator<Chapter>()
-    {
-        @Override
-        public Chapter createFromParcel(Parcel in)
-        {
-            return new Chapter(in);
-        }
-
-        @Override
-        public Chapter[] newArray(int size)
-        {
-            return new Chapter[size];
-        }
-    };
 
     public String getChapterUrl()
     {

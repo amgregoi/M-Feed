@@ -13,8 +13,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -69,11 +67,6 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     private IMain.ActivityPresenter mMainPresenter;
     private GoogleApiClient mGoogleApiClient;
 
-    public IMain.ActivityPresenter getPresenter()
-    {
-        return mMainPresenter;
-    }
-
     /***
      * This function creates and returns a new intent for this activity.
      *
@@ -84,6 +77,11 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     {
         Intent lIntent = new Intent(aContext, MainActivity.class);
         return lIntent;
+    }
+
+    public IMain.ActivityPresenter getPresenter()
+    {
+        return mMainPresenter;
     }
 
     /***
@@ -221,17 +219,6 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     {
         mMainPresenter.updateQueryChange(aQueryText);
         return false;
-    }
-
-    /***
-     * This function returns the activity's context.
-     *
-     * @return
-     */
-    @Override
-    public Context getContext()
-    {
-        return this;
     }
 
     /***
@@ -432,6 +419,17 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
                                                 aParent.invalidateViews();
                                                 return true;
                                             });
+    }
+
+    /***
+     * This function returns the activity's context.
+     *
+     * @return
+     */
+    @Override
+    public Context getContext()
+    {
+        return this;
     }
 
     /***

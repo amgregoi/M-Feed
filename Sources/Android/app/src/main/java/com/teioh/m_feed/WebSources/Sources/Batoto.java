@@ -1,11 +1,9 @@
 package com.teioh.m_feed.WebSources.Sources;
 
-import com.squareup.okhttp.Headers;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.Utils.MangaDB;
 import com.teioh.m_feed.Utils.MangaLogger;
-import com.teioh.m_feed.Utils.NetworkService;
 import com.teioh.m_feed.WebSources.RequestWrapper;
 import com.teioh.m_feed.WebSources.SourceBase;
 
@@ -22,16 +20,54 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import rx.Observable;
 import rx.schedulers.Schedulers;
 
 public class Batoto extends SourceBase
 {
     final public static String TAG = Batoto.class.getSimpleName();
-    final public static String SourceKey = "Batoto";
 
-    final private static String mBaseUrl = "http://bato.to/";
-    final private static String mUpdatesUrl = "http://bato.to/search_ajax?order_cond=update&order=desc&p=";
+    final public String SourceKey = "Batoto";
+    final private String mBaseUrl = "http://bato.to/";
+    final private String mUpdatesUrl = "http://bato.to/search_ajax?order_cond=update&order=desc&p=";
+    final private String mGenres[] = {
+            "4-Koma",
+            "Action",
+            "Adventure",
+            "Award Winning",
+            "Comedy",
+            "Cooking",
+            "Doujinshi",
+            "Drama",
+            "Ecchi",
+            "Fantasy",
+            "Gender Bender",
+            "Harem",
+            "Historical",
+            "Horror",
+            "Josei",
+            "Martial Arts",
+            "Mecha",
+            "Medical",
+            "Music",
+            "Mystery",
+            "Oneshot",
+            "Psychological",
+            "Romance",
+            "School Life",
+            "Sci-fi",
+            "Seinen",
+            "Shoujo",
+            "Shoujo Ai",
+            "Shounen",
+            "Shounen Ai",
+            "Slice of Life",
+            "Smut", "Sports",
+            "Supernatural",
+            "Tragedy",
+            "Webtoon",
+            "Yaoi",
+            "Yuri"
+    };
 
     /**
      * {@inheritDoc}
@@ -40,6 +76,15 @@ public class Batoto extends SourceBase
     public String getRecentUpdatesUrl()
     {
         return mUpdatesUrl;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String[] getGenres()
+    {
+        return mGenres;
     }
 
     /**
@@ -86,6 +131,73 @@ public class Batoto extends SourceBase
         MangaLogger.logInfo(TAG, "Finished parsing recent updates");
 
         return lMangaList;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Manga parseResponseToManga(final RequestWrapper aRequest, final String aResponseBody)
+    {
+        Document lParsedDocument = Jsoup.parse(aResponseBody);
+
+        Element lArtistElement = lParsedDocument.select("a[href^=http://bato.to/search?artist_name]").first();
+        Element lDescriptionElement = lParsedDocument.select("tr").get(6);
+        Elements lGenreElements = lParsedDocument.select("img[src=http://bato.to/forums/public/style_images/master/bullet_black.png]");
+        Element lThumbnailElement = lParsedDocument.select("img[src^=http://img.bato.to/forums/uploads/]").first();
+
+        Manga lNewManga = MangaDB.getInstance().getManga(aRequest.getMangaUrl());
+
+        if (lNewManga == null) lNewManga = new Manga(aRequest.getMangaTitle(), aRequest.getMangaUrl(), SourceKey);
+
+        if (lArtistElement != null)
+        {
+            String lArtist = lArtistElement.text();
+            lNewManga.setArtist(lArtist);
+            lNewManga.setAuthor(lArtist);
+        }
+
+        if (lDescriptionElement != null)
+        {
+            String lDescription = lDescriptionElement.text().substring("Description:".length()).trim();
+            lNewManga.setDescription(lDescription);
+        }
+
+        if (lGenreElements != null)
+        {
+            String lGenres = "";
+            for (int i = 0; i < lGenreElements.size(); i++)
+            {
+                String lCurrentGenre = lGenreElements.get(i).attr("alt");
+
+                if (i < lGenreElements.size() - 1)
+                {
+                    lGenres += lCurrentGenre + ", ";
+                }
+                else
+                {
+                    lGenres += lCurrentGenre;
+                }
+            }
+
+            lNewManga.setmGenre(lGenres);
+        }
+
+        if (lThumbnailElement != null)
+        {
+            String lThumbnail = lThumbnailElement.attr("src");
+            lNewManga.setPicUrl(lThumbnail);
+        }
+
+        boolean lStatus = aResponseBody.contains("<td>Complete</td>");
+        if (lStatus) lNewManga.setStatus("Complete");
+        else lNewManga.setStatus("Ongoing");
+
+        lNewManga.setInitialized(1);
+
+        MangaDB.getInstance().putManga(lNewManga);
+        return lNewManga;
+
     }
 
     /**
@@ -176,73 +288,6 @@ public class Batoto extends SourceBase
         Element lImageElement = lParsedDocument.getElementById("comic_page");
 
         return lImageElement.attr("src");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Manga parseResponseToManga(final RequestWrapper aRequest, final String aResponseBody)
-    {
-        Document lParsedDocument = Jsoup.parse(aResponseBody);
-
-        Element lArtistElement = lParsedDocument.select("a[href^=http://bato.to/search?artist_name]").first();
-        Element lDescriptionElement = lParsedDocument.select("tr").get(6);
-        Elements lGenreElements = lParsedDocument.select("img[src=http://bato.to/forums/public/style_images/master/bullet_black.png]");
-        Element lThumbnailElement = lParsedDocument.select("img[src^=http://img.bato.to/forums/uploads/]").first();
-
-        Manga lNewManga = MangaDB.getInstance().getManga(aRequest.getMangaUrl());
-
-        if (lNewManga == null) lNewManga = new Manga(aRequest.getMangaTitle(), aRequest.getMangaUrl(), SourceKey);
-
-        if (lArtistElement != null)
-        {
-            String lArtist = lArtistElement.text();
-            lNewManga.setArtist(lArtist);
-            lNewManga.setAuthor(lArtist);
-        }
-
-        if (lDescriptionElement != null)
-        {
-            String lDescription = lDescriptionElement.text().substring("Description:".length()).trim();
-            lNewManga.setDescription(lDescription);
-        }
-
-        if (lGenreElements != null)
-        {
-            String lGenres = "";
-            for (int i = 0; i < lGenreElements.size(); i++)
-            {
-                String lCurrentGenre = lGenreElements.get(i).attr("alt");
-
-                if (i < lGenreElements.size() - 1)
-                {
-                    lGenres += lCurrentGenre + ", ";
-                }
-                else
-                {
-                    lGenres += lCurrentGenre;
-                }
-            }
-
-            lNewManga.setmGenre(lGenres);
-        }
-
-        if (lThumbnailElement != null)
-        {
-            String lThumbnail = lThumbnailElement.attr("src");
-            lNewManga.setPicUrl(lThumbnail);
-        }
-
-        boolean lStatus = aResponseBody.contains("<td>Complete</td>");
-        if (lStatus) lNewManga.setStatus("Complete");
-        else lNewManga.setStatus("Ongoing");
-
-        lNewManga.setInitialized(1);
-
-        MangaDB.getInstance().putManga(lNewManga);
-        return lNewManga;
-
     }
 
 }

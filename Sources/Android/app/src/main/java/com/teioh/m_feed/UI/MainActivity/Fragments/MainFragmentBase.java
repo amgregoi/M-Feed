@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.os.TraceCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +11,6 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.l4digital.fastscroll.FastScrollRecyclerView;
-import com.l4digital.fastscroll.FastScroller;
-import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
@@ -31,10 +28,23 @@ import butterknife.ButterKnife;
  */
 public abstract class MainFragmentBase extends Fragment implements IMain.FragmentView
 {
-    @Bind(R.id.manga_recycle_view) FastScrollRecyclerView mGridView;
-
     protected IMain.FragmentPresenter mFragmentPresenter;
     protected Listeners.MainFragmentListener mListener;
+    @Bind(R.id.manga_recycle_view) FastScrollRecyclerView mGridView;
+
+    /***
+     * This function is called in the fragment lifecycle
+     *
+     * @param aContext
+     */
+    @Override
+    public void onAttach(Context aContext)
+    {
+        super.onAttach(aContext);
+
+        if (aContext instanceof Listeners.MainFragmentListener) mListener = (Listeners.MainFragmentListener) aContext;
+        else throw new ClassCastException(aContext.toString() + " must implement Listeners.MainFragmentListener");
+    }
 
     /***
      * This function initializes the view of the fragment.
@@ -62,6 +72,16 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
+     * This function is called in the fragment lifecycle
+     */
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        mFragmentPresenter.onResume();
+    }
+
+    /***
      * This function saves the state of the fragment when a transition is invoked.
      *
      * @param aRestore
@@ -77,20 +97,20 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
      * This function is called in the fragment lifecycle
      */
     @Override
-    public void onResume()
-    {
-        super.onResume();
-        mFragmentPresenter.onResume();
-    }
-
-    /***
-     * This function is called in the fragment lifecycle
-     */
-    @Override
     public void onPause()
     {
         super.onPause();
         mFragmentPresenter.onPause();
+    }
+
+    /***
+     * This function clears the Glide cache to cleanup memory when necessary.
+     */
+    @Override
+    public void onLowMemory()
+    {
+        super.onLowMemory();
+        Glide.get(getContext()).clearMemory();
     }
 
     /***
@@ -102,30 +122,6 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
         super.onDestroyView();
         mFragmentPresenter.onDestroy();
         ButterKnife.unbind(this);
-    }
-
-    /***
-     * This function is called in the fragment lifecycle
-     *
-     * @param aContext
-     */
-    @Override
-    public void onAttach(Context aContext)
-    {
-        super.onAttach(aContext);
-
-        if (aContext instanceof Listeners.MainFragmentListener) mListener = (Listeners.MainFragmentListener) aContext;
-        else throw new ClassCastException(aContext.toString() + " must implement Listeners.MainFragmentListener");
-    }
-
-    /***
-     * This function clears the Glide cache to cleanup memory when necessary.
-     */
-    @Override
-    public void onLowMemory()
-    {
-        super.onLowMemory();
-        Glide.get(getContext()).clearMemory();
     }
 
     /***

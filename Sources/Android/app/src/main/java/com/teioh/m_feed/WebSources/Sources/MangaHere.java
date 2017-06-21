@@ -20,10 +20,45 @@ import rx.schedulers.Schedulers;
 public class MangaHere extends SourceBase
 {
     final public static String TAG = MangaHere.class.getSimpleName();
-    final public String SourceKey = "MangaHere";
 
-    final String mBaseUrl = "http://mangahere.co/";
-    final String mUpdatesUrl = "http://mangahere.co/latest/";
+    final private String SourceKey = "MangaHere";
+    final private String mBaseUrl = "http://mangahere.co/";
+    final private String mUpdatesUrl = "http://mangahere.co/latest/";
+    final private String mGenres[] = {
+            "Action",
+            "Adventure",
+            "Comedy",
+            "Doujinshi",
+            "Drama",
+            "Ecchi",
+            "Fantasy",
+            "Gender Bender",
+            "Harem",
+            "Historical",
+            "Horror",
+            "Josei",
+            "Martial Arts",
+            "Mature",
+            "Mecha",
+            "Mystery",
+            "One Shot",
+            "Psychological",
+            "Romance",
+            "School Life",
+            "Sci-fi",
+            "Seinen",
+            "Shoujo",
+            "Shoujo Ai",
+            "Shounen",
+            "Shounen Ai",
+            "Slice of Life",
+            "Sports",
+            "Supernatural",
+            "Tragedy",
+            "Yaoi",
+            "Yuri"
+    };
+
 
     /**
      * {@inheritDoc}
@@ -37,6 +72,15 @@ public class MangaHere extends SourceBase
     /**
      * {@inheritDoc}
      */
+    @Override
+    public String[] getGenres()
+    {
+        return mGenres;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public List<Manga> parseResponseToRecentList(final String aResponseBody)
     {
         Document lParsedDocument = Jsoup.parse(aResponseBody);
@@ -45,52 +89,6 @@ public class MangaHere extends SourceBase
         List<Manga> lMangaList = resolveMangaFromRecentDocument(lParsedDocument);
 
         return lMangaList;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<Chapter> parseResponseToChapters(RequestWrapper aRequest, String aResponseBody)
-    {
-        Document lParsedDocument = Jsoup.parse(aResponseBody);
-        Elements lUpdates = lParsedDocument.select("div.detail_list").select("ul").not("ul.tab_comment.clearfix");
-        lParsedDocument = Jsoup.parse(lUpdates.toString());
-        List<Chapter> lChapterList = resolveChaptersFromParsedDocument(lParsedDocument, aRequest.getMangaTitle());
-
-        return lChapterList;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<String> parseResponseToPageUrls(final String aResponseBody)
-    {
-        List<String> lPageUrls = new ArrayList<>();
-
-        //get base url for images
-        Document lParsedDocumentForImage = Jsoup.parse(aResponseBody);
-        Elements lImageUpdates = lParsedDocumentForImage.select("select.wid60").first().select("option");
-
-        for (Element iUrl : lImageUpdates)
-        {
-            lPageUrls.add(iUrl.attr("value"));
-        }
-
-        return lPageUrls;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String parseResponseToImageUrls(final String aResponseBody, final String aResponseUrl)
-    {
-        Document lParsedDocumentForImage = Jsoup.parse(aResponseBody);
-        String lUrl = lParsedDocumentForImage.select("section#viewer.read_img").select("img#image").attr("src");
-
-        return lUrl;
     }
 
     /**
@@ -166,6 +164,82 @@ public class MangaHere extends SourceBase
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Chapter> parseResponseToChapters(RequestWrapper aRequest, String aResponseBody)
+    {
+        Document lParsedDocument = Jsoup.parse(aResponseBody);
+        Elements lUpdates = lParsedDocument.select("div.detail_list").select("ul").not("ul.tab_comment.clearfix");
+        lParsedDocument = Jsoup.parse(lUpdates.toString());
+        List<Chapter> lChapterList = resolveChaptersFromParsedDocument(lParsedDocument, aRequest.getMangaTitle());
+
+        return lChapterList;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<String> parseResponseToPageUrls(final String aResponseBody)
+    {
+        List<String> lPageUrls = new ArrayList<>();
+
+        //get base url for images
+        Document lParsedDocumentForImage = Jsoup.parse(aResponseBody);
+        Elements lImageUpdates = lParsedDocumentForImage.select("select.wid60").first().select("option");
+
+        for (Element iUrl : lImageUpdates)
+        {
+            lPageUrls.add(iUrl.attr("value"));
+        }
+
+        return lPageUrls;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String parseResponseToImageUrls(final String aResponseBody, final String aResponseUrl)
+    {
+        Document lParsedDocumentForImage = Jsoup.parse(aResponseBody);
+        String lUrl = lParsedDocumentForImage.select("section#viewer.read_img").select("img#image").attr("src");
+
+        return lUrl;
+    }
+
+    /***
+     * This helper function resolves chapters from the specified document.
+     * Parent - parseResponseToChapters();
+     *
+     * @param aParsedDocument
+     * @param aTitle
+     * @return
+     */
+    private List<Chapter> resolveChaptersFromParsedDocument(final Document aParsedDocument, final String aTitle)
+    {
+        List<Chapter> lChapterList = new ArrayList<>();
+        Elements lChapterElements = aParsedDocument.getElementsByTag("li");
+        int lNumChapters = lChapterElements.size();
+
+        for (Element iChapterElement : lChapterElements)
+        {
+            String lChapterUrl = iChapterElement.select("a").attr("href");
+            String lChapterTitle = iChapterElement.select("span.left").text();
+            String lChapterDate = iChapterElement.select("span.right").text();
+
+            Chapter lCurChapter = new Chapter(lChapterUrl, aTitle, lChapterTitle, lChapterDate, lNumChapters);
+            lNumChapters--;
+
+            lChapterList.add(lCurChapter);
+        }
+
+        MangaLogger.logInfo(TAG, " Finished parsing chapter list (" + aTitle + ")");
+        return lChapterList;
+    }
+
     /***
      * This helper function resolves manga objects from the specified document.
      * Parent - parseResponseToRecentList
@@ -207,35 +281,5 @@ public class MangaHere extends SourceBase
 
         if (lMangaList.size() == 0) return null;
         return lMangaList;
-    }
-
-    /***
-     * This helper function resolves chapters from the specified document.
-     * Parent - parseResponseToChapters();
-     *
-     * @param aParsedDocument
-     * @param aTitle
-     * @return
-     */
-    private List<Chapter> resolveChaptersFromParsedDocument(final Document aParsedDocument, final String aTitle)
-    {
-        List<Chapter> lChapterList = new ArrayList<>();
-        Elements lChapterElements = aParsedDocument.getElementsByTag("li");
-        int lNumChapters = lChapterElements.size();
-
-        for (Element iChapterElement : lChapterElements)
-        {
-            String lChapterUrl = iChapterElement.select("a").attr("href");
-            String lChapterTitle = iChapterElement.select("span.left").text();
-            String lChapterDate = iChapterElement.select("span.right").text();
-
-            Chapter lCurChapter = new Chapter(lChapterUrl, aTitle, lChapterTitle, lChapterDate, lNumChapters);
-            lNumChapters--;
-
-            lChapterList.add(lCurChapter);
-        }
-
-        MangaLogger.logInfo(TAG, " Finished parsing chapter list (" + aTitle + ")");
-        return lChapterList;
     }
 }

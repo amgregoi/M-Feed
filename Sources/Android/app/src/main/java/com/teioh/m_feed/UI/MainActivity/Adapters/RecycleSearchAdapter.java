@@ -6,7 +6,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.l4digital.fastscroll.FastScroller;
 import com.teioh.m_feed.BuildConfig;
@@ -28,8 +26,6 @@ import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.Utils.MangaLogger;
-
-import org.jsoup.helper.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -117,18 +113,20 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
              .transition(new GenericTransitionOptions<>().transition(android.R.anim.fade_in))
              .into(new BitmapImageViewTarget(aHolder.mImageView)
              {
-                 @Override public void onResourceReady(Bitmap resource, Transition<? super Bitmap> animation)
-                 {
-                     super.onResourceReady(resource, animation);
-                     aHolder.mImageView.setScaleType(ImageView.ScaleType.FIT_XY);
-
-                 }
-
-                 @Override public void onLoadFailed(@Nullable Drawable errorDrawable)
+                 @Override
+                 public void onLoadFailed(@Nullable Drawable errorDrawable)
                  {
                      super.onLoadFailed(errorDrawable);
                      MangaLogger
                              .logError(TAG, errorDrawable.toString(), "url=" + lMangaItem.getPicUrl());
+                 }
+
+                 @Override
+                 public void onResourceReady(Bitmap resource, Transition<? super Bitmap> animation)
+                 {
+                     super.onResourceReady(resource, animation);
+                     aHolder.mImageView.setScaleType(ImageView.ScaleType.FIT_XY);
+
                  }
              });
 
@@ -261,16 +259,6 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
         return mOriginalData;
     }
 
-    /**
-     * This function returns the adapter filter object.
-     *
-     * @return
-     */
-    public Filter getFilter()
-    {
-        return mFilter;
-    }
-
     /***
      * This function returns the original set of data of the adapter.
      *
@@ -293,6 +281,16 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
         mFilteredData = new ArrayList<>(aData);
         //
         getFilter().filter(mFilter.mLastQuery);
+    }
+
+    /**
+     * This function returns the adapter filter object.
+     *
+     * @return
+     */
+    public Filter getFilter()
+    {
+        return mFilter;
     }
 
     /***
@@ -325,7 +323,8 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
      * @param position The current position in the recycler view
      * @return The character to the be displayed in the fast scroll bubble
      */
-    @Override public String getSectionText(int position)
+    @Override
+    public String getSectionText(int position)
     {
         char lChar = mFilteredData.get(position).getTitle().charAt(0);
         if (!Character.isLetterOrDigit(lChar))

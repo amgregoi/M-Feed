@@ -26,15 +26,20 @@ import rx.schedulers.Schedulers;
 
 public abstract class SourceBase
 {
-    private String TAG = "temp";
-    //This is temporary, will be moved back to MangaJoy at a later time when I have lists for all sources
-    final public String genres[] = {"Action", "Adult", "Adventure", "Comedy", "Doujinshi", "Drama", "Ecchi", "Fantasy", "Gender Bender", "Harem", "Historical", "Horror", "Josei", "Lolicon", "Manga", "Manhua", "Manhwa", "Martial Arts", "Mature", "Mecha", "Mystery", "One shot", "Psychological", "Romance", "School Life", "Sci fi", "Seinen", "Shotacon", "Shoujo", "Shoujo Ai", "Shounen", "Shounen Ai", "Slice of Life", "Smut", "Sports", "Supernatural", "Tragedy", "Yaoi", "Yuri"};
+    private String TAG = SourceBase.class.getSimpleName();
 
     /***
-     * This function retrieves the sources recent update page url
+     * This function retrieves the sources recent update page url.
      * @return
      */
     public abstract String getRecentUpdatesUrl();
+
+    /***
+     * This function retrieves the array of genres a source supports.
+     *
+     * @return
+     */
+    public abstract String[] getGenres();
 
     /***
      * This function pareses the response body and builds the Recent Manga list.

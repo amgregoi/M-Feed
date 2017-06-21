@@ -35,14 +35,10 @@ public class FilterDialogFragment extends DialogFragment
 {
     public final static String TAG = FilterDialogFragment.class.getSimpleName();
 
-    @Bind(R.id.genreList)
-    GridView mGenreGridView;
-    @Bind(R.id.genre_search_button)
-    Button mSearchButton;
-    @Bind(R.id.genre_cancel_button)
-    Button mCancelButton;
-    @Bind(R.id.genre_clear_button)
-    Button mClearButton;
+    @Bind(R.id.genreList) GridView mGenreGridView;
+    @Bind(R.id.genre_search_button) Button mSearchButton;
+    @Bind(R.id.genre_cancel_button) Button mCancelButton;
+    @Bind(R.id.genre_clear_button) Button mClearButton;
 
     private GenreListAdapter mAdapter;
 
@@ -71,7 +67,7 @@ public class FilterDialogFragment extends DialogFragment
         View lView = aInflater.inflate(R.layout.main_search_dialog, aContainer, false);
         ButterKnife.bind(this, lView);
 
-        mAdapter = new GenreListAdapter(getContext(), new ArrayList<>(Arrays.asList(new SourceFactory().getSource().genres)));
+        mAdapter = new GenreListAdapter(getContext(), new ArrayList<>(Arrays.asList(new SourceFactory().getSource().getGenres())));
         registerAdapter(mAdapter);
 
         getDialog().setCanceledOnTouchOutside(true);
@@ -109,7 +105,8 @@ public class FilterDialogFragment extends DialogFragment
         mClearButton.setOnClickListener(aView ->
                                         {
                                             mAdapter = new GenreListAdapter(getContext(), new ArrayList<>(Arrays.asList(new SourceFactory()
-                                                                                                                                .getSource().genres)));
+                                                                                                                                .getSource()
+                                                                                                                                .getGenres())));
                                             registerAdapter(mAdapter);
                                         });
     }

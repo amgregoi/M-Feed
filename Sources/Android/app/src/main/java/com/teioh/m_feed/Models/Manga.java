@@ -6,13 +6,25 @@ import android.os.Parcelable;
 public class Manga implements Parcelable
 {
     public final static String TAG = "MANGA";
+    public static final Creator<Manga> CREATOR = new Creator<Manga>()
+    {
+        @Override
+        public Manga createFromParcel(Parcel aIn)
+        {
+            return new Manga(aIn);
+        }
 
+        @Override
+        public Manga[] newArray(int aSize)
+        {
+            return new Manga[aSize];
+        }
+    };
     private Long _id;
     private String title;
     private String image;
     private String link;
     private String description;
-
     private String author;
     private String artist;
     private String genres;
@@ -74,46 +86,6 @@ public class Manga implements Parcelable
         initialized = aIn.readInt();
     }
 
-    @Override
-    public int describeContents()
-    {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel aDest, int aFlags)
-    {
-        aDest.writeLong(_id);
-        aDest.writeString(title);
-        aDest.writeString(image);
-        aDest.writeString(link);
-        aDest.writeString(description);
-
-        aDest.writeString(author);
-        aDest.writeString(artist);
-        aDest.writeString(genres);
-        aDest.writeString(status);
-        aDest.writeString(source);
-        aDest.writeString(alternate);
-        aDest.writeInt(following);
-        aDest.writeInt(initialized);
-    }
-
-    public static final Creator<Manga> CREATOR = new Creator<Manga>()
-    {
-        @Override
-        public Manga createFromParcel(Parcel aIn)
-        {
-            return new Manga(aIn);
-        }
-
-        @Override
-        public Manga[] newArray(int aSize)
-        {
-            return new Manga[aSize];
-        }
-    };
-
     public long get_id()
     {
         return _id;
@@ -124,11 +96,6 @@ public class Manga implements Parcelable
         _id = aId;
     }
 
-    public String toString()
-    {
-        return title;
-    }
-
     public String getTitle()
     {
         return title;
@@ -137,16 +104,6 @@ public class Manga implements Parcelable
     public void setTitle(String aTitle)
     {
         title = aTitle;
-    }
-
-    public String getDescription()
-    {
-        return description;
-    }
-
-    public void setDescription(String aDesc)
-    {
-        description = aDesc;
     }
 
     public String getPicUrl()
@@ -164,9 +121,14 @@ public class Manga implements Parcelable
         return link;
     }
 
-    public void setMangaUrl(String aUrl)
+    public String getDescription()
     {
-        link = aUrl;
+        return description;
+    }
+
+    public void setDescription(String aDesc)
+    {
+        description = aDesc;
     }
 
     public String getAuthor()
@@ -229,25 +191,18 @@ public class Manga implements Parcelable
         alternate = aAlternate;
     }
 
-    public boolean getFollowing()
+    public String getRecentChapter()
     {
-        if (following > 0) return true;
-        return false;
+        return recentChapter;
+    }
+
+    public void setRecentChapter(String aRecentChapter)
+    {
+        recentChapter = aRecentChapter;
     }
 
     public int getFollowingValue()
     {
-        return following;
-    }
-
-    /***
-     *
-     * @param lVal 0 - not following, ... finish describing values
-     * @return
-     */
-    public int setFollowing(int lVal)
-    {
-        following = lVal;
         return following;
     }
 
@@ -262,6 +217,53 @@ public class Manga implements Parcelable
     }
 
     @Override
+    public int describeContents()
+    {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel aDest, int aFlags)
+    {
+        aDest.writeLong(_id);
+        aDest.writeString(title);
+        aDest.writeString(image);
+        aDest.writeString(link);
+        aDest.writeString(description);
+
+        aDest.writeString(author);
+        aDest.writeString(artist);
+        aDest.writeString(genres);
+        aDest.writeString(status);
+        aDest.writeString(source);
+        aDest.writeString(alternate);
+        aDest.writeInt(following);
+        aDest.writeInt(initialized);
+    }
+
+    public void setMangaUrl(String aUrl)
+    {
+        link = aUrl;
+    }
+
+    public boolean getFollowing()
+    {
+        if (following > 0) return true;
+        return false;
+    }
+
+    /***
+     *
+     * @param lVal 0 - not following, ... finish describing values
+     * @return
+     */
+    public int setFollowing(int lVal)
+    {
+        following = lVal;
+        return following;
+    }
+
+    @Override
     public boolean equals(Object aObject)
     {
         boolean lCompare = false;
@@ -272,13 +274,8 @@ public class Manga implements Parcelable
         return lCompare;
     }
 
-    public String getRecentChapter()
+    public String toString()
     {
-        return recentChapter;
-    }
-
-    public void setRecentChapter(String aRecentChapter)
-    {
-        recentChapter = aRecentChapter;
+        return title;
     }
 }

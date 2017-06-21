@@ -166,18 +166,6 @@ public class MangaDB extends SQLiteOpenHelper
         cupboard().withDatabase(getWritableDatabase()).update(Manga.class, lValues, mMangaTable.Title + " = ?", aTitle);
     }
 
-    /***
-     * This function updates the follow status of an item in the database (unfollow)
-     *
-     * @param aTitle
-     */
-    public void updateMangaUnfollow(String aTitle)
-    {
-        ContentValues lValues = new ContentValues(1);
-        lValues.put(mMangaTable.Following, 0);
-        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, lValues, mMangaTable.Title + " = ?", aTitle);
-    }
-
     /**
      * This function retrieves the list of followed items from the database.
      *
@@ -212,7 +200,6 @@ public class MangaDB extends SQLiteOpenHelper
                                  });
     }
 
-
     /**
      * This function retrieves the source catalog from the database.
      *
@@ -245,17 +232,6 @@ public class MangaDB extends SQLiteOpenHelper
                                          subscriber.onError(lException);
                                      }
                                  });
-    }
-
-    /***
-     * This function retrieves an item from the database specified by its url.
-     *
-     * @param aUrl
-     * @return
-     */
-    public Manga getManga(String aUrl)
-    {
-        return cupboard().withDatabase(getReadableDatabase()).query(Manga.class).withSelection(mMangaTable.URL + " = ?", aUrl).get();
     }
 
     /***
@@ -306,6 +282,17 @@ public class MangaDB extends SQLiteOpenHelper
     }
 
     /***
+     * This function retrieves an item from the database specified by its url.
+     *
+     * @param aUrl
+     * @return
+     */
+    public Manga getManga(String aUrl)
+    {
+        return cupboard().withDatabase(getReadableDatabase()).query(Manga.class).withSelection(mMangaTable.URL + " = ?", aUrl).get();
+    }
+
+    /***
      * This function updates an chapter item from the database.
      * @param aChapter
      */
@@ -343,15 +330,6 @@ public class MangaDB extends SQLiteOpenHelper
     }
 
     /***
-     * This function removes chapters from a specified manga from the database.
-     * @param aManga
-     */
-    public void removeChapters(Manga aManga)
-    {
-        cupboard().withDatabase(getWritableDatabase()).delete(Chapter.class, mChapterTable.MangaTitle + " = ?", aManga.getTitle());
-    }
-
-    /***
      * This function unfollows all items from database.
      */
     public void resetLibrary()
@@ -366,6 +344,18 @@ public class MangaDB extends SQLiteOpenHelper
             updateMangaUnfollow(iManga.getTitle());
         }
         lQuery.close();
+    }
+
+    /***
+     * This function updates the follow status of an item in the database (unfollow)
+     *
+     * @param aTitle
+     */
+    public void updateMangaUnfollow(String aTitle)
+    {
+        ContentValues lValues = new ContentValues(1);
+        lValues.put(mMangaTable.Following, 0);
+        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, lValues, mMangaTable.Title + " = ?", aTitle);
     }
 
     /***
@@ -384,6 +374,15 @@ public class MangaDB extends SQLiteOpenHelper
             removeChapters(iManga);
         }
         lQuery.close();
+    }
+
+    /***
+     * This function removes chapters from a specified manga from the database.
+     * @param aManga
+     */
+    public void removeChapters(Manga aManga)
+    {
+        cupboard().withDatabase(getWritableDatabase()).delete(Chapter.class, mChapterTable.MangaTitle + " = ?", aManga.getTitle());
     }
 
     /***

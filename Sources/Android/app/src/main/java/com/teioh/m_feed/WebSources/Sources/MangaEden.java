@@ -25,15 +25,61 @@ public class MangaEden extends SourceBase
 {
     final public static String TAG = MangaEden.class.getSimpleName();
 
-    final public String SourceKey = "MangaEden";
+    final private String SourceKey = "MangaEden";
+    final private String mBaseUrl = "http://www.mangaeden.com";
+    final private String mUpdatesUrl = "http://www.mangaeden.com/ajax/news/1/0/";
+    final private String mGenres[] = {
+            "Action",
+            "Adult",
+            "Adventure",
+            "Comedy",
+            "Doujinshi",
+            "Drama",
+            "Ecchi",
+            "Fantasy",
+            "Gender Bender",
+            "Harem",
+            "Historical",
+            "Horror",
+            "Josei",
+            "Martial Arts",
+            "Mature",
+            "Mecha",
+            "Mystery",
+            "One Shot",
+            "Psychological",
+            "Romance",
+            "School Life",
+            "Sci-fi",
+            "Seinen",
+            "Shoujo",
+            "Shounen",
+            "Slice of Life",
+            "Smut",
+            "Sports",
+            "Supernatural",
+            "Tragedy",
+            "Webtoons",
+            "Yaoi",
+            "Yuri"
+    };
 
-    final String mBaseUrl = "http://www.mangaeden.com";
-    final String mUpdatesUrl = "http://www.mangaeden.com/ajax/news/1/0/";
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getRecentUpdatesUrl()
     {
         return mUpdatesUrl;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String[] getGenres()
+    {
+        return mGenres;
     }
 
     /**
@@ -75,6 +121,50 @@ public class MangaEden extends SourceBase
 
         if (lMangaList.size() == 0) return null;
         return lMangaList;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Manga parseResponseToManga(final RequestWrapper aRequest, final String aResponseBody)
+    {
+        try
+        {
+            JSONObject lParsedJsonObject = new JSONObject(aResponseBody);
+
+            String lGenres = "";
+            JSONArray lGenreArrayNodes = lParsedJsonObject.getJSONArray("categories");
+            for (int i = 0; i < lGenreArrayNodes.length(); i++)
+            {
+                if (i != lGenreArrayNodes.length() - 1)
+                {
+                    lGenres += lGenreArrayNodes.getString(i) + ", ";
+                }
+                else
+                {
+                    lGenres += lGenreArrayNodes.getString(i);
+                }
+            }
+
+            Manga lNewManga = MangaDB.getInstance().getManga(aRequest.getMangaUrl());
+
+            lNewManga.setArtist(lParsedJsonObject.getString("artist"));
+            lNewManga.setAuthor(lParsedJsonObject.getString("author"));
+            lNewManga.setDescription(lParsedJsonObject.getString("description").trim());
+            lNewManga.setmGenre(lGenres);
+            lNewManga.setPicUrl("https://cdn.mangaeden.com/mangasimg/" + lParsedJsonObject.getString("image"));
+            lNewManga.setInitialized(1);
+
+            MangaDB.getInstance().updateManga(lNewManga);
+            MangaLogger.logError(TAG, "Finished creating/update manga (" + lNewManga.getTitle() + ")");
+            return lNewManga;
+        }
+        catch (Exception aException)
+        {
+            MangaLogger.logError(TAG, aException.getMessage());
+            return null;
+        }
     }
 
     /**
@@ -144,50 +234,6 @@ public class MangaEden extends SourceBase
         return aResponseUrl;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Manga parseResponseToManga(final RequestWrapper aRequest, final String aResponseBody)
-    {
-        try
-        {
-            JSONObject lParsedJsonObject = new JSONObject(aResponseBody);
-
-            String lGenres = "";
-            JSONArray lGenreArrayNodes = lParsedJsonObject.getJSONArray("categories");
-            for (int i = 0; i < lGenreArrayNodes.length(); i++)
-            {
-                if (i != lGenreArrayNodes.length() - 1)
-                {
-                    lGenres += lGenreArrayNodes.getString(i) + ", ";
-                }
-                else
-                {
-                    lGenres += lGenreArrayNodes.getString(i);
-                }
-            }
-
-            Manga lNewManga = MangaDB.getInstance().getManga(aRequest.getMangaUrl());
-
-            lNewManga.setArtist(lParsedJsonObject.getString("artist"));
-            lNewManga.setAuthor(lParsedJsonObject.getString("author"));
-            lNewManga.setDescription(lParsedJsonObject.getString("description").trim());
-            lNewManga.setmGenre(lGenres);
-            lNewManga.setPicUrl("https://cdn.mangaeden.com/mangasimg/" + lParsedJsonObject.getString("image"));
-            lNewManga.setInitialized(1);
-
-            MangaDB.getInstance().updateManga(lNewManga);
-            MangaLogger.logError(TAG, "Finished creating/update manga (" + lNewManga.getTitle() + ")");
-            return lNewManga;
-        }
-        catch (Exception aException)
-        {
-            MangaLogger.logError(TAG, aException.getMessage());
-            return null;
-        }
-    }
-
     /***
      * This helper function resolves and builds chapters from the parsed json
      * Parent - parseResponseToChapters();
@@ -216,6 +262,24 @@ public class MangaEden extends SourceBase
     }
 
     /***
+     * This helper function sets the chapters index value.
+     * Parent - parseResponseToChapters();
+     *
+     * @param aChapterList
+     * @return
+     */
+    private List<Chapter> setNumberForChapterList(List<Chapter> aChapterList)
+    {
+        Collections.reverse(aChapterList);
+        for (int i = 0; i < aChapterList.size(); i++)
+        {
+            aChapterList.get(i).setChapterNumber(i + 1);
+        }
+
+        return aChapterList;
+    }
+
+    /***
      * This helper function constructs a chapter from the specified JSON.
      * Parent - resolveChaptersFromParsedJson();
      *
@@ -235,23 +299,5 @@ public class MangaEden extends SourceBase
         lNewChapter.setChapterDate(lDate.toString());
 
         return lNewChapter;
-    }
-
-    /***
-     * This helper function sets the chapters index value.
-     * Parent - parseResponseToChapters();
-     *
-     * @param aChapterList
-     * @return
-     */
-    private List<Chapter> setNumberForChapterList(List<Chapter> aChapterList)
-    {
-        Collections.reverse(aChapterList);
-        for (int i = 0; i < aChapterList.size(); i++)
-        {
-            aChapterList.get(i).setChapterNumber(i + 1);
-        }
-
-        return aChapterList;
     }
 }

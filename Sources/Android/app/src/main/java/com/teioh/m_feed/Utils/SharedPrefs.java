@@ -2,9 +2,7 @@ package com.teioh.m_feed.Utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.nfc.Tag;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.teioh.m_feed.MFeedApplication;
 import com.teioh.m_feed.MangaEnums;
@@ -36,17 +34,14 @@ public class SharedPrefs
         }
     }
 
-    /**
-     * Sets the users MyAnimeList(MAL) login credentials for authorized API calls
-     *
-     * @param aEmail, The users Google email
+    /***
+     * This function verifies if a user is signed into google.
+     * @return
      */
-    public static void setGoogleEmail(String aEmail)
+    public static boolean isSignedIn()
     {
-        Context lContext = MFeedApplication.getInstance();
-        SharedPreferences.Editor lEditor = PreferenceManager.getDefaultSharedPreferences(lContext).edit();
-        lEditor.putString(lContext.getString(R.string.PREF_GOOGLE_EMAIL), aEmail);
-        lEditor.apply();
+        if (getGoogleEmail().contains("Guest")) return false;
+        return true;
     }
 
     /**
@@ -61,33 +56,18 @@ public class SharedPrefs
                                 .getString(lContext.getString(R.string.PREF_GOOGLE_EMAIL), "Guest (Sign in)");
     }
 
-
-    /***
-     * This function verifies if a user is signed into google.
-     * @return
-     */
-    public static boolean isSignedIn()
-    {
-        if (getGoogleEmail().contains("Guest")) return false;
-        return true;
-    }
-
-
     /**
-     * Set the users application layout preference
+     * Sets the users MyAnimeList(MAL) login credentials for authorized API calls
      *
-     * @param aGrid, User preference for application layout
-     *               True = GridLayout
-     *               False = LinearLayout
+     * @param aEmail, The users Google email
      */
-    public static void setLayoutFormat(boolean aGrid)
+    public static void setGoogleEmail(String aEmail)
     {
         Context lContext = MFeedApplication.getInstance();
         SharedPreferences.Editor lEditor = PreferenceManager.getDefaultSharedPreferences(lContext).edit();
-        lEditor.putBoolean(lContext.getString(R.string.PREF_APP_LAYOUT_IS_GRID), aGrid);
+        lEditor.putString(lContext.getString(R.string.PREF_GOOGLE_EMAIL), aEmail);
         lEditor.apply();
     }
-
 
     /**
      * Get the users application layout preferences
@@ -104,17 +84,17 @@ public class SharedPrefs
     }
 
     /**
-     * Set the users application theme preference
+     * Set the users application layout preference
      *
-     * @param aLightTheme, User preference for application theme
-     *                     True = Light theme
-     *                     False = Dark theme
+     * @param aGrid, User preference for application layout
+     *               True = GridLayout
+     *               False = LinearLayout
      */
-    public static void setLayoutTheme(boolean aLightTheme)
+    public static void setLayoutFormat(boolean aGrid)
     {
         Context lContext = MFeedApplication.getInstance();
         SharedPreferences.Editor lEditor = PreferenceManager.getDefaultSharedPreferences(lContext).edit();
-        lEditor.putBoolean(lContext.getString(R.string.PREF_APP_THEME_IS_LIGHT), aLightTheme);
+        lEditor.putBoolean(lContext.getString(R.string.PREF_APP_LAYOUT_IS_GRID), aGrid);
         lEditor.apply();
     }
 
@@ -132,16 +112,18 @@ public class SharedPrefs
                                 .getBoolean(lContext.getString(R.string.PREF_APP_THEME_IS_LIGHT), false);
     }
 
-    /***
-     * This function sets the current source.
+    /**
+     * Set the users application theme preference
      *
-     * @param aSource
+     * @param aLightTheme, User preference for application theme
+     *                     True = Light theme
+     *                     False = Dark theme
      */
-    public static void setSavedSource(String aSource)
+    public static void setLayoutTheme(boolean aLightTheme)
     {
         Context lContext = MFeedApplication.getInstance();
         SharedPreferences.Editor lEditor = PreferenceManager.getDefaultSharedPreferences(lContext).edit();
-        lEditor.putString(lContext.getString(R.string.PREF_USER_SOURCE), aSource);
+        lEditor.putBoolean(lContext.getString(R.string.PREF_APP_THEME_IS_LIGHT), aLightTheme);
         lEditor.apply();
     }
 
@@ -158,15 +140,15 @@ public class SharedPrefs
     }
 
     /***
-     * This function sets the chapter vertical scroll setting.
+     * This function sets the current source.
      *
-     * @param aVertical
+     * @param aSource
      */
-    public static void setChapterScrollVertical(boolean aVertical)
+    public static void setSavedSource(String aSource)
     {
         Context lContext = MFeedApplication.getInstance();
         SharedPreferences.Editor lEditor = PreferenceManager.getDefaultSharedPreferences(lContext).edit();
-        lEditor.putBoolean(lContext.getString(R.string.PREF_CHAPTER_SCROLL_VERTICAL), aVertical);
+        lEditor.putString(lContext.getString(R.string.PREF_USER_SOURCE), aSource);
         lEditor.apply();
     }
 
@@ -183,15 +165,15 @@ public class SharedPrefs
     }
 
     /***
-     * This function sets the chapter screen orientation setting.
+     * This function sets the chapter vertical scroll setting.
      *
-     * @param aLandscape
+     * @param aVertical
      */
-    public static void setChapterScreenOrientation(boolean aLandscape)
+    public static void setChapterScrollVertical(boolean aVertical)
     {
         Context lContext = MFeedApplication.getInstance();
         SharedPreferences.Editor lEditor = PreferenceManager.getDefaultSharedPreferences(lContext).edit();
-        lEditor.putBoolean(lContext.getString(R.string.PREF_CHAPTER_SCREEN_ORIENTATION), aLandscape);
+        lEditor.putBoolean(lContext.getString(R.string.PREF_CHAPTER_SCROLL_VERTICAL), aVertical);
         lEditor.apply();
     }
 
@@ -205,6 +187,19 @@ public class SharedPrefs
         Context lContext = MFeedApplication.getInstance();
         return PreferenceManager.getDefaultSharedPreferences(lContext)
                                 .getBoolean(lContext.getString(R.string.PREF_CHAPTER_SCREEN_ORIENTATION), false);
+    }
+
+    /***
+     * This function sets the chapter screen orientation setting.
+     *
+     * @param aLandscape
+     */
+    public static void setChapterScreenOrientation(boolean aLandscape)
+    {
+        Context lContext = MFeedApplication.getInstance();
+        SharedPreferences.Editor lEditor = PreferenceManager.getDefaultSharedPreferences(lContext).edit();
+        lEditor.putBoolean(lContext.getString(R.string.PREF_CHAPTER_SCREEN_ORIENTATION), aLandscape);
+        lEditor.apply();
     }
 
     /***
@@ -249,7 +244,8 @@ public class SharedPrefs
     public static List<String> getLogs()
     {
         Context lContext = MFeedApplication.getInstance();
-        Set lLogSet = PreferenceManager.getDefaultSharedPreferences(lContext).getStringSet(lContext.getString(R.string.PREF_SAVE_LOGS), new HashSet<>(0));
+        Set lLogSet = PreferenceManager.getDefaultSharedPreferences(lContext)
+                                       .getStringSet(lContext.getString(R.string.PREF_SAVE_LOGS), new HashSet<>(0));
 
         return new ArrayList<>(lLogSet);
     }

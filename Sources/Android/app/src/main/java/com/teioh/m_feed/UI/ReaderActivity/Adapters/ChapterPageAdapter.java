@@ -55,7 +55,7 @@ public class ChapterPageAdapter extends FragmentStatePagerAdapter
             }
             else
             {
-                Fragment lChapterFragment = ChapterFragment.getNewInstance(mParentFollowing , mChapterList.get(aPosition), aPosition);
+                Fragment lChapterFragment = ChapterFragment.getNewInstance(mParentFollowing, mChapterList.get(aPosition), aPosition);
                 mPageReferenceMap.put(aPosition, new WeakReference<>(lChapterFragment));
 
                 return lChapterFragment;
@@ -65,19 +65,6 @@ public class ChapterPageAdapter extends FragmentStatePagerAdapter
         {
             return null;
         }
-    }
-
-    /***
-     * This function destroys the chapter fragment item specified by its position.
-     * @param aContainer
-     * @param aPosition
-     * @param aObject
-     */
-    @Override
-    public void destroyItem(ViewGroup aContainer, int aPosition, Object aObject)
-    {
-        super.destroyItem(aContainer, aPosition, aObject);
-        mPageReferenceMap.remove(aPosition);
     }
 
     /***
@@ -101,6 +88,19 @@ public class ChapterPageAdapter extends FragmentStatePagerAdapter
         }
 
         return lFragment;
+    }
+
+    /***
+     * This function destroys the chapter fragment item specified by its position.
+     * @param aContainer
+     * @param aPosition
+     * @param aObject
+     */
+    @Override
+    public void destroyItem(ViewGroup aContainer, int aPosition, Object aObject)
+    {
+        super.destroyItem(aContainer, aPosition, aObject);
+        mPageReferenceMap.remove(aPosition);
     }
 
     /***

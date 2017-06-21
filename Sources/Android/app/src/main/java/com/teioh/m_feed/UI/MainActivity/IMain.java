@@ -3,12 +3,9 @@ package com.teioh.m_feed.UI.MainActivity;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Manga;
-import com.teioh.m_feed.UI.MainActivity.Adapters.RecycleSearchAdapter;
 import com.teioh.m_feed.UI.MainActivity.Adapters.ViewPagerAdapterMain;
 import com.teioh.m_feed.UI.Maps.BaseContextMap;
 import com.teioh.m_feed.UI.Maps.DrawerLayoutMap;
@@ -84,9 +81,9 @@ public interface IMain
 
         void updateSelection(Manga aManga);
 
-        boolean updateRecentSelection(Manga aManga);
-
         boolean setRecentSelection(Long aId);
+
+        boolean updateRecentSelection(Manga aManga);
 
     }
 

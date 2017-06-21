@@ -11,7 +11,6 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
 import com.teioh.m_feed.R;
-import com.teioh.m_feed.WebSources.SourceBase;
 import com.teioh.m_feed.WebSources.SourceFactory;
 
 import java.util.List;
@@ -39,6 +38,38 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter
     }
 
     /***
+     * This function returns the group (parent) item count in the adapter.
+     *
+     * @return
+     */
+    public int getGroupCount()
+    {
+        return mDrawerItems.size();
+    }
+
+    /***
+     * This function gets the child item count in a specified parent group.
+     *
+     * @param aGroupPosition
+     * @return
+     */
+    public int getChildrenCount(int aGroupPosition)
+    {
+        return mSourceCollection.get(mDrawerItems.get(aGroupPosition)).size();
+    }
+
+    /***
+     * This function returns the group (parent) item in the adapter.
+     *
+     * @param aGroupPosition
+     * @return
+     */
+    public Object getGroup(int aGroupPosition)
+    {
+        return mDrawerItems.get(aGroupPosition);
+    }
+
+    /***
      * This function returns the child of a parent item in the adapter.
      *
      * @param aGroupPosition The position of the parent view.
@@ -51,6 +82,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter
     }
 
     /***
+     * This function returns the group (parent) ID in the adapter.
+     *
+     * @param aGroupPosition
+     * @return
+     */
+    public long getGroupId(int aGroupPosition)
+    {
+        return aGroupPosition;
+    }
+
+    /***
      * This function returns the ID of the child item in the adapter..
      *
      * @param aGroupPosition
@@ -60,6 +102,41 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter
     public long getChildId(int aGroupPosition, int aChildPosition)
     {
         return aChildPosition;
+    }
+
+    /***
+     * This function returns whether the adapter has stable Ids.
+     *
+     * @return
+     */
+    public boolean hasStableIds()
+    {
+        return true;
+    }
+
+    /***
+     * This function returns the view of the group (parent) in the adapter.
+     *
+     * @param aGroupPosition
+     * @param aExpanded
+     * @param aConvertView
+     * @param aParent
+     * @return
+     */
+    public View getGroupView(int aGroupPosition, boolean aExpanded, View aConvertView, ViewGroup aParent)
+    {
+        String lSource = (String) getGroup(aGroupPosition);
+
+        if (aConvertView == null)
+        {
+            LayoutInflater lInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            aConvertView = lInflater.inflate(R.layout.drawer_list_item, null);
+        }
+
+        TextView lSourceTextView = (TextView) aConvertView.findViewById(R.id.sourceTitle);
+        lSourceTextView.setTypeface(null, Typeface.BOLD);
+        lSourceTextView.setText(lSource);
+        return aConvertView;
     }
 
     /***
@@ -96,86 +173,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter
             lSourceTextView.setTextColor(mContext.getResources().getColor(R.color.white));
             lBar.setBackgroundColor(mContext.getResources().getColor(R.color.white));
         }
-        
+
         return aConvertView;
-    }
-
-    /***
-     * This function gets the child item count in a specified parent group.
-     *
-     * @param aGroupPosition
-     * @return
-     */
-    public int getChildrenCount(int aGroupPosition)
-    {
-        return mSourceCollection.get(mDrawerItems.get(aGroupPosition)).size();
-    }
-
-    /***
-     * This function returns the group (parent) item in the adapter.
-     *
-     * @param aGroupPosition
-     * @return
-     */
-    public Object getGroup(int aGroupPosition)
-    {
-        return mDrawerItems.get(aGroupPosition);
-    }
-
-    /***
-     * This function returns the group (parent) item count in the adapter.
-     *
-     * @return
-     */
-    public int getGroupCount()
-    {
-        return mDrawerItems.size();
-    }
-
-    /***
-     * This function returns the group (parent) ID in the adapter.
-     *
-     * @param aGroupPosition
-     * @return
-     */
-    public long getGroupId(int aGroupPosition)
-    {
-        return aGroupPosition;
-    }
-
-    /***
-     * This function returns the view of the group (parent) in the adapter.
-     *
-     * @param aGroupPosition
-     * @param aExpanded
-     * @param aConvertView
-     * @param aParent
-     * @return
-     */
-    public View getGroupView(int aGroupPosition, boolean aExpanded, View aConvertView, ViewGroup aParent)
-    {
-        String lSource = (String) getGroup(aGroupPosition);
-
-        if (aConvertView == null)
-        {
-            LayoutInflater lInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            aConvertView = lInflater.inflate(R.layout.drawer_list_item, null);
-        }
-
-        TextView lSourceTextView = (TextView) aConvertView.findViewById(R.id.sourceTitle);
-        lSourceTextView.setTypeface(null, Typeface.BOLD);
-        lSourceTextView.setText(lSource);
-        return aConvertView;
-    }
-
-    /***
-     * This function returns whether the adapter has stable Ids.
-     *
-     * @return
-     */
-    public boolean hasStableIds()
-    {
-        return true;
     }
 
     /***

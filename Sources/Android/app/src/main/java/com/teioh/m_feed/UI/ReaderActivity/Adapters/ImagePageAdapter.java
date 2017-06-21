@@ -15,8 +15,8 @@ import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.transition.Transition;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.ReaderActivity.Widgets.GestureImageView;
 import com.teioh.m_feed.Utils.MangaLogger;
@@ -58,19 +58,6 @@ public class ImagePageAdapter extends PagerAdapter
     }
 
     /***
-     *
-     *
-     * @param aView
-     * @param aObject
-     * @return
-     */
-    @Override
-    public boolean isViewFromObject(View aView, Object aObject)
-    {
-        return aView == (aObject);
-    }
-
-    /***
      * This function instantiates the item specified by its position.
      *
      * @param aContainer
@@ -99,7 +86,15 @@ public class ImagePageAdapter extends PagerAdapter
              .transition(new GenericTransitionOptions<>().transition(android.R.anim.fade_in))
              .into(new BitmapImageViewTarget(mImage)
              {
-                 @Override public void onResourceReady(Bitmap resource, Transition<? super Bitmap> glideAnimation)
+                 @Override
+                 public void onLoadFailed(@Nullable Drawable errorDrawable)
+                 {
+                     super.onLoadFailed(errorDrawable);
+                     mImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_refresh_white_24dp));
+                 }
+
+                 @Override
+                 public void onResourceReady(Bitmap resource, Transition<? super Bitmap> glideAnimation)
                  {
                      super.onResourceReady(resource, glideAnimation);
                      mImage.initializeView();
@@ -112,12 +107,6 @@ public class ImagePageAdapter extends PagerAdapter
                          MangaLogger.logError(TAG, aException.toString(), "Position: " + aPosition);
                      }
                      mImage.startFling(0, 100000f); //large fling to initialize the image to the top for long pages
-                 }
-
-                 @Override public void onLoadFailed(@Nullable Drawable errorDrawable)
-                 {
-                     super.onLoadFailed(errorDrawable);
-                     mImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_refresh_white_24dp));
                  }
              });
         (aContainer).addView(lView);
@@ -137,6 +126,19 @@ public class ImagePageAdapter extends PagerAdapter
     {
         (aContainer).removeView((RelativeLayout) aObject);
         mImageViews.remove(aPosition);
+    }
+
+    /***
+     *
+     *
+     * @param aView
+     * @param aObject
+     * @return
+     */
+    @Override
+    public boolean isViewFromObject(View aView, Object aObject)
+    {
+        return aView == (aObject);
     }
 
     /***

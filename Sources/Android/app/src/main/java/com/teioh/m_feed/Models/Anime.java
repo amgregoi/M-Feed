@@ -9,6 +9,20 @@ import android.os.Parcelable;
 public class Anime implements Parcelable
 {
 
+    public static final Creator<Anime> CREATOR = new Creator<Anime>()
+    {
+        @Override
+        public Anime createFromParcel(Parcel in)
+        {
+            return new Anime(in);
+        }
+
+        @Override
+        public Anime[] newArray(int aSize)
+        {
+            return new Anime[aSize];
+        }
+    };
     private String mAnimeUrl;
     private String mPictureUrl;
     private String mTitle;
@@ -19,6 +33,29 @@ public class Anime implements Parcelable
     private boolean mFollowing;
     private String mSource;
 
+    public Anime()
+    {
+    }
+
+    public Anime(String aUrl, String aTitle)
+    {
+        mAnimeUrl = aUrl;
+        mTitle = aTitle;
+    }
+
+    protected Anime(Parcel aIn)
+    {
+        mAnimeUrl = aIn.readString();
+        mPictureUrl = aIn.readString();
+        mTitle = aIn.readString();
+        mAlternateNames = aIn.readString();
+        mGenres = aIn.readString();
+        mStatus = aIn.readString();
+        mSummary = aIn.readString();
+        mSource = aIn.readString();
+        mFollowing = aIn.readByte() != 0;
+
+    }
 
     public boolean ismFollowing()
     {
@@ -109,46 +146,6 @@ public class Anime implements Parcelable
     {
         mAnimeUrl = aAnimeUrl;
     }
-
-    public Anime()
-    {
-    }
-
-    public Anime(String aUrl, String aTitle)
-    {
-        mAnimeUrl = aUrl;
-        mTitle = aTitle;
-    }
-
-
-    protected Anime(Parcel aIn)
-    {
-        mAnimeUrl = aIn.readString();
-        mPictureUrl = aIn.readString();
-        mTitle = aIn.readString();
-        mAlternateNames = aIn.readString();
-        mGenres = aIn.readString();
-        mStatus = aIn.readString();
-        mSummary = aIn.readString();
-        mSource = aIn.readString();
-        mFollowing = aIn.readByte() != 0;
-
-    }
-
-    public static final Creator<Anime> CREATOR = new Creator<Anime>()
-    {
-        @Override
-        public Anime createFromParcel(Parcel in)
-        {
-            return new Anime(in);
-        }
-
-        @Override
-        public Anime[] newArray(int aSize)
-        {
-            return new Anime[aSize];
-        }
-    };
 
     @Override
     public int describeContents()

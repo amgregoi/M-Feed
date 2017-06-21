@@ -193,6 +193,139 @@ public class MangaPresenter implements IManga.ActivityPresenter
     }
 
     /***
+     * This function retrieves the current items information
+     */
+    private void getMangaViewInfo()
+    {
+        try
+        {
+            if (NetworkService.isNetworkAvailable())
+            {
+                if (mManga.getInitialized() == 0)
+                {
+                    mObservableMangaSubscription = new SourceFactory().getSource()
+                                                                      .updateMangaObservable(new RequestWrapper(mManga)).cache()
+                                                                      .doOnError(throwable -> MangaLogger
+                                                                              .logError(TAG, throwable.getMessage()))
+                                                                      .observeOn(AndroidSchedulers.mainThread())
+                                                                      .subscribe(manga -> updateMangaView(manga));
+                }
+                else
+                {
+                    updateMangaView(mManga);
+                    MangaLogger.logInfo(TAG, "Manga was previously initialized");
+                }
+            }
+            else
+            {
+                updateMangaView(mManga);
+                MangaLogger.logInfo(TAG, "No internet access ");
+            }
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lException.getMessage());
+        }
+    }
+
+    /***
+     * This function retrieves the current items chapter list.
+     */
+    private void getChapterList()
+    {
+        try
+        {
+            if (NetworkService.isNetworkAvailable())
+            {
+                if (!mChapterFlag)
+                {
+                    mChapterListSubscription = new SourceFactory().getSource()
+                                                                  .getChapterListObservable(new RequestWrapper(mManga)).cache()
+                                                                  .doOnError(throwable -> MangaLogger
+                                                                          .logError(TAG, throwable.getMessage()))
+                                                                  .subscribe(chapters -> updateChapterList(chapters));
+                }
+                else
+                {
+                    MangaLogger.logInfo(TAG, "Chapter list is already initialized");
+                    updateChapterList(mChapterList);
+                }
+            }
+            else
+            {
+                MangaLogger.logInfo(TAG, "No internet access");
+                updateChapterList(new ArrayList<>());
+            }
+        }
+        catch (Exception aException)
+        {
+            MangaLogger.logError(TAG, aException.getMessage());
+        }
+    }
+
+    /***
+     * This function updates the manga view.
+     *
+     * @param aManga
+     */
+    private void updateMangaView(Manga aManga)
+    {
+        try
+        {
+            if (aManga != null)
+            {
+                if (mMangaMapper.getContext() != null)
+                {
+                    mMangaMapper.setMangaViews(aManga);
+                }
+                mManga = aManga;
+
+                String lInitTest = mManga.getDescription();
+                if (!lInitTest.isEmpty())
+                {
+                    mManga.setInitialized(1);
+                }
+
+                MangaDB.getInstance().putManga(aManga);
+                if (mChapterListSubscription != null)
+                {
+                    mObservableMangaSubscription.unsubscribe();
+                    mObservableMangaSubscription = null;
+                }
+            }
+        }
+        catch (Exception aException)
+        {
+            MangaLogger.logError(TAG, aException.getMessage());
+        }
+    }
+
+    /***
+     * This function updates the chapter list class variable.
+     *
+     * @param aChapterList
+     */
+    private void updateChapterList(List<Chapter> aChapterList)
+    {
+        try
+        {
+            if (mMangaMapper.getContext() != null)
+            {
+                mChapterList = new ArrayList<>(aChapterList);
+                mAdapter = new ChapterListAdapter(mMangaMapper.getContext(), R.layout.manga_chapter_list_item, mChapterList);
+                mMangaMapper.registerAdapter(mAdapter);
+                mMangaMapper.stopRefresh();
+                mMangaMapper.showCoverLayout();
+                mChapterFlag = true;
+            }
+        }
+        catch (Exception aException)
+        {
+            MangaLogger.logError(TAG, aException.getMessage());
+        }
+    }
+
+    /***
      * This function reverses the chapter list items.
      */
     @Override
@@ -363,7 +496,8 @@ public class MangaPresenter implements IManga.ActivityPresenter
     /***
      * This function clears the chapter cache for the current item.
      */
-    @Override public boolean clearCachedChapters()
+    @Override
+    public boolean clearCachedChapters()
     {
         boolean lResult = true;
         try
@@ -377,139 +511,6 @@ public class MangaPresenter implements IManga.ActivityPresenter
         }
 
         return lResult;
-    }
-
-    /***
-     * This function retrieves the current items information
-     */
-    private void getMangaViewInfo()
-    {
-        try
-        {
-            if (NetworkService.isNetworkAvailable())
-            {
-                if (mManga.getInitialized() == 0)
-                {
-                    mObservableMangaSubscription = new SourceFactory().getSource()
-                                                                      .updateMangaObservable(new RequestWrapper(mManga)).cache()
-                                                                      .doOnError(throwable -> MangaLogger
-                                                                              .logError(TAG, throwable.getMessage()))
-                                                                      .observeOn(AndroidSchedulers.mainThread())
-                                                                      .subscribe(manga -> updateMangaView(manga));
-                }
-                else
-                {
-                    updateMangaView(mManga);
-                    MangaLogger.logInfo(TAG, "Manga was previously initialized");
-                }
-            }
-            else
-            {
-                updateMangaView(mManga);
-                MangaLogger.logInfo(TAG, "No internet access ");
-            }
-        }
-        catch (Exception lException)
-        {
-            MangaLogger.logError(TAG, lException.getMessage());
-        }
-    }
-
-    /***
-     * This function updates the manga view.
-     *
-     * @param aManga
-     */
-    private void updateMangaView(Manga aManga)
-    {
-        try
-        {
-            if (aManga != null)
-            {
-                if (mMangaMapper.getContext() != null)
-                {
-                    mMangaMapper.setMangaViews(aManga);
-                }
-                mManga = aManga;
-
-                String lInitTest = mManga.getDescription();
-                if (!lInitTest.isEmpty())
-                {
-                    mManga.setInitialized(1);
-                }
-
-                MangaDB.getInstance().putManga(aManga);
-                if (mChapterListSubscription != null)
-                {
-                    mObservableMangaSubscription.unsubscribe();
-                    mObservableMangaSubscription = null;
-                }
-            }
-        }
-        catch (Exception aException)
-        {
-            MangaLogger.logError(TAG, aException.getMessage());
-        }
-    }
-
-    /***
-     * This function retrieves the current items chapter list.
-     */
-    private void getChapterList()
-    {
-        try
-        {
-            if (NetworkService.isNetworkAvailable())
-            {
-                if (!mChapterFlag)
-                {
-                    mChapterListSubscription = new SourceFactory().getSource()
-                                                                  .getChapterListObservable(new RequestWrapper(mManga)).cache()
-                                                                  .doOnError(throwable -> MangaLogger
-                                                                          .logError(TAG, throwable.getMessage()))
-                                                                  .subscribe(chapters -> updateChapterList(chapters));
-                }
-                else
-                {
-                    MangaLogger.logInfo(TAG, "Chapter list is already initialized");
-                    updateChapterList(mChapterList);
-                }
-            }
-            else
-            {
-                MangaLogger.logInfo(TAG, "No internet access");
-                updateChapterList(new ArrayList<>());
-            }
-        }
-        catch (Exception aException)
-        {
-            MangaLogger.logError(TAG, aException.getMessage());
-        }
-    }
-
-    /***
-     * This function updates the chapter list class variable.
-     *
-     * @param aChapterList
-     */
-    private void updateChapterList(List<Chapter> aChapterList)
-    {
-        try
-        {
-            if (mMangaMapper.getContext() != null)
-            {
-                mChapterList = new ArrayList<>(aChapterList);
-                mAdapter = new ChapterListAdapter(mMangaMapper.getContext(), R.layout.manga_chapter_list_item, mChapterList);
-                mMangaMapper.registerAdapter(mAdapter);
-                mMangaMapper.stopRefresh();
-                mMangaMapper.showCoverLayout();
-                mChapterFlag = true;
-            }
-        }
-        catch (Exception aException)
-        {
-            MangaLogger.logError(TAG, aException.getMessage());
-        }
     }
 
 

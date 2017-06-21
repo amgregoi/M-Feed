@@ -21,10 +21,50 @@ public class MangaJoy extends SourceBase
 {
     final public static String TAG = MangaJoy.class.getSimpleName();
 
-    final public static String SourceKey = "MangaJoy";
-    final public static String mGenres[] = {"Action", "Adult", "Adventure", "Comedy", "Doujinshi", "Drama", "Ecchi", "Fantasy", "Gender Bender", "Harem", "Historical", "Horror", "Josei", "Lolicon", "Manga", "Manhua", "Manhwa", "Martial Arts", "Mature", "Mecha", "Mystery", "One shot", "Psychological", "Romance", "School Life", "Sci fi", "Seinen", "Shotacon", "Shoujo", "Shoujo Ai", "Shounen", "Shounen Ai", "Slice of Life", "Smut", "Sports", "Supernatural", "Tragedy", "Yaoi", "Yuri"};
-    final static String mBaseUrl = "http://funmanga.com/";
-    static String mUpdatesUrl = "http://funmanga.com/latest-chapters";
+    final private String SourceKey = "MangaJoy";
+    final private String mBaseUrl = "http://funmanga.com/";
+    final private String mUpdatesUrl = "http://funmanga.com/latest-chapters";
+    final private String mGenres[] = {"Joy",
+            "Action",
+            "Adult",
+            "Adventure",
+            "Comedy",
+            "Doujinshi",
+            "Drama",
+            "Ecchi",
+            "Fantasy",
+            "Gender Bender",
+            "Harem",
+            "Historical",
+            "Horror",
+            "Josei",
+            "Lolicon",
+            "Manga",
+            "Manhua",
+            "Manhwa",
+            "Martial Arts",
+            "Mature",
+            "Mecha",
+            "Mystery",
+            "One shot",
+            "Psychological",
+            "Romance",
+            "School Life",
+            "Sci fi",
+            "Seinen",
+            "Shotacon",
+            "Shoujo",
+            "Shoujo Ai",
+            "Shounen",
+            "Shounen Ai",
+            "Slice of Life",
+            "Smut",
+            "Sports",
+            "Supernatural",
+            "Tragedy",
+            "Yaoi",
+            "Yuri"
+    };
 
     /**
      * {@inheritDoc}
@@ -33,6 +73,15 @@ public class MangaJoy extends SourceBase
     public String getRecentUpdatesUrl()
     {
         return mUpdatesUrl;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String[] getGenres()
+    {
+        return mGenres;
     }
 
     /**
@@ -89,52 +138,6 @@ public class MangaJoy extends SourceBase
         return lMangaList;
 
 
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<Chapter> parseResponseToChapters(RequestWrapper aRequest, String aResponseBody)
-    {
-        Document lParsedDocument = Jsoup.parse(aResponseBody);
-        List<Chapter> lChapterList = resolveChaptersFromParsedDocument(lParsedDocument, aRequest.getMangaTitle());
-
-        return lChapterList;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<String> parseResponseToPageUrls(final String aResponseBody)
-    {
-        List<String> lImages = new ArrayList<>();
-
-        Document lDoc = Jsoup.parse(aResponseBody);
-        Elements lNav = lDoc.select("h5.widget-heading").select("select").select("option");
-
-        int lPages = lNav.size();
-
-        for (int i = 1; i < lPages; i++)
-        {
-            String lLink = lNav.get(i).attr("value");
-            lImages.add(lLink);
-        }
-
-        return lImages;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String parseResponseToImageUrls(final String aResponseBody, final String aResponseUrl)
-    {
-        Document lParsedDocument = Jsoup.parse(aResponseBody);
-        String lLink = lParsedDocument.select("img.img-responsive").attr("src");
-
-        return lLink;
     }
 
     /**
@@ -204,6 +207,52 @@ public class MangaJoy extends SourceBase
             MangaLogger.logError(TAG, aException.getMessage());
             return null;
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Chapter> parseResponseToChapters(RequestWrapper aRequest, String aResponseBody)
+    {
+        Document lParsedDocument = Jsoup.parse(aResponseBody);
+        List<Chapter> lChapterList = resolveChaptersFromParsedDocument(lParsedDocument, aRequest.getMangaTitle());
+
+        return lChapterList;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<String> parseResponseToPageUrls(final String aResponseBody)
+    {
+        List<String> lImages = new ArrayList<>();
+
+        Document lDoc = Jsoup.parse(aResponseBody);
+        Elements lNav = lDoc.select("h5.widget-heading").select("select").select("option");
+
+        int lPages = lNav.size();
+
+        for (int i = 1; i < lPages; i++)
+        {
+            String lLink = lNav.get(i).attr("value");
+            lImages.add(lLink);
+        }
+
+        return lImages;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String parseResponseToImageUrls(final String aResponseBody, final String aResponseUrl)
+    {
+        Document lParsedDocument = Jsoup.parse(aResponseBody);
+        String lLink = lParsedDocument.select("img.img-responsive").attr("src");
+
+        return lLink;
     }
 
     /***

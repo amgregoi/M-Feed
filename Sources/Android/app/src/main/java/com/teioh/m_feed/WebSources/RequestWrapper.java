@@ -9,7 +9,20 @@ import com.teioh.m_feed.Models.Manga;
 public class RequestWrapper implements Parcelable
 {
     public static final String TAG = RequestWrapper.class.getSimpleName();
+    public static final Parcelable.Creator<RequestWrapper> CREATOR = new Parcelable.Creator<RequestWrapper>()
+    {
+        @Override
+        public RequestWrapper createFromParcel(Parcel aInputParcel)
+        {
+            return new RequestWrapper(aInputParcel);
+        }
 
+        @Override
+        public RequestWrapper[] newArray(int aSize)
+        {
+            return new RequestWrapper[aSize];
+        }
+    };
     private Manga mManga;
     private Chapter mChapter;
 
@@ -32,21 +45,6 @@ public class RequestWrapper implements Parcelable
     {
         mChapter = aChapter;
     }
-
-    public static final Parcelable.Creator<RequestWrapper> CREATOR = new Parcelable.Creator<RequestWrapper>()
-    {
-        @Override
-        public RequestWrapper createFromParcel(Parcel aInputParcel)
-        {
-            return new RequestWrapper(aInputParcel);
-        }
-
-        @Override
-        public RequestWrapper[] newArray(int aSize)
-        {
-            return new RequestWrapper[aSize];
-        }
-    };
 
     private RequestWrapper(Parcel aIn)
     {
