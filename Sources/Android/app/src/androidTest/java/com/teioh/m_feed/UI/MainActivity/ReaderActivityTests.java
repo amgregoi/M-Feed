@@ -80,13 +80,13 @@ public class ReaderActivityTests
         onView(allOf(withId(R.id.vertical_scroll_toggle), isDisplayed())).perform(click());
 
         //Perform swipe up while vertical scroll is active
-        onView(allOf(withId(R.id.gesture_pager), isDisplayed())).perform(swipeUp());
+        onView(allOf(withId(R.id.reader_pager), isDisplayed())).perform(swipeUp());
 
         //Toggle vertical scroll off
         onView(allOf(withId(R.id.vertical_scroll_toggle), isDisplayed())).perform(click());
 
         //Perform left swipe while vertical scroll is off
-        onView(allOf(withId(R.id.gesture_pager), isDisplayed())).perform(swipeLeft());
+        onView(allOf(withId(R.id.reader_pager), isDisplayed())).perform(swipeLeft());
     }
 
     /***

@@ -29,6 +29,12 @@ public abstract class SourceBase
     private String TAG = SourceBase.class.getSimpleName();
 
     /***
+     * This function returns the type of content the source provides.
+     * @return
+     */
+    public abstract MangaEnums.eSourceType getSourceType();
+
+    /***
      * This function retrieves the sources recent update page url.
      * @return
      */
@@ -185,7 +191,7 @@ public abstract class SourceBase
      *
      * @return
      */
-    public MangaEnums.eSource getSourceType()
+    public MangaEnums.eSource getCurrentSource()
     {
         return MangaEnums.eSource.valueOf(SharedPrefs.getSavedSource());
     }
@@ -195,7 +201,7 @@ public abstract class SourceBase
      *
      * @param aSource
      */
-    public void setSourceType(MangaEnums.eSource aSource)
+    public void setCurrentSource(MangaEnums.eSource aSource)
     {
         SharedPrefs.setSavedSource(aSource.name());
     }

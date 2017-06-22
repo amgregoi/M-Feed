@@ -20,6 +20,7 @@ public class Chapter implements Parcelable
             return new Chapter[size];
         }
     };
+
     private String url;
     private String date;
     private String mangaTitle;

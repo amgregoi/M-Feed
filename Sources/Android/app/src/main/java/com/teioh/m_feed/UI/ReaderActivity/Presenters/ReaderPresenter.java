@@ -6,7 +6,7 @@ import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.UI.MangaActivity.MangaPresenter;
 import com.teioh.m_feed.UI.ReaderActivity.Adapters.ChapterPageAdapter;
-import com.teioh.m_feed.UI.ReaderActivity.ChapterFragment;
+import com.teioh.m_feed.UI.ReaderActivity.ChapterMangaFragment;
 import com.teioh.m_feed.UI.ReaderActivity.IReader;
 import com.teioh.m_feed.UI.ReaderActivity.ReaderActivity;
 import com.teioh.m_feed.Utils.MangaDB;
@@ -15,14 +15,14 @@ import com.teioh.m_feed.Utils.SharedPrefs;
 
 import java.util.ArrayList;
 
-public class ReaderPresenter implements IReader.ActivityPresenter
+public class ReaderPresenter implements IReader.ReaderActivityPresenter
 {
     public final static String TAG = ReaderPresenter.class.getSimpleName();
     public final static String CHAPTER_LIST_KEY = TAG + ":CHAPTER_LIST";
     public final static String CHAPTER_POSITION = TAG + ":POSITION";
     public final static String PARENT_URL = TAG + ":PARENT_URL";
 
-    private IReader.ActivityView mReaderMap;
+    private IReader.ReaderActivityView mReaderMap;
     private ChapterPageAdapter mChapterPagerAdapter;
     private ArrayList<Chapter> mChapterList;
     private int mChapterPosition;
@@ -34,7 +34,7 @@ public class ReaderPresenter implements IReader.ActivityPresenter
      *
      * @param aMap
      */
-    public ReaderPresenter(IReader.ActivityView aMap)
+    public ReaderPresenter(IReader.ReaderActivityView aMap)
     {
         mReaderMap = aMap;
     }
@@ -154,8 +154,8 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     {
         try
         {
-            ChapterFragment lTempFragment;
-            if ((lTempFragment = ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition))) != null)
+            ChapterMangaFragment lTempFragment;
+            if ((lTempFragment = ((ChapterMangaFragment) mChapterPagerAdapter.getItem(aPosition))) != null)
             {
                 lTempFragment.updateToolbar();
             }
@@ -177,8 +177,8 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     {
         try
         {
-            ChapterFragment lTempFragment;
-            if ((lTempFragment = ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition))) != null)
+            ChapterMangaFragment lTempFragment;
+            if ((lTempFragment = ((ChapterMangaFragment) mChapterPagerAdapter.getItem(aPosition))) != null)
             {
                 lTempFragment.incrementChapterPage();
             }
@@ -200,8 +200,8 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     {
         try
         {
-            ChapterFragment lTempFragment;
-            if ((lTempFragment = ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition))) != null)
+            ChapterMangaFragment lTempFragment;
+            if ((lTempFragment = ((ChapterMangaFragment) mChapterPagerAdapter.getItem(aPosition))) != null)
             {
                 lTempFragment.decrementChapterPage();
             }
@@ -223,8 +223,8 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     {
         try
         {
-            ChapterFragment lTempFragment;
-            if ((lTempFragment = ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition))) != null)
+            ChapterMangaFragment lTempFragment;
+            if ((lTempFragment = ((ChapterMangaFragment) mChapterPagerAdapter.getItem(aPosition))) != null)
             {
                 lTempFragment.updateChapterViewStatus();
             }
@@ -246,8 +246,8 @@ public class ReaderPresenter implements IReader.ActivityPresenter
     {
         try
         {
-            ChapterFragment lChapterFragment;
-            if ((lChapterFragment = ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition))) != null)
+            ChapterMangaFragment lChapterFragment;
+            if ((lChapterFragment = ((ChapterMangaFragment) mChapterPagerAdapter.getItem(aPosition))) != null)
             {
                 lChapterFragment.onRefresh();
             }
@@ -291,16 +291,16 @@ public class ReaderPresenter implements IReader.ActivityPresenter
             boolean lCurrentValue = SharedPrefs.getChapterScrollVertical();
             SharedPrefs.setChapterScrollVertical(!lCurrentValue);
 
-            ChapterFragment lTempFragment;
-            if ((lTempFragment = ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition))) != null)
+            ChapterMangaFragment lTempFragment;
+            if ((lTempFragment = ((ChapterMangaFragment) mChapterPagerAdapter.getItem(aPosition))) != null)
             {
                 lTempFragment.toggleVerticalScrollSettings();
             }
-            if ((lTempFragment = ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition + 1))) != null)
+            if ((lTempFragment = ((ChapterMangaFragment) mChapterPagerAdapter.getItem(aPosition + 1))) != null)
             {
                 lTempFragment.toggleVerticalScrollSettings();
             }
-            if ((lTempFragment = ((ChapterFragment) mChapterPagerAdapter.getItem(aPosition - 1))) != null)
+            if ((lTempFragment = ((ChapterMangaFragment) mChapterPagerAdapter.getItem(aPosition - 1))) != null)
             {
                 lTempFragment.toggleVerticalScrollSettings();
             }

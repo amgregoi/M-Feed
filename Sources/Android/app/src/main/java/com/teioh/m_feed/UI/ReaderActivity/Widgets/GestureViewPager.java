@@ -15,7 +15,7 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
 
     private GestureImageView mGestureImageView;
     private GestureDetector mGestureDetector;
-    private OnSingleTapListener mSingleTapListener;
+    private UserGestureListener mUserGestureListener;
 
     private boolean mVertical;
 
@@ -58,28 +58,71 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
 
         if (mGestureImageView != null)
         {
+            //ACTION_DOWN workaround for checkSwipe()
+            if(aEvent.getAction() == MotionEvent.ACTION_DOWN)
+                mHorizontalSwipeX = aEvent.getX();
+
             if (!mGestureImageView.canScrollParent(mVertical))
             {
                 return false;
             }
+
+            if (mVertical)
+            {
+                boolean lResult = super.onInterceptTouchEvent(swapXY(aEvent));
+                swapXY(aEvent); // return touch coordinates to original reference frame for any child views
+                return lResult;
+            }
         }
-        if (mVertical)
-        {
-            boolean lResult = super.onInterceptTouchEvent(swapXY(aEvent));
-            swapXY(aEvent); // return touch coordinates to original reference frame for any child views
-            return lResult;
-        }
-        else
-        {
-            return super.onInterceptTouchEvent(aEvent);
-        }
+
+        return super.onInterceptTouchEvent(aEvent);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev)
     {
+        checkOverScroll(ev);
+
         if (mVertical) return super.onTouchEvent(swapXY(ev));
         else return super.onTouchEvent(ev);
+    }
+
+    private void checkOverScroll(MotionEvent ev)
+    {
+        if (getCurrentItem() == 0 && checkSwipe(ev) == eSwipeDirection.LEFT)
+        {
+            mUserGestureListener.onLeft();
+        }
+        else if (getAdapter() != null &&
+                getAdapter().getCount() - 1 == getCurrentItem() &&
+                checkSwipe(ev) == eSwipeDirection.RIGHT)
+        {
+            mUserGestureListener.onRight();
+        }
+    }
+
+    float mHorizontalSwipeX;
+
+    private eSwipeDirection checkSwipe(MotionEvent ev)
+    {
+        switch (ev.getAction())
+        {
+            //ACTION_DOWN is getting handled up stream, need to look into this..
+            case MotionEvent.ACTION_DOWN:
+                mHorizontalSwipeX = ev.getX();
+                break;
+            case MotionEvent.ACTION_UP:
+                if (mHorizontalSwipeX < ev.getX())
+                {
+                    return eSwipeDirection.LEFT;
+                }
+                else
+                {
+                    return eSwipeDirection.RIGHT;
+                }
+        }
+
+        return eSwipeDirection.NEUTRAL;
     }
 
     private void fetchGestureImageViewByTag()
@@ -173,9 +216,9 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
         }
         else
         {
-            if (mSingleTapListener != null)
+            if (mUserGestureListener != null)
             {
-                mSingleTapListener.onSingleTap();
+                mUserGestureListener.onSingleTap();
             }
         }
 
@@ -229,9 +272,9 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
         }
     }
 
-    public void setOnSingleTapListener(OnSingleTapListener singleTapListener)
+    public void setUserGesureListener(UserGestureListener singleTapListener)
     {
-        mSingleTapListener = singleTapListener;
+        mUserGestureListener = singleTapListener;
     }
 
     public boolean toggleVerticalScroller()
@@ -239,9 +282,20 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
         return setScrollerType();
     }
 
-    public interface OnSingleTapListener
+    public interface UserGestureListener
     {
         void onSingleTap();
+
+        void onLeft();
+
+        void onRight();
+    }
+
+    private enum eSwipeDirection
+    {
+        LEFT,
+        RIGHT,
+        NEUTRAL
     }
 }
 

@@ -1,5 +1,6 @@
 package com.teioh.m_feed.WebSources.Sources;
 
+import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.Utils.MangaDB;
@@ -64,6 +65,15 @@ public class Batoto extends SourceBase
             "Smut", "Sports",
             "Supernatural", "Tragedy", "Webtoon", "Yaoi", "Yuri"
     };
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public MangaEnums.eSourceType getSourceType()
+    {
+        return MangaEnums.eSourceType.MANGA;
+    }
 
     /**
      * {@inheritDoc}

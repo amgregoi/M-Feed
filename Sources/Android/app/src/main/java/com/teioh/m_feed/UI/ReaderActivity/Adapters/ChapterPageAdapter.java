@@ -6,9 +6,12 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
+import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Chapter;
-import com.teioh.m_feed.UI.ReaderActivity.ChapterFragment;
+import com.teioh.m_feed.UI.ReaderActivity.ChapterMangaFragment;
+import com.teioh.m_feed.UI.ReaderActivity.ChapterNovelFragment;
 import com.teioh.m_feed.Utils.MangaLogger;
+import com.teioh.m_feed.WebSources.SourceFactory;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -55,7 +58,15 @@ public class ChapterPageAdapter extends FragmentStatePagerAdapter
             }
             else
             {
-                Fragment lChapterFragment = ChapterFragment.getNewInstance(mParentFollowing, mChapterList.get(aPosition), aPosition);
+                Fragment lChapterFragment;
+                if (new SourceFactory().getSource().getSourceType() == MangaEnums.eSourceType.NOVEL)
+                {
+                    lChapterFragment = ChapterNovelFragment.getNewInstance(mParentFollowing, mChapterList.get(aPosition), aPosition);
+                }
+                else
+                {
+                    lChapterFragment = ChapterMangaFragment.getNewInstance(mParentFollowing, mChapterList.get(aPosition), aPosition);
+                }
                 mPageReferenceMap.put(aPosition, new WeakReference<>(lChapterFragment));
 
                 return lChapterFragment;
@@ -79,7 +90,14 @@ public class ChapterPageAdapter extends FragmentStatePagerAdapter
         Fragment lFragment = null;
         try
         {
-            lFragment = (ChapterFragment) super.instantiateItem(aContainer, aPosition);
+            if (new SourceFactory().getSource().getSourceType() == MangaEnums.eSourceType.NOVEL)
+            {
+                lFragment = (ChapterNovelFragment) super.instantiateItem(aContainer, aPosition);
+            }
+            else
+            {
+                lFragment = (ChapterMangaFragment) super.instantiateItem(aContainer, aPosition);
+            }
             mPageReferenceMap.put(aPosition, new WeakReference<>(lFragment));
         }
         catch (Exception aException)

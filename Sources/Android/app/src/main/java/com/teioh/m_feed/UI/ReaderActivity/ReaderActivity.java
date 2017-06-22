@@ -16,12 +16,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MangaActivity.MangaPresenter;
 import com.teioh.m_feed.UI.ReaderActivity.Presenters.ReaderPresenter;
 import com.teioh.m_feed.UI.ReaderActivity.Widgets.NoScrollViewPager;
 import com.teioh.m_feed.Utils.SharedPrefs;
+import com.teioh.m_feed.WebSources.SourceFactory;
 
 import java.util.ArrayList;
 
@@ -30,7 +32,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class ReaderActivity extends AppCompatActivity implements IReader.ActivityView
+public class ReaderActivity extends AppCompatActivity implements IReader.ReaderActivityView
 {
 
     @Bind(R.id.no_scroll_pager) NoScrollViewPager mViewPager;
@@ -44,7 +46,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     @Bind(R.id.endPageNumber) TextView mEndPage;
 
 
-    private IReader.ActivityPresenter mReaderPresenter;
+    private IReader.ReaderActivityPresenter mReaderPresenter;
 
     /***
      * This function creates and returns a new intent for the activity.
@@ -130,6 +132,15 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
             mViewPager.setAdapter(aAdapter);
             mViewPager.addOnPageChangeListener(this);
             mViewPager.setOffscreenPageLimit(0);
+
+            if (new SourceFactory().getSource().getSourceType() == MangaEnums.eSourceType.NOVEL)
+            {
+                mViewPager.setPagingEnabled(true);
+            }
+            else
+            {
+                mViewPager.setPagingEnabled(false);
+            }
         }
     }
 
@@ -272,15 +283,19 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
      * @param aTitle
      * @param aChapterTitle
      * @param aSize
-     * @param aChapter
+     * @param aCurrentPage
      */
     @Override
-    public void updateToolbar(String aTitle, String aChapterTitle, int aSize, int aChapter)
+    public void updateToolbar(String aTitle, String aChapterTitle, int aSize, int aCurrentPage, int aChapterPosition)
     {
-        mMangaTitle.setText(aTitle);
-        mChapterTitle.setText(aChapterTitle);
-        mEndPage.setText(String.valueOf(aSize));
-        mReaderPresenter.updateChapterViewStatus(mViewPager.getCurrentItem());
+        if (mViewPager.getCurrentItem() == aChapterPosition)
+        {
+            mMangaTitle.setText(aTitle);
+            mChapterTitle.setText(aChapterTitle);
+            mEndPage.setText(String.valueOf(aSize));
+            mCurrentPage.setText(String.valueOf(aCurrentPage));
+            mReaderPresenter.updateChapterViewStatus(mViewPager.getCurrentItem());
+        }
     }
 
     /***

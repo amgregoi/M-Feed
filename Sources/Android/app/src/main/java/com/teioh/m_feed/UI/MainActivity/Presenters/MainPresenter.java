@@ -295,21 +295,21 @@ public class MainPresenter implements IMain.ActivityPresenter
         try
         {
             SourceBase lSource = new SourceFactory().getSource();
-            MangaEnums.eSource lSourceType = lSource.getSourceByPosition(aPosition);
+            MangaEnums.eSource lSelectedSource = lSource.getSourceByPosition(aPosition);
 
             if (mViewPagerAdapterMain.hasRegisteredFragments())
             {
-                if (lSource.getSourceType() != lSourceType)
+                if (lSource.getCurrentSource() != lSelectedSource)
                 {
-                    new SourceFactory().getSource().setSourceType(lSourceType);
-                    Toast.makeText(mMainMapper.getContext(), "Changing source to " + lSourceType, Toast.LENGTH_SHORT).show();
+                    new SourceFactory().getSource().setCurrentSource(lSelectedSource);
+                    Toast.makeText(mMainMapper.getContext(), "Changing source to " + lSelectedSource, Toast.LENGTH_SHORT).show();
 
                     mMainMapper.setDefaultFilterImage();
                     mGenreFilterActive = false;
                     ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).updateSource();
                     ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).updateSource();
                     ((CatalogFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).updateSource();
-                    mMainMapper.setActivityTitle(lSourceType.name());
+                    mMainMapper.setActivityTitle(lSelectedSource.name());
                 }
             }
             else

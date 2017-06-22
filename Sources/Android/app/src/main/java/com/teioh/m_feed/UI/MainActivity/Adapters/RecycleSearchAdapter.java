@@ -118,7 +118,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
                  {
                      super.onLoadFailed(errorDrawable);
                      MangaLogger
-                             .logError(TAG, errorDrawable.toString(), "url=" + lMangaItem.getPicUrl());
+                             .logError(TAG, errorDrawable.toString(), "Image URL = " + lMangaItem.getPicUrl());
                  }
 
                  @Override

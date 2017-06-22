@@ -1,5 +1,6 @@
 package com.teioh.m_feed.WebSources.Sources;
 
+import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.Utils.MangaDB;
@@ -59,6 +60,14 @@ public class MangaHere extends SourceBase
             "Yuri"
     };
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public MangaEnums.eSourceType getSourceType()
+    {
+        return MangaEnums.eSourceType.MANGA;
+    }
 
     /**
      * {@inheritDoc}

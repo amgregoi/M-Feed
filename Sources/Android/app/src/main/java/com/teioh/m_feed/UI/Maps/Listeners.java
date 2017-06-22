@@ -38,7 +38,7 @@ public interface Listeners
 
         void showToolbar();
 
-        void updateToolbar(String aTitle, String aChapterTitle, int aSize, int aPage);
+        void updateToolbar(String aTitle, String aChapterTitle, int aSize, int aPage, int aChapterPosition);
 
         void updateCurrentPage(int aPosition);
 

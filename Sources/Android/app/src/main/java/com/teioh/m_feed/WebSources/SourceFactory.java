@@ -20,6 +20,8 @@ public class SourceFactory
      */
     public String getSourceName()
     {
-        return MangaEnums.eSource.valueOf(SharedPrefs.getSavedSource()).getSource().getSourceType().name();
+        return MangaEnums.eSource.valueOf(SharedPrefs.getSavedSource()).getSource().getCurrentSource().name();
     }
+
+
 }

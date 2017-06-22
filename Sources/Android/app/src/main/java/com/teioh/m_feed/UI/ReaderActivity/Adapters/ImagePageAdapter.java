@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
@@ -70,7 +71,7 @@ public class ImagePageAdapter extends PagerAdapter
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View lView = mInflater.inflate(R.layout.reader_chapter_item, aContainer, false);
 
-        GestureImageView mImage = (GestureImageView) lView.findViewById(R.id.chapterPageImageView);
+        GestureImageView mImage = (GestureImageView) lView.findViewById(R.id.chapter_page_image_view);
 
         RequestOptions lOptions = new RequestOptions();
         lOptions.fitCenter()
