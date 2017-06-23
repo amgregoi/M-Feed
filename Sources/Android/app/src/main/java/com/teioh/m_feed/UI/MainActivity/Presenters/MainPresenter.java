@@ -47,7 +47,7 @@ public class MainPresenter implements IMain.ActivityPresenter
     private IMain.ActivityView mMainMapper;
     private Fragment mSettingsFragment;
     private boolean mGenreFilterActive;
-    private long mRecentMangaId;
+    private String mRecentMangaUrl;
 
     private GoogleSignInAccount mGoogleAccount;
 
@@ -136,7 +136,7 @@ public class MainPresenter implements IMain.ActivityPresenter
         {
             mMainMapper.closeDrawer();
             setupDrawerLayouts();
-            if (mRecentMangaId >= 0) updateRecentManga();
+            if (mRecentMangaUrl != null) updateRecentManga();
         }
         catch (Exception aException)
         {
@@ -294,14 +294,14 @@ public class MainPresenter implements IMain.ActivityPresenter
 
         try
         {
-            SourceBase lSource = new SourceFactory().getSource();
+            SourceBase lSource = SourceFactory.getInstance().getSource();
             MangaEnums.eSource lSelectedSource = lSource.getSourceByPosition(aPosition);
 
             if (mViewPagerAdapterMain.hasRegisteredFragments())
             {
                 if (lSource.getCurrentSource() != lSelectedSource)
                 {
-                    new SourceFactory().getSource().setCurrentSource(lSelectedSource);
+                    SourceFactory.getInstance().getSource().setCurrentSource(lSelectedSource);
                     Toast.makeText(mMainMapper.getContext(), "Changing source to " + lSelectedSource, Toast.LENGTH_SHORT).show();
 
                     mMainMapper.setDefaultFilterImage();
@@ -462,14 +462,14 @@ public class MainPresenter implements IMain.ActivityPresenter
 
         try
         {
-            Manga lManga = MangaDB.getInstance().getManga(mRecentMangaId);
+            Manga lManga = MangaDB.getInstance().getManga(mRecentMangaUrl);
 
             if (lManga != null)
             {
                 lResult &= ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).updateRecentSelection(lManga);
                 lResult &= ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).updateRecentSelection(lManga);
                 lResult &= ((CatalogFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).updateRecentSelection(lManga);
-                mRecentMangaId = -1;
+                mRecentMangaUrl = null;
             }
         }
         catch (Exception aException)
@@ -484,12 +484,12 @@ public class MainPresenter implements IMain.ActivityPresenter
     /***
      * This function updates the last clicked manga.
      *
-     * @param aMangaId
+     * @param aUrl
      */
     @Override
-    public void setRecentManga(long aMangaId)
+    public void setRecentManga(String aUrl)
     {
-        mRecentMangaId = aMangaId;
+        mRecentMangaUrl = aUrl;
     }
 
     /***

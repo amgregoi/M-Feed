@@ -203,12 +203,12 @@ public class MangaPresenter implements IManga.ActivityPresenter
             {
                 if (mManga.getInitialized() == 0)
                 {
-                    mObservableMangaSubscription = new SourceFactory().getSource()
-                                                                      .updateMangaObservable(new RequestWrapper(mManga)).cache()
-                                                                      .doOnError(throwable -> MangaLogger
-                                                                              .logError(TAG, throwable.getMessage()))
-                                                                      .observeOn(AndroidSchedulers.mainThread())
-                                                                      .subscribe(manga -> updateMangaView(manga));
+                    mObservableMangaSubscription = SourceFactory.getInstance().getSource()
+                                                                .updateMangaObservable(new RequestWrapper(mManga)).cache()
+                                                                .doOnError(throwable -> MangaLogger
+                                                                        .logError(TAG, throwable.getMessage()))
+                                                                .observeOn(AndroidSchedulers.mainThread())
+                                                                .subscribe(manga -> updateMangaView(manga));
                 }
                 else
                 {
@@ -239,11 +239,11 @@ public class MangaPresenter implements IManga.ActivityPresenter
             {
                 if (!mChapterFlag)
                 {
-                    mChapterListSubscription = new SourceFactory().getSource()
-                                                                  .getChapterListObservable(new RequestWrapper(mManga)).cache()
-                                                                  .doOnError(throwable -> MangaLogger
-                                                                          .logError(TAG, throwable.getMessage()))
-                                                                  .subscribe(chapters -> updateChapterList(chapters));
+                    mChapterListSubscription = SourceFactory.getInstance().getSource()
+                                                            .getChapterListObservable(new RequestWrapper(mManga)).cache()
+                                                            .doOnError(throwable -> MangaLogger
+                                                                    .logError(TAG, throwable.getMessage()))
+                                                            .subscribe(chapters -> updateChapterList(chapters));
                 }
                 else
                 {
@@ -285,6 +285,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
                 {
                     mManga.setInitialized(1);
                 }
+                mManga.setInitialized(0); // TODO remove..
 
                 MangaDB.getInstance().putManga(aManga);
                 if (mChapterListSubscription != null)

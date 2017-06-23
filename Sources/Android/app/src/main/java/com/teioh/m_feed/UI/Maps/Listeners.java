@@ -18,7 +18,7 @@ public interface Listeners
     interface MainFragmentListener
     {
 
-        boolean setRecentSelection(Long aId);
+        boolean setRecentSelection(String aUrl);
 
         boolean updateRecentSelection(Manga aManga);
 

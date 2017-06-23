@@ -18,7 +18,7 @@ import java.util.List;
 
 import rx.schedulers.Schedulers;
 
-public class MangaHere extends SourceBase
+public class MangaHere extends SourceManga
 {
     final public static String TAG = MangaHere.class.getSimpleName();
 

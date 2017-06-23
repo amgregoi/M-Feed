@@ -45,6 +45,9 @@ public class ReaderActivity extends AppCompatActivity implements IReader.ReaderA
     @Bind(R.id.currentPageNumber) TextView mCurrentPage;
     @Bind(R.id.endPageNumber) TextView mEndPage;
 
+    @Bind(R.id.backPageButton) ImageButton mBackPageButton;
+    @Bind(R.id.forwardPageButton) ImageButton mForwardPageButton;
+
 
     private IReader.ReaderActivityPresenter mReaderPresenter;
 
@@ -133,7 +136,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.ReaderA
             mViewPager.addOnPageChangeListener(this);
             mViewPager.setOffscreenPageLimit(0);
 
-            if (new SourceFactory().getSource().getSourceType() == MangaEnums.eSourceType.NOVEL)
+            if (SourceFactory.getInstance().getSource().getSourceType() == MangaEnums.eSourceType.NOVEL)
             {
                 mViewPager.setPagingEnabled(true);
             }
@@ -166,6 +169,13 @@ public class ReaderActivity extends AppCompatActivity implements IReader.ReaderA
         mToolbarHeader.setNavigationOnClickListener(v -> onBackPressed());
         mToolbarHeader.setPadding(0, getStatusBarHeight(), 0, 0);
         mToolbarFooter.setPadding(0, 0, 0, getNavBarHeight());
+
+        if (SourceFactory.getInstance().getSource().getSourceType() == MangaEnums.eSourceType.NOVEL)
+        {
+            mVerticalScrollButton.setVisibility(View.GONE);
+            mForwardPageButton.setVisibility(View.GONE);
+            mBackPageButton.setVisibility(View.GONE);
+        }
     }
 
     /***

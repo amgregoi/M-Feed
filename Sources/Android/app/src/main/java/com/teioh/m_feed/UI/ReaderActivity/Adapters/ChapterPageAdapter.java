@@ -59,7 +59,7 @@ public class ChapterPageAdapter extends FragmentStatePagerAdapter
             else
             {
                 Fragment lChapterFragment;
-                if (new SourceFactory().getSource().getSourceType() == MangaEnums.eSourceType.NOVEL)
+                if (SourceFactory.getInstance().getSource().getSourceType() == MangaEnums.eSourceType.NOVEL)
                 {
                     lChapterFragment = ChapterNovelFragment.getNewInstance(mParentFollowing, mChapterList.get(aPosition), aPosition);
                 }
@@ -90,7 +90,7 @@ public class ChapterPageAdapter extends FragmentStatePagerAdapter
         Fragment lFragment = null;
         try
         {
-            if (new SourceFactory().getSource().getSourceType() == MangaEnums.eSourceType.NOVEL)
+            if (SourceFactory.getInstance().getSource().getSourceType() == MangaEnums.eSourceType.NOVEL)
             {
                 lFragment = (ChapterNovelFragment) super.instantiateItem(aContainer, aPosition);
             }

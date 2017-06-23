@@ -33,7 +33,7 @@ public class RecentPresenter extends MainFragmentPresenterBase
             if (NetworkService.isNetworkAvailable())
             {
                 mViewMapper.startRefresh();
-                mMangaListSubscription = new SourceFactory().getSource()
+                mMangaListSubscription = SourceFactory.getInstance().getSource()
                                                             .getRecentMangaObservable()
                                                             .cache()
                                                             .subscribe(aManga -> updateMangaGridView(aManga));

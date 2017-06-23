@@ -385,7 +385,7 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
             {
                 manga = mAdapter.getItemAt(mAdAdapter.getOriginalPosition(aPos));
             }
-            if (mViewMapper.setRecentSelection(manga.get_id()))
+            if (mViewMapper.setRecentSelection(manga.getMangaURL()))
             {
                 Intent intent = MangaActivity.getNewInstance(mViewMapper.getContext(), manga.getMangaURL());
                 mViewMapper.getContext().startActivity(intent);

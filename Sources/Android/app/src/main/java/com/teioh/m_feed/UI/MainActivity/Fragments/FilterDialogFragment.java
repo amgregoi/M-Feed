@@ -67,7 +67,7 @@ public class FilterDialogFragment extends DialogFragment
         View lView = aInflater.inflate(R.layout.main_search_dialog, aContainer, false);
         ButterKnife.bind(this, lView);
 
-        mAdapter = new GenreListAdapter(getContext(), new ArrayList<>(Arrays.asList(new SourceFactory().getSource().getGenres())));
+        mAdapter = new GenreListAdapter(getContext(), new ArrayList<>(Arrays.asList(SourceFactory.getInstance().getSource().getGenres())));
         registerAdapter(mAdapter);
 
         getDialog().setCanceledOnTouchOutside(true);
@@ -104,9 +104,11 @@ public class FilterDialogFragment extends DialogFragment
                                          });
         mClearButton.setOnClickListener(aView ->
                                         {
-                                            mAdapter = new GenreListAdapter(getContext(), new ArrayList<>(Arrays.asList(new SourceFactory()
-                                                                                                                                .getSource()
-                                                                                                                                .getGenres())));
+                                            mAdapter = new GenreListAdapter(getContext(),
+                                                                            new ArrayList<>(Arrays.asList(SourceFactory
+                                                                                                                  .getInstance()
+                                                                                                                  .getSource()
+                                                                                                                  .getGenres())));
                                             registerAdapter(mAdapter);
                                         });
     }
@@ -120,7 +122,7 @@ public class FilterDialogFragment extends DialogFragment
         List<String> lSelectionArgs = new ArrayList<>();
 
         lSelection.append("source" + " = ?");
-        lSelectionArgs.add(new SourceFactory().getSourceName());
+        lSelectionArgs.add(SourceFactory.getInstance().getSourceName());
 
         List<String> lKeepList = mAdapter.getGenreListByStatus(1);
         List<String> lRemoveList = mAdapter.getGenreListByStatus(2);

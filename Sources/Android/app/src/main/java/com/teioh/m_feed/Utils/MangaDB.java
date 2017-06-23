@@ -180,7 +180,8 @@ public class MangaDB extends SQLiteOpenHelper
                                          ArrayList<Manga> lMangaList = new ArrayList<>();
                                          QueryResultIterable<Manga> lQuery = cupboard().withDatabase(getReadableDatabase())
                                                                                        .query(Manga.class)
-                                                                                       .withSelection("NOT " + mMangaTable.Following + " = ? AND " + mMangaTable.Source + " = ?", "0", new SourceFactory()
+                                                                                       .withSelection("NOT " + mMangaTable.Following + " = ? AND " + mMangaTable.Source + " = ?", "0", SourceFactory
+                                                                                               .getInstance()
                                                                                                .getSourceName())
                                                                                        .query();
 
@@ -365,7 +366,8 @@ public class MangaDB extends SQLiteOpenHelper
     {
         QueryResultIterable<Manga> lQuery = cupboard().withDatabase(getReadableDatabase())
                                                       .query(Manga.class)
-                                                      .withSelection("NOT" + mMangaTable.Following + " = ? AND " + mMangaTable.Source + " = ?", "0", new SourceFactory()
+                                                      .withSelection("NOT" + mMangaTable.Following + " = ? AND " + mMangaTable.Source + " = ?", "0", SourceFactory
+                                                              .getInstance()
                                                               .getSourceName())
                                                       .query();
 

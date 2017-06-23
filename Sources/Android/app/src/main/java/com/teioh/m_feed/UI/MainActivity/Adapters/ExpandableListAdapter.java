@@ -163,7 +163,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter
         TextView lSourceTextView = (TextView) aConvertView.findViewById(R.id.sourceTitle);
         lSourceTextView.setText(lSource);
 
-        if (lSource.equals(new SourceFactory().getSourceName()))
+        if (lSource.equals(SourceFactory.getInstance().getSourceName()))
         {
             lSourceTextView.setTextColor(mContext.getResources().getColor(R.color.ColorAccent));
             lBar.setBackgroundColor(mContext.getResources().getColor(R.color.ColorAccent));

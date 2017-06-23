@@ -202,15 +202,15 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * This function sets the recently selected item according to is ID
+     * This function sets the recently selected item according to its url.
      *
-     * @param aId
+     * @param aUrl
      * @return
      */
     @Override
-    public boolean setRecentSelection(Long aId)
+    public boolean setRecentSelection(String aUrl)
     {
-        return mListener.setRecentSelection(aId);
+        return mListener.setRecentSelection(aUrl);
     }
 
     /***

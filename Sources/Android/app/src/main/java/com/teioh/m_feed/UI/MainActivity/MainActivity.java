@@ -42,6 +42,8 @@ import com.teioh.m_feed.WebSources.SourceFactory;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.transform.Source;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -243,7 +245,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     public void setupToolbar()
     {
         setSupportActionBar(mToolBar);
-        mActivityTitle.setText(new SourceFactory().getSourceName());
+        mActivityTitle.setText(SourceFactory.getInstance().getSourceName());
 
         mFilterView.setOnClickListener(v ->
                                        {
@@ -256,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
                                            {
                                                mMainPresenter.onClearGenreFilter();
                                                mFilterView.setImageDrawable(getResources().getDrawable(R.drawable.filter_outline_24dp));
-                                               mActivityTitle.setText(new SourceFactory().getSourceName());
+                                               mActivityTitle.setText(SourceFactory.getInstance().getSourceName());
                                            }
                                        });
     }
@@ -336,7 +338,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         {
             mSearchView.setVisibility(View.VISIBLE);
             mFilterView.setVisibility(View.VISIBLE);
-            setActivityTitle(new SourceFactory().getSourceName());
+            setActivityTitle(SourceFactory.getInstance().getSourceName());
         }
         else
         {
@@ -438,14 +440,14 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
      * @return
      */
     @Override
-    public boolean setRecentSelection(Long aId)
+    public boolean setRecentSelection(String aUrl)
     {
         if (mMultiActionMenu.isExpanded())
         {
             mMultiActionMenu.collapse();
             return false;
         }
-        mMainPresenter.setRecentManga(aId);
+        mMainPresenter.setRecentManga(aUrl);
         return true;
     }
 
@@ -470,7 +472,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         //reset genre filter and UI
         mMainPresenter.onClearGenreFilter();
         mFilterView.setImageDrawable(getResources().getDrawable(R.drawable.filter_outline_24dp));
-        mActivityTitle.setText(new SourceFactory().getSourceName());
+        mActivityTitle.setText(SourceFactory.getInstance().getSourceName());
 
         //reset
         mMainPresenter.onFilterSelected(MangaEnums.eFilterStatus.NONE);
@@ -563,7 +565,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         {
             mMainPresenter.onClearGenreFilter();
             mFilterView.setImageDrawable(getResources().getDrawable(R.drawable.filter_outline_24dp));
-            mActivityTitle.setText(new SourceFactory().getSourceName());
+            mActivityTitle.setText(SourceFactory.getInstance().getSourceName());
         }
         else if (!mToast.getView().isShown())
         {

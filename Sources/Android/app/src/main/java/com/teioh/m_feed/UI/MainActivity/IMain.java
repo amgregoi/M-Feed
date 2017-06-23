@@ -67,7 +67,7 @@ public interface IMain
 
         boolean updateRecentManga();
 
-        void setRecentManga(long aMangaId);
+        void setRecentManga(String aUrl);
 
         boolean updateSignIn(GoogleSignInResult aAccount);
     }
@@ -81,7 +81,7 @@ public interface IMain
 
         void updateSelection(Manga aManga);
 
-        boolean setRecentSelection(Long aId);
+        boolean setRecentSelection(String aUrl);
 
         boolean updateRecentSelection(Manga aManga);
 

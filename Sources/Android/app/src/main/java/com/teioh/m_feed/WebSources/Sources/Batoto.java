@@ -23,7 +23,7 @@ import java.util.Locale;
 
 import rx.schedulers.Schedulers;
 
-public class Batoto extends SourceBase
+public class Batoto extends SourceManga
 {
     final public static String TAG = Batoto.class.getSimpleName();
 
