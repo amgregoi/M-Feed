@@ -13,8 +13,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -44,6 +42,8 @@ import com.teioh.m_feed.WebSources.SourceFactory;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.transform.Source;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -69,13 +69,8 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     private IMain.ActivityPresenter mMainPresenter;
     private GoogleApiClient mGoogleApiClient;
 
-    public IMain.ActivityPresenter getPresenter()
-    {
-        return mMainPresenter;
-    }
-
     /***
-     * TODO..
+     * This function creates and returns a new intent for this activity.
      *
      * @param aContext
      * @return
@@ -86,8 +81,13 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         return lIntent;
     }
 
+    public IMain.ActivityPresenter getPresenter()
+    {
+        return mMainPresenter;
+    }
+
     /***
-     * TODO..
+     * This function initializes the view of the fragment.
      *
      * @param aSavedInstanceState
      */
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     }
 
     /***
-     * TODO..
+     * This function is called in the fragment lifecycle.
      *
      * @param aSavedInstanceState
      */
@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     }
 
     /***
-     * TODO..
+     * This function is called in the fragment lifecycle.
      *
      * @param aNewConfig
      */
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     }
 
     /***
-     * TODO..
+     * This function is called when a fragment or activities onDestroy is called in their life cycle chain.
      */
     @Override
     public void onDestroy()
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     }
 
     /***
-     * TODO..
+     * This function saves relevant data that needs to persist between device state changes.
      *
      * @param aSave
      */
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     }
 
     /***
-     * TODO..
+     * This function trims Glide cache when memory is low.
      *
      * @param aLevel
      */
@@ -172,31 +172,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     }
 
     /***
-     * TODO..
-     *
-     * @param aMenu
-     * @return
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu aMenu)
-    {
-        return true;
-    }
-
-    /***
-     * TODO..
-     *
-     * @param aItem
-     * @return
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem aItem)
-    {
-        return super.onOptionsItemSelected(aItem);
-    }
-
-    /***
-     * TODO..
+     * This function is called when an activity re-enters from another view (like a dialog fragment)
      *
      * @param aResultCode
      * @param aData
@@ -223,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     }
 
     /***
-     * TODO..
+     * Not Implemented.
      *
      * @param aQueryText
      * @return
@@ -235,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     }
 
     /***
-     * TODO..
+     * This function performs the text query filter.
      *
      * @param aQueryText
      * @return
@@ -248,16 +224,9 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     }
 
     /***
-     * TODO..
-     *
-     * @return
+     * This function registers the pager adapter.
+     * @param aAdapter
      */
-    @Override
-    public Context getContext()
-    {
-        return this;
-    }
-
     @Override
     public void registerAdapter(ViewPagerAdapterMain aAdapter)
     {
@@ -269,11 +238,14 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         }
     }
 
+    /***
+     * This function initializes the activity toolbar.
+     */
     @Override
     public void setupToolbar()
     {
         setSupportActionBar(mToolBar);
-        mActivityTitle.setText(new SourceFactory().getSourceName());
+        mActivityTitle.setText(SourceFactory.getInstance().getSourceName());
 
         mFilterView.setOnClickListener(v ->
                                        {
@@ -286,11 +258,14 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
                                            {
                                                mMainPresenter.onClearGenreFilter();
                                                mFilterView.setImageDrawable(getResources().getDrawable(R.drawable.filter_outline_24dp));
-                                               mActivityTitle.setText(new SourceFactory().getSourceName());
+                                               mActivityTitle.setText(SourceFactory.getInstance().getSourceName());
                                            }
                                        });
     }
 
+    /***
+     * This function initializes the tab layout.
+     */
     @Override
     public void setupTabLayout()
     {
@@ -299,6 +274,9 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         mTabLayout.setCustomTabColorizer(position -> getResources().getColor(R.color.ColorAccent));
     }
 
+    /***
+     * This function initializes the search view.
+     */
     @Override
     public void setupSearchView()
     {
@@ -321,24 +299,38 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
                                                       });
     }
 
+    /***
+     * This function updates the activity title in the toolbar.
+     * @param aTitle
+     */
     @Override
     public void setActivityTitle(String aTitle)
     {
         mActivityTitle.setText(aTitle);
     }
 
+    /***
+     * This function sets the current item of the viewpager.
+     * @param aPosition
+     */
     @Override
     public void setPageAdapterItem(int aPosition)
     {
         mViewPager.setCurrentItem(aPosition);
     }
 
+    /***
+     * This function sets the default filter image inside the toolbar (Non active filter image)
+     */
     @Override
     public void setDefaultFilterImage()
     {
         mFilterView.setImageDrawable(getResources().getDrawable(R.drawable.filter_outline_24dp));
     }
 
+    /***
+     * This function toggles toolbar elements.
+     */
     @Override
     public void toggleToolbarElements()
     {
@@ -346,7 +338,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         {
             mSearchView.setVisibility(View.VISIBLE);
             mFilterView.setVisibility(View.VISIBLE);
-            setActivityTitle(new SourceFactory().getSourceName());
+            setActivityTitle(SourceFactory.getInstance().getSourceName());
         }
         else
         {
@@ -356,6 +348,9 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         }
     }
 
+    /***
+     * This function initializes drawer layout listener.
+     */
     @Override
     public void setDrawerLayoutListener()
     {
@@ -378,18 +373,29 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
+    /***
+     * This function closes the drawer layout.
+     */
     @Override
     public void closeDrawer()
     {
         mDrawerLayout.closeDrawers();
     }
 
+    /***
+     * This function opens the drawer layout.
+     */
     @Override
     public void openDrawer()
     {
         mDrawerLayout.openDrawer(mDrawerList);
     }
 
+    /***
+     * This functin initializes the drawer layout.
+     * @param aDrawerItems
+     * @param aSourceCollections
+     */
     @Override
     public void setupDrawerLayout(List<String> aDrawerItems, Map<String, List<String>> aSourceCollections)
     {
@@ -417,31 +423,56 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
                                             });
     }
 
+    /***
+     * This function returns the activity's context.
+     *
+     * @return
+     */
     @Override
-    public boolean setRecentSelection(Long aId)
+    public Context getContext()
+    {
+        return this;
+    }
+
+    /***
+     * this function sets the recently selected item.
+     * @param aId
+     * @return
+     */
+    @Override
+    public boolean setRecentSelection(String aUrl)
     {
         if (mMultiActionMenu.isExpanded())
         {
             mMultiActionMenu.collapse();
             return false;
         }
-        mMainPresenter.setRecentManga(aId);
+        mMainPresenter.setRecentManga(aUrl);
         return true;
     }
 
+    /***
+     * This function updates the recently selected item.
+     * @param aManga
+     * @return
+     */
     @Override
     public boolean updateRecentSelection(Manga aManga)
     {
         return mMainPresenter.updateRecentManga();
     }
 
+    /***
+     * This function removes search and query filters.
+     * @return
+     */
     @Override
     public boolean removeFilters()
     {
         //reset genre filter and UI
         mMainPresenter.onClearGenreFilter();
         mFilterView.setImageDrawable(getResources().getDrawable(R.drawable.filter_outline_24dp));
-        mActivityTitle.setText(new SourceFactory().getSourceName());
+        mActivityTitle.setText(SourceFactory.getInstance().getSourceName());
 
         //reset
         mMainPresenter.onFilterSelected(MangaEnums.eFilterStatus.NONE);
@@ -450,12 +481,19 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         return true;  //update
     }
 
+    /***
+     * Not Implemented
+     * @param aResult
+     */
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult aResult)
     {
-
+        //do nothing
     }
 
+    /***
+     * This function performs the google sign in auth.
+     */
     @Override
     public void signIn()
     {
@@ -463,12 +501,21 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         startActivityForResult(signInIntent, 8008);
     }
 
+    /***
+     * This function performs the google sign out.
+     */
     @Override
     public void signOut()
     {
         Auth.GoogleSignInApi.signOut(mGoogleApiClient);
     }
 
+    /***
+     * This function retrieves the result of the google sign in.
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -482,6 +529,9 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         }
     }
 
+    /***
+     * This function handles various outcomes of perform a back press in the activity.
+     */
     @Override
     public void onBackPressed()
     {
@@ -515,7 +565,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         {
             mMainPresenter.onClearGenreFilter();
             mFilterView.setImageDrawable(getResources().getDrawable(R.drawable.filter_outline_24dp));
-            mActivityTitle.setText(new SourceFactory().getSourceName());
+            mActivityTitle.setText(SourceFactory.getInstance().getSourceName());
         }
         else if (!mToast.getView().isShown())
         {
@@ -532,7 +582,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     }
 
     /***
-     * TODO..
+     * This function clears the Glide cache when low on memory.
      */
     @Override
     public void onLowMemory()
@@ -542,7 +592,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     }
 
     /***
-     * TODO..
+     * This function is called when a fragment or activities onPause() is called in their life cycle chain.
      */
     @Override
     protected void onPause()
@@ -552,7 +602,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     }
 
     /***
-     * TODO..
+     * This function is called when a fragment or activities onResume() is called in their life cycle chain.
      */
     @Override
     protected void onResume()
@@ -561,6 +611,9 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         mMainPresenter.onResume();
     }
 
+    /***
+     * This function performs filter by status (ALL)
+     */
     @OnClick(R.id.fab_all)
     public void onFABAll()
     {
@@ -569,6 +622,9 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         mMainPresenter.onFilterSelected(MangaEnums.eFilterStatus.NONE);
     }
 
+    /***
+     * This function performs filter by status (COMPLETE)
+     */
     @OnClick(R.id.fab_complete)
     public void onFABComplete()
     {
@@ -576,6 +632,9 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         mMainPresenter.onFilterSelected(MangaEnums.eFilterStatus.COMPLETE);
     }
 
+    /***
+     * This function performs filter by status (LIBRARY)
+     */
     @OnClick(R.id.fab_library)
     public void onFABLibrary()
     {
@@ -583,6 +642,9 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         mMainPresenter.onFilterSelected(MangaEnums.eFilterStatus.FOLLOWING);
     }
 
+    /***
+     * This function performs filter by status (ON_HOLD)
+     */
     @OnClick(R.id.fab_on_hold)
     public void onFABHold()
     {
@@ -590,6 +652,9 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         mMainPresenter.onFilterSelected(MangaEnums.eFilterStatus.ON_HOLD);
     }
 
+    /***
+     * This function performs filter by status (READING)
+     */
     @OnClick(R.id.fab_reading)
     public void onFABReading()
     {

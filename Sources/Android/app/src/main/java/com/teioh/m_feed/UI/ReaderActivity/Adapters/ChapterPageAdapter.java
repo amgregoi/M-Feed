@@ -6,9 +6,12 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
+import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Chapter;
-import com.teioh.m_feed.UI.ReaderActivity.ChapterFragment;
+import com.teioh.m_feed.UI.ReaderActivity.ChapterMangaFragment;
+import com.teioh.m_feed.UI.ReaderActivity.ChapterNovelFragment;
 import com.teioh.m_feed.Utils.MangaLogger;
+import com.teioh.m_feed.WebSources.SourceFactory;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -24,8 +27,9 @@ public class ChapterPageAdapter extends FragmentStatePagerAdapter
     private SparseArray<WeakReference<Fragment>> mPageReferenceMap = new SparseArray<WeakReference<Fragment>>();
 
     private boolean mParentFollowing;
+
     /***
-     * TODO..
+     * This is the constructor for the Chapter Page Adapter
      * @param aFragmentManager
      * @param aChapterList
      */
@@ -37,7 +41,7 @@ public class ChapterPageAdapter extends FragmentStatePagerAdapter
     }
 
     /***
-     * TODO..
+     * This function returns the chapter fragment specified by its position.
      * @param aPosition
      * @return
      */
@@ -54,7 +58,15 @@ public class ChapterPageAdapter extends FragmentStatePagerAdapter
             }
             else
             {
-                Fragment lChapterFragment = ChapterFragment.getNewInstance(mParentFollowing , mChapterList.get(aPosition), aPosition);
+                Fragment lChapterFragment;
+                if (SourceFactory.getInstance().getSource().getSourceType() == MangaEnums.eSourceType.NOVEL)
+                {
+                    lChapterFragment = ChapterNovelFragment.getNewInstance(mParentFollowing, mChapterList.get(aPosition), aPosition);
+                }
+                else
+                {
+                    lChapterFragment = ChapterMangaFragment.getNewInstance(mParentFollowing, mChapterList.get(aPosition), aPosition);
+                }
                 mPageReferenceMap.put(aPosition, new WeakReference<>(lChapterFragment));
 
                 return lChapterFragment;
@@ -67,7 +79,37 @@ public class ChapterPageAdapter extends FragmentStatePagerAdapter
     }
 
     /***
-     * TODO..
+     * This function instantiates the item specified by its position.
+     * @param aContainer
+     * @param aPosition
+     * @return
+     */
+    @Override
+    public Object instantiateItem(ViewGroup aContainer, int aPosition)
+    {
+        Fragment lFragment = null;
+        try
+        {
+            if (SourceFactory.getInstance().getSource().getSourceType() == MangaEnums.eSourceType.NOVEL)
+            {
+                lFragment = (ChapterNovelFragment) super.instantiateItem(aContainer, aPosition);
+            }
+            else
+            {
+                lFragment = (ChapterMangaFragment) super.instantiateItem(aContainer, aPosition);
+            }
+            mPageReferenceMap.put(aPosition, new WeakReference<>(lFragment));
+        }
+        catch (Exception aException)
+        {
+            MangaLogger.logError(TAG, aException.getMessage());
+        }
+
+        return lFragment;
+    }
+
+    /***
+     * This function destroys the chapter fragment item specified by its position.
      * @param aContainer
      * @param aPosition
      * @param aObject
@@ -80,32 +122,7 @@ public class ChapterPageAdapter extends FragmentStatePagerAdapter
     }
 
     /***
-     * TODO..
-     * @param aContainer
-     * @param aPosition
-     * @return
-     */
-    @Override
-    public Object instantiateItem(ViewGroup aContainer, int aPosition)
-    {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
-        Fragment lFragment = null;
-        try
-        {
-            lFragment = (ChapterFragment) super.instantiateItem(aContainer, aPosition);
-            mPageReferenceMap.put(aPosition, new WeakReference<>(lFragment));
-        }
-        catch (Exception aException)
-        {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
-        }
-
-        return lFragment;
-    }
-
-    /***
-     * TODO..
+     * This function returns the chapter count.
      * @return
      */
     @Override

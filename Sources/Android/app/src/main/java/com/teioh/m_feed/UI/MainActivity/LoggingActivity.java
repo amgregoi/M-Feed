@@ -23,12 +23,21 @@ public class LoggingActivity extends AppCompatActivity
     private ArrayAdapter<String> mAdapter;
     private FloatingActionButton mRefresh;
 
+    /***
+     * This function creates and returns a new intent for this activity.
+     * @param aContext
+     * @return
+     */
     public static Intent getNewInstance(Context aContext)
     {
         Intent lIntent = new Intent(aContext, LoggingActivity.class);
         return lIntent;
     }
 
+    /***
+     * This function initializes the view of the activity.
+     * @param aSavedInstanceState
+     */
     @Override
     protected void onCreate(@Nullable Bundle aSavedInstanceState)
     {
@@ -39,10 +48,12 @@ public class LoggingActivity extends AppCompatActivity
         mLogs.setAdapter(mAdapter);
 
         mRefresh = (FloatingActionButton) findViewById(R.id.refresh_log);
-        mRefresh.setOnClickListener(v -> {
-            mAdapter = new ArrayAdapter<String>(this, R.layout.logging_item, R.id.log_item, MangaLogger.getLogs());
-            mLogs.setAdapter(mAdapter);
-        });
+        mRefresh.setOnClickListener(v ->
+                                    {
+                                        mAdapter = new ArrayAdapter<String>(this, R.layout.logging_item, R.id.log_item, MangaLogger
+                                                .getLogs());
+                                        mLogs.setAdapter(mAdapter);
+                                    });
     }
 
 

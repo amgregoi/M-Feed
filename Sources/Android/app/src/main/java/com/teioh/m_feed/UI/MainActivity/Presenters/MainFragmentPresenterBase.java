@@ -48,178 +48,6 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     }
 
     /***
-     * This function performs the Async task of querying, parsing a sources front page and building
-     * a list of manga objects for the user to view
-     */
-    @Override
-    public abstract void updateMangaList();
-
-    /***
-     * This function sets the specific query text to search in the three core adapters
-     *
-     * @param aQueryText The text used for a search.
-     */
-    @Override
-    public boolean onQueryTextChange(String aQueryText)
-    {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-        boolean lResult = true;
-        try
-        {
-            if (mAdapter != null)
-            {
-                mAdapter.performTextFilter(aQueryText);
-            }
-        }
-        catch (Exception lException)
-        {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
-            lResult = false;
-        }
-
-        return lResult;
-    }
-
-    /***
-     * This function clears the view and refreshes the Recent Adapter with new(er) data.
-     */
-    @Override
-    public boolean updateSource()
-    {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-        boolean lResult = false;
-
-        try
-        {
-            if (mViewMapper.getContext() != null)
-            {
-                if (mViewMapper != null && mAdapter != null)
-                {
-                    mMangaList.clear();
-                    mAdapter.notifyDataSetChanged();
-                }
-
-                mViewMapper.startRefresh();
-                updateMangaList();
-                lResult = true;
-            }
-        }
-        catch (Exception lException)
-        {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
-            lResult = false;
-        }
-
-        return lResult;
-    }
-
-    /***
-     * This function sets the filter type specified by the user
-     *
-     * @param aFilter The filter type that has been selected
-     */
-    @Override
-    public boolean onFilterSelected(MangaEnums.eFilterStatus aFilter)
-    {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-        boolean lResult = false;
-        try
-        {
-            if (mAdapter != null)
-            {
-                lResult = mAdapter.filterByStatus(aFilter);
-            }
-        }
-        catch (Exception lException)
-        {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
-        }
-
-        return lResult;
-    }
-
-    /***
-     * This function sets refreshes the GenreFilter list based on the specified list that has been filtered.
-     *
-     * @param aMangaList The object list that has been filtered.
-     */
-    @Override
-    public boolean onGenreFilterSelected(ArrayList<Manga> aMangaList)
-    {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-        boolean lResult = true;
-
-        try
-        {
-            if (aMangaList != null)
-            {
-                mGenreFilterList = new ArrayList<>(aMangaList);
-                mGenreFilterList.retainAll(mMangaList);
-                mAdapter.setOriginalData(mGenreFilterList);
-            }
-        }
-        catch (Exception lException)
-        {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
-            lResult = false;
-        }
-
-        return lResult;
-    }
-
-    /***
-     * This function will clear any set Genre Filter by refreshing the adapters "original data"
-     */
-    @Override
-    public boolean onClearGenreFilter()
-    {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-        boolean lResult = true;
-
-        try
-        {
-            mAdapter.setOriginalData(mMangaList);
-        }
-        catch (Exception lException)
-        {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
-            lResult = false;
-        }
-
-        return lResult;
-    }
-
-    /***
-     * This function updates the specified object in the three core adapters.
-     *
-     * @param aManga The object that is being updated.
-     */
-    @Override
-    public boolean updateSelection(Manga aManga)
-    {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-        boolean lResult = true;
-
-        try
-        {
-            if (mAdapter != null)
-            {
-                if (mViewMapper instanceof LibraryFragment) mAdapter.updateLibraryItem(aManga);
-                else mAdapter.updateItem(aManga);
-
-                mMangaList = mAdapter.getOriginalData();
-            }
-        }
-        catch (Exception lException)
-        {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
-            lResult = false;
-        }
-
-        return lResult;
-    }
-
-    /***
      * This function initializes the MainFragmentPresenterBase object, as well as the users view.
      *
      * @param aBundle
@@ -227,8 +55,6 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     @Override
     public void init(Bundle aBundle)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             mViewMapper.setupSwipeRefresh();
@@ -255,7 +81,7 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
 
         }
     }
@@ -316,36 +142,169 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
     }
 
     /***
-     * This function starts a Manga Activity when a click is performed on a Manga Object
-     *
-     * @param aPos This is the position of the selected object
+     * This function performs the Async task of querying, parsing a sources front page and building
+     * a list of manga objects for the user to view
      */
-    protected void onItemClick(int aPos)
-    {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+    @Override
+    public abstract void updateMangaList();
 
+    /***
+     * This function sets the specific query text to search in the three core adapters
+     *
+     * @param aQueryText The text used for a search.
+     */
+    @Override
+    public boolean onQueryTextChange(String aQueryText)
+    {
+        boolean lResult = true;
         try
         {
-            Manga manga;
-            if (NATIVE_AD_1_UNIT_ID == null)
+            if (mAdapter != null)
             {
-                manga = mAdapter.getItemAt(aPos);
-            }
-            else
-            {
-                manga = mAdapter.getItemAt(mAdAdapter.getOriginalPosition(aPos));
-            }
-            if (mViewMapper.setRecentSelection(manga.get_id()))
-            {
-                Intent intent = MangaActivity.getNewInstance(mViewMapper.getContext(), manga.getMangaURL());
-                mViewMapper.getContext().startActivity(intent);
+                mAdapter.performTextFilter(aQueryText);
             }
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
+            lResult = false;
         }
 
+        return lResult;
+    }
+
+    /***
+     * This function clears the view and refreshes the Recent Adapter with new(er) data.
+     */
+    @Override
+    public boolean updateSource()
+    {
+        boolean lResult = false;
+
+        try
+        {
+            if (mViewMapper.getContext() != null)
+            {
+                if (mViewMapper != null && mAdapter != null)
+                {
+                    mMangaList.clear();
+                    mAdapter.notifyDataSetChanged();
+                }
+
+                mViewMapper.startRefresh();
+                updateMangaList();
+                lResult = true;
+            }
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lException.getMessage());
+            lResult = false;
+        }
+
+        return lResult;
+    }
+
+    /***
+     * This function sets the filter type specified by the user
+     *
+     * @param aFilter The filter type that has been selected
+     */
+    @Override
+    public boolean onFilterSelected(MangaEnums.eFilterStatus aFilter)
+    {
+        boolean lResult = false;
+        try
+        {
+            if (mAdapter != null)
+            {
+                lResult = mAdapter.filterByStatus(aFilter);
+            }
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lException.getMessage());
+        }
+
+        return lResult;
+    }
+
+    /***
+     * This function sets refreshes the GenreFilter list based on the specified list that has been filtered.
+     *
+     * @param aMangaList The object list that has been filtered.
+     */
+    @Override
+    public boolean onGenreFilterSelected(ArrayList<Manga> aMangaList)
+    {
+        boolean lResult = true;
+
+        try
+        {
+            if (aMangaList != null)
+            {
+                mGenreFilterList = new ArrayList<>(aMangaList);
+                mGenreFilterList.retainAll(mMangaList);
+                mAdapter.setOriginalData(mGenreFilterList);
+            }
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lException.getMessage());
+            lResult = false;
+        }
+
+        return lResult;
+    }
+
+    /***
+     * This function will clear any set Genre Filter by refreshing the adapters "original data"
+     */
+    @Override
+    public boolean onClearGenreFilter()
+    {
+        boolean lResult = true;
+
+        try
+        {
+            mAdapter.setOriginalData(mMangaList);
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lException.getMessage());
+            lResult = false;
+        }
+
+        return lResult;
+    }
+
+    /***
+     * This function updates the specified object in the three core adapters.
+     *
+     * @param aManga The object that is being updated.
+     */
+    @Override
+    public boolean updateSelection(Manga aManga)
+    {
+        boolean lResult = true;
+
+        try
+        {
+            if (mAdapter != null)
+            {
+                if (mViewMapper instanceof LibraryFragment) mAdapter.updateLibraryItem(aManga);
+                else mAdapter.updateItem(aManga);
+
+                mMangaList = mAdapter.getOriginalData();
+            }
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lException.getMessage());
+            lResult = false;
+        }
+
+        return lResult;
     }
 
     /***
@@ -355,8 +314,6 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
      */
     protected void updateMangaGridView(List<Manga> aMangaList)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
 
@@ -377,7 +334,7 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
 
                 if (mAdapter == null)
                 {
-                    mAdapter = new RecycleSearchAdapter(mMangaList, (pos) -> onItemClick(pos));
+                    mAdapter = new RecycleSearchAdapter(mMangaList, (pos) -> onItemSelected(pos));
                     mAdapter.setHasStableIds(true);
                     if (NATIVE_AD_1_UNIT_ID == null)
                     {
@@ -406,8 +363,39 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
+    }
+
+    /***
+     * This function starts a Manga Activity when a click is performed on a Manga Object
+     *
+     * @param aPos This is the position of the selected object
+     */
+    protected void onItemSelected(int aPos)
+    {
+        try
+        {
+            Manga manga;
+            if (NATIVE_AD_1_UNIT_ID == null)
+            {
+                manga = mAdapter.getItemAt(aPos);
+            }
+            else
+            {
+                manga = mAdapter.getItemAt(mAdAdapter.getOriginalPosition(aPos));
+            }
+            if (mViewMapper.setRecentSelection(manga.getMangaURL()))
+            {
+                Intent intent = MangaActivity.getNewInstance(mViewMapper.getContext(), manga.getMangaURL());
+                mViewMapper.getContext().startActivity(intent);
+            }
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lException.getMessage());
+        }
+
     }
 
     /***
@@ -416,8 +404,6 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
      */
     protected void setupMoPubAdapter()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         try
         {
             MoPubNativeAdPositioning.MoPubServerPositioning lAdPositioning = MoPubNativeAdPositioning.serverPositioning();
@@ -439,7 +425,9 @@ public abstract class MainFragmentPresenterBase implements IMain.FragmentPresent
         }
         catch (Exception lException)
         {
-            MangaLogger.logError(TAG, lMethod, lException.getMessage());
+            MangaLogger.logError(TAG, lException.getMessage());
         }
     }
+
+
 }

@@ -35,19 +35,15 @@ public class FilterDialogFragment extends DialogFragment
 {
     public final static String TAG = FilterDialogFragment.class.getSimpleName();
 
-    @Bind( R.id.genreList )
-    GridView mGenreGridView;
-    @Bind( R.id.genre_search_button )
-    Button mSearchButton;
-    @Bind( R.id.genre_cancel_button )
-    Button mCancelButton;
-    @Bind( R.id.genre_clear_button )
-    Button mClearButton;
+    @Bind(R.id.genreList) GridView mGenreGridView;
+    @Bind(R.id.genre_search_button) Button mSearchButton;
+    @Bind(R.id.genre_cancel_button) Button mCancelButton;
+    @Bind(R.id.genre_clear_button) Button mClearButton;
 
     private GenreListAdapter mAdapter;
 
     /***
-     * TODO..
+     * This function creates and returns a new instance of the fragment.
      *
      * @return
      */
@@ -58,7 +54,7 @@ public class FilterDialogFragment extends DialogFragment
     }
 
     /***
-     * TODO..
+     * This function initializes and creates the view of the fragment.
      *
      * @param aInflater
      * @param aContainer
@@ -71,7 +67,7 @@ public class FilterDialogFragment extends DialogFragment
         View lView = aInflater.inflate(R.layout.main_search_dialog, aContainer, false);
         ButterKnife.bind(this, lView);
 
-        mAdapter = new GenreListAdapter(getContext(), new ArrayList<>(Arrays.asList(new SourceFactory().getSource().genres)));
+        mAdapter = new GenreListAdapter(getContext(), new ArrayList<>(Arrays.asList(SourceFactory.getInstance().getSource().getGenres())));
         registerAdapter(mAdapter);
 
         getDialog().setCanceledOnTouchOutside(true);
@@ -81,7 +77,7 @@ public class FilterDialogFragment extends DialogFragment
     }
 
     /***
-     * TODO..
+     * This function is called when the fragment is destroyed for cleanup.
      */
     @Override
     public void onDestroy()
@@ -91,37 +87,42 @@ public class FilterDialogFragment extends DialogFragment
     }
 
     /***
-     * TODO..
+     * This function registers the adapter for the Genre grid view.
      *
      * @param aAdapter
      */
     private void registerAdapter(BaseAdapter aAdapter)
     {
         mGenreGridView.setAdapter(aAdapter);
-        mGenreGridView.setOnItemClickListener((aParent, aView, aPosition, aId) -> ((GenreListAdapter) aAdapter).updateItem(aPosition, aView));
+        mGenreGridView
+                .setOnItemClickListener((aParent, aView, aPosition, aId) -> ((GenreListAdapter) aAdapter).updateItem(aPosition, aView));
         mSearchButton.setOnClickListener(aView -> performSearch());
-        mCancelButton.setOnClickListener(aView -> {
-            FilterDialogFragment.this.getActivity().onActivityReenter(Activity.RESULT_CANCELED, null);
-            getDialog().dismiss();
-        });
-        mClearButton.setOnClickListener(aView -> {
-            mAdapter = new GenreListAdapter(getContext(), new ArrayList<>(Arrays.asList(new SourceFactory().getSource().genres)));
-            registerAdapter(mAdapter);
-        });
+        mCancelButton.setOnClickListener(aView ->
+                                         {
+                                             FilterDialogFragment.this.getActivity().onActivityReenter(Activity.RESULT_CANCELED, null);
+                                             getDialog().dismiss();
+                                         });
+        mClearButton.setOnClickListener(aView ->
+                                        {
+                                            mAdapter = new GenreListAdapter(getContext(),
+                                                                            new ArrayList<>(Arrays.asList(SourceFactory
+                                                                                                                  .getInstance()
+                                                                                                                  .getSource()
+                                                                                                                  .getGenres())));
+                                            registerAdapter(mAdapter);
+                                        });
     }
 
     /***
-     * TODO..
+     * This function performs the filter based on the selection of the genre grid view.
      */
     private void performSearch()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
         StringBuilder lSelection = new StringBuilder();
         List<String> lSelectionArgs = new ArrayList<>();
 
         lSelection.append("source" + " = ?");
-        lSelectionArgs.add(new SourceFactory().getSourceName());
+        lSelectionArgs.add(SourceFactory.getInstance().getSourceName());
 
         List<String> lKeepList = mAdapter.getGenreListByStatus(1);
         List<String> lRemoveList = mAdapter.getGenreListByStatus(2);
@@ -134,7 +135,7 @@ public class FilterDialogFragment extends DialogFragment
         }
         else
         {
-            MangaLogger.logInfo(TAG, lMethod, "Starting filter search");
+            MangaLogger.logInfo(TAG, "Starting filter search");
 
             for (String iString : lKeepList)
             {
@@ -152,14 +153,16 @@ public class FilterDialogFragment extends DialogFragment
 
             QueryResultIterable<Manga> iFilteredManga = cupboard().withDatabase(MangaDB.getInstance().getReadableDatabase())
                                                                   .query(Manga.class)
-                                                                  .withSelection(lSelection.toString(), lSelectionArgs.toArray(new String[lSelectionArgs
-                                                                          .size()]))
+                                                                  .withSelection(lSelection.toString(), lSelectionArgs
+                                                                          .toArray(new String[lSelectionArgs
+                                                                                  .size()]))
                                                                   .query();
 
             if (iFilteredManga.iterator().hasNext())
             {
                 Intent lIntent = new Intent();
-                lIntent.putParcelableArrayListExtra("MANGA", new ArrayList<>(iFilteredManga.list())); //TODO decide if i want to pass whole list or query contents
+                lIntent.putParcelableArrayListExtra("MANGA", new ArrayList<>(iFilteredManga
+                                                                                     .list())); //TODO decide if i want to pass whole list or query contents
                 FilterDialogFragment.this.getActivity().onActivityReenter(Activity.RESULT_OK, lIntent);
                 getDialog().dismiss();
             }
@@ -168,7 +171,7 @@ public class FilterDialogFragment extends DialogFragment
                 Toast.makeText(getContext(), "Search result empty", Toast.LENGTH_SHORT).show();
             }
 
-            MangaLogger.logInfo(TAG, lMethod, "Finished filter search");
+            MangaLogger.logInfo(TAG, "Finished filter search");
 
         }
 

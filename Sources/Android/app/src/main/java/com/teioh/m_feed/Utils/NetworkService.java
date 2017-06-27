@@ -14,7 +14,6 @@ import com.teioh.m_feed.MFeedApplication;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.schedulers.Schedulers;
 
 public class NetworkService
@@ -23,7 +22,7 @@ public class NetworkService
     private OkHttpClient mClient;
 
     /***
-     * TODO..
+     * This is a private constructor.
      */
     private NetworkService()
     {
@@ -34,7 +33,7 @@ public class NetworkService
     }
 
     /***
-     * TODO..
+     * This function retrieves the permanent instance of the network service.
      *
      * @return
      */
@@ -49,7 +48,7 @@ public class NetworkService
     }
 
     /***
-     * TODO..
+     * This function retrieves a new temporary instance of the network service.
      *
      * @return
      */
@@ -59,19 +58,42 @@ public class NetworkService
     }
 
     /***
-     * TODO..
+     * This function returns an observable string converted from the response of a query.
+     *
+     * @param aResponse
+     * @return
+     */
+    public static Observable<String> mapResponseToString(final Response aResponse)
+    {
+        return Observable.create((Observable.OnSubscribe<String>) subscriber ->
+        {
+            try
+            {
+                subscriber.onNext(aResponse.body().string());
+                subscriber.onCompleted();
+            }
+            catch (Throwable e)
+            {
+                subscriber.onError(e);
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    /***
+     * This function verifies if the network is available.
      *
      * @return
      */
     public static boolean isNetworkAvailable()
     {
-        ConnectivityManager connectivityManager = (ConnectivityManager) MFeedApplication.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager = (ConnectivityManager) MFeedApplication.getInstance()
+                                                                                        .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     /***
-     * TODO...
+     * This function retrieves an observable response from a network query by url.
      *
      * @param aUrl
      * @return
@@ -83,28 +105,26 @@ public class NetworkService
             return null;
         }
 
-        return Observable.create(new Observable.OnSubscribe<Response>()
+        return Observable.create((Observable.OnSubscribe<Response>) subscriber ->
         {
-            @Override
-            public void call(Subscriber<? super Response> subscriber)
+            try
             {
-                try
-                {
-                    Request request = new Request.Builder().url(aUrl).header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.21").build();
+                Request request = new Request.Builder().url(aUrl)
+                                                       .header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.21")
+                                                       .build();
 
-                    subscriber.onNext(mClient.newCall(request).execute());
-                    subscriber.onCompleted();
-                }
-                catch (Throwable e)
-                {
-                    subscriber.onError(e);
-                }
+                subscriber.onNext(mClient.newCall(request).execute());
+                subscriber.onCompleted();
+            }
+            catch (Throwable e)
+            {
+                subscriber.onError(e);
             }
         }).subscribeOn(Schedulers.io());
     }
 
     /***
-     * TODO...
+     * This function retrieves an observable response from a network query by url and custom headers.
      *
      * @param aUrl
      * @param aHeaders
@@ -117,48 +137,18 @@ public class NetworkService
             return null;
         }
 
-        return Observable.create(new Observable.OnSubscribe<Response>()
+        return Observable.create((Observable.OnSubscribe<Response>) subscriber ->
         {
-            @Override
-            public void call(Subscriber<? super Response> subscriber)
+            try
             {
-                try
-                {
-                    Request request = new Request.Builder().url(aUrl).headers(aHeaders).build();
+                Request request = new Request.Builder().url(aUrl).headers(aHeaders).build();
 
-                    subscriber.onNext(mClient.newCall(request).execute());
-                    subscriber.onCompleted();
-                }
-                catch (Throwable e)
-                {
-                    subscriber.onError(e);
-                }
+                subscriber.onNext(mClient.newCall(request).execute());
+                subscriber.onCompleted();
             }
-        }).subscribeOn(Schedulers.io());
-    }
-
-    /***
-     * TODO...
-     *
-     * @param aResponse
-     * @return
-     */
-    public static Observable<String> mapResponseToString(final Response aResponse)
-    {
-        return Observable.create(new Observable.OnSubscribe<String>()
-        {
-            @Override
-            public void call(Subscriber<? super String> subscriber)
+            catch (Throwable e)
             {
-                try
-                {
-                    subscriber.onNext(aResponse.body().string());
-                    subscriber.onCompleted();
-                }
-                catch (Throwable e)
-                {
-                    subscriber.onError(e);
-                }
+                subscriber.onError(e);
             }
         }).subscribeOn(Schedulers.io());
     }

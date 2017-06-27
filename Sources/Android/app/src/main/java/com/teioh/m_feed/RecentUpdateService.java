@@ -12,12 +12,6 @@ public class RecentUpdateService extends Service
 {
 
     @Override
-    public IBinder onBind(Intent intent)
-    {
-        return null;
-    }
-
-    @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
         updateRecent();
@@ -29,6 +23,12 @@ public class RecentUpdateService extends Service
     public void onDestroy()
     {
         super.onDestroy();
+    }
+
+    @Override
+    public IBinder onBind(Intent intent)
+    {
+        return null;
     }
 
     private void updateRecent()

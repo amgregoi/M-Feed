@@ -2,9 +2,7 @@ package com.teioh.m_feed.Utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.nfc.Tag;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.teioh.m_feed.MFeedApplication;
 import com.teioh.m_feed.MangaEnums;
@@ -19,6 +17,9 @@ public class SharedPrefs
 {
 
 
+    /***
+     * This function initializes the shared prefs.
+     */
     public static void initializePreferences()
     {
         Context lContext = MFeedApplication.getInstance();
@@ -31,6 +32,28 @@ public class SharedPrefs
             editor.putString(lContext.getString(R.string.PREF_STORAGE_LOCATION), lContext.getFilesDir().getAbsolutePath());
             editor.commit();
         }
+    }
+
+    /***
+     * This function verifies if a user is signed into google.
+     * @return
+     */
+    public static boolean isSignedIn()
+    {
+        if (getGoogleEmail().contains("Guest")) return false;
+        return true;
+    }
+
+    /**
+     * Get the users Google email
+     *
+     * @return The users Google Email
+     */
+    public static String getGoogleEmail()
+    {
+        Context lContext = MFeedApplication.getInstance();
+        return PreferenceManager.getDefaultSharedPreferences(lContext)
+                                .getString(lContext.getString(R.string.PREF_GOOGLE_EMAIL), "Guest (Sign in)");
     }
 
     /**
@@ -47,51 +70,6 @@ public class SharedPrefs
     }
 
     /**
-     * Get the users Google email
-     *
-     * @return The users Google Email
-     */
-    public static String getGoogleEmail()
-    {
-        Context lContext = MFeedApplication.getInstance();
-        return PreferenceManager.getDefaultSharedPreferences(lContext)
-                                .getString(lContext.getString(R.string.PREF_GOOGLE_EMAIL), "Guest (Sign in)");
-    }
-
-    /**
-     * Get the users MAL password
-     *
-     * @return The users MAL password
-     */
-//    public static String getMALPassword()
-//    {
-//        Context lContext = MFeedApplication.getInstance();
-//        return PreferenceManager.getDefaultSharedPreferences(lContext).getString(lContext.getString(R.string.PREF_MAL_PASSWORD), null);
-//    }
-    public static boolean isSignedIn()
-    {
-        if (getGoogleEmail().contains("Guest")) return false;
-        return true;
-    }
-
-
-    /**
-     * Set the users application layout preference
-     *
-     * @param aGrid, User preference for application layout
-     *               True = GridLayout
-     *               False = LinearLayout
-     */
-    public static void setLayoutFormat(boolean aGrid)
-    {
-        Context lContext = MFeedApplication.getInstance();
-        SharedPreferences.Editor lEditor = PreferenceManager.getDefaultSharedPreferences(lContext).edit();
-        lEditor.putBoolean(lContext.getString(R.string.PREF_APP_LAYOUT_IS_GRID), aGrid);
-        lEditor.apply();
-    }
-
-
-    /**
      * Get the users application layout preferences
      *
      * @return The users App layout preference
@@ -106,17 +84,17 @@ public class SharedPrefs
     }
 
     /**
-     * Set the users application theme preference
+     * Set the users application layout preference
      *
-     * @param aLightTheme, User preference for application theme
-     *                     True = Light theme
-     *                     False = Dark theme
+     * @param aGrid, User preference for application layout
+     *               True = GridLayout
+     *               False = LinearLayout
      */
-    public static void setLayoutTheme(boolean aLightTheme)
+    public static void setLayoutFormat(boolean aGrid)
     {
         Context lContext = MFeedApplication.getInstance();
         SharedPreferences.Editor lEditor = PreferenceManager.getDefaultSharedPreferences(lContext).edit();
-        lEditor.putBoolean(lContext.getString(R.string.PREF_APP_THEME_IS_LIGHT), aLightTheme);
+        lEditor.putBoolean(lContext.getString(R.string.PREF_APP_LAYOUT_IS_GRID), aGrid);
         lEditor.apply();
     }
 
@@ -134,8 +112,35 @@ public class SharedPrefs
                                 .getBoolean(lContext.getString(R.string.PREF_APP_THEME_IS_LIGHT), false);
     }
 
+    /**
+     * Set the users application theme preference
+     *
+     * @param aLightTheme, User preference for application theme
+     *                     True = Light theme
+     *                     False = Dark theme
+     */
+    public static void setLayoutTheme(boolean aLightTheme)
+    {
+        Context lContext = MFeedApplication.getInstance();
+        SharedPreferences.Editor lEditor = PreferenceManager.getDefaultSharedPreferences(lContext).edit();
+        lEditor.putBoolean(lContext.getString(R.string.PREF_APP_THEME_IS_LIGHT), aLightTheme);
+        lEditor.apply();
+    }
+
     /***
-     * TODO...
+     * This function retrieves the current source.
+     *
+     * @return
+     */
+    public static String getSavedSource()
+    {
+        Context lContext = MFeedApplication.getInstance();
+        return PreferenceManager.getDefaultSharedPreferences(lContext)
+                                .getString(lContext.getString(R.string.PREF_USER_SOURCE), MangaEnums.eSource.MangaJoy.name());
+    }
+
+    /***
+     * This function sets the current source.
      *
      * @param aSource
      */
@@ -148,19 +153,19 @@ public class SharedPrefs
     }
 
     /***
-     * TODO...
+     * This function returns the chapter vertical scroll setting.
      *
      * @return
      */
-    public static String getSavedSource()
+    public static boolean getChapterScrollVertical()
     {
         Context lContext = MFeedApplication.getInstance();
         return PreferenceManager.getDefaultSharedPreferences(lContext)
-                                .getString(lContext.getString(R.string.PREF_USER_SOURCE), MangaEnums.eSource.MangaJoy.name());
+                                .getBoolean(lContext.getString(R.string.PREF_CHAPTER_SCROLL_VERTICAL), false);
     }
 
     /***
-     * TODO...
+     * This function sets the chapter vertical scroll setting.
      *
      * @param aVertical
      */
@@ -173,19 +178,19 @@ public class SharedPrefs
     }
 
     /***
-     * TODO...
+     * This function returns the chapter screen orientation setting.
      *
-     * @return
+     * @return true if LandScape, false otherwise
      */
-    public static boolean getChapterScrollVertical()
+    public static boolean getChapterScreenOrientation()
     {
         Context lContext = MFeedApplication.getInstance();
         return PreferenceManager.getDefaultSharedPreferences(lContext)
-                                .getBoolean(lContext.getString(R.string.PREF_CHAPTER_SCROLL_VERTICAL), false);
+                                .getBoolean(lContext.getString(R.string.PREF_CHAPTER_SCREEN_ORIENTATION), false);
     }
 
     /***
-     * TODO...
+     * This function sets the chapter screen orientation setting.
      *
      * @param aLandscape
      */
@@ -198,19 +203,7 @@ public class SharedPrefs
     }
 
     /***
-     * TODO...
-     *
-     * @return true if LandScape, false otherwise
-     */
-    public static boolean getChapterScreenOrientation()
-    {
-        Context lContext = MFeedApplication.getInstance();
-        return PreferenceManager.getDefaultSharedPreferences(lContext)
-                                .getBoolean(lContext.getString(R.string.PREF_CHAPTER_SCREEN_ORIENTATION), false);
-    }
-
-    /***
-     * TODO...
+     * This function gets the in app logging status.
      *
      * @return true if logging, false otherwise
      */
@@ -221,7 +214,7 @@ public class SharedPrefs
     }
 
     /***
-     * TODO...
+     * This function sets the in app logging status.
      *
      * @param aLogging
      */
@@ -233,6 +226,9 @@ public class SharedPrefs
         lEditor.apply();
     }
 
+    /***
+     * This function saves a set of in app logs to persist over multiple application launches.
+     */
     public static void saveLogs()
     {
         Context lContext = MFeedApplication.getInstance();
@@ -241,10 +237,15 @@ public class SharedPrefs
         lEditor.apply();
     }
 
+    /***
+     * this function returns a set of in app logs to persist over multiple application launches.
+     * @return
+     */
     public static List<String> getLogs()
     {
         Context lContext = MFeedApplication.getInstance();
-        Set lLogSet = PreferenceManager.getDefaultSharedPreferences(lContext).getStringSet(lContext.getString(R.string.PREF_SAVE_LOGS), new HashSet<>(0));
+        Set lLogSet = PreferenceManager.getDefaultSharedPreferences(lContext)
+                                       .getStringSet(lContext.getString(R.string.PREF_SAVE_LOGS), new HashSet<>(0));
 
         return new ArrayList<>(lLogSet);
     }

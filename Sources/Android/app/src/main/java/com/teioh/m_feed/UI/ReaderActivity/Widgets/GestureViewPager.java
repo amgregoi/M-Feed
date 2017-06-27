@@ -7,7 +7,6 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.bumptech.glide.request.target.ViewTarget;
 import com.teioh.m_feed.UI.ReaderActivity.Adapters.ImagePageAdapter;
 import com.teioh.m_feed.Utils.SharedPrefs;
 
@@ -16,7 +15,7 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
 
     private GestureImageView mGestureImageView;
     private GestureDetector mGestureDetector;
-    private OnSingleTapListener mSingleTapListener;
+    private UserGestureListener mUserGestureListener;
 
     private boolean mVertical;
 
@@ -34,6 +33,23 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
         setScrollerType();
     }
 
+    public boolean setScrollerType()
+    {
+        mVertical = SharedPrefs.getChapterScrollVertical();
+
+        if (mVertical)
+        {
+            setPageTransformer(true, new VerticalPageTransformer());
+            setOverScrollMode(OVER_SCROLL_IF_CONTENT_SCROLLS);
+            return true;
+        }
+        else
+        {
+            setPageTransformer(true, null);
+            return false;
+        }
+    }
+
     @Override
     public boolean onInterceptTouchEvent(MotionEvent aEvent)
     {
@@ -42,41 +58,92 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
 
         if (mGestureImageView != null)
         {
+            //ACTION_DOWN workaround for checkSwipe()
+            if(aEvent.getAction() == MotionEvent.ACTION_DOWN)
+                mHorizontalSwipeX = aEvent.getX();
+
             if (!mGestureImageView.canScrollParent(mVertical))
             {
                 return false;
             }
+
+            if (mVertical)
+            {
+                boolean lResult = super.onInterceptTouchEvent(swapXY(aEvent));
+                swapXY(aEvent); // return touch coordinates to original reference frame for any child views
+                return lResult;
+            }
         }
-        if (mVertical)
-        {
-            boolean lResult = super.onInterceptTouchEvent(swapXY(aEvent));
-            swapXY(aEvent); // return touch coordinates to original reference frame for any child views
-            return lResult;
-        }
-        else
-        {
-            return super.onInterceptTouchEvent(aEvent);
-        }
+
+        return super.onInterceptTouchEvent(aEvent);
     }
 
     @Override
-    public boolean onDoubleTap(MotionEvent aEvent)
+    public boolean onTouchEvent(MotionEvent ev)
     {
-        if (mGestureImageView != null)
+        checkOverScroll(ev);
+
+        if (mVertical) return super.onTouchEvent(swapXY(ev));
+        else return super.onTouchEvent(ev);
+    }
+
+    private void checkOverScroll(MotionEvent ev)
+    {
+        if (getCurrentItem() == 0 && checkSwipe(ev) == eSwipeDirection.LEFT)
         {
-            if (mGestureImageView.isInitialized())
-            {
-                if (mGestureImageView.getScale() > mGestureImageView.MIN_SCALE)
-                {
-                    mGestureImageView.zoomToPoint(mGestureImageView.MIN_SCALE, getWidth() / 2, getHeight() / 2);
-                }
-                else if (mGestureImageView.getScale() < mGestureImageView.MED_SCALE)
-                {
-                    mGestureImageView.zoomToPoint(mGestureImageView.MED_SCALE, aEvent.getX(), aEvent.getY());
-                }
-            }
+            mUserGestureListener.onLeft();
         }
-        return true;
+        else if (getAdapter() != null &&
+                getAdapter().getCount() - 1 == getCurrentItem() &&
+                checkSwipe(ev) == eSwipeDirection.RIGHT)
+        {
+            mUserGestureListener.onRight();
+        }
+    }
+
+    float mHorizontalSwipeX;
+
+    private eSwipeDirection checkSwipe(MotionEvent ev)
+    {
+        switch (ev.getAction())
+        {
+            //ACTION_DOWN is getting handled up stream, need to look into this..
+            case MotionEvent.ACTION_DOWN:
+                mHorizontalSwipeX = ev.getX();
+                break;
+            case MotionEvent.ACTION_UP:
+                if (mHorizontalSwipeX < ev.getX())
+                {
+                    return eSwipeDirection.LEFT;
+                }
+                else
+                {
+                    return eSwipeDirection.RIGHT;
+                }
+        }
+
+        return eSwipeDirection.NEUTRAL;
+    }
+
+    private void fetchGestureImageViewByTag()
+    {
+        mGestureImageView = (GestureImageView) findViewWithTag(ImagePageAdapter.TAG + ":" + getCurrentItem());
+    }
+
+    /**
+     * Swaps the X and Y coordinates of your touch event.
+     */
+    private MotionEvent swapXY(MotionEvent ev)
+    {
+        float width = getWidth();
+        float height = getHeight();
+
+        float newX = (ev.getY() / height) * width;
+        float newY = (ev.getX() / width) * height;
+
+        ev.setLocation(newX, newY);
+
+        return ev;
     }
 
     @Override
@@ -93,6 +160,17 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
     }
 
     @Override
+    public void onShowPress(MotionEvent aEvent)
+    {
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent aEvent)
+    {
+        return false;
+    }
+
+    @Override
     public boolean onScroll(MotionEvent aEvent, MotionEvent aEvent2, float aXDistance, float aYDistance)
     {
         if (mGestureImageView != null)
@@ -103,6 +181,11 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
             }
         }
         return true;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent aEvent)
+    {
     }
 
     @Override
@@ -133,12 +216,32 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
         }
         else
         {
-            if (mSingleTapListener != null)
+            if (mUserGestureListener != null)
             {
-                mSingleTapListener.onSingleTap();
+                mUserGestureListener.onSingleTap();
             }
         }
 
+        return true;
+    }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent aEvent)
+    {
+        if (mGestureImageView != null)
+        {
+            if (mGestureImageView.isInitialized())
+            {
+                if (mGestureImageView.getScale() > mGestureImageView.MIN_SCALE)
+                {
+                    mGestureImageView.zoomToPoint(mGestureImageView.MIN_SCALE, getWidth() / 2, getHeight() / 2);
+                }
+                else if (mGestureImageView.getScale() < mGestureImageView.MED_SCALE)
+                {
+                    mGestureImageView.zoomToPoint(mGestureImageView.MED_SCALE, aEvent.getX(), aEvent.getY());
+                }
+            }
+        }
         return true;
     }
 
@@ -148,30 +251,13 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
         return false;
     }
 
-    @Override
-    public void onLongPress(MotionEvent aEvent)
+    public void decrememntCurrentItem()
     {
-    }
-
-    @Override
-    public void onShowPress(MotionEvent aEvent)
-    {
-    }
-
-    @Override
-    public boolean onSingleTapUp(MotionEvent aEvent)
-    {
-        return false;
-    }
-
-    private void fetchGestureImageViewByTag()
-    {
-        mGestureImageView = (GestureImageView) findViewWithTag(ImagePageAdapter.TAG + ":" + getCurrentItem());
-    }
-
-    public void setOnSingleTapListener(OnSingleTapListener singleTapListener)
-    {
-        mSingleTapListener = singleTapListener;
+        int position = getCurrentItem();
+        if (position != 0)
+        {
+            setCurrentItem(position - 1, true);
+        }
     }
 
     public void incrementCurrentItem()
@@ -186,41 +272,9 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
         }
     }
 
-    public void decrememntCurrentItem()
+    public void setUserGesureListener(UserGestureListener singleTapListener)
     {
-        int position = getCurrentItem();
-        if (position != 0)
-        {
-            setCurrentItem(position - 1, true);
-        }
-    }
-
-    public interface OnSingleTapListener
-    {
-        void onSingleTap();
-    }
-
-    /**
-     * Swaps the X and Y coordinates of your touch event.
-     */
-    private MotionEvent swapXY(MotionEvent ev)
-    {
-        float width = getWidth();
-        float height = getHeight();
-
-        float newX = (ev.getY() / height) * width;
-        float newY = (ev.getX() / width) * height;
-
-        ev.setLocation(newX, newY);
-
-        return ev;
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent ev)
-    {
-        if (mVertical) return super.onTouchEvent(swapXY(ev));
-        else return super.onTouchEvent(ev);
+        mUserGestureListener = singleTapListener;
     }
 
     public boolean toggleVerticalScroller()
@@ -228,21 +282,20 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
         return setScrollerType();
     }
 
-    public boolean setScrollerType()
+    public interface UserGestureListener
     {
-        mVertical = SharedPrefs.getChapterScrollVertical();
+        void onSingleTap();
 
-        if (mVertical)
-        {
-            setPageTransformer(true, new VerticalPageTransformer());
-            setOverScrollMode(OVER_SCROLL_IF_CONTENT_SCROLLS);
-            return true;
-        }
-        else
-        {
-            setPageTransformer(true, null);
-            return false;
-        }
+        void onLeft();
+
+        void onRight();
+    }
+
+    private enum eSwipeDirection
+    {
+        LEFT,
+        RIGHT,
+        NEUTRAL
     }
 }
 

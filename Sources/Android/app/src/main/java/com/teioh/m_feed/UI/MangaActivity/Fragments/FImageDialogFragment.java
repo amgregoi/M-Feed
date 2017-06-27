@@ -21,27 +21,30 @@ public class FImageDialogFragment extends DialogFragment
 {
     public final static String TAG = FImageDialogFragment.class.getSimpleName();
     public final static String IMAGE_URL_KEY = TAG + ":" + "IMAGE_URL_KEY";
-    private String mImageUrl;
 
     @Bind(R.id.image_for_dialog) ImageView mImage;
 
+    private String mImageUrl;
+
     /***
-     * TODO..
+     * This function creates and returns a new instance of the fragment.
      *
      * @param url
      * @return
      */
     public static DialogFragment getNewInstance(String url)
     {
-        DialogFragment fragment = new FImageDialogFragment();
         Bundle lBundle = new Bundle();
         lBundle.putString(IMAGE_URL_KEY, url);
-        fragment.setArguments(lBundle);
-        return fragment;
+
+        DialogFragment lFragment = new FImageDialogFragment();
+        lFragment.setArguments(lBundle);
+
+        return lFragment;
     }
 
     /***
-     * TODO..
+     * This function initializes the view of the fragment.
      *
      * @param aInflater
      * @param aContainer
@@ -64,7 +67,7 @@ public class FImageDialogFragment extends DialogFragment
     }
 
     /***
-     * TODO..
+     * This function is called in the fragment lifecycle.
      *
      * @param savedInstanceState
      */
@@ -85,7 +88,7 @@ public class FImageDialogFragment extends DialogFragment
     }
 
     /***
-     * TODO..
+     * This function is called when a fragment or activities onDestroy is called in their life cycle chain.
      */
     @Override
     public void onDestroyView()

@@ -20,14 +20,11 @@ public class LibraryPresenter extends MainFragmentPresenterBase
     }
 
     /***
-     * TODO...
+     * This function performs the update to the presenter data list.
      */
     @Override
     public void updateMangaList()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
-
         if (mMangaListSubscription != null)
         {
             mMangaListSubscription.unsubscribe();
@@ -40,12 +37,13 @@ public class LibraryPresenter extends MainFragmentPresenterBase
                                             .getLibraryList().cache()
                                             .subscribeOn(Schedulers.io())
                                             .observeOn(AndroidSchedulers.mainThread())
-                                            .doOnError(throwable -> Toast.makeText(MFeedApplication.getInstance(), throwable.getMessage(), Toast.LENGTH_SHORT))
+                                            .doOnError(throwable -> Toast
+                                                    .makeText(MFeedApplication.getInstance(), throwable.getMessage(), Toast.LENGTH_SHORT))
                                             .subscribe(aManga -> updateMangaGridView(aManga));
         }
         catch (Exception aException)
         {
-            MangaLogger.logError(TAG, lMethod, aException.getMessage());
+            MangaLogger.logError(TAG, aException.getMessage());
 
         }
 

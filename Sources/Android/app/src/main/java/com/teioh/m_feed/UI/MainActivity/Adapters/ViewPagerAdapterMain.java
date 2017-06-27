@@ -5,8 +5,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 
-import com.teioh.m_feed.UI.MainActivity.Fragments.LibraryFragment;
 import com.teioh.m_feed.UI.MainActivity.Fragments.CatalogFragment;
+import com.teioh.m_feed.UI.MainActivity.Fragments.LibraryFragment;
 import com.teioh.m_feed.UI.MainActivity.Fragments.RecentFragment;
 
 public class ViewPagerAdapterMain extends FragmentStatePagerAdapter
@@ -17,7 +17,7 @@ public class ViewPagerAdapterMain extends FragmentStatePagerAdapter
     private SparseArray<Fragment> mRegisteredFragments = new SparseArray<Fragment>();
 
     /***
-     * TODO..
+     * This is the constructor for the View Pager Adapter.
      *
      * @param aFragmentManager
      * @param aTabTitles
@@ -62,6 +62,17 @@ public class ViewPagerAdapterMain extends FragmentStatePagerAdapter
     }
 
     /***
+     * This method return the Number of tabs for the tabs Strip
+     *
+     * @return
+     */
+    @Override
+    public int getCount()
+    {
+        return mTabCount;
+    }
+
+    /***
      * This method return the titles for the Tabs in the Tab Strip
      *
      * @param aPosition
@@ -74,18 +85,7 @@ public class ViewPagerAdapterMain extends FragmentStatePagerAdapter
     }
 
     /***
-     * This method return the Number of tabs for the tabs Strip
-     *
-     * @return
-     */
-    @Override
-    public int getCount()
-    {
-        return mTabCount;
-    }
-
-    /***
-     * TODO..
+     * This method returns the registered fragment specified by its position.
      *
      * @param aPosition
      * @return
@@ -96,7 +96,7 @@ public class ViewPagerAdapterMain extends FragmentStatePagerAdapter
     }
 
     /***
-     * TODO..
+     * This function verifies that the adapter contains any registered fragments.
      *
      * @return
      */

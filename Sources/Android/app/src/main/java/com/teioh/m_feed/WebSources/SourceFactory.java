@@ -6,7 +6,7 @@ import com.teioh.m_feed.Utils.SharedPrefs;
 public class SourceFactory
 {
     /***
-     * TODO..
+     * This function retrieves the current source.
      * @return
      */
     public SourceBase getSource()
@@ -15,11 +15,17 @@ public class SourceFactory
     }
 
     /***
-     * TODO..
+     * This function retrieves the current sources name.
      * @return
      */
     public String getSourceName()
     {
-        return MangaEnums.eSource.valueOf(SharedPrefs.getSavedSource()).getSource().getSourceType().name();
+        return MangaEnums.eSource.valueOf(SharedPrefs.getSavedSource()).getSource().getCurrentSource().name();
     }
+
+    public static SourceFactory getInstance()
+    {
+        return new SourceFactory();
+    }
+
 }

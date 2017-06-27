@@ -5,7 +5,7 @@ import com.teioh.m_feed.WebSources.Sources.Batoto;
 import com.teioh.m_feed.WebSources.Sources.MangaEden;
 import com.teioh.m_feed.WebSources.Sources.MangaHere;
 import com.teioh.m_feed.WebSources.Sources.MangaJoy;
-import com.teioh.m_feed.WebSources.Sources.MangaPark;
+import com.teioh.m_feed.WebSources.Sources.WuxiaWorld;
 
 /**
  * Created by amgregoi on 11/19/16.
@@ -13,7 +13,7 @@ import com.teioh.m_feed.WebSources.Sources.MangaPark;
 public class MangaEnums
 {
     /***
-     * TODO..
+     * This enum is for the various manga filter status'
      */
     public enum eFilterStatus
     {
@@ -42,7 +42,7 @@ public class MangaEnums
 
 
     /***
-     * TODO..
+     * This enum is for the various loading status'
      */
     public enum eLoadingStatus
     {
@@ -85,16 +85,22 @@ public class MangaEnums
         }
     }
 
+    public enum eSourceType
+    {
+        MANGA,
+        NOVEL;
+    }
+
     /***
-     * TODO..
+     * This enum is for the various sources.
      */
     public enum eSource
     {
         Batoto(new Batoto()),
         MangaEden(new MangaEden()),
         MangaHere(new MangaHere()),
-        MangaJoy(new MangaJoy());
-//        MangaPark(new MangaPark());
+        MangaJoy(new MangaJoy()),
+        WuxiaWorld(new WuxiaWorld());
 
         SourceBase lSource;
 
@@ -110,7 +116,7 @@ public class MangaEnums
     }
 
     /***
-     * TODO..
+     * This enum is for the various follow status types.
      */
     public enum eFollowType
     {

@@ -6,7 +6,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.l4digital.fastscroll.FastScroller;
 import com.teioh.m_feed.BuildConfig;
@@ -28,8 +26,6 @@ import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.Utils.MangaLogger;
-
-import org.jsoup.helper.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,7 +40,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
     private TextFilter mFilter = new TextFilter();
 
     /***
-     * TODO..
+     * This is the constructor for the Recycle Search Adapter.
      *
      * @param aData
      * @param aListener
@@ -57,7 +53,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
     }
 
     /***
-     * TODO..
+     * This function creates the view holder for an item in the adapter.
      *
      * @param aParent
      * @param aViewType
@@ -71,7 +67,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
     }
 
     /***
-     * TODO..
+     * This function binds the view holder for an item in the adapter.
      *
      * @param aHolder
      * @param aPosition
@@ -117,18 +113,20 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
              .transition(new GenericTransitionOptions<>().transition(android.R.anim.fade_in))
              .into(new BitmapImageViewTarget(aHolder.mImageView)
              {
-                 @Override public void onResourceReady(Bitmap resource, Transition<? super Bitmap> animation)
+                 @Override
+                 public void onLoadFailed(@Nullable Drawable errorDrawable)
+                 {
+                     super.onLoadFailed(errorDrawable);
+                     MangaLogger
+                             .logError(TAG, errorDrawable.toString(), "Image URL = " + lMangaItem.getPicUrl());
+                 }
+
+                 @Override
+                 public void onResourceReady(Bitmap resource, Transition<? super Bitmap> animation)
                  {
                      super.onResourceReady(resource, animation);
                      aHolder.mImageView.setScaleType(ImageView.ScaleType.FIT_XY);
 
-                 }
-
-                 @Override public void onLoadFailed(@Nullable Drawable errorDrawable)
-                 {
-                     super.onLoadFailed(errorDrawable);
-                     MangaLogger
-                             .logError(TAG, "OnBindViewHolder.OnLoadFailed()", errorDrawable.toString(), "url=" + lMangaItem.getPicUrl());
                  }
              });
 
@@ -136,7 +134,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
     }
 
     /***
-     * TODO..
+     * This function retuns the ID of an item in the adapter specified by its position.
      *
      * @param aPosition
      * @return
@@ -147,7 +145,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
     }
 
     /***
-     * TODO..
+     * This function returns the item count of currently displayed data in the adapter.
      *
      * @return
      */
@@ -158,7 +156,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
     }
 
     /***
-     * TODO..
+     * This function recycles the viewholder of an item in the adapter.
      *
      * @param aHolder
      */
@@ -170,9 +168,9 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
     }
 
     /***
-     * TODO..
+     * This function gets an item in the adapter specified by its position.
      *
-     * @param aPosition
+     * @param aPosition The position of the item to be retrieved.
      * @return
      */
     public Manga getItemAt(int aPosition)
@@ -181,7 +179,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
     }
 
     /***
-     * TODO..
+     * This function updates an item in the adapter specified by the param object.
      *
      * @param aManga
      */
@@ -205,7 +203,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
     }
 
     /***
-     * TODO..
+     * This function updates a library item in the adapter specified by the param object.
      *
      * @param aManga
      */
@@ -242,7 +240,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
     }
 
     /***
-     * TODO..
+     * This function performs the text search filter on the current set of adapter data.
      *
      * @param aQuery
      */
@@ -252,7 +250,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
     }
 
     /***
-     * TODO..
+     * This function returns the original set of data of the adapter.
      *
      * @return
      */
@@ -261,23 +259,18 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
         return mOriginalData;
     }
 
-    /**
-     * Filter
+    /***
+     * This function returns the original set of data of the adapter.
      *
      * @return
      */
-    public Filter getFilter()
-    {
-        return mFilter;
-    }
-
     public ArrayList<Manga> getOriginalData()
     {
         return mOriginalData;
     }
 
     /***
-     * TODO..
+     * This function updates the original adapter data set to the specified list.
      *
      * @param aData
      */
@@ -290,6 +283,21 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
         getFilter().filter(mFilter.mLastQuery);
     }
 
+    /**
+     * This function returns the adapter filter object.
+     *
+     * @return
+     */
+    public Filter getFilter()
+    {
+        return mFilter;
+    }
+
+    /***
+     * This function filters the adapter data by a specified FilterType status.
+     * @param aFilterType
+     * @return
+     */
     public boolean filterByStatus(MangaEnums.eFilterStatus aFilterType)
     {
         boolean lResult = true;
@@ -315,7 +323,8 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
      * @param position The current position in the recycler view
      * @return The character to the be displayed in the fast scroll bubble
      */
-    @Override public String getSectionText(int position)
+    @Override
+    public String getSectionText(int position)
     {
         char lChar = mFilteredData.get(position).getTitle().charAt(0);
         if (!Character.isLetterOrDigit(lChar))
@@ -324,7 +333,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
     }
 
     /***
-     * TODO..
+     * This interface defines the function to be used when an item is selected from this adapter.
      */
     public interface ItemSelectedListener
     {
@@ -332,7 +341,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
     }
 
     /***
-     * TOOD..
+     * This class defines the Space Decoration of the RecyclerView that will use this adapter.
      */
     public static class SpacesItemDecoration extends RecyclerView.ItemDecoration
     {
@@ -375,7 +384,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
     }
 
     /***
-     * TODO..
+     * This class is the view holder for item data in this adapter.
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
@@ -384,7 +393,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
         public LinearLayout mLayoutFooter;
 
         /***
-         * TODO..
+         * This is the ViewHolder constructor
          *
          * @param aView
          */
@@ -398,7 +407,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
         }
 
         /***
-         * TODO..
+         * This function performs the ViewHolders item select.
          *
          * @param aView
          */
@@ -412,7 +421,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
     }
 
     /***
-     * TODO..
+     * This class defines the Filter used to de-limit data that is viewed from this adapter.
      */
     public class TextFilter extends Filter
     {
@@ -420,7 +429,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
         public MangaEnums.eFilterStatus mLastFilter = MangaEnums.eFilterStatus.NONE;
 
         /***
-         * TODO..
+         * This function performs the text filter based on the specified CharSequence.
          *
          * @param aFilterText
          * @return
@@ -475,7 +484,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
         }
 
         /***
-         * TODO..
+         * This function sets the result of the filtering to the mFilteredData class variable.
          *
          * @param aFilterText
          * @param aFilterResult
@@ -489,7 +498,7 @@ public class RecycleSearchAdapter extends RecyclerView.Adapter<RecycleSearchAdap
         }
 
         /***
-         * TODO..
+         * This function performs the filter specified by the FilterStatus parameter.
          *
          * @param aFilterType
          */

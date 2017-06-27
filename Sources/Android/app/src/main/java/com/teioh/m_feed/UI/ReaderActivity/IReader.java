@@ -1,7 +1,9 @@
 package com.teioh.m_feed.UI.ReaderActivity;
 
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 
+import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.UI.Maps.BaseContextMap;
 import com.teioh.m_feed.UI.Maps.LifeCycleMap;
 import com.teioh.m_feed.UI.Maps.Listeners;
@@ -16,19 +18,21 @@ public interface IReader
     /***
      * TODO..
      */
-    interface ActivityView extends BaseContextMap, PageAdapterMap, ViewPager.OnPageChangeListener, Listeners.ReaderListener
+    interface ReaderActivityView extends BaseContextMap, PageAdapterMap, ViewPager.OnPageChangeListener, Listeners.ReaderListener
     {
         void setCurrentChapter(int aPosition);
 
         void setupToolbar();
 
         void setScreenOrientation(boolean aLandscape);
+
+        void hideToolbar();
     }
 
     /***
      * TODO..
      */
-    interface ActivityPresenter extends LifeCycleMap
+    interface ReaderActivityPresenter extends LifeCycleMap
     {
 
         void updateToolbar(int aPosition);
@@ -40,7 +44,7 @@ public interface IReader
         void updateChapterViewStatus(int aPosition);
 
         void onRefreshButton(int aPosition);
-        
+
         void toggleOrientation();
 
         void toggleVerticalScrollSettings(int aPosition);
@@ -51,10 +55,10 @@ public interface IReader
     /***
      * TODO..
      */
-    interface FragmentView extends BaseContextMap, PageAdapterMap, ViewPager.OnPageChangeListener, GestureViewPager.OnSingleTapListener
+    interface MangaFragmentView extends BaseContextMap, ViewPager.OnPageChangeListener, GestureViewPager.UserGestureListener
     {
 
-        void setupOnSingleTapListener();
+        void setUserGestureListener();
 
         void updateToolbar();
 
@@ -68,51 +72,71 @@ public interface IReader
 
         void decrementChapter();
 
-        void hideToolbar(long aDelay);
+        void toggleToolbar();
 
-        void showToolbar();
+        void startToolbarTimer();
 
-        void updateToolbar(String aMangaTitle, String aChapterTitle, int aSize, int aPage);
+        void updateToolbar(String aMangaTitle, String aChapterTitle, int aSize, int aPage, int aChapterPosition);
 
         void updateCurrentPage(int aPosition);
 
         void onRefresh();
 
-        void failedLoadChapter();
-
-        boolean checkActiveChapter(int aChapter);
-
-        void setCurrentChapterPage(int aPosition);
-
-        void setChapterPage(int aPage);
+        void setCurrentChapterPage(int aPosition, int aChapterPosition);
 
         void toggleVerticalScrollSettings();
+
+        void registerAdapter(PagerAdapter aAdapter, MangaEnums.eSourceType aType);
 
     }
 
     /***
      * TODO..
      */
-    interface FragmentPresenter extends LifeCycleMap
+    interface MangaFragmentPresenter extends LifeCycleMap
     {
-
-        void getImageUrls();
-
         void toggleToolbar();
-
-        void setToNextChapter();
-
-        void setToPreviousChapter();
-
-        void updateOffsetCounter(int aOffset, int aPosition);
-
-        void updateState(int aState);
 
         void updateReaderToolbar();
 
         void updateCurrentPage(int aPosition);
 
         void updateActiveChapter();
+
+        void updateChapterViewStatus();
+
+        void onRefresh(int aPosition);
+    }
+
+    interface NovelFragmentView extends BaseContextMap, GestureViewPager.UserGestureListener
+    {
+        void setUserGestureListener();
+
+        void updateChapterViewStatus();
+
+        void incrementChapter();
+
+        void decrementChapter();
+
+        void toggleToolbar();
+
+        void startToolbarTimer();
+
+        void updateToolbar(String aMangaTitle, String aChapterTitle, int aSize, int aPage, int aChapterPosition);
+
+        void updateCurrentPage(int aPosition);
+
+        void onRefresh();
+
+        void setContentText(String aText);
+
+    }
+
+    interface NovelFragmentPresenter extends LifeCycleMap
+    {
+        void toggleToolbar();
+
+        void updateReaderToolbar();
 
         void updateChapterViewStatus();
 

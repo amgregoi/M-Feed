@@ -24,7 +24,7 @@ public class RecentFragment extends MainFragmentBase
     @Bind(R.id.no_internet_image) ImageView mWifiView;
 
     /***
-     * TODO..
+     * This function creates and returns a new instance of the fragment.
      *
      * @return
      */
@@ -35,7 +35,7 @@ public class RecentFragment extends MainFragmentBase
     }
 
     /***
-     * TODO..
+     * This function initializes the view of the fragment.
      *
      * @param aInflater
      * @param aContainer
@@ -56,7 +56,7 @@ public class RecentFragment extends MainFragmentBase
     }
 
     /***
-     * TODO..
+     * This function starts the swipe refresh layout refresh animation.
      */
     @Override
     public void startRefresh()
@@ -68,7 +68,7 @@ public class RecentFragment extends MainFragmentBase
     }
 
     /***
-     * TODO..
+     * This function stops the swipe refresh layout refresh animation.
      */
     @Override
     public void stopRefresh()
@@ -80,22 +80,23 @@ public class RecentFragment extends MainFragmentBase
     }
 
     /***
-     * TODO..
+     * This function initializes the swipe refresh layout.
      */
     @Override
     public void setupSwipeRefresh()
     {
         mSwipeContainer.setEnabled(true);
-        mSwipeContainer.setOnRefreshListener(() -> {
-            mGridView.setVisibility(View.GONE);
-            mFragmentPresenter.updateMangaList();
-            mListener.removeFilters();
+        mSwipeContainer.setOnRefreshListener(() ->
+                                             {
+                                                 mGridView.setVisibility(View.GONE);
+                                                 mFragmentPresenter.updateMangaList();
+                                                 mListener.removeFilters();
 
-        });
+                                             });
     }
 
     /***
-     * TODO..
+     * Not implemented for this class
      */
     @Override
     public boolean removeFilters()
@@ -105,7 +106,7 @@ public class RecentFragment extends MainFragmentBase
     }
 
     /***
-     * TODO..
+     * This function hides the fragment layouts behind the Wi-Fi view to show there is no Wi-Fi.
      */
     public void showNoWifiView()
     {

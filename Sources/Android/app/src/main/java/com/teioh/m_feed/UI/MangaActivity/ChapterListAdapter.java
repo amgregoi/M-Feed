@@ -26,7 +26,7 @@ public class ChapterListAdapter extends ArrayAdapter
     private int mLayoutResource;
 
     /***
-     * TODO..
+     * This is the constructor for the chapter list adapter.
      *
      * @param aContext
      * @param aResource
@@ -42,7 +42,7 @@ public class ChapterListAdapter extends ArrayAdapter
     }
 
     /***
-     * TODO..
+     * This function returns the view of an item in the adapter specified by its position.
      *
      * @param aPosition
      * @param aConvertView
@@ -94,20 +94,22 @@ public class ChapterListAdapter extends ArrayAdapter
     }
 
     /***
-     * TODO..
-     */
-    static class ChapterHolder
-    {
-        TextView lMangaTitle;
-        TextView lChapterDate;
-    }
-
-    /***
-     * TODO..
+     * This function reverses the order of the chapter list.
+     * ASCENDING -> DESCENDING
+     * DESCENDING -> ASCENDING
      */
     public void reverseChapterListOrder()
     {
         Collections.reverse(mChapterList);
         notifyDataSetChanged();
+    }
+
+    /***
+     * This class is the view holder for items in the adapter.
+     */
+    static class ChapterHolder
+    {
+        TextView lMangaTitle;
+        TextView lChapterDate;
     }
 }

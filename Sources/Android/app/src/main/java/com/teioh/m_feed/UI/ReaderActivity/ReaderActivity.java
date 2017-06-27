@@ -1,10 +1,13 @@
 package com.teioh.m_feed.UI.ReaderActivity;
 
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,12 +19,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MangaActivity.MangaPresenter;
 import com.teioh.m_feed.UI.ReaderActivity.Presenters.ReaderPresenter;
 import com.teioh.m_feed.UI.ReaderActivity.Widgets.NoScrollViewPager;
+import com.teioh.m_feed.Utils.MangaLogger;
 import com.teioh.m_feed.Utils.SharedPrefs;
+import com.teioh.m_feed.WebSources.SourceFactory;
 
 import java.util.ArrayList;
 
@@ -30,8 +36,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class ReaderActivity extends AppCompatActivity implements IReader.ActivityView
+public class ReaderActivity extends AppCompatActivity implements IReader.ReaderActivityView
 {
+    public final static String TAG = ReaderActivity.class.getSimpleName();
 
     @Bind(R.id.no_scroll_pager) NoScrollViewPager mViewPager;
     @Bind(R.id.chapter_header) Toolbar mToolbarHeader;
@@ -43,11 +50,36 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     @Bind(R.id.currentPageNumber) TextView mCurrentPage;
     @Bind(R.id.endPageNumber) TextView mEndPage;
 
+    @Bind(R.id.backPageButton) ImageButton mBackPageButton;
+    @Bind(R.id.forwardPageButton) ImageButton mForwardPageButton;
 
-    private IReader.ActivityPresenter mReaderPresenter;
+
+    private IReader.ReaderActivityPresenter mReaderPresenter;
+    private ToolbarTimerService mToolBarService;
+    private boolean mToolbarsHidden = true;
+
+    private ServiceConnection mConnection = new ServiceConnection()
+    {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service)
+        {
+            // We've bound to ToolbarTimerService, cast the IBinder and get ToolbarTimerService instance
+            ToolbarTimerService.LocalBinder binder = (ToolbarTimerService.LocalBinder) service;
+            mToolBarService = binder.getService();
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName aComponent)
+        {
+            MangaLogger.logInfo(TAG, aComponent.flattenToShortString() + " service disconnected.");
+        }
+    };
 
     /***
-     * TODO..
+     * This function creates and returns a new intent for the activity.
      *
      * @param aContext
      * @return
@@ -63,7 +95,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function initializes the view for the activity.
      *
      * @param aSavedInstanceState
      */
@@ -81,10 +113,29 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
             mReaderPresenter.onRestoreState(aSavedInstanceState);
         }
         mReaderPresenter.init(getIntent().getExtras());
+
+        mToolBarService = new ToolbarTimerService();
+        mToolBarService.setToolbarListener(this);
+
+
+        Intent intent = new Intent(this, ToolbarTimerService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     /***
-     * TODO..
+     * This function is called when a fragment or activities onDestroy is called in their life cycle chain.
+     */
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        mReaderPresenter.onDestroy();
+        ButterKnife.unbind(this);
+        unbindService(mConnection);
+    }
+
+    /***
+     * This function saves relevant data that needs to persist between device state changes.
      *
      * @param aSave
      */
@@ -96,38 +147,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
-     */
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-        mReaderPresenter.onResume();
-    }
-
-    /***
-     * TODO..
-     */
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
-        mReaderPresenter.onPause();
-    }
-
-    /***
-     * TODO..
-     */
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
-        ButterKnife.unbind(this);
-        mReaderPresenter.onDestroy();
-    }
-
-    /***
-     * TODO..
+     * This function returns the activity's context.
      *
      * @return
      */
@@ -138,7 +158,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function registers the adapter to the viewpager.
      *
      * @param aAdapter
      */
@@ -150,11 +170,20 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
             mViewPager.setAdapter(aAdapter);
             mViewPager.addOnPageChangeListener(this);
             mViewPager.setOffscreenPageLimit(0);
+
+            if (SourceFactory.getInstance().getSource().getSourceType() == MangaEnums.eSourceType.NOVEL)
+            {
+                mViewPager.setPagingEnabled(true);
+            }
+            else
+            {
+                mViewPager.setPagingEnabled(false);
+            }
         }
     }
 
     /***
-     * TODO..
+     * This function sets the current viewpager position.
      *
      * @param aPosition
      */
@@ -165,74 +194,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
-     */
-    @Override
-    public void incrementChapter()
-    {
-        mViewPager.incrementCurrentItem();
-        mReaderPresenter.updateRecentChapter(mViewPager.getCurrentItem());
-
-    }
-
-    /***
-     * TODO..
-     */
-    @Override
-    public void decrementChapter()
-    {
-        mViewPager.decrememntCurrentItem();
-        mReaderPresenter.updateRecentChapter(mViewPager.getCurrentItem());
-    }
-
-    /***
-     * TODO..
-     *
-     * @param aDelay
-     */
-    @Override
-    public void hideToolbar(long aDelay)
-    {
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-
-
-        mToolbarHeader.animate().translationY(-mToolbarHeader.getHeight()).setInterpolator(new AccelerateInterpolator()).setStartDelay(10).start();
-        mToolbarHeader2.animate().translationY(-mToolbarHeader2.getHeight() - mToolbarHeader.getHeight()).setInterpolator(new AccelerateInterpolator()).setStartDelay(10).start();
-        mToolbarFooter.animate().translationY(mToolbarFooter.getHeight()).setInterpolator(new DecelerateInterpolator()).setStartDelay(20).start();
-    }
-
-    /***
-     * TODO..
-     */
-    @Override
-    public void showToolbar()
-    {
-        getWindow().getDecorView().setSystemUiVisibility(0);
-        mToolbarHeader.animate().translationY(mToolbarHeader.getScrollY()).setInterpolator(new DecelerateInterpolator()).setStartDelay(10).start();
-        mToolbarHeader2.animate().translationY(mToolbarHeader2.getScrollY() + mToolbarHeader.getScrollY()).setInterpolator(new DecelerateInterpolator()).setStartDelay(10).start();
-        mToolbarFooter.animate().translationY(-mToolbarFooter.getScrollY()).setInterpolator(new AccelerateInterpolator()).setStartDelay(10).start();
-
-    }
-
-    /***
-     * TODO..
-     *
-     * @param aTitle
-     * @param aChapterTitle
-     * @param aSize
-     * @param aChapter
-     */
-    @Override
-    public void updateToolbar(String aTitle, String aChapterTitle, int aSize, int aChapter)
-    {
-        mMangaTitle.setText(aTitle);
-        mChapterTitle.setText(aChapterTitle);
-        mEndPage.setText(String.valueOf(aSize));
-        mReaderPresenter.updateChapterViewStatus(mViewPager.getCurrentItem());
-    }
-
-    /***
-     * TODO..
+     * This function initializes the header toolbar.
      */
     @Override
     public void setupToolbar()
@@ -242,6 +204,30 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
         mToolbarHeader.setNavigationOnClickListener(v -> onBackPressed());
         mToolbarHeader.setPadding(0, getStatusBarHeight(), 0, 0);
         mToolbarFooter.setPadding(0, 0, 0, getNavBarHeight());
+
+        if (SourceFactory.getInstance().getSource().getSourceType() == MangaEnums.eSourceType.NOVEL)
+        {
+            mVerticalScrollButton.setVisibility(View.GONE);
+            mForwardPageButton.setVisibility(View.GONE);
+            mBackPageButton.setVisibility(View.GONE);
+        }
+    }
+
+    /***
+     * This function sets the screen orientation.
+     *
+     * @param isLandscape
+     */
+    public void setScreenOrientation(boolean isLandscape)
+    {
+        if (isLandscape)
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
+        else
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
     }
 
     /***
@@ -263,7 +249,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function gets the navigation bar height of the device.
      *
      * @return
      */
@@ -280,43 +266,155 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
-     *
-     * @param aPosition
-     * @param aPositionOffset
-     * @param aPositionOffsetPixels
+     * This function increments the viewpager position.
      */
     @Override
-    public void onPageScrolled(int aPosition, float aPositionOffset, int aPositionOffsetPixels)
+    public void incrementChapter()
     {
-        //Do Nothing
+        mViewPager.incrementCurrentItem();
+        mReaderPresenter.updateRecentChapter(mViewPager.getCurrentItem());
+
     }
 
     /***
-     * TODO..
-     *
-     * @param aPosition
+     * This function decrements the viewpager position.
      */
     @Override
-    public void onPageSelected(int aPosition)
+    public void decrementChapter()
     {
-        toggleVerticalScrollIcon();
-        mReaderPresenter.updateToolbar(aPosition);
+        mViewPager.decrememntCurrentItem();
+        mReaderPresenter.updateRecentChapter(mViewPager.getCurrentItem());
+        mToolBarService.startToolBarTimer();
     }
 
     /***
-     * TODO..
+     * This function hides the header and footer toolbars.
      *
-     * @param aState
      */
     @Override
-    public void onPageScrollStateChanged(int aState)
+    public void hideToolbar()
     {
-        //Do Nothing
+        int lHiddenSystemView = View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+
+        try
+        {
+            if (!mToolbarsHidden)
+            {
+                getWindow().getDecorView()
+                           .setSystemUiVisibility(lHiddenSystemView);
+
+
+                mToolbarHeader.animate()
+                              .translationY(-mToolbarHeader.getHeight())
+                              .setInterpolator(new AccelerateInterpolator())
+                              .setStartDelay(10)
+                              .start();
+
+                mToolbarHeader2.animate()
+                               .translationY(-mToolbarHeader2.getHeight() - mToolbarHeader.getHeight())
+                               .setInterpolator(new AccelerateInterpolator())
+                               .setStartDelay(10)
+                               .start();
+
+                mToolbarFooter.animate()
+                              .translationY(mToolbarFooter.getHeight())
+                              .setInterpolator(new DecelerateInterpolator())
+                              .setStartDelay(20)
+                              .start();
+
+                mToolbarsHidden = true;
+            }
+        }
+        catch (Exception aException)
+        {
+            MangaLogger.logError(TAG, aException.toString());
+        }
     }
 
     /***
-     * TODO..
+     * This function shows the header and footer tool bars.
+     */
+    private void showToolbar()
+    {
+        try
+        {
+            if (mToolbarsHidden)
+            {
+                getWindow().getDecorView().setSystemUiVisibility(0);
+                mToolbarHeader.animate()
+                              .translationY(mToolbarHeader.getScrollY())
+                              .setInterpolator(new DecelerateInterpolator(.8f))
+                              .setStartDelay(10)
+                              .start();
+
+                mToolbarHeader2.animate()
+                               .translationY(mToolbarHeader2.getScrollY() + mToolbarHeader.getScrollY())
+                               .setInterpolator(new DecelerateInterpolator(.8f))
+                               .setStartDelay(10)
+                               .start();
+
+                mToolbarFooter.animate()
+                              .translationY(-mToolbarFooter.getScrollY()).setInterpolator(new AccelerateInterpolator(.8f))
+                              .setStartDelay(10)
+                              .start();
+
+                mToolbarsHidden = false;
+                startToolbarTimer();
+            }
+        }
+        catch (Exception aException)
+        {
+            MangaLogger.logError(TAG, aException.toString());
+        }
+    }
+
+    /***
+     * This function toggles the toolbar visibility specified by the users confirmed single taps.
+     */
+    @Override
+    public void toggleToolbar()
+    {
+        if (!mToolbarsHidden)
+        {
+            hideToolbar();
+        }
+        else
+        {
+            showToolbar();
+        }
+    }
+
+    /***
+     * This function starts the timer of the ToolbarTimerService to hide the tool bars.
+     */
+    public void startToolbarTimer()
+    {
+        mToolBarService.startToolBarTimer();
+    }
+
+    /***
+     * This function updates the header toolbar.
+     *
+     * @param aTitle
+     * @param aChapterTitle
+     * @param aSize
+     * @param aCurrentPage
+     */
+    @Override
+    public void updateToolbar(String aTitle, String aChapterTitle, int aSize, int aCurrentPage, int aChapterPosition)
+    {
+        if (mViewPager.getCurrentItem() == aChapterPosition)
+        {
+            mMangaTitle.setText(aTitle);
+            mChapterTitle.setText(aChapterTitle);
+            mEndPage.setText(String.valueOf(aSize));
+            mCurrentPage.setText(String.valueOf(aCurrentPage));
+            mReaderPresenter.updateChapterViewStatus(mViewPager.getCurrentItem());
+        }
+    }
+
+    /***
+     * This function updates the current page counter in the footer toolbar.
      *
      * @param aPosition
      */
@@ -327,7 +425,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function verifies if this is the active (visible) chapter.
      *
      * @param aChapter
      * @return
@@ -340,116 +438,44 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
     }
 
     /***
-     * TODO..
+     * This function handles when a page is scrolled.
+     *
+     * @param aPosition
+     * @param aPositionOffset
+     * @param aPositionOffsetPixels
      */
-    @OnClick(R.id.skipPreviousButton)
-    public void onSkipPreviousClick()
+    @Override
+    public void onPageScrolled(int aPosition, float aPositionOffset, int aPositionOffsetPixels)
     {
-        mViewPager.decrememntCurrentItem();
-        mReaderPresenter.updateRecentChapter(mViewPager.getCurrentItem());
+        //Do Nothing
     }
 
     /***
-     * TODO..
+     * This function handles when a page is selected.
+     *
+     * @param aPosition
      */
-    @OnClick(R.id.backPageButton)
-    public void onBackPageClick()
+    @Override
+    public void onPageSelected(int aPosition)
     {
-        mReaderPresenter.decrementChapterPage(mViewPager.getCurrentItem());
-    }
-
-    /***
-     * TODO..
-     */
-    @OnClick(R.id.refresh_button)
-    public void onRefreshClicked()
-    {
-        mReaderPresenter.onRefreshButton(mViewPager.getCurrentItem());
-        Toast.makeText(this, "Refreshing chapter", Toast.LENGTH_SHORT).show();
-    }
-
-    /***
-     * TODO..
-     */
-    @OnClick(R.id.forwardPageButton)
-    public void onForwardPageClick()
-    {
-        mReaderPresenter.incrementChapterPage(mViewPager.getCurrentItem());
-    }
-
-    /***
-     * TODO..
-     */
-    @OnClick(R.id.skipForwardButton)
-    public void onSkipForwardClick()
-    {
-        mViewPager.incrementCurrentItem();
-        mReaderPresenter.updateRecentChapter(mViewPager.getCurrentItem());
-
-    }
-
-    /***
-     * TODO..
-     */
-    @OnClick(R.id.screen_orient_button)
-    public void onScreenOrientClick()
-    {
-        mReaderPresenter.toggleOrientation();
-        //toggleicon
-    }
-
-    /***
-     * TODO..
-     */
-    @OnClick(R.id.vertical_scroll_toggle)
-    public void onVerticalScrollToggle()
-    {
-        mReaderPresenter.toggleVerticalScrollSettings(mViewPager.getCurrentItem());
         toggleVerticalScrollIcon();
-
+        mReaderPresenter.updateToolbar(aPosition);
+        showToolbar();
     }
 
     /***
-     * TODO..
+     * This function handles when a page scroll state has changed.
      *
-     * @param isLandscape
-     */
-    public void setScreenOrientation(boolean isLandscape)
-    {
-        if (isLandscape)
-        {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        }
-        else
-        {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
-    }
-
-    /***
-     * TODO..
-     *
-     * @param aLevel
+     * @param aState
      */
     @Override
-    public void onTrimMemory(int aLevel)
+    public void onPageScrollStateChanged(int aState)
     {
-        super.onTrimMemory(aLevel);
-        Glide.get(this).trimMemory(aLevel);
+        //Do Nothing
     }
 
     /***
-     * TODO..
-     */
-    @Override
-    public void onLowMemory()
-    {
-        super.onLowMemory();
-        Glide.get(this).clearMemory();
-    }
-
-    /***
-     * TODO..
+     * This function toggles vertical scroll icon accordingly.
      */
     private void toggleVerticalScrollIcon()
     {
@@ -461,6 +487,125 @@ public class ReaderActivity extends AppCompatActivity implements IReader.Activit
         {
             mVerticalScrollButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_swap_horiz_white_24dp));
         }
+    }
+
+    /***
+     * This function handles skip to previous chapter.
+     */
+    @OnClick(R.id.skipPreviousButton)
+    public void onSkipPreviousClick()
+    {
+        mViewPager.decrememntCurrentItem();
+        mReaderPresenter.updateRecentChapter(mViewPager.getCurrentItem());
+        startToolbarTimer();
+    }
+
+    /***
+     * This function handles go back one chapter page.
+     */
+    @OnClick(R.id.backPageButton)
+    public void onBackPageClick()
+    {
+        mReaderPresenter.decrementChapterPage(mViewPager.getCurrentItem());
+        startToolbarTimer();
+    }
+
+    /***
+     * This function handles refresh chapter button.
+     */
+    @OnClick(R.id.refresh_button)
+    public void onRefreshClicked()
+    {
+        mReaderPresenter.onRefreshButton(mViewPager.getCurrentItem());
+        Toast.makeText(this, "Refreshing chapter", Toast.LENGTH_SHORT).show();
+        mToolBarService.stopTimer();
+    }
+
+    /***
+     * This function handles go forward one chapter page.
+     */
+    @OnClick(R.id.forwardPageButton)
+    public void onForwardPageClick()
+    {
+        mReaderPresenter.incrementChapterPage(mViewPager.getCurrentItem());
+        startToolbarTimer();
+    }
+
+    /***
+     * This function handles skip to next chapter.
+     */
+    @OnClick(R.id.skipForwardButton)
+    public void onSkipForwardClick()
+    {
+        mViewPager.incrementCurrentItem();
+        mReaderPresenter.updateRecentChapter(mViewPager.getCurrentItem());
+        startToolbarTimer();
+    }
+
+    /***
+     * This function handles screen orient toggle.
+     */
+    @OnClick(R.id.screen_orient_button)
+    public void onScreenOrientClick()
+    {
+        mReaderPresenter.toggleOrientation();
+        startToolbarTimer();
+        //TODO.. toggle icon
+    }
+
+    /***
+     * This function handles vertical scroll toggle.
+     */
+    @OnClick(R.id.vertical_scroll_toggle)
+    public void onVerticalScrollToggle()
+    {
+        mReaderPresenter.toggleVerticalScrollSettings(mViewPager.getCurrentItem());
+        toggleVerticalScrollIcon();
+        startToolbarTimer();
+
+    }
+
+    /***
+     * This function trims Glide cache when low memory
+     *
+     * @param aLevel
+     */
+    @Override
+    public void onTrimMemory(int aLevel)
+    {
+        super.onTrimMemory(aLevel);
+        Glide.get(this).trimMemory(aLevel);
+    }
+
+    /***
+     * This function clears Glide cache when low memory.
+     */
+    @Override
+    public void onLowMemory()
+    {
+        super.onLowMemory();
+        Glide.get(this).clearMemory();
+    }
+
+    /***
+     * This function is called when a fragment or activities onPause() is called in their life cycle chain.
+     */
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        mReaderPresenter.onPause();
+    }
+
+    /***
+     * This function is called when a fragment or activities onResume() is called in their life cycle chain.
+     */
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        mReaderPresenter.onResume();
+        showToolbar();
     }
 
 

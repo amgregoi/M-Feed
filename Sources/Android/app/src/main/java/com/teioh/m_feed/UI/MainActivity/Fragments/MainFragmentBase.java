@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.os.TraceCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +11,6 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.l4digital.fastscroll.FastScrollRecyclerView;
-import com.l4digital.fastscroll.FastScroller;
-import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
@@ -31,13 +28,26 @@ import butterknife.ButterKnife;
  */
 public abstract class MainFragmentBase extends Fragment implements IMain.FragmentView
 {
-    @Bind(R.id.manga_recycle_view) FastScrollRecyclerView mGridView;
-
     protected IMain.FragmentPresenter mFragmentPresenter;
     protected Listeners.MainFragmentListener mListener;
+    @Bind(R.id.manga_recycle_view) FastScrollRecyclerView mGridView;
 
     /***
-     * TODO.
+     * This function is called in the fragment lifecycle
+     *
+     * @param aContext
+     */
+    @Override
+    public void onAttach(Context aContext)
+    {
+        super.onAttach(aContext);
+
+        if (aContext instanceof Listeners.MainFragmentListener) mListener = (Listeners.MainFragmentListener) aContext;
+        else throw new ClassCastException(aContext.toString() + " must implement Listeners.MainFragmentListener");
+    }
+
+    /***
+     * This function initializes the view of the fragment.
      * @param aInflater
      * @param aContainer
      * @param aSavedInstanceState
@@ -46,7 +56,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     public abstract View onCreateView(LayoutInflater aInflater, @Nullable ViewGroup aContainer, @Nullable Bundle aSavedInstanceState);
 
     /***
-     * TODO...
+     * This function restores/initializes the fragment presenter layer.
      *
      * @param aSave
      */
@@ -62,7 +72,17 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * This function is called in the fragment lifecycle
+     */
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        mFragmentPresenter.onResume();
+    }
+
+    /***
+     * This function saves the state of the fragment when a transition is invoked.
      *
      * @param aRestore
      */
@@ -74,17 +94,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
-     */
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-        mFragmentPresenter.onResume();
-    }
-
-    /***
-     * TODO...
+     * This function is called in the fragment lifecycle
      */
     @Override
     public void onPause()
@@ -94,7 +104,17 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * This function clears the Glide cache to cleanup memory when necessary.
+     */
+    @Override
+    public void onLowMemory()
+    {
+        super.onLowMemory();
+        Glide.get(getContext()).clearMemory();
+    }
+
+    /***
+     * This function is called in the fragment lifecycle
      */
     @Override
     public void onDestroyView()
@@ -105,31 +125,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
-     *
-     * @param aContext
-     */
-    @Override
-    public void onAttach(Context aContext)
-    {
-        super.onAttach(aContext);
-
-        if (aContext instanceof Listeners.MainFragmentListener) mListener = (Listeners.MainFragmentListener) aContext;
-        else throw new ClassCastException(aContext.toString() + " must implement Listeners.MainFragmentListener");
-    }
-
-    /***
-     * TODO...
-     */
-    @Override
-    public void onLowMemory()
-    {
-        super.onLowMemory();
-        Glide.get(getContext()).clearMemory();
-    }
-
-    /***
-     * TODO...
+     * This function updates the current source.
      */
     @Override
     public void updateSource()
@@ -138,7 +134,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * This function performs the filter by status filter.
      *
      * @param aFilter
      */
@@ -148,7 +144,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * This function performs the Genre query filter.
      *
      * @param aMangaList
      */
@@ -159,7 +155,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * This function clears the genre query filter.
      */
     @Override
     public boolean onClearGenreFilter()
@@ -168,7 +164,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * This function registers the adapter to the recycler view.
      *
      * @param aAdapter
      * @param aLayout
@@ -195,7 +191,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * This function updates the specified object in the fragment.
      *
      * @param aManga
      */
@@ -206,19 +202,19 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * This function sets the recently selected item according to its url.
      *
-     * @param aId
+     * @param aUrl
      * @return
      */
     @Override
-    public boolean setRecentSelection(Long aId)
+    public boolean setRecentSelection(String aUrl)
     {
-        return mListener.setRecentSelection(aId);
+        return mListener.setRecentSelection(aUrl);
     }
 
     /***
-     * TODO...
+     * This function updates the recently selected item according to the object.
      *
      * @param aManga
      */
@@ -229,7 +225,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * Not implemented
      *
      * @param aQueryText
      * @return
@@ -241,7 +237,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * This function performs the text query filter.
      *
      * @param aQueryText
      * @return
@@ -254,17 +250,17 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
-     * TODO...
+     * This function starts the swipe refresh layout refresh animation.
      */
     public abstract void startRefresh();
 
     /***
-     * TODO...
+     * This function stops the swipe refresh layout refresh animation.
      */
     public abstract void stopRefresh();
 
     /***
-     * TODO...
+     * This function initializes the swipe refresh layout.
      */
     public abstract void setupSwipeRefresh();
 

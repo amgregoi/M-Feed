@@ -21,7 +21,7 @@ public class MFeedApplication extends Application
     private static MFeedApplication aInstance;
 
     /***
-     * TODO..
+     * This static section registers the two classes to my ORM database.
      */
     static
     {
@@ -30,7 +30,7 @@ public class MFeedApplication extends Application
     }
 
     /***
-     * TODO..
+     * This is the constructor for the application
      */
     public MFeedApplication()
     {
@@ -38,7 +38,16 @@ public class MFeedApplication extends Application
     }
 
     /***
-     * TODO..
+     * This function returns a synchronized isntance of the application.
+     * @return
+     */
+    public static synchronized MFeedApplication getInstance()
+    {
+        return aInstance;
+    }
+
+    /***
+     * This function initializes various modules when the application is created.
      */
     @Override
     public void onCreate()
@@ -56,16 +65,19 @@ public class MFeedApplication extends Application
         MangaLogger.initialize();
     }
 
-    @Override public void onTerminate()
+    /***
+     * This function saves the logs when the application terminates
+     */
+    @Override
+    public void onTerminate()
     {
         super.onTerminate();
 
         SharedPrefs.saveLogs();
     }
 
-
     /***
-     * TODO..
+     * This function clears Glide cache when low on memory.
      */
     @Override
     public void onLowMemory()
@@ -75,7 +87,7 @@ public class MFeedApplication extends Application
     }
 
     /***
-     * TODO..
+     * This function trims Glide cache when low on memory.
      * @param aLevel
      */
     @Override
@@ -84,16 +96,6 @@ public class MFeedApplication extends Application
         super.onTrimMemory(aLevel);
         Glide.get(this).trimMemory(aLevel);
     }
-
-    /***
-     * TODO..
-     * @return
-     */
-    public static synchronized MFeedApplication getInstance()
-    {
-        return aInstance;
-    }
-
 
 
 }

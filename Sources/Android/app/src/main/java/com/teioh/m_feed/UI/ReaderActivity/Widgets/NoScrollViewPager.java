@@ -21,15 +21,15 @@ public class NoScrollViewPager extends ViewPager
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent aEvent)
-    {
-        return this.mPagingEnabled && super.onTouchEvent(aEvent);
-    }
-
-    @Override
     public boolean onInterceptTouchEvent(MotionEvent aEvent)
     {
         return this.mPagingEnabled && super.onInterceptTouchEvent(aEvent);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent aEvent)
+    {
+        return this.mPagingEnabled && super.onTouchEvent(aEvent);
     }
 
     public void setPagingEnabled(boolean aPagingEnabled)

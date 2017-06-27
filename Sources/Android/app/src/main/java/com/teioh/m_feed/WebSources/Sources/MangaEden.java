@@ -1,10 +1,10 @@
 package com.teioh.m_feed.WebSources.Sources;
 
+import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.Utils.MangaDB;
 import com.teioh.m_feed.Utils.MangaLogger;
-import com.teioh.m_feed.Utils.NetworkService;
 import com.teioh.m_feed.WebSources.RequestWrapper;
 import com.teioh.m_feed.WebSources.SourceBase;
 
@@ -12,7 +12,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -21,334 +20,294 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MangaEden extends SourceBase
+public class MangaEden extends SourceManga
 {
     final public static String TAG = MangaEden.class.getSimpleName();
 
-    final public String SourceKey = "MangaEden";
-
-    final String mBaseUrl = "http://www.mangaeden.com";
-    final String mUpdatesUrl = "http://www.mangaeden.com/ajax/news/1/0/";
+    final private String SourceKey = "MangaEden";
+    final private String mBaseUrl = "http://www.mangaeden.com";
+    final private String mUpdatesUrl = "http://www.mangaeden.com/ajax/news/1/0/";
+    final private String mGenres[] = {
+            "Action",
+            "Adult",
+            "Adventure",
+            "Comedy",
+            "Doujinshi",
+            "Drama",
+            "Ecchi",
+            "Fantasy",
+            "Gender Bender",
+            "Harem",
+            "Historical",
+            "Horror",
+            "Josei",
+            "Martial Arts",
+            "Mature",
+            "Mecha",
+            "Mystery",
+            "One Shot",
+            "Psychological",
+            "Romance",
+            "School Life",
+            "Sci-fi",
+            "Seinen",
+            "Shoujo",
+            "Shounen",
+            "Slice of Life",
+            "Smut",
+            "Sports",
+            "Supernatural",
+            "Tragedy",
+            "Webtoons",
+            "Yaoi",
+            "Yuri"
+    };
 
     /**
-     * builds list of manga for recently updated page
+     * {@inheritDoc}
      */
-    public Observable<List<Manga>> getRecentUpdatesObservable()
+    @Override
+    public MangaEnums.eSourceType getSourceType()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
-        return NetworkService.getTemporaryInstance()
-                             .getResponse(mUpdatesUrl)
-                             .flatMap(response -> NetworkService.mapResponseToString(response))
-                             .flatMap(html -> Observable.just(scrapeUpdatestoManga(Jsoup.parse(html))))
-                             .subscribeOn(Schedulers.computation())
-                             .observeOn(AndroidSchedulers.mainThread())
-                             .retry(5)
-                             .doOnError(aThrowable -> MangaLogger.logError(TAG, lMethod, aThrowable.getMessage()))
-                             .onErrorReturn(null);
+        return MangaEnums.eSourceType.MANGA;
     }
 
-    /***
-     * ChapterFragment - takes a chapter url, and returns list of urls to chapter images
-     *
-     * @param request
-     * @return
+    /**
+     * {@inheritDoc}
      */
-    public Observable<String> getChapterImageListObservable(final RequestWrapper request)
+    @Override
+    public String getRecentUpdatesUrl()
     {
-        return NetworkService.getPermanentInstance()
-                             .getResponse(request.getChapterUrl())
-                             .subscribeOn(Schedulers.computation())
-                             .observeOn(AndroidSchedulers.mainThread())
-                             .flatMap(response -> NetworkService.mapResponseToString(response))
-                             .flatMap(unparsedJson -> Observable.create(new Observable.OnSubscribe<List<String>>()
-                             {
-                                 @Override
-                                 public void call(Subscriber<? super List<String>> subscriber)
-                                 {
-                                     try
-                                     {
-                                         subscriber.onNext(parseJsonToImageUrls(unparsedJson));
-                                         subscriber.onCompleted();
-                                     }
-                                     catch (Throwable e)
-                                     {
-                                         subscriber.onError(e);
-                                     }
-                                 }
-                             }))
-                             .flatMap(imageUrls -> Observable.from(imageUrls.toArray(new String[imageUrls.size()])));
+        return mUpdatesUrl;
     }
 
-    /***
-     * TODO...
-     *
-     * @param request
-     * @return
+    /**
+     * {@inheritDoc}
      */
-    public Observable<List<Chapter>> getChapterListObservable(final RequestWrapper request)
+    @Override
+    public String[] getGenres()
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
-        return NetworkService.getPermanentInstance()
-                             .getResponse(request.getMangaUrl())
-                             .flatMap(response -> NetworkService.mapResponseToString(response))
-                             .flatMap(unparsedJson -> Observable.create(new Observable.OnSubscribe<List<Chapter>>()
-                             {
-                                 @Override
-                                 public void call(Subscriber<? super List<Chapter>> subscriber)
-                                 {
-                                     try
-                                     {
-                                         subscriber.onNext(parseJsonToChapters(request, unparsedJson));
-                                         subscriber.onCompleted();
-                                     }
-                                     catch (Throwable e)
-                                     {
-                                         subscriber.onError(e);
-                                     }
-                                 }
-                             }))
-                             .observeOn(AndroidSchedulers.mainThread())
-                             .doOnError(aThrowable -> MangaLogger.logError(TAG, lMethod, aThrowable.getMessage()))
-                             .onErrorReturn(null);
-
+        return mGenres;
     }
 
-    /***
-     * Adds new Manga and
-     * gets missing manga information and updates database
-     *
-     * @param request
-     * @return
+    /**
+     * {@inheritDoc}
      */
-    public Observable<Manga> updateMangaObservable(final RequestWrapper request)
+    @Override
+    public List<Manga> parseResponseToRecentList(final String aResponseBody)
     {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
+        List<Manga> lMangaList = new ArrayList<>();
+        Elements lMangaElements = Jsoup.parse(aResponseBody).select("body > li");
 
-        return NetworkService.getTemporaryInstance()
-                             .getResponse(request.getMangaUrl())
-                             .flatMap(response -> NetworkService.mapResponseToString(response))
-                             .flatMap(unparsedJson -> Observable.create(new Observable.OnSubscribe<Manga>()
-                             {
-                                 @Override
-                                 public void call(Subscriber<? super Manga> subscriber)
-                                 {
-                                     try
-                                     {
-                                         subscriber.onNext(parseJsonToManga(request, unparsedJson));
-                                         subscriber.onCompleted();
-                                     }
-                                     catch (Throwable e)
-                                     {
-                                         subscriber.onError(e);
-                                     }
-                                 }
-                             }))
-                             .doOnError(aThrowable -> MangaLogger.logError(TAG, lMethod, aThrowable.getMessage()))
-                             .onErrorReturn(null);
-    }
-
-    /***
-     * TODO...
-     *
-     * @param parsedDocument
-     * @return
-     */
-    private List<Manga> scrapeUpdatestoManga(final Document parsedDocument)
-    {
-        String lMethod = Thread.currentThread().getStackTrace()[2].getMethodName();
-
-        List<Manga> mangaList = new ArrayList<>();
-        Elements mangaElements = parsedDocument.select("body > li");
-
-        for (Element htmlBlock : mangaElements)
+        for (Element iMangaBlock : lMangaElements)
         {
-            Element urlElement = htmlBlock.select("div.newsManga").first();
-            Element nameElement = htmlBlock.select("div.manga_tooltop_header > a").first();
+            Element iUrlElement = iMangaBlock.select("div.newsManga").first();
+            Element iTitleElement = iMangaBlock.select("div.manga_tooltop_header > a").first();
 
-            String mangaTitle = nameElement.text();
-            String mangaUrl = "https://www.mangaeden.com/api/manga/" + urlElement.id().substring(0, 24) + "/";
+            String lTitle = iTitleElement.text();
+            String lUrl = "https://www.mangaeden.com/api/manga/" + iUrlElement.id().substring(0, 24) + "/";
 
-            Manga lManga = MangaDB.getInstance().getManga(mangaUrl);
+            Manga lManga = MangaDB.getInstance().getManga(lUrl);
+
             if (lManga != null)
             {
-                mangaList.add(lManga);
+                lMangaList.add(lManga);
             }
             else
             {
-                lManga = new Manga(mangaTitle, mangaUrl, SourceKey);
-                mangaList.add(lManga);
+                lManga = new Manga(lTitle, lUrl, SourceKey);
+                lMangaList.add(lManga);
                 MangaDB.getInstance().putManga(lManga);
                 updateMangaObservable(new RequestWrapper(lManga)).subscribeOn(Schedulers.computation())
-                                                                 .doOnError(aThrowable -> MangaLogger.logError(TAG, lMethod, aThrowable.getMessage()))
+                                                                 .doOnError(aThrowable -> MangaLogger
+                                                                         .logError(TAG, aThrowable.getMessage()))
                                                                  .subscribe();
             }
         }
 
-        MangaLogger.logError(TAG, lMethod, " Finished parsing recent updates");
+        MangaLogger.logInfo(TAG, "Finished parsing recent updates");
 
-        if (mangaList.size() == 0) return null;
-        return mangaList;
+        if (lMangaList.size() == 0) return null;
+        return lMangaList;
     }
 
-    /***
-     * TODO...
-     *
-     * @param request
-     * @param unparsedJson
-     * @return
-     * @throws JSONException
+    /**
+     * {@inheritDoc}
      */
-    private List<Chapter> parseJsonToChapters(RequestWrapper request, String unparsedJson) throws JSONException
+    @Override
+    public Manga parseResponseToManga(final RequestWrapper aRequest, final String aResponseBody)
     {
-        JSONObject parsedJsonObject = new JSONObject(unparsedJson);
-
-        List<Chapter> chapterList = scrapeChaptersFromParsedJson(parsedJsonObject);
-        chapterList = setNumberForChapterList(chapterList);
-
-        return chapterList;
-    }
-
-    /***
-     * TODO...
-     *
-     * @param parsedJsonObject
-     * @return
-     * @throws JSONException
-     */
-    private List<Chapter> scrapeChaptersFromParsedJson(JSONObject parsedJsonObject) throws JSONException
-    {
-        List<Chapter> chapterList = new ArrayList<>();
-
-        String mangaName = parsedJsonObject.getString("title");
-        JSONArray chapterArrayNodes = parsedJsonObject.getJSONArray("chapters");
-        for (int index = 0; index < chapterArrayNodes.length(); index++)
+        try
         {
-            JSONArray currentChapterArray = chapterArrayNodes.getJSONArray(index);
+            JSONObject lParsedJsonObject = new JSONObject(aResponseBody);
 
-            Chapter currentChapter = constructChapterFromJSONArray(currentChapterArray, mangaName);
-
-            chapterList.add(currentChapter);
-        }
-
-        Collections.reverse(chapterList);
-        return chapterList;
-    }
-
-    /*
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     */
-
-    /***
-     * TODO...
-     *
-     * @param chapterNode
-     * @param mangaName
-     * @return
-     * @throws JSONException
-     */
-    private Chapter constructChapterFromJSONArray(JSONArray chapterNode, String mangaName) throws JSONException
-    {
-        Chapter newChapter = new Chapter(mangaName);
-
-        newChapter.setChapterUrl("https://www.mangaeden.com/api/chapter/" + chapterNode.getString(3) + "/");
-        newChapter.setChapterTitle(mangaName + " " + chapterNode.getDouble(0));
-
-        Date d = new Date(chapterNode.getLong(1) * 1000);
-        newChapter.setChapterDate(d.toString());
-        return newChapter;
-    }
-
-    /***
-     * TODO...
-     *
-     * @param chapterList
-     * @return
-     */
-    private List<Chapter> setNumberForChapterList(List<Chapter> chapterList)
-    {
-        Collections.reverse(chapterList);
-        for (int index = 0; index < chapterList.size(); index++)
-        {
-            chapterList.get(index).setChapterNumber(index + 1);
-        }
-
-        return chapterList;
-    }
-
-    /***
-     * TODO...
-     *
-     * @param unparsedJson
-     * @return
-     * @throws JSONException
-     */
-    private List<String> parseJsonToImageUrls(String unparsedJson) throws JSONException
-    {
-        JSONObject parsedJson = new JSONObject(unparsedJson);
-        List<String> imageUrlList = new ArrayList<>();
-
-        JSONArray imageArrayNodes = parsedJson.getJSONArray("images");
-        for (int index = 0; index < imageArrayNodes.length(); index++)
-        {
-            JSONArray currentImageNode = imageArrayNodes.getJSONArray(index);
-
-            imageUrlList.add("https://cdn.mangaeden.com/mangasimg/" + currentImageNode.getString(1));
-        }
-        Collections.reverse(imageUrlList);
-
-        return imageUrlList;
-    }
-
-    /***
-     * TODO...
-     *
-     * @param request
-     * @param unparsedJson
-     * @return
-     * @throws JSONException
-     */
-    private Manga parseJsonToManga(RequestWrapper request, String unparsedJson) throws JSONException
-    {
-        JSONObject parsedJsonObject = new JSONObject(unparsedJson);
-
-        String fieldGenre = "";
-        JSONArray genreArrayNodes = parsedJsonObject.getJSONArray("categories");
-        for (int index = 0; index < genreArrayNodes.length(); index++)
-        {
-            if (index != genreArrayNodes.length() - 1)
+            String lGenres = "";
+            JSONArray lGenreArrayNodes = lParsedJsonObject.getJSONArray("categories");
+            for (int i = 0; i < lGenreArrayNodes.length(); i++)
             {
-                fieldGenre += genreArrayNodes.getString(index) + ", ";
+                if (i != lGenreArrayNodes.length() - 1)
+                {
+                    lGenres += lGenreArrayNodes.getString(i) + ", ";
+                }
+                else
+                {
+                    lGenres += lGenreArrayNodes.getString(i);
+                }
             }
-            else
-            {
-                fieldGenre += genreArrayNodes.getString(index);
-            }
+
+            Manga lNewManga = MangaDB.getInstance().getManga(aRequest.getMangaUrl());
+
+            lNewManga.setArtist(lParsedJsonObject.getString("artist"));
+            lNewManga.setAuthor(lParsedJsonObject.getString("author"));
+            lNewManga.setDescription(lParsedJsonObject.getString("description").trim());
+            lNewManga.setmGenre(lGenres);
+            lNewManga.setPicUrl("https://cdn.mangaeden.com/mangasimg/" + lParsedJsonObject.getString("image"));
+            lNewManga.setInitialized(1);
+
+            MangaDB.getInstance().updateManga(lNewManga);
+            MangaLogger.logError(TAG, "Finished creating/update manga (" + lNewManga.getTitle() + ")");
+            return lNewManga;
+        }
+        catch (Exception aException)
+        {
+            MangaLogger.logError(TAG, aException.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Chapter> parseResponseToChapters(RequestWrapper aRequest, String aResponseBody)
+    {
+        List<Chapter> lChapterList = null;
+
+        try
+        {
+            JSONObject lParsedJsonObject = new JSONObject(aResponseBody);
+
+            lChapterList = resolveChaptersFromParsedJson(lParsedJsonObject);
+            lChapterList = setNumberForChapterList(lChapterList);
+        }
+        catch (JSONException aException)
+        {
+            MangaLogger.logError(TAG, aException.getMessage());
         }
 
-        Manga newManga = MangaDB.getInstance().getManga(request.getMangaUrl());
+        MangaLogger.logInfo(TAG, "Finished parsing chapter list (" + aRequest.getMangaTitle() + ")");
+        return lChapterList;
 
-        newManga.setArtist(parsedJsonObject.getString("artist"));
-        newManga.setAuthor(parsedJsonObject.getString("author"));
-        newManga.setDescription(parsedJsonObject.getString("description").trim());
-        newManga.setmGenre(fieldGenre);
-        newManga.setPicUrl("https://cdn.mangaeden.com/mangasimg/" + parsedJsonObject.getString("image"));
-        newManga.setInitialized(1);
+    }
 
-        MangaDB.getInstance().putManga(newManga);
-        return newManga;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<String> parseResponseToPageUrls(final String aResponseBody)
+    {
+        List<String> lImageList = null;
+
+        try
+        {
+            JSONObject lParsedJson = new JSONObject(aResponseBody);
+            lImageList = new ArrayList<>();
+
+            JSONArray lImageArrayNodes = lParsedJson.getJSONArray("images");
+            for (int i = 0; i < lImageArrayNodes.length(); i++)
+            {
+                JSONArray lCurrentImageNode = lImageArrayNodes.getJSONArray(i);
+
+                lImageList.add("https://cdn.mangaeden.com/mangasimg/" + lCurrentImageNode.getString(1));
+            }
+
+            Collections.reverse(lImageList);
+        }
+        catch (JSONException aException)
+        {
+            MangaLogger.logError(TAG, aException.getMessage());
+        }
+
+        MangaLogger.logInfo(TAG, "Finished parsing page url list.");
+        return lImageList;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String parseResponseToImageUrls(String aResponseBody, final String aResponseUrl)
+    {
+        //Note: This method was added to keep consistency with the other sources
+        return aResponseUrl;
+    }
+
+    /***
+     * This helper function resolves and builds chapters from the parsed json
+     * Parent - parseResponseToChapters();
+     *
+     * @param aParsedJson
+     * @return
+     * @throws JSONException
+     */
+    private List<Chapter> resolveChaptersFromParsedJson(JSONObject aParsedJson) throws JSONException
+    {
+        List<Chapter> lChapterList = new ArrayList<>();
+
+        String lMangaTitle = aParsedJson.getString("title");
+        JSONArray lChapterArrayNodes = aParsedJson.getJSONArray("chapters");
+        for (int i = 0; i < lChapterArrayNodes.length(); i++)
+        {
+            JSONArray lCurrentChapterArray = lChapterArrayNodes.getJSONArray(i);
+
+            Chapter lCurrentChapter = constructChapterFromJSONArray(lCurrentChapterArray, lMangaTitle);
+
+            lChapterList.add(lCurrentChapter);
+        }
+
+        Collections.reverse(lChapterList);
+        return lChapterList;
+    }
+
+    /***
+     * This helper function sets the chapters index value.
+     * Parent - parseResponseToChapters();
+     *
+     * @param aChapterList
+     * @return
+     */
+    private List<Chapter> setNumberForChapterList(List<Chapter> aChapterList)
+    {
+        Collections.reverse(aChapterList);
+        for (int i = 0; i < aChapterList.size(); i++)
+        {
+            aChapterList.get(i).setChapterNumber(i + 1);
+        }
+
+        return aChapterList;
+    }
+
+    /***
+     * This helper function constructs a chapter from the specified JSON.
+     * Parent - resolveChaptersFromParsedJson();
+     *
+     * @param aChapterNode
+     * @param aMangaName
+     * @return
+     * @throws JSONException
+     */
+    private Chapter constructChapterFromJSONArray(JSONArray aChapterNode, String aMangaName) throws JSONException
+    {
+        Chapter lNewChapter = new Chapter(aMangaName);
+
+        lNewChapter.setChapterUrl("https://www.mangaeden.com/api/chapter/" + aChapterNode.getString(3) + "/");
+        lNewChapter.setChapterTitle(aMangaName + " " + aChapterNode.getDouble(0));
+
+        Date lDate = new Date(aChapterNode.getLong(1) * 1000);
+        lNewChapter.setChapterDate(lDate.toString());
+
+        return lNewChapter;
     }
 }

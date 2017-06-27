@@ -17,7 +17,7 @@ public class LibraryFragment extends MainFragmentBase
     public final static String TAG = LibraryFragment.class.getSimpleName();
 
     /***
-     * TODO..
+     * This function creates and returns a new instance of the fragment.
      *
      * @return
      */
@@ -28,7 +28,7 @@ public class LibraryFragment extends MainFragmentBase
     }
 
     /***
-     * TODO..
+     * This function initializes the view of the fragment.
      *
      * @param aInflater
      * @param aContainer
@@ -46,7 +46,7 @@ public class LibraryFragment extends MainFragmentBase
     }
 
     /***
-     * TODO..
+     * Not implemented for this class
      */
     @Override
     public void startRefresh()
@@ -55,7 +55,7 @@ public class LibraryFragment extends MainFragmentBase
     }
 
     /***
-     * TODO..
+     * Not implemented for this class
      */
     @Override
     public void stopRefresh()
@@ -64,7 +64,7 @@ public class LibraryFragment extends MainFragmentBase
     }
 
     /***
-     * TODO..
+     * Not implemented for this class
      */
     @Override
     public void setupSwipeRefresh()
@@ -73,7 +73,7 @@ public class LibraryFragment extends MainFragmentBase
     }
 
     /***
-     * TOOD..
+     * Not implemented for this class
      */
     @Override
     public boolean removeFilters()

@@ -8,6 +8,7 @@ public interface Listeners
     interface DialogYesNoListener
     {
         void positive(int aAction);
+
         void negative(int aAction);
     }
 
@@ -17,7 +18,7 @@ public interface Listeners
     interface MainFragmentListener
     {
 
-        boolean setRecentSelection(Long aId);
+        boolean setRecentSelection(String aUrl);
 
         boolean updateRecentSelection(Manga aManga);
 
@@ -33,11 +34,11 @@ public interface Listeners
 
         void decrementChapter();
 
-        void hideToolbar(long aDelay);
+        void toggleToolbar();
 
-        void showToolbar();
+        void startToolbarTimer();
 
-        void updateToolbar(String aTitle, String aChapterTitle, int aSize, int aPage);
+        void updateToolbar(String aTitle, String aChapterTitle, int aSize, int aPage, int aChapterPosition);
 
         void updateCurrentPage(int aPosition);
 

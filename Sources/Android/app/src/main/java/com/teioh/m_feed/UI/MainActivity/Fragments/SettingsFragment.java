@@ -1,6 +1,7 @@
 package com.teioh.m_feed.UI.MainActivity.Fragments;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -25,11 +26,10 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
 {
     public final static String TAG = SettingsFragment.class.getSimpleName();
 
-    //TODO implement settings with shared prefs
     @Bind(R.id.logging_toggle) ToggleButton mLoggingToggle;
 
     /***
-     * TODO..
+     * This function creates and returns a new instance of the fragment.
      * @return
      */
     public static Fragment getnewInstance()
@@ -39,7 +39,7 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
     }
 
     /***
-     * TODO..
+     * This function initializes the view of the fragment.
      * @param aInflater
      * @param aContainer
      * @param aSavedInstanceState
@@ -57,35 +57,7 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
     }
 
     /***
-     * TODO..
-     * @param aSave
-     */
-    @Override
-    public void onActivityCreated(@Nullable Bundle aSave)
-    {
-        super.onActivityCreated(aSave);
-    }
-
-    /***
-     * TODO..
-     */
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-    }
-
-    /***
-     * TODO..
-     */
-    @Override
-    public void onPause()
-    {
-        super.onPause();
-    }
-
-    /***
-     * TODO..
+     * This function is called in the fragment lifecycle
      */
     @Override
     public void onDestroyView()
@@ -94,6 +66,19 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
         ButterKnife.unbind(this);
     }
 
+    /***
+     * This function intializes relavent parts of the layout based on saved SharedPrefs.
+     */
+    private void initializeLayout()
+    {
+        mLoggingToggle.setChecked(SharedPrefs.getLoggingStatus());
+        MangaLogger.logInfo(TAG, "Finished initializing settings layout");
+
+    }
+
+    /***
+     * This function performs the show logs item select.
+     */
     @OnClick(R.id.show_logs)
     public void onShowLogsClick()
     {
@@ -106,12 +91,31 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
 
     }
 
+    /***
+     * This function performs the clear logs item select.
+     */
     @OnClick(R.id.clear_logs)
     public void onClearLogsClick()
     {
         launchYesNoDialog(R.string.logs, getString(R.string.settings_clear_logs), 99);
     }
 
+    /***
+     * This function launches the YesNo dialog to verify by the user an action should be executed.
+     * @param aTitleRes
+     * @param aMessage
+     * @param aAction
+     */
+    private void launchYesNoDialog(int aTitleRes, String aMessage, int aAction)
+    {
+        DialogFragment newFragment = FYesNoDialog.getNewInstance(aTitleRes, aMessage, aAction, false);
+        newFragment.setTargetFragment(this, 1);
+        newFragment.show(getActivity().getSupportFragmentManager(), "dialog");
+    }
+
+    /***
+     * This function performs the toggle logs item select.
+     */
     @OnClick(R.id.toggle_logs)
     public void onToggleLogsClick()
     {
@@ -121,38 +125,48 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
         MangaLogger.makeToast("Toggling internal logger");
     }
 
+    /***
+     * This function performs the clear chapter cache item select.
+     */
     @OnClick(R.id.reset_cached_chapters)
     public void onResetChaptersClick()
     {
         launchYesNoDialog(R.string.chapter_cache, getString(R.string.settings_chapter_cache), 0);
     }
 
+    /***
+     * This function performs the clear user library item select.
+     */
     @OnClick(R.id.reset_followed_manga_pref)
     public void onResetLibraryClick()
     {
         launchYesNoDialog(R.string.library, getString(R.string.settings_library), 1);
     }
 
+    /***
+     * This function performs the delete all downloaded chapters item select.
+     */
     @OnClick(R.id.reset_downloaded_chapters)
     public void onRemoveDownloadedChaptersClick()
     {
         launchYesNoDialog(R.string.downloaded_chapters, getString(R.string.settings_downloaded_chapters), 2);
     }
 
+    /***
+     * This function performs the contact us item select.
+     */
     @OnClick(R.id.contact_us)
     public void onContactUsClick()
     {
         launchYesNoDialog(R.string.contact_us, getString(R.string.settings_contact_us), 3);
     }
 
-    private void initializeLayout()
-    {
-        mLoggingToggle.setChecked(SharedPrefs.getLoggingStatus());
-        MangaLogger.logInfo(TAG, "initializeLayout", "Finished initializing settings layout");
-
-    }
-
-    @Override public void positive(int aAction)
+    /***
+     * This function performs various (above) operations based on the action ID specified.
+     * @param aAction
+     */
+    @Override
+    public void positive(int aAction)
     {
         switch (aAction)
         {
@@ -175,8 +189,24 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
                 break;
 
             case 3://Contact Us
-                MangaLogger.logError(TAG, "positive", getString(R.string.method_not_implemented));
-                MangaLogger.makeToast(getString(R.string.method_not_implemented));
+                Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+
+                String aEmailList[] = {"teioh08@gmail.com"};
+                emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, aEmailList);
+                emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "MangaFeed Contact:");
+                emailIntent.setType("plain/text");
+
+                PackageManager packageManager = getActivity().getPackageManager();
+                if (emailIntent.resolveActivity(packageManager) != null)
+                {
+                    startActivity(emailIntent);
+                }
+                else
+                {
+                    MangaLogger.logInfo(TAG, "There is no activity to support email intent");
+                    MangaLogger.makeToast("No application available to send an email.");
+                }
+
                 break;
 
             case 99://Logs
@@ -191,16 +221,13 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
         }
     }
 
-    @Override public void negative(int aAction)
+    /***
+     * This function is called and logged when an action is declined by the user.
+     * @param aAction
+     */
+    @Override
+    public void negative(int aAction)
     {
-        MangaLogger.makeToast("NEGATIVE");
-
-    }
-
-    private void launchYesNoDialog(int aTitleRes, String aMessage, int aAction)
-    {
-        DialogFragment newFragment = FYesNoDialog.getNewInstance(aTitleRes, aMessage, aAction, false);
-        newFragment.setTargetFragment(this, 1);
-        newFragment.show(getActivity().getSupportFragmentManager(), "dialog");
+        MangaLogger.logInfo(TAG, "No was selected for action (" + aAction + ")");
     }
 }

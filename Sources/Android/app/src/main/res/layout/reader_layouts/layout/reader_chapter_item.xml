@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="fill_parent"
-	android:theme="@style/ReaderTheme"
-	>
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:theme="@style/ReaderTheme"
+    >
 
-	<com.teioh.m_feed.UI.ReaderActivity.Widgets.GestureImageView
-		android:id="@+id/chapterPageImageView"
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    android:scaleType="center"
-		android:src="@drawable/ic_book_white_18dp"
-		/>
-
-
-
+    <com.teioh.m_feed.UI.ReaderActivity.Widgets.GestureImageView
+        android:id="@+id/chapter_page_image_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scaleType="center"
+        android:src="@drawable/ic_book_white_18dp"
+        />
 </RelativeLayout>
