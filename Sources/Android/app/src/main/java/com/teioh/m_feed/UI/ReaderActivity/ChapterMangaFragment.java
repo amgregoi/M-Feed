@@ -364,6 +364,8 @@ public class ChapterMangaFragment extends Fragment implements IReader.MangaFragm
         {
             mChapterPresenter.onRestoreState(aSavedInstanceState);
         }
+
+        mChapterPresenter.init(getArguments());
     }
 
     /***
@@ -372,7 +374,6 @@ public class ChapterMangaFragment extends Fragment implements IReader.MangaFragm
     @Override
     public void onStart()
     {
-        mChapterPresenter.init(getArguments());
         super.onStart();
     }
 
