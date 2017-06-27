@@ -25,6 +25,8 @@ public interface IReader
         void setupToolbar();
 
         void setScreenOrientation(boolean aLandscape);
+
+        void hideToolbar();
     }
 
     /***
@@ -70,9 +72,9 @@ public interface IReader
 
         void decrementChapter();
 
-        void hideToolbar(long aDelay);
+        void toggleToolbar();
 
-        void showToolbar();
+        void startToolbarTimer();
 
         void updateToolbar(String aMangaTitle, String aChapterTitle, int aSize, int aPage, int aChapterPosition);
 
@@ -104,7 +106,6 @@ public interface IReader
         void updateChapterViewStatus();
 
         void onRefresh(int aPosition);
-
     }
 
     interface NovelFragmentView extends BaseContextMap, GestureViewPager.UserGestureListener
@@ -117,9 +118,9 @@ public interface IReader
 
         void decrementChapter();
 
-        void hideToolbar(long aDelay);
+        void toggleToolbar();
 
-        void showToolbar();
+        void startToolbarTimer();
 
         void updateToolbar(String aMangaTitle, String aChapterTitle, int aSize, int aPage, int aChapterPosition);
 

@@ -275,16 +275,8 @@ public class ChapterMangaPresenter implements IReader.MangaFragmentPresenter
     {
         try
         {
-            if (mIsToolbarShowing)
-            {
-                mIsToolbarShowing = false;
-                mChapterReaderMapper.hideToolbar(0);
-            }
-            else
-            {
-                mIsToolbarShowing = true;
-                mChapterReaderMapper.showToolbar();
-            }
+            mChapterReaderMapper.toggleToolbar();
+
         }
         catch (Exception aException)
         {
@@ -410,6 +402,8 @@ public class ChapterMangaPresenter implements IReader.MangaFragmentPresenter
                                                                   .setCurrentChapterPage(mChapter.getCurrentPage(), mPosition);
 
                                                           mImageSubFlag = true;
+
+                                                          mChapterReaderMapper.startToolbarTimer();
 
                                                       }
 

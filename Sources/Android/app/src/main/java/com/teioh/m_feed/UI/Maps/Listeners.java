@@ -34,9 +34,9 @@ public interface Listeners
 
         void decrementChapter();
 
-        void hideToolbar(long aDelay);
+        void toggleToolbar();
 
-        void showToolbar();
+        void startToolbarTimer();
 
         void updateToolbar(String aTitle, String aChapterTitle, int aSize, int aPage, int aChapterPosition);
 

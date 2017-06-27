@@ -1,10 +1,13 @@
 package com.teioh.m_feed.UI.ReaderActivity;
 
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +25,7 @@ import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MangaActivity.MangaPresenter;
 import com.teioh.m_feed.UI.ReaderActivity.Presenters.ReaderPresenter;
 import com.teioh.m_feed.UI.ReaderActivity.Widgets.NoScrollViewPager;
+import com.teioh.m_feed.Utils.MangaLogger;
 import com.teioh.m_feed.Utils.SharedPrefs;
 import com.teioh.m_feed.WebSources.SourceFactory;
 
@@ -34,6 +38,7 @@ import butterknife.OnClick;
 
 public class ReaderActivity extends AppCompatActivity implements IReader.ReaderActivityView
 {
+    public final static String TAG = ReaderActivity.class.getSimpleName();
 
     @Bind(R.id.no_scroll_pager) NoScrollViewPager mViewPager;
     @Bind(R.id.chapter_header) Toolbar mToolbarHeader;
@@ -50,6 +55,28 @@ public class ReaderActivity extends AppCompatActivity implements IReader.ReaderA
 
 
     private IReader.ReaderActivityPresenter mReaderPresenter;
+    private ToolbarTimerService mToolBarService;
+    private boolean mToolbarsHidden = true;
+
+    private ServiceConnection mConnection = new ServiceConnection()
+    {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service)
+        {
+            // We've bound to ToolbarTimerService, cast the IBinder and get ToolbarTimerService instance
+            ToolbarTimerService.LocalBinder binder = (ToolbarTimerService.LocalBinder) service;
+            mToolBarService = binder.getService();
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName aComponent)
+        {
+            MangaLogger.logInfo(TAG, aComponent.flattenToShortString() + " service disconnected.");
+        }
+    };
 
     /***
      * This function creates and returns a new intent for the activity.
@@ -86,6 +113,13 @@ public class ReaderActivity extends AppCompatActivity implements IReader.ReaderA
             mReaderPresenter.onRestoreState(aSavedInstanceState);
         }
         mReaderPresenter.init(getIntent().getExtras());
+
+        mToolBarService = new ToolbarTimerService();
+        mToolBarService.setToolbarListener(this);
+
+
+        Intent intent = new Intent(this, ToolbarTimerService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     /***
@@ -95,8 +129,9 @@ public class ReaderActivity extends AppCompatActivity implements IReader.ReaderA
     protected void onDestroy()
     {
         super.onDestroy();
-        ButterKnife.unbind(this);
         mReaderPresenter.onDestroy();
+        ButterKnife.unbind(this);
+        unbindService(mConnection);
     }
 
     /***
@@ -249,42 +284,112 @@ public class ReaderActivity extends AppCompatActivity implements IReader.ReaderA
     {
         mViewPager.decrememntCurrentItem();
         mReaderPresenter.updateRecentChapter(mViewPager.getCurrentItem());
+        mToolBarService.startToolBarTimer();
     }
 
     /***
      * This function hides the header and footer toolbars.
      *
-     * @param aDelay
      */
     @Override
-    public void hideToolbar(long aDelay)
+    public void hideToolbar()
     {
-        getWindow().getDecorView()
-                   .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        int lHiddenSystemView = View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+
+        try
+        {
+            if (!mToolbarsHidden)
+            {
+                getWindow().getDecorView()
+                           .setSystemUiVisibility(lHiddenSystemView);
 
 
-        mToolbarHeader.animate().translationY(-mToolbarHeader.getHeight()).setInterpolator(new AccelerateInterpolator()).setStartDelay(10)
-                      .start();
-        mToolbarHeader2.animate().translationY(-mToolbarHeader2.getHeight() - mToolbarHeader.getHeight())
-                       .setInterpolator(new AccelerateInterpolator()).setStartDelay(10).start();
-        mToolbarFooter.animate().translationY(mToolbarFooter.getHeight()).setInterpolator(new DecelerateInterpolator()).setStartDelay(20)
-                      .start();
+                mToolbarHeader.animate()
+                              .translationY(-mToolbarHeader.getHeight())
+                              .setInterpolator(new AccelerateInterpolator())
+                              .setStartDelay(10)
+                              .start();
+
+                mToolbarHeader2.animate()
+                               .translationY(-mToolbarHeader2.getHeight() - mToolbarHeader.getHeight())
+                               .setInterpolator(new AccelerateInterpolator())
+                               .setStartDelay(10)
+                               .start();
+
+                mToolbarFooter.animate()
+                              .translationY(mToolbarFooter.getHeight())
+                              .setInterpolator(new DecelerateInterpolator())
+                              .setStartDelay(20)
+                              .start();
+
+                mToolbarsHidden = true;
+            }
+        }
+        catch (Exception aException)
+        {
+            MangaLogger.logError(TAG, aException.toString());
+        }
     }
 
     /***
      * This function shows the header and footer tool bars.
      */
-    @Override
-    public void showToolbar()
+    private void showToolbar()
     {
-        getWindow().getDecorView().setSystemUiVisibility(0);
-        mToolbarHeader.animate().translationY(mToolbarHeader.getScrollY()).setInterpolator(new DecelerateInterpolator()).setStartDelay(10)
-                      .start();
-        mToolbarHeader2.animate().translationY(mToolbarHeader2.getScrollY() + mToolbarHeader.getScrollY())
-                       .setInterpolator(new DecelerateInterpolator()).setStartDelay(10).start();
-        mToolbarFooter.animate().translationY(-mToolbarFooter.getScrollY()).setInterpolator(new AccelerateInterpolator()).setStartDelay(10)
-                      .start();
+        try
+        {
+            if (mToolbarsHidden)
+            {
+                getWindow().getDecorView().setSystemUiVisibility(0);
+                mToolbarHeader.animate()
+                              .translationY(mToolbarHeader.getScrollY())
+                              .setInterpolator(new DecelerateInterpolator(.8f))
+                              .setStartDelay(10)
+                              .start();
 
+                mToolbarHeader2.animate()
+                               .translationY(mToolbarHeader2.getScrollY() + mToolbarHeader.getScrollY())
+                               .setInterpolator(new DecelerateInterpolator(.8f))
+                               .setStartDelay(10)
+                               .start();
+
+                mToolbarFooter.animate()
+                              .translationY(-mToolbarFooter.getScrollY()).setInterpolator(new AccelerateInterpolator(.8f))
+                              .setStartDelay(10)
+                              .start();
+
+                mToolbarsHidden = false;
+                startToolbarTimer();
+            }
+        }
+        catch (Exception aException)
+        {
+            MangaLogger.logError(TAG, aException.toString());
+        }
+    }
+
+    /***
+     * This function toggles the toolbar visibility specified by the users confirmed single taps.
+     */
+    @Override
+    public void toggleToolbar()
+    {
+        if (!mToolbarsHidden)
+        {
+            hideToolbar();
+        }
+        else
+        {
+            showToolbar();
+        }
+    }
+
+    /***
+     * This function starts the timer of the ToolbarTimerService to hide the tool bars.
+     */
+    public void startToolbarTimer()
+    {
+        mToolBarService.startToolBarTimer();
     }
 
     /***
@@ -355,6 +460,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.ReaderA
     {
         toggleVerticalScrollIcon();
         mReaderPresenter.updateToolbar(aPosition);
+        showToolbar();
     }
 
     /***
@@ -391,6 +497,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.ReaderA
     {
         mViewPager.decrememntCurrentItem();
         mReaderPresenter.updateRecentChapter(mViewPager.getCurrentItem());
+        startToolbarTimer();
     }
 
     /***
@@ -400,6 +507,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.ReaderA
     public void onBackPageClick()
     {
         mReaderPresenter.decrementChapterPage(mViewPager.getCurrentItem());
+        startToolbarTimer();
     }
 
     /***
@@ -410,6 +518,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.ReaderA
     {
         mReaderPresenter.onRefreshButton(mViewPager.getCurrentItem());
         Toast.makeText(this, "Refreshing chapter", Toast.LENGTH_SHORT).show();
+        mToolBarService.stopTimer();
     }
 
     /***
@@ -419,6 +528,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.ReaderA
     public void onForwardPageClick()
     {
         mReaderPresenter.incrementChapterPage(mViewPager.getCurrentItem());
+        startToolbarTimer();
     }
 
     /***
@@ -429,7 +539,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.ReaderA
     {
         mViewPager.incrementCurrentItem();
         mReaderPresenter.updateRecentChapter(mViewPager.getCurrentItem());
-
+        startToolbarTimer();
     }
 
     /***
@@ -439,6 +549,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.ReaderA
     public void onScreenOrientClick()
     {
         mReaderPresenter.toggleOrientation();
+        startToolbarTimer();
         //TODO.. toggle icon
     }
 
@@ -450,6 +561,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.ReaderA
     {
         mReaderPresenter.toggleVerticalScrollSettings(mViewPager.getCurrentItem());
         toggleVerticalScrollIcon();
+        startToolbarTimer();
 
     }
 
@@ -493,6 +605,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.ReaderA
     {
         super.onResume();
         mReaderPresenter.onResume();
+        showToolbar();
     }
 
 

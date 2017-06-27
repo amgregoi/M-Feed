@@ -30,7 +30,7 @@ public class ChapterMangaFragment extends Fragment implements IReader.MangaFragm
     @Bind(R.id.reader_pager) GestureViewPager mViewPager;
 
     private IReader.MangaFragmentPresenter mChapterPresenter;
-    private Listeners.ReaderListener listener;
+    private Listeners.ReaderListener mListener;
 
 
     /***
@@ -147,7 +147,7 @@ public class ChapterMangaFragment extends Fragment implements IReader.MangaFragm
     }
 
     /***
-     * This function initializes the viewpager single tap listener.
+     * This function initializes the viewpager single tap mListener.
      */
     @Override
     public void setUserGestureListener()
@@ -214,7 +214,7 @@ public class ChapterMangaFragment extends Fragment implements IReader.MangaFragm
     @Override
     public void incrementChapter()
     {
-        listener.incrementChapter();
+        mListener.incrementChapter();
     }
 
     /***
@@ -223,27 +223,22 @@ public class ChapterMangaFragment extends Fragment implements IReader.MangaFragm
     @Override
     public void decrementChapter()
     {
-        listener.decrementChapter();
-    }
-
-    /***
-     * This function hides the header and footer toolbars.
-     *
-     * @param aDelay
-     */
-    @Override
-    public void hideToolbar(long aDelay)
-    {
-        listener.hideToolbar(aDelay);
+        mListener.decrementChapter();
     }
 
     /***
      * This function shows the header and footer tool bars.
      */
     @Override
-    public void showToolbar()
+    public void toggleToolbar()
     {
-        listener.showToolbar();
+        mListener.toggleToolbar();
+    }
+
+    @Override
+    public void startToolbarTimer()
+    {
+        mListener.startToolbarTimer();
     }
 
     /***
@@ -257,7 +252,7 @@ public class ChapterMangaFragment extends Fragment implements IReader.MangaFragm
     @Override
     public void updateToolbar(String aMangaTitle, String aChapterTitle, int aSize, int aPage, int aChapterPosition)
     {
-        listener.updateToolbar(aMangaTitle, aChapterTitle, aSize, aPage, aChapterPosition);
+        mListener.updateToolbar(aMangaTitle, aChapterTitle, aSize, aPage, aChapterPosition);
     }
 
     /***
@@ -268,7 +263,7 @@ public class ChapterMangaFragment extends Fragment implements IReader.MangaFragm
     @Override
     public void updateCurrentPage(int aPosition)
     {
-        listener.updateCurrentPage(aPosition);
+        mListener.updateCurrentPage(aPosition);
     }
 
     /***
@@ -317,7 +312,7 @@ public class ChapterMangaFragment extends Fragment implements IReader.MangaFragm
     public void onAttach(Context aContext)
     {
         super.onAttach(aContext);
-        if (aContext instanceof Listeners.ReaderListener) listener = (Listeners.ReaderListener) aContext;
+        if (aContext instanceof Listeners.ReaderListener) mListener = (Listeners.ReaderListener) aContext;
         else throw new ClassCastException(aContext.toString() + " must implement Listeners.ReaderListener");
 
     }
@@ -366,15 +361,6 @@ public class ChapterMangaFragment extends Fragment implements IReader.MangaFragm
         }
 
         mChapterPresenter.init(getArguments());
-    }
-
-    /***
-     * This function is called in the fragment lifecycle.
-     */
-    @Override
-    public void onStart()
-    {
-        super.onStart();
     }
 
     /***
