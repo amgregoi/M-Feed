@@ -8,10 +8,12 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.teioh.m_feed.UI.ReaderActivity.Adapters.ImagePageAdapter;
+import com.teioh.m_feed.Utils.MangaLogger;
 import com.teioh.m_feed.Utils.SharedPrefs;
 
 public class GestureViewPager extends ViewPager implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener
 {
+    public final static String TAG = GestureViewPager.class.getSimpleName();
 
     private GestureImageView mGestureImageView;
     private GestureDetector mGestureDetector;
@@ -53,29 +55,40 @@ public class GestureViewPager extends ViewPager implements GestureDetector.OnGes
     @Override
     public boolean onInterceptTouchEvent(MotionEvent aEvent)
     {
-        fetchGestureImageViewByTag();
-        mGestureDetector.onTouchEvent(aEvent);
-
-        if (mGestureImageView != null)
+        //Try catch was added to handle androids viewpager bug that pops up sometimes.
+        //super.onInterceptTouchEvent throws index out of bounds exception.
+        try
         {
-            //ACTION_DOWN workaround for checkSwipe()
-            if(aEvent.getAction() == MotionEvent.ACTION_DOWN)
-                mHorizontalSwipeX = aEvent.getX();
+            fetchGestureImageViewByTag();
+            mGestureDetector.onTouchEvent(aEvent);
 
-            if (!mGestureImageView.canScrollParent(mVertical))
+            if (mGestureImageView != null)
             {
-                return false;
+                //ACTION_DOWN workaround for checkSwipe()
+                if (aEvent.getAction() == MotionEvent.ACTION_DOWN)
+                    mHorizontalSwipeX = aEvent.getX();
+
+                if (!mGestureImageView.canScrollParent(mVertical))
+                {
+                    return false;
+                }
+
+                if (mVertical)
+                {
+                    boolean lResult = super.onInterceptTouchEvent(swapXY(aEvent));
+                    swapXY(aEvent); // return touch coordinates to original reference frame for any child views
+                    return lResult;
+                }
             }
 
-            if (mVertical)
-            {
-                boolean lResult = super.onInterceptTouchEvent(swapXY(aEvent));
-                swapXY(aEvent); // return touch coordinates to original reference frame for any child views
-                return lResult;
-            }
+            return super.onInterceptTouchEvent(aEvent);
+        }
+        catch (Exception aException)
+        {
+            MangaLogger.logError(TAG, aException.getMessage());
         }
 
-        return super.onInterceptTouchEvent(aEvent);
+        return false;
     }
 
     @Override
