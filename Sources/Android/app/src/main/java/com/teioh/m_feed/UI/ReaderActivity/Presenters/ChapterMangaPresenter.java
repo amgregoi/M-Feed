@@ -104,7 +104,7 @@ public class ChapterMangaPresenter implements IReader.MangaFragmentPresenter
                 aSave.putParcelable(CHAPTER, mChapter);
             }
             aSave.putInt(CHAPTER_POSITION_LIST_PARCELABLE_KEY, mPosition);
-            aSave.putInt(LOADING_STATUS, MangaEnums.eLoadingStatus.getLoadingStatu(mLoadingStatus));
+            aSave.putInt(LOADING_STATUS, MangaEnums.eLoadingStatus.getLoadingStatus(mLoadingStatus));
             aSave.putBoolean(IMAGE_SUB_FLAG, mImageSubFlag);
 
             mImageListSubscription.unsubscribe();

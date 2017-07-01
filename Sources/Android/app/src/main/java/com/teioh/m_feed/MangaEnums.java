@@ -38,6 +38,7 @@ public class MangaEnums
         {
             return mValue;
         }
+
     }
 
 
@@ -69,7 +70,7 @@ public class MangaEnums
             }
         }
 
-        public static int getLoadingStatu(eLoadingStatus aStatus)
+        public static int getLoadingStatus(eLoadingStatus aStatus)
         {
             switch (aStatus)
             {
@@ -120,6 +121,12 @@ public class MangaEnums
      */
     public enum eFollowType
     {
-        Reading, Completed, On_Hold
+        Reading, Completed, On_Hold;
+
+        @Override
+        public String toString()
+        {
+            return super.toString().replace("_", " ");
+        }
     }
 }
