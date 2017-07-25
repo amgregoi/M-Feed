@@ -239,16 +239,8 @@ public class ChapterNovelFragment extends Fragment implements IReader.NovelFragm
         {
             mChapterPresenter.onRestoreState(aSavedInstanceState);
         }
-    }
 
-    /***
-     * This function is called in the fragment lifecycle.
-     */
-    @Override
-    public void onStart()
-    {
         mChapterPresenter.init(getArguments());
-        super.onStart();
     }
 
     /***
