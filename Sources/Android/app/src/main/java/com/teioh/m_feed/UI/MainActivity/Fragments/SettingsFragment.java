@@ -13,6 +13,7 @@ import android.widget.ToggleButton;
 
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.LoggingActivity;
+import com.teioh.m_feed.UI.MainActivity.MainActivity;
 import com.teioh.m_feed.UI.Maps.Listeners;
 import com.teioh.m_feed.Utils.MangaDB;
 import com.teioh.m_feed.Utils.MangaLogger;
@@ -180,7 +181,8 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
                 //TODO... definitely need to move off main thread, and reset Main Activity reviews
                 MangaLogger.logError(TAG, "positive", "WATCH FOR SLOW PERFORMANCES, MAY NEED TO MOVE OFF MAIN THREAD");
                 MangaDB.getInstance().resetLibrary();
-                MangaLogger.makeToast("Resetting user library");
+                MangaLogger.makeToast("User library has been reset");
+                ((MainActivity)getActivity()).updateFragmentViews();
                 break;
 
             case 2: //Remove Downloaded Chapters

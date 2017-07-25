@@ -250,6 +250,15 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     }
 
     /***
+     * This function updates three main views.
+     */
+    @Override
+    public void updateFragmentViews()
+    {
+        mFragmentPresenter.updateMangaList();
+    }
+
+    /***
      * This function starts the swipe refresh layout refresh animation.
      */
     public abstract void startRefresh();

@@ -47,4 +47,9 @@ public interface Listeners
         boolean checkActiveChapter(int aChapter);
     }
 
+    interface ReaderTimerListener{
+        void hideToolbar();
+        void hideSystemUi();
+    }
+
 }

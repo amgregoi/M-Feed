@@ -41,6 +41,8 @@ public interface IMain
         void setDefaultFilterImage();
 
         void toggleToolbarElements();
+
+        void updateFragmentViews();
     }
 
     /***
@@ -70,6 +72,8 @@ public interface IMain
         void setRecentManga(String aUrl);
 
         boolean updateSignIn(GoogleSignInResult aAccount);
+
+        void updateFragmentViews();
     }
 
     /***
@@ -84,6 +88,8 @@ public interface IMain
         boolean setRecentSelection(String aUrl);
 
         boolean updateRecentSelection(Manga aManga);
+
+        void updateFragmentViews();
 
     }
 

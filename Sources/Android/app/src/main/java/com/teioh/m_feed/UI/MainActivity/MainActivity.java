@@ -42,8 +42,6 @@ import com.teioh.m_feed.WebSources.SourceFactory;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.transform.Source;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -348,6 +346,12 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
         }
     }
 
+    @Override
+    public void updateFragmentViews()
+    {
+        mMainPresenter.updateFragmentViews();
+    }
+
     /***
      * This function initializes drawer layout listener.
      */
@@ -436,7 +440,7 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
 
     /***
      * this function sets the recently selected item.
-     * @param aId
+     * @param aUrl
      * @return
      */
     @Override

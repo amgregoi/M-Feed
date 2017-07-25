@@ -294,15 +294,11 @@ public class ReaderActivity extends AppCompatActivity implements IReader.ReaderA
     @Override
     public void hideToolbar()
     {
-        int lHiddenSystemView = View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-
         try
         {
             if (!mToolbarsHidden)
             {
-                getWindow().getDecorView()
-                           .setSystemUiVisibility(lHiddenSystemView);
-
+                hideSystemUi();
 
                 mToolbarHeader.animate()
                               .translationY(-mToolbarHeader.getHeight())
@@ -328,6 +324,18 @@ public class ReaderActivity extends AppCompatActivity implements IReader.ReaderA
         catch (Exception aException)
         {
             MangaLogger.logError(TAG, aException.toString());
+        }
+    }
+
+    @Override
+    public void hideSystemUi()
+    {
+        int lHiddenSystemView = View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+
+        if (getWindow().getDecorView().getSystemUiVisibility() != lHiddenSystemView)
+        {
+            getWindow().getDecorView()
+                       .setSystemUiVisibility(lHiddenSystemView);
         }
     }
 
@@ -460,6 +468,7 @@ public class ReaderActivity extends AppCompatActivity implements IReader.ReaderA
     {
         toggleVerticalScrollIcon();
         mReaderPresenter.updateToolbar(aPosition);
+        mReaderPresenter.updateRecentChapter(aPosition);
         showToolbar();
     }
 

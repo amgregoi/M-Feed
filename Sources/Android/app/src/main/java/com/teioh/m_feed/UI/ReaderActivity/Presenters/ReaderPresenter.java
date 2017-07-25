@@ -154,8 +154,8 @@ public class ReaderPresenter implements IReader.ReaderActivityPresenter
     {
         try
         {
-            ChapterMangaFragment lTempFragment;
-            if ((lTempFragment = ((ChapterMangaFragment) mChapterPagerAdapter.getItem(aPosition))) != null)
+            IReader.ReaderFragmentBaseView lTempFragment;
+            if ((lTempFragment = ((IReader.ReaderFragmentBaseView) mChapterPagerAdapter.getItem(aPosition))) != null)
             {
                 lTempFragment.updateToolbar();
             }
@@ -223,8 +223,8 @@ public class ReaderPresenter implements IReader.ReaderActivityPresenter
     {
         try
         {
-            ChapterMangaFragment lTempFragment;
-            if ((lTempFragment = ((ChapterMangaFragment) mChapterPagerAdapter.getItem(aPosition))) != null)
+            IReader.ReaderFragmentBaseView lTempFragment;
+            if ((lTempFragment = ((IReader.ReaderFragmentBaseView) (mChapterPagerAdapter.getItem(aPosition)))) != null)
             {
                 lTempFragment.updateChapterViewStatus();
             }
@@ -246,8 +246,8 @@ public class ReaderPresenter implements IReader.ReaderActivityPresenter
     {
         try
         {
-            ChapterMangaFragment lChapterFragment;
-            if ((lChapterFragment = ((ChapterMangaFragment) mChapterPagerAdapter.getItem(aPosition))) != null)
+            IReader.ReaderFragmentBaseView lChapterFragment;
+            if ((lChapterFragment = ((IReader.ReaderFragmentBaseView) mChapterPagerAdapter.getItem(aPosition))) != null)
             {
                 lChapterFragment.onRefresh();
             }

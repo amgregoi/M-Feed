@@ -33,16 +33,10 @@ public class MangaDB extends SQLiteOpenHelper
     private static MangaDB sInstance;
     private Context mContext;
 
-    private MangaTable mMangaTable;
-    private ChapterTable mChapterTable;
-
     public MangaDB(Context aContext)
     {
         super(aContext, sDB_NAME, null, sDATABASE_VERSION);
         mContext = aContext;
-
-        mMangaTable = new MangaTable();
-        mChapterTable = new ChapterTable();
     }
 
     /***
@@ -162,8 +156,8 @@ public class MangaDB extends SQLiteOpenHelper
     public void updateMangaFollow(String aTitle, int aValue)
     {
         ContentValues lValues = new ContentValues(1);
-        lValues.put(mMangaTable.Following, aValue);
-        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, lValues, mMangaTable.Title + " = ?", aTitle);
+        lValues.put(MangaTable.Following, aValue);
+        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, lValues, MangaTable.Title + " = ?", aTitle);
     }
 
     /**
@@ -180,7 +174,7 @@ public class MangaDB extends SQLiteOpenHelper
                                          ArrayList<Manga> lMangaList = new ArrayList<>();
                                          QueryResultIterable<Manga> lQuery = cupboard().withDatabase(getReadableDatabase())
                                                                                        .query(Manga.class)
-                                                                                       .withSelection("NOT " + mMangaTable.Following + " = ? AND " + mMangaTable.Source + " = ?", "0", SourceFactory
+                                                                                       .withSelection("NOT " + MangaTable.Following + " = ? AND " + MangaTable.Source + " = ?", "0", SourceFactory
                                                                                                .getInstance()
                                                                                                .getSourceName())
                                                                                        .query();
@@ -215,7 +209,7 @@ public class MangaDB extends SQLiteOpenHelper
                                          ArrayList<Manga> lMangaList = new ArrayList<>();
                                          QueryResultIterable<Manga> lQuery = cupboard().withDatabase(getReadableDatabase())
                                                                                        .query(Manga.class)
-                                                                                       .withSelection(mMangaTable.Source + " = ?", SharedPrefs
+                                                                                       .withSelection(MangaTable.Source + " = ?", SharedPrefs
                                                                                                .getSavedSource())
                                                                                        .query();
 
@@ -243,7 +237,7 @@ public class MangaDB extends SQLiteOpenHelper
      */
     public Manga getManga(long aId)
     {
-        return cupboard().withDatabase(getReadableDatabase()).query(Manga.class).withSelection(mMangaTable.ID + " = ?", Long.toString(aId))
+        return cupboard().withDatabase(getReadableDatabase()).query(Manga.class).withSelection(MangaTable.ID + " = ?", Long.toString(aId))
                          .get();
     }
 
@@ -265,21 +259,18 @@ public class MangaDB extends SQLiteOpenHelper
     public void updateManga(Manga aManga)
     {
         ContentValues lValues = new ContentValues(1);
-        lValues.put(mMangaTable.Alternate, aManga.getAlternate());
-        lValues.put(mMangaTable.Image, aManga.getPicUrl());
-        lValues.put(mMangaTable.Description, aManga.getDescription());
-        lValues.put(mMangaTable.Artist, aManga.getArtist());
-        lValues.put(mMangaTable.Author, aManga.getAuthor());
-        lValues.put(mMangaTable.Genres, aManga.getmGenre());
-        lValues.put(mMangaTable.Status, aManga.getStatus());
-        lValues.put(mMangaTable.Source, aManga.getSource());
-        lValues.put(mMangaTable.RecentChapter, aManga.getRecentChapter());
-        lValues.put(mMangaTable.URL, aManga.getMangaURL());
+        lValues.put(MangaTable.Alternate, aManga.getAlternate());
+        lValues.put(MangaTable.Image, aManga.getPicUrl());
+        lValues.put(MangaTable.Description, aManga.getDescription());
+        lValues.put(MangaTable.Artist, aManga.getArtist());
+        lValues.put(MangaTable.Author, aManga.getAuthor());
+        lValues.put(MangaTable.Genres, aManga.getmGenre());
+        lValues.put(MangaTable.Status, aManga.getStatus());
+        lValues.put(MangaTable.Source, aManga.getSource());
+        lValues.put(MangaTable.RecentChapter, aManga.getRecentChapter());
+        lValues.put(MangaTable.URL, aManga.getMangaURL());
 
-        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, lValues, mMangaTable.URL + " = ?", aManga.getMangaURL());
-
-        Manga test = getManga(aManga.getMangaURL());
-        test = null;
+        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, lValues, MangaTable.URL + " = ?", aManga.getMangaURL());
     }
 
     /***
@@ -290,7 +281,7 @@ public class MangaDB extends SQLiteOpenHelper
      */
     public Manga getManga(String aUrl)
     {
-        return cupboard().withDatabase(getReadableDatabase()).query(Manga.class).withSelection(mMangaTable.URL + " = ?", aUrl).get();
+        return cupboard().withDatabase(getReadableDatabase()).query(Manga.class).withSelection(MangaTable.URL + " = ?", aUrl).get();
     }
 
     /***
@@ -300,15 +291,15 @@ public class MangaDB extends SQLiteOpenHelper
     public void updateChapter(Chapter aChapter)
     {
         ContentValues lValues = new ContentValues(1);
-        lValues.put(mChapterTable.URL, aChapter.getChapterUrl());
-        lValues.put(mChapterTable.Date, aChapter.getChapterDate());
-        lValues.put(mChapterTable.MangaTitle, aChapter.getMangaTitle());
-        lValues.put(mChapterTable.ChapterTitle, aChapter.getChapterTitle());
-        lValues.put(mChapterTable.ChapterNumber, aChapter.getChapterNumber());
-        lValues.put(mChapterTable.CurrentPage, aChapter.getCurrentPage());
-        lValues.put(mChapterTable.TotalPages, aChapter.getTotalPages());
+        lValues.put(ChapterTable.URL, aChapter.getChapterUrl());
+        lValues.put(ChapterTable.Date, aChapter.getChapterDate());
+        lValues.put(ChapterTable.MangaTitle, aChapter.getMangaTitle());
+        lValues.put(ChapterTable.ChapterTitle, aChapter.getChapterTitle());
+        lValues.put(ChapterTable.ChapterNumber, aChapter.getChapterNumber());
+        lValues.put(ChapterTable.CurrentPage, aChapter.getCurrentPage());
+        lValues.put(ChapterTable.TotalPages, aChapter.getTotalPages());
 
-        cupboard().withDatabase(getWritableDatabase()).update(Chapter.class, lValues, mChapterTable.URL + " = ?", aChapter.getChapterUrl());
+        cupboard().withDatabase(getWritableDatabase()).update(Chapter.class, lValues, ChapterTable.URL + " = ?", aChapter.getChapterUrl());
     }
 
     /***
@@ -318,7 +309,7 @@ public class MangaDB extends SQLiteOpenHelper
      */
     public Chapter getChapter(String aUrl)
     {
-        return cupboard().withDatabase(getReadableDatabase()).query(Chapter.class).withSelection(mChapterTable.URL + " = ?", aUrl).get();
+        return cupboard().withDatabase(getReadableDatabase()).query(Chapter.class).withSelection(ChapterTable.URL + " = ?", aUrl).get();
     }
 
     /***
@@ -335,16 +326,7 @@ public class MangaDB extends SQLiteOpenHelper
      */
     public void resetLibrary()
     {
-        QueryResultIterable<Manga> lQuery = cupboard().withDatabase(getReadableDatabase())
-                                                      .query(Manga.class)
-                                                      .withSelection("NOT " + mMangaTable.Following + " = ?", "0")
-                                                      .query();
-
-        for (Manga iManga : lQuery)
-        {
-            updateMangaUnfollow(iManga.getTitle());
-        }
-        lQuery.close();
+        getWritableDatabase().execSQL("UPDATE Manga set following = 0 WHERE following > 0");
     }
 
     /***
@@ -355,8 +337,8 @@ public class MangaDB extends SQLiteOpenHelper
     public void updateMangaUnfollow(String aTitle)
     {
         ContentValues lValues = new ContentValues(1);
-        lValues.put(mMangaTable.Following, 0);
-        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, lValues, mMangaTable.Title + " = ?", aTitle);
+        lValues.put(MangaTable.Following, 0);
+        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, lValues, MangaTable.Title + " = ?", aTitle);
     }
 
     /***
@@ -364,18 +346,7 @@ public class MangaDB extends SQLiteOpenHelper
      */
     public void resetCachedChapters()
     {
-        QueryResultIterable<Manga> lQuery = cupboard().withDatabase(getReadableDatabase())
-                                                      .query(Manga.class)
-                                                      .withSelection("NOT" + mMangaTable.Following + " = ? AND " + mMangaTable.Source + " = ?", "0", SourceFactory
-                                                              .getInstance()
-                                                              .getSourceName())
-                                                      .query();
-
-        for (Manga iManga : lQuery)
-        {
-            removeChapters(iManga);
-        }
-        lQuery.close();
+        getWritableDatabase().execSQL("DELETE FROM Chapter");
     }
 
     /***
@@ -384,27 +355,28 @@ public class MangaDB extends SQLiteOpenHelper
      */
     public void removeChapters(Manga aManga)
     {
-        cupboard().withDatabase(getWritableDatabase()).delete(Chapter.class, mChapterTable.MangaTitle + " = ?", aManga.getTitle());
+        cupboard().withDatabase(getWritableDatabase()).delete(Chapter.class, ChapterTable.MangaTitle + " = ?", aManga.getTitle());
     }
+
 
     /***
      * This inner class defines the sql column names for the Manga Table
      */
     static class MangaTable
     {
-        public String ID = "_id";
-        public String Title = "title";
-        public String Alternate = "alternate";
-        public String Image = "image";
-        public String Description = "description";
-        public String Artist = "artist";
-        public String Author = "author";
-        public String Genres = "genres";
-        public String Status = "status";
-        public String Source = "source";
-        public String RecentChapter = "recentChapter";
-        public String URL = "link";
-        public String Following = "following";
+        public final static String ID = "_id";
+        public final static String Title = "title";
+        public final static String Alternate = "alternate";
+        public final static String Image = "image";
+        public final static String Description = "description";
+        public final static String Artist = "artist";
+        public final static String Author = "author";
+        public final static String Genres = "genres";
+        public final static String Status = "status";
+        public final static String Source = "source";
+        public final static String RecentChapter = "recentChapter";
+        public final static String URL = "link";
+        public final static String Following = "following";
     }
 
     /***
@@ -412,13 +384,13 @@ public class MangaDB extends SQLiteOpenHelper
      */
     static class ChapterTable
     {
-        public String TotalPages = "totalPages";
-        public String CurrentPage = "currentPage";
-        public String ChapterNumber = "chapterNumber";
-        public String ChapterTitle = "chapterTitle";
-        public String MangaTitle = "mangaTitle";
-        public String Date = "date";
-        public String URL = "url";
+        public final static String TotalPages = "totalPages";
+        public final static String CurrentPage = "currentPage";
+        public final static String ChapterNumber = "chapterNumber";
+        public final static String ChapterTitle = "chapterTitle";
+        public final static String MangaTitle = "mangaTitle";
+        public final static String Date = "date";
+        public final static String URL = "url";
     }
 
 }

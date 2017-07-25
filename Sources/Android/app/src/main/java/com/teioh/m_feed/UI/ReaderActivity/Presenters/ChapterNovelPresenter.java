@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.teioh.m_feed.MangaEnums;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.UI.ReaderActivity.IReader;
+import com.teioh.m_feed.Utils.MangaDB;
 import com.teioh.m_feed.Utils.MangaLogger;
 import com.teioh.m_feed.WebSources.RequestWrapper;
 import com.teioh.m_feed.WebSources.SourceFactory;
@@ -24,8 +25,10 @@ import static com.teioh.m_feed.UI.ReaderActivity.Presenters.ChapterMangaPresente
 public class ChapterNovelPresenter implements IReader.NovelFragmentPresenter
 {
     public final static String TAG = ChapterNovelPresenter.class.getSimpleName();
+    public static final String CHAPTER = TAG + ":CHAPTER";
+    private static final String LOADING_STATUS = TAG + ":LOADING";
 
-    private boolean mIsToolbarShowing, mChapterParentFollowing;
+    private boolean mChapterParentFollowing;
     private int mPosition;
     private Chapter mChapter;
     private MangaEnums.eLoadingStatus mLoadingStatus;
@@ -42,7 +45,6 @@ public class ChapterNovelPresenter implements IReader.NovelFragmentPresenter
         mPosition = aBundle.getInt(CHAPTER_POSITION_LIST_PARCELABLE_KEY);
         mChapter = aBundle.getParcelable(Chapter.TAG + ":" + mPosition);
         mChapterParentFollowing = aBundle.getBoolean(CHAPTER_PARENT_FOLLOWING, false);
-        mIsToolbarShowing = true;
         mLoadingStatus = MangaEnums.eLoadingStatus.LOADING;
 
     }
@@ -91,13 +93,46 @@ public class ChapterNovelPresenter implements IReader.NovelFragmentPresenter
     @Override
     public void onSaveState(Bundle aSave)
     {
+        try
+        {
+            if (mChapter != null)
+            {
+                aSave.putParcelable(CHAPTER, mChapter);
+            }
+            aSave.putInt(CHAPTER_POSITION_LIST_PARCELABLE_KEY, mPosition);
+            aSave.putInt(LOADING_STATUS, MangaEnums.eLoadingStatus.getLoadingStatus(mLoadingStatus));
+            mImageListSubscription.unsubscribe();
 
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lException.getMessage());
+        }
     }
 
     @Override
     public void onRestoreState(Bundle aRestore)
     {
 
+        try
+        {
+            if (aRestore.containsKey(CHAPTER))
+            {
+                mChapter = aRestore.getParcelable(CHAPTER);
+            }
+            if (aRestore.containsKey(CHAPTER_POSITION_LIST_PARCELABLE_KEY))
+            {
+                mPosition = aRestore.getInt(CHAPTER_POSITION_LIST_PARCELABLE_KEY);
+            }
+            if (aRestore.containsKey(LOADING_STATUS))
+            {
+                mLoadingStatus = MangaEnums.eLoadingStatus.getLoadingStatus(aRestore.getInt(LOADING_STATUS));
+            }
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lException.getMessage());
+        }
     }
 
     @Override
@@ -121,13 +156,26 @@ public class ChapterNovelPresenter implements IReader.NovelFragmentPresenter
     @Override
     public void updateChapterViewStatus()
     {
+        try
+        {
+            Chapter lViewedChapter = MangaDB.getInstance().getChapter(mChapter.getChapterUrl());
 
+            if (mChapterParentFollowing && lViewedChapter == null)
+            {
+                MangaDB.getInstance().addChapter(mChapter);
+            }
+
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lException.getMessage());
+        }
     }
 
     @Override
     public void onRefresh(int aPosition)
     {
-
+        MangaLogger.makeToast("NOT Implemented");
     }
 
     @Override

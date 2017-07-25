@@ -33,13 +33,12 @@ public class MangaPresenter implements IManga.ActivityPresenter
     private ArrayList<Chapter> mChapterList;
     private ChapterListAdapter mAdapter;
     private boolean mChapterOrderDescending;
-    private boolean mRestoreActivity, mChapterFlag = false;
+    private boolean mRestoreActivity, mChapterFlag = false, mViewFlag = false;
     private Manga mManga;
 
     private IManga.ActivityView mMangaMapper;
 
-
-    public MangaPresenter(IManga.ActivityView aMap)
+    MangaPresenter(IManga.ActivityView aMap)
     {
         mMangaMapper = aMap;
     }
@@ -294,6 +293,9 @@ public class MangaPresenter implements IManga.ActivityPresenter
                     mObservableMangaSubscription = null;
                 }
             }
+
+            mViewFlag = true;
+            if(mChapterFlag) showLayout();
         }
         catch (Exception aException)
         {
@@ -315,15 +317,21 @@ public class MangaPresenter implements IManga.ActivityPresenter
                 mChapterList = new ArrayList<>(aChapterList);
                 mAdapter = new ChapterListAdapter(mMangaMapper.getContext(), R.layout.manga_chapter_list_item, mChapterList);
                 mMangaMapper.registerAdapter(mAdapter);
-                mMangaMapper.stopRefresh();
-                mMangaMapper.showCoverLayout();
                 mChapterFlag = true;
+                if(mViewFlag) showLayout();
             }
         }
         catch (Exception aException)
         {
             MangaLogger.logError(TAG, aException.getMessage());
         }
+    }
+
+    private void showLayout()
+    {
+        mMangaMapper.stopRefresh();
+        mMangaMapper.showCoverLayout();
+
     }
 
     /***

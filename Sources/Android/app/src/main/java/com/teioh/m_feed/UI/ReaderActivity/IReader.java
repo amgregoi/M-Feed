@@ -18,7 +18,7 @@ public interface IReader
     /***
      * TODO..
      */
-    interface ReaderActivityView extends BaseContextMap, PageAdapterMap, ViewPager.OnPageChangeListener, Listeners.ReaderListener
+    interface ReaderActivityView extends BaseContextMap, PageAdapterMap, ViewPager.OnPageChangeListener, Listeners.ReaderListener, Listeners.ReaderTimerListener
     {
         void setCurrentChapter(int aPosition);
 
@@ -26,7 +26,6 @@ public interface IReader
 
         void setScreenOrientation(boolean aLandscape);
 
-        void hideToolbar();
     }
 
     /***
@@ -52,19 +51,9 @@ public interface IReader
         void updateRecentChapter(int aPosition);
     }
 
-    /***
-     * TODO..
-     */
-    interface MangaFragmentView extends BaseContextMap, ViewPager.OnPageChangeListener, GestureViewPager.UserGestureListener
+    interface ReaderFragmentBaseView extends BaseContextMap, GestureViewPager.UserGestureListener
     {
-
         void setUserGestureListener();
-
-        void updateToolbar();
-
-        void incrementChapterPage();
-
-        void decrementChapterPage();
 
         void updateChapterViewStatus();
 
@@ -78,9 +67,21 @@ public interface IReader
 
         void updateToolbar(String aMangaTitle, String aChapterTitle, int aSize, int aPage, int aChapterPosition);
 
-        void updateCurrentPage(int aPosition);
+        void updateToolbar();
 
         void onRefresh();
+
+        void updateCurrentPage(int aPosition);
+
+    }
+    /***
+     * TODO..
+     */
+    interface MangaFragmentView extends ReaderFragmentBaseView, ViewPager.OnPageChangeListener
+    {
+        void incrementChapterPage();
+
+        void decrementChapterPage();
 
         void setCurrentChapterPage(int aPosition, int aChapterPosition);
 
@@ -108,28 +109,9 @@ public interface IReader
         void onRefresh(int aPosition);
     }
 
-    interface NovelFragmentView extends BaseContextMap, GestureViewPager.UserGestureListener
+    interface NovelFragmentView extends ReaderFragmentBaseView
     {
-        void setUserGestureListener();
-
-        void updateChapterViewStatus();
-
-        void incrementChapter();
-
-        void decrementChapter();
-
-        void toggleToolbar();
-
-        void startToolbarTimer();
-
-        void updateToolbar(String aMangaTitle, String aChapterTitle, int aSize, int aPage, int aChapterPosition);
-
-        void updateCurrentPage(int aPosition);
-
-        void onRefresh();
-
         void setContentText(String aText);
-
     }
 
     interface NovelFragmentPresenter extends LifeCycleMap

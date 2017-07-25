@@ -74,7 +74,7 @@ public class ChapterNovelFragment extends Fragment implements IReader.NovelFragm
     @Override
     public void setUserGestureListener()
     {
-
+        //left blank
     }
 
     /***
@@ -120,6 +120,18 @@ public class ChapterNovelFragment extends Fragment implements IReader.NovelFragm
     public void startToolbarTimer()
     {
         mListener.startToolbarTimer();
+    }
+
+    /***
+     * This function updates the toolbar.
+     */
+    @Override
+    public void updateToolbar()
+    {
+        if (mChapterPresenter != null)
+        {
+            mChapterPresenter.updateReaderToolbar();
+        }
     }
 
     /***

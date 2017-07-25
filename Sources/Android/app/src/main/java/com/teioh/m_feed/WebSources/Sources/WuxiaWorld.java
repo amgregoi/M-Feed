@@ -23,9 +23,9 @@ import java.util.List;
  */
 public class WuxiaWorld extends SourceNovel
 {
-    private final static String TAG = WuxiaWorld.class.getSimpleName();
+    public final static String TAG = WuxiaWorld.class.getSimpleName();
 
-    private final String SourceKey = "MangaJoy";
+    private final String SourceKey = "WuxiaWorld";
 
     private String mChineseId = "li#menu-item-2165";
     private String mKoreanId = "li#menu-item-116520";

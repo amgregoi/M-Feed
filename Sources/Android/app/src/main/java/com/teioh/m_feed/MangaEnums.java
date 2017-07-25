@@ -89,7 +89,7 @@ public class MangaEnums
     public enum eSourceType
     {
         MANGA,
-        NOVEL;
+        NOVEL
     }
 
     /***

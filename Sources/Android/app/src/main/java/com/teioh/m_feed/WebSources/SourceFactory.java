@@ -23,6 +23,11 @@ public class SourceFactory
         return MangaEnums.eSource.valueOf(SharedPrefs.getSavedSource()).getSource().getCurrentSource().name();
     }
 
+    public MangaEnums.eSourceType getSourceType()
+    {
+        return getSource().getSourceType();
+    }
+
     public static SourceFactory getInstance()
     {
         return new SourceFactory();

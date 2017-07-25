@@ -538,6 +538,21 @@ public class MainPresenter implements IMain.ActivityPresenter
         return lResult;
     }
 
+    @Override
+    public void updateFragmentViews()
+    {
+        try
+        {
+            ((RecentFragment) mViewPagerAdapterMain.getRegisteredFragment(0)).updateFragmentViews();
+            ((LibraryFragment) mViewPagerAdapterMain.getRegisteredFragment(1)).updateFragmentViews();
+            ((CatalogFragment) mViewPagerAdapterMain.getRegisteredFragment(2)).updateFragmentViews();
+        }
+        catch (Exception aException)
+        {
+            MangaLogger.logError(TAG, aException.getMessage());
+        }
+    }
+
     /***
      * This function brings the settings fragments into view.
      */

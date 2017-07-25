@@ -37,7 +37,7 @@ public class ChapterMangaPresenter implements IReader.MangaFragmentPresenter
     private Subscription mImageListSubscription, mLoadImageUrlSubscription;
     private ImagePageAdapter mChapterPageAdapter;
 
-    private boolean mIsToolbarShowing, mChapterParentFollowing;
+    private boolean mChapterParentFollowing;
     private int mPosition;
     private ArrayList<String> mContentUrlList;
     private Chapter mChapter;
@@ -57,7 +57,6 @@ public class ChapterMangaPresenter implements IReader.MangaFragmentPresenter
         mPosition = aBundle.getInt(CHAPTER_POSITION_LIST_PARCELABLE_KEY);
         mChapter = aBundle.getParcelable(Chapter.TAG + ":" + mPosition);
         mChapterParentFollowing = aBundle.getBoolean(CHAPTER_PARENT_FOLLOWING, false);
-        mIsToolbarShowing = true;
         mLoadingStatus = MangaEnums.eLoadingStatus.LOADING;
     }
 
