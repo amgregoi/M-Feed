@@ -269,7 +269,7 @@ public class Manga implements Parcelable
         boolean lCompare = false;
         if (aObject != null && aObject instanceof Manga)
         {
-            if (getTitle().equals(((Manga) aObject).getTitle())) lCompare = true;
+            if (getMangaURL().equals(((Manga) aObject).getMangaURL())) lCompare = true;
         }
         return lCompare;
     }

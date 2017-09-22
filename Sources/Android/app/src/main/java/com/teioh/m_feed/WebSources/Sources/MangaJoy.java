@@ -115,6 +115,7 @@ public class MangaJoy extends SourceManga
                 {
                     String lMangaTitle = iUsefulElement.select("a").attr("title");
                     String lMangaUrl = iUsefulElement.select("a").attr("href");
+                    lMangaUrl = lMangaUrl.replace("www.", "");
 
                     if (lMangaUrl.charAt(lMangaUrl.length() - 1) != '/') lMangaUrl += "/"; //add ending slash to url if missing
                     Manga lManga = MangaDB.getInstance().getManga(lMangaUrl);

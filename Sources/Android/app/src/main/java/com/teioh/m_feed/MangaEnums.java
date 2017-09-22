@@ -5,6 +5,7 @@ import com.teioh.m_feed.WebSources.Sources.Batoto;
 import com.teioh.m_feed.WebSources.Sources.MangaEden;
 import com.teioh.m_feed.WebSources.Sources.MangaHere;
 import com.teioh.m_feed.WebSources.Sources.MangaJoy;
+import com.teioh.m_feed.WebSources.Sources.ReadLight;
 import com.teioh.m_feed.WebSources.Sources.WuxiaWorld;
 
 /**
@@ -101,7 +102,8 @@ public class MangaEnums
         MangaEden(new MangaEden()),
         MangaHere(new MangaHere()),
         MangaJoy(new MangaJoy()),
-        WuxiaWorld(new WuxiaWorld());
+//        WuxiaWorld(new WuxiaWorld()),
+        ReadLight(new ReadLight());
 
         SourceBase lSource;
 
