@@ -80,25 +80,6 @@ public class ReadLight extends SourceNovel
                     lNovelList.add(lManga);
             }
 
-
-//            Document lParsedDocument = Jsoup.parse(aResponseBody);
-//            Elements lNovelBlocks = lParsedDocument.select("div.col-lg-8.content").select("div.list-by-word-body").select("li");
-//
-//            for (Element lNovel : lNovelBlocks) {
-//                Document lMenuItems = Jsoup.parse(lNovel.toString());
-//                String lMangaUrl = lMenuItems.select("a").first().attr("href");
-//                String lMangaTitle = lMenuItems.select("a").first().text();
-//
-//                if (!lMangaUrl.contains("#")) {
-//                    Manga lManga = MangaDB.getInstance().getManga(lMangaUrl);
-//                    if (lManga == null) {
-////                        Log.e(TAG, "INSERT INTO Manga (title,link,source) VALUES (\"" + lMangaTitle + "\",\"" + lMangaUrl + "\",\"" + SourceKey + "\");");
-//                    }
-//                    if (!lNovelList.contains(lManga))
-//                        lNovelList.add(lManga);
-//                }
-//            }
-
         }
         catch (Exception aException)
         {
@@ -243,24 +224,24 @@ public class ReadLight extends SourceNovel
     @Override
     public String parseResponseToImageUrls(String aResponseBody, String aResponseUrl)
     {
-
-        String lText = "";
-
         try
         {
             Document lParsedDocument = Jsoup.parse(aResponseBody);
-            Elements lContent = lParsedDocument.select("div.chapter-content3").select("p");
+            Elements lContent = lParsedDocument.select("div.chapter-content3");//.select("p");
+            lContent.select("div.row").first().remove();
+            lContent.select("noscript").first().remove();
 
-            for (Element iElement : lContent)
-            {
-                    lText += iElement.text() + "\n\n";
-            }
+            return lContent.toString();
+//            for (Element iElement : lContent)
+//            {
+//                    lText += iElement.text() + "\n\n";
+//            }
         }
         catch (Exception aException)
         {
             MangaLogger.logError(TAG, aException.getMessage());
         }
-
-        return lText;
+//
+        return "Failed to pull page.";
     }
 }

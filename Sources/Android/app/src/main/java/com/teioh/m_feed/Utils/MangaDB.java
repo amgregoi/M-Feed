@@ -248,7 +248,7 @@ public class MangaDB extends SQLiteOpenHelper
      */
     public void putManga(Manga aManga)
     {
-        if(cupboard().withDatabase(getReadableDatabase()).query(Manga.class).withSelection(MangaTable.URL + " = ?", aManga.getMangaURL()) == null)
+        if(getManga(aManga.getMangaURL()) == null)
             cupboard().withDatabase(getWritableDatabase()).put(aManga);
         else
             updateManga(aManga);
