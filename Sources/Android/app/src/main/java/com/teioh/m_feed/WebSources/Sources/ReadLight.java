@@ -229,19 +229,15 @@ public class ReadLight extends SourceNovel
             Document lParsedDocument = Jsoup.parse(aResponseBody);
             Elements lContent = lParsedDocument.select("div.chapter-content3");//.select("p");
             lContent.select("div.row").first().remove();
-            lContent.select("noscript").first().remove();
+            //lContent.select("noscript").first().remove();
 
             return lContent.toString();
-//            for (Element iElement : lContent)
-//            {
-//                    lText += iElement.text() + "\n\n";
-//            }
         }
         catch (Exception aException)
         {
             MangaLogger.logError(TAG, aException.getMessage());
         }
-//
+
         return "Failed to pull page.";
     }
 }
