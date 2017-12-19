@@ -1,6 +1,7 @@
 package com.teioh.m_feed;
 
 import android.app.Application;
+import android.os.StrictMode;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.ViewTarget;
@@ -63,6 +64,10 @@ public class MFeedApplication extends Application
         // Fabric init
         Fabric.with(this, new Crashlytics());
         MangaLogger.initialize();
+
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+
     }
 
     /***

@@ -38,6 +38,8 @@
 	<string name="remove_from_library_title">Remove Manga</string>
     <string name="remove_from_library_text">Are you sure you want to remove this item from your library?</string>
     <string name="NOVEL_TEXT_SIZE">NOVEL_TEXT_SIZE</string>
-    <!-- Next Section -->
+    <string name="settings_update_apk">Are you sure you want to update your devices Manga Feed APK?</string>
+	<string name="update_apk">Update Device APK</string>
+	<!-- Next Section -->
 
 </resources>

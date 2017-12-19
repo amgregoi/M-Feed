@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -36,6 +37,7 @@ import com.teioh.m_feed.UI.MainActivity.Fragments.FilterDialogFragment;
 import com.teioh.m_feed.UI.MainActivity.Fragments.SettingsFragment;
 import com.teioh.m_feed.UI.MainActivity.Presenters.MainPresenter;
 import com.teioh.m_feed.UI.MainActivity.Widgets.SlidingTabLayout;
+import com.teioh.m_feed.Utils.MangaLogger;
 import com.teioh.m_feed.Utils.SharedPrefs;
 import com.teioh.m_feed.WebSources.SourceFactory;
 
@@ -46,7 +48,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity implements IMain.ActivityView, GoogleApiClient.OnConnectionFailedListener
+public class MainActivity extends AppCompatActivity implements IMain.ActivityView,
+        GoogleApiClient.OnConnectionFailedListener,
+        ActivityCompat.OnRequestPermissionsResultCallback
+
 {
     public final static String TAG = MainActivity.class.getSimpleName();
 
@@ -155,6 +160,18 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
     {
         super.onSaveInstanceState(aSave);
         mMainPresenter.onSaveState(aSave);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        switch (requestCode){
+            case 100:
+            case 101:
+                MangaLogger.makeToast("You may now check for Manga Feed updates.");
+                break;
+        }
+
     }
 
     /***

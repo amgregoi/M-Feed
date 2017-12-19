@@ -1,11 +1,20 @@
 package com.teioh.m_feed.UI.MainActivity.Fragments;
 
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +28,15 @@ import com.teioh.m_feed.Utils.MangaDB;
 import com.teioh.m_feed.Utils.MangaLogger;
 import com.teioh.m_feed.Utils.SharedPrefs;
 
+import java.io.File;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class SettingsFragment extends Fragment implements Listeners.DialogYesNoListener
 {
+
     public final static String TAG = SettingsFragment.class.getSimpleName();
 
     @BindView(R.id.logging_toggle) ToggleButton mLoggingToggle;
@@ -162,6 +174,15 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
     }
 
     /***
+     * This function tries to update the device apk by user request.
+     */
+    @OnClick(R.id.update_apk)
+    public void onUpdateClick()
+    {
+        launchYesNoDialog(R.string.update_apk, getString(R.string.settings_update_apk), 4);
+    }
+
+    /***
      * This function performs various (above) operations based on the action ID specified.
      * @param aAction
      */
@@ -181,7 +202,7 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
                 MangaLogger.logError(TAG, "positive", "WATCH FOR SLOW PERFORMANCES, MAY NEED TO MOVE OFF MAIN THREAD");
                 MangaDB.getInstance().resetLibrary();
                 MangaLogger.makeToast("User library has been reset");
-                ((MainActivity)getActivity()).updateFragmentViews();
+                ((MainActivity) getActivity()).updateFragmentViews();
                 break;
 
             case 2: //Remove Downloaded Chapters
@@ -210,6 +231,19 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
 
                 break;
 
+            case 4:
+                int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                if (permissionCheck != PackageManager.PERMISSION_GRANTED)
+                {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+                }
+                else
+                {
+                    updateDeviceAPK();
+                }
+
+                break;
+
             case 99://Logs
                 MangaLogger.clearLogs();
                 MangaLogger.makeToast("Clearing logs");
@@ -220,6 +254,58 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
                 MangaLogger.makeToast("Action not implemented");
 
         }
+    }
+
+    private void updateDeviceAPK()
+    {
+        //get destination to update file and set Uri
+        //TODO: First I wanted to store my update .apk file on internal storage for my app but apparently android does not allow you to open and install
+        //aplication with existing package from there. So for me, alternative solution is Download directory in external storage. If there is better
+        //solution, please inform us in comment
+        String destination = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/";
+        String fileName = "AppName.apk";
+        destination += fileName;
+        final Uri uri = Uri.parse("file://" + destination);
+
+        //Delete update file if exists
+        File file = new File(destination);
+        if (file.exists())
+            //file.delete() - test this, I think sometimes it doesnt work
+            file.delete();
+
+        //get url of app on server
+        String url = "https://github.com/amgregoi/M-Feed/releases/download/v1.0.0-beta/MangaFeed-NR.apk";
+
+        //set downloadmanager
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+        request.setDescription("Downloading new MFeed APK");
+        request.setTitle("Manga Feed");
+
+        //set destination
+        request.setDestinationUri(uri);
+
+        // get download service and enqueue file
+        final DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+        final long downloadId = manager.enqueue(request);
+
+        //set BroadcastReceiver to install app when .apk is downloaded
+        BroadcastReceiver onComplete = new BroadcastReceiver()
+        {
+            public void onReceive(Context ctxt, Intent intent)
+            {
+                Intent install = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+                install.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                install.setDataAndType(uri,
+                                       manager.getMimeTypeForDownloadedFile(downloadId));
+                startActivity(install);
+
+                getContext().unregisterReceiver(this);
+                //finish();
+            }
+        };
+        //register receiver for when .apk download is compete
+        getContext().registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
     }
 
     /***
