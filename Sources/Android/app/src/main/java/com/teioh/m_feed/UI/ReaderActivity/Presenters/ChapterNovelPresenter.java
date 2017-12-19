@@ -7,6 +7,7 @@ import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.UI.ReaderActivity.IReader;
 import com.teioh.m_feed.Utils.MangaDB;
 import com.teioh.m_feed.Utils.MangaLogger;
+import com.teioh.m_feed.Utils.SharedPrefs;
 import com.teioh.m_feed.WebSources.RequestWrapper;
 import com.teioh.m_feed.WebSources.SourceFactory;
 
@@ -33,6 +34,9 @@ public class ChapterNovelPresenter implements IReader.NovelFragmentPresenter
     private Chapter mChapter;
     private MangaEnums.eLoadingStatus mLoadingStatus;
 
+    private float[] mNovelTextSizes = {13.0f, 14.5f, 16.0f, 17.5f, 19.0f};
+
+
     private IReader.NovelFragmentView mChapterReaderMapper;
 
     /***
@@ -56,6 +60,13 @@ public class ChapterNovelPresenter implements IReader.NovelFragmentPresenter
     public void init(Bundle aBundle)
     {
         mChapterReaderMapper.setUserGestureListener();
+        mChapterReaderMapper.alterNovelTextSize(SharedPrefs.getNovelTextSize());
+
+        retrieveChapter();
+    }
+
+    private void retrieveChapter()
+    {
         mImageListSubscription = SourceFactory.getInstance().getSource().getChapterImageListObservable(new RequestWrapper(mChapter)).cache()
                                               .subscribeOn(Schedulers.io())
                                               .observeOn(AndroidSchedulers.mainThread())
@@ -175,7 +186,27 @@ public class ChapterNovelPresenter implements IReader.NovelFragmentPresenter
     @Override
     public void onRefresh(int aPosition)
     {
-        MangaLogger.makeToast("NOT Implemented");
+        mChapterReaderMapper.setContentText("");
+        try
+        {
+            if (mChapterReaderMapper != null && mChapterReaderMapper.getContext() != null)
+            {
+                mLoadingStatus = MangaEnums.eLoadingStatus.REFRESH;
+                updateReaderToolbar();
+                retrieveChapter();
+            }
+        }
+        catch (Exception aException)
+        {
+            MangaLogger.logError(TAG, aException.getMessage());
+        }
+    }
+
+    @Override
+    public float getNovelTextSize(int aPosition)
+    {
+        SharedPrefs.setNovelTextSize(aPosition);
+        return mNovelTextSizes[aPosition];
     }
 
     @Override

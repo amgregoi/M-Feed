@@ -7,6 +7,7 @@ import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.UI.MangaActivity.MangaPresenter;
 import com.teioh.m_feed.UI.ReaderActivity.Adapters.ChapterPageAdapter;
 import com.teioh.m_feed.UI.ReaderActivity.ChapterMangaFragment;
+import com.teioh.m_feed.UI.ReaderActivity.ChapterNovelFragment;
 import com.teioh.m_feed.UI.ReaderActivity.IReader;
 import com.teioh.m_feed.UI.ReaderActivity.ReaderActivity;
 import com.teioh.m_feed.Utils.MangaDB;
@@ -211,6 +212,23 @@ public class ReaderPresenter implements IReader.ReaderActivityPresenter
             MangaLogger.logError(TAG, lException.getMessage());
         }
 
+    }
+
+    @Override
+    public void alterNovelTextSize(int aValue, int aPosition)
+    {
+        try
+        {
+            ChapterNovelFragment lTempFragment;
+            if ((lTempFragment = ((ChapterNovelFragment) mChapterPagerAdapter.getItem(aPosition))) != null)
+            {
+                lTempFragment.alterNovelTextSize(aValue);
+            }
+        }
+        catch (Exception lException)
+        {
+            MangaLogger.logError(TAG, lException.getMessage());
+        }
     }
 
     /***

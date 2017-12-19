@@ -251,4 +251,24 @@ public class SharedPrefs
     }
 
 
+    /***
+     * This function gets the in app logging status.
+     *
+     * @return true if logging, false otherwise
+     */
+    public static int getNovelTextSize()
+    {
+        Context lContext = MFeedApplication.getInstance();
+        return PreferenceManager.getDefaultSharedPreferences(lContext).getInt(lContext.getString(R.string.NOVEL_TEXT_SIZE), 0);
+    }
+
+    public static void setNovelTextSize(int aSize)
+    {
+        Context lContext = MFeedApplication.getInstance();
+        SharedPreferences.Editor lEditor = PreferenceManager.getDefaultSharedPreferences(lContext).edit();
+        lEditor.putInt(lContext.getString(R.string.NOVEL_TEXT_SIZE), aSize);
+        lEditor.apply();
+    }
+
+
 }

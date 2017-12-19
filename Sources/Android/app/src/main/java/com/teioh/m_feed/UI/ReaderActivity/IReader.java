@@ -40,6 +40,8 @@ public interface IReader
 
         void decrementChapterPage(int aPosition);
 
+        void alterNovelTextSize(int aValue, int aPosition);
+
         void updateChapterViewStatus(int aPosition);
 
         void onRefreshButton(int aPosition);
@@ -112,6 +114,9 @@ public interface IReader
     interface NovelFragmentView extends ReaderFragmentBaseView
     {
         void setContentText(String aText);
+
+        void alterNovelTextSize(int aValue);
+
     }
 
     interface NovelFragmentPresenter extends LifeCycleMap
@@ -123,6 +128,8 @@ public interface IReader
         void updateChapterViewStatus();
 
         void onRefresh(int aPosition);
+
+        float getNovelTextSize(int aPosition);
 
     }
 }

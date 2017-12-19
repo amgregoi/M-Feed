@@ -16,6 +16,7 @@ import com.teioh.m_feed.UI.ReaderActivity.Presenters.ChapterMangaPresenter;
 import com.teioh.m_feed.UI.ReaderActivity.Presenters.ChapterNovelPresenter;
 import com.teioh.m_feed.UI.ReaderActivity.Widgets.GestureTextView;
 import com.teioh.m_feed.UI.ReaderActivity.Widgets.GestureViewPager;
+import com.teioh.m_feed.Utils.SharedPrefs;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -174,6 +175,12 @@ public class ChapterNovelFragment extends Fragment implements IReader.NovelFragm
         mTextView.setText(aText);
     }
 
+    @Override
+    public void alterNovelTextSize(int aValue)
+    {
+        mTextView.setTextSize(mChapterPresenter.getNovelTextSize(aValue));
+    }
+
     /***
      * This function is called in the fragment lifecycle.
      *
@@ -214,14 +221,7 @@ public class ChapterNovelFragment extends Fragment implements IReader.NovelFragm
         ButterKnife.bind(this, lView);
         mTextView.setUserGesureListener(this);
 
-        mTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                onSingleTap();
-            }
-        });
+        mTextView.setOnClickListener(v -> onSingleTap());
 
         return lView;
     }

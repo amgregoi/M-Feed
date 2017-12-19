@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,9 +50,12 @@ public class ReaderActivity extends AppCompatActivity implements IReader.ReaderA
     @BindView(R.id.mangaTitle) TextView mMangaTitle;
     @BindView(R.id.currentPageNumber) TextView mCurrentPage;
     @BindView(R.id.endPageNumber) TextView mEndPage;
+    @BindView(R.id.pageNumDivider) TextView mDivider;
 
     @BindView(R.id.backPageButton) ImageButton mBackPageButton;
     @BindView(R.id.forwardPageButton) ImageButton mForwardPageButton;
+
+    @BindView(R.id.seekBar) SeekBar mTextSizeSeekBar;
 
 
     private IReader.ReaderActivityPresenter mReaderPresenter;
@@ -209,7 +213,41 @@ public class ReaderActivity extends AppCompatActivity implements IReader.ReaderA
             mVerticalScrollButton.setVisibility(View.GONE);
             mForwardPageButton.setVisibility(View.GONE);
             mBackPageButton.setVisibility(View.GONE);
+
+            mDivider.setVisibility(View.GONE);
+            mEndPage.setVisibility(View.GONE);
+            mCurrentPage.setVisibility(View.GONE);
+
+            mTextSizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
+            {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
+                {
+                    mReaderPresenter.alterNovelTextSize(progress, mViewPager.getCurrentItem());
+                    startToolbarTimer();
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar)
+                {
+                    // Do nothing
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar)
+                {
+                    // Do nothing
+                }
+            });
+
+            mTextSizeSeekBar.setProgress(SharedPrefs.getNovelTextSize());
         }
+        else
+        {
+            mTextSizeSeekBar.setVisibility(View.GONE);
+        }
+
+
     }
 
     /***
