@@ -19,7 +19,7 @@ import com.teioh.m_feed.UI.ReaderActivity.Presenters.ChapterMangaPresenter;
 import com.teioh.m_feed.UI.ReaderActivity.Widgets.GestureViewPager;
 import com.teioh.m_feed.Utils.MangaLogger;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ChapterMangaFragment extends Fragment implements IReader.MangaFragmentView
@@ -27,7 +27,7 @@ public class ChapterMangaFragment extends Fragment implements IReader.MangaFragm
     public final static String TAG = ChapterMangaFragment.class.getSimpleName();
 
 
-    @Bind(R.id.reader_pager) GestureViewPager mViewPager;
+    @BindView(R.id.reader_pager) GestureViewPager mViewPager;
 
     private IReader.MangaFragmentPresenter mChapterPresenter;
     private Listeners.ReaderListener mListener;

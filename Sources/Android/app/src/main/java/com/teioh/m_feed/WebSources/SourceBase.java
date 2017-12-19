@@ -122,6 +122,9 @@ public abstract class SourceBase
      */
     public Observable<List<Chapter>> getChapterListObservable(final RequestWrapper aRequest)
     {
+//        String lUrl = aRequest.getMangaUrl();
+//        if(lUrl.substring(0,2).equals("//")) lUrl = "http:" + lUrl;
+
         return NetworkService.getPermanentInstance()
                              .getResponseCustomHeaders(aRequest.getMangaUrl(), constructRequestHeaders())
                              .flatMap(aResponse -> NetworkService.mapResponseToString(aResponse))
@@ -140,6 +143,9 @@ public abstract class SourceBase
      */
     public Observable<Manga> updateMangaObservable(final RequestWrapper aRequest)
     {
+//        String lUrl = aRequest.getMangaUrl();
+//        if(lUrl.substring(0,2).equals("//")) lUrl = "http:" + lUrl;
+
         return NetworkService.getPermanentInstance()
                              .getResponseCustomHeaders(aRequest.getMangaUrl(), constructRequestHeaders())
                              .flatMap(aResponse -> NetworkService.mapResponseToString(aResponse))

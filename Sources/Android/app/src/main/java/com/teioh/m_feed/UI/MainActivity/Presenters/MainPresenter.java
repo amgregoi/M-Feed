@@ -150,7 +150,6 @@ public class MainPresenter implements IMain.ActivityPresenter
     @Override
     public void onDestroy()
     {
-        ButterKnife.unbind(mMainMapper);
         mMainMapper = null;
     }
 

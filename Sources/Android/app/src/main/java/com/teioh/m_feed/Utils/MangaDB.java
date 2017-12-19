@@ -150,14 +150,14 @@ public class MangaDB extends SQLiteOpenHelper
     /***
      * This function updates the follow status of an item in the database
      *
-     * @param aTitle
+     * @param aUrl
      * @param aValue
      */
-    public void updateMangaFollow(String aTitle, int aValue)
+    public void updateMangaFollow(String aUrl, int aValue)
     {
         ContentValues lValues = new ContentValues(1);
         lValues.put(MangaTable.Following, aValue);
-        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, lValues, MangaTable.Title + " = ?", aTitle);
+        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, lValues, MangaTable.URL + " = ?", aUrl);
     }
 
     /**
@@ -174,6 +174,7 @@ public class MangaDB extends SQLiteOpenHelper
                                          ArrayList<Manga> lMangaList = new ArrayList<>();
                                          QueryResultIterable<Manga> lQuery = cupboard().withDatabase(getReadableDatabase())
                                                                                        .query(Manga.class)
+                                                                                       .distinct().groupBy(MangaTable.Title)
                                                                                        .withSelection("NOT " + MangaTable.Following + " = ? AND " + MangaTable.Source + " = ?", "0", SourceFactory
                                                                                                .getInstance()
                                                                                                .getSourceName())
@@ -248,7 +249,8 @@ public class MangaDB extends SQLiteOpenHelper
      */
     public void putManga(Manga aManga)
     {
-        if(cupboard().withDatabase(getReadableDatabase()).query(Manga.class).withSelection(MangaTable.URL + " = ?", aManga.getMangaURL()) == null)
+        if (cupboard().withDatabase(getReadableDatabase()).query(Manga.class).withSelection(MangaTable.URL + " = ?", aManga.getMangaURL())
+                      .get() == null)
             cupboard().withDatabase(getWritableDatabase()).put(aManga);
         else
             updateManga(aManga);
@@ -272,8 +274,8 @@ public class MangaDB extends SQLiteOpenHelper
         lValues.put(MangaTable.Source, aManga.getSource());
         lValues.put(MangaTable.RecentChapter, aManga.getRecentChapter());
         lValues.put(MangaTable.URL, aManga.getMangaURL());
-
         cupboard().withDatabase(getWritableDatabase()).update(Manga.class, lValues, MangaTable.URL + " = ?", aManga.getMangaURL());
+
     }
 
     /***
@@ -335,13 +337,13 @@ public class MangaDB extends SQLiteOpenHelper
     /***
      * This function updates the follow status of an item in the database (unfollow)
      *
-     * @param aTitle
+     * @param aUrl
      */
-    public void updateMangaUnfollow(String aTitle)
+    public void updateMangaUnfollow(String aUrl)
     {
         ContentValues lValues = new ContentValues(1);
         lValues.put(MangaTable.Following, 0);
-        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, lValues, MangaTable.Title + " = ?", aTitle);
+        cupboard().withDatabase(getWritableDatabase()).update(Manga.class, lValues, MangaTable.URL + " = ?", aUrl);
     }
 
     /***

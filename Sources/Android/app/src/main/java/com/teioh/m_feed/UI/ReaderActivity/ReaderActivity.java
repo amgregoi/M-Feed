@@ -31,7 +31,7 @@ import com.teioh.m_feed.WebSources.SourceFactory;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -40,18 +40,18 @@ public class ReaderActivity extends AppCompatActivity implements IReader.ReaderA
 {
     public final static String TAG = ReaderActivity.class.getSimpleName();
 
-    @Bind(R.id.no_scroll_pager) NoScrollViewPager mViewPager;
-    @Bind(R.id.chapter_header) Toolbar mToolbarHeader;
-    @Bind(R.id.chapter_header_2) Toolbar mToolbarHeader2;
-    @Bind(R.id.vertical_scroll_toggle) ImageButton mVerticalScrollButton;
-    @Bind(R.id.chapter_footer) Toolbar mToolbarFooter;
-    @Bind(R.id.chapterTitle) TextView mChapterTitle;
-    @Bind(R.id.mangaTitle) TextView mMangaTitle;
-    @Bind(R.id.currentPageNumber) TextView mCurrentPage;
-    @Bind(R.id.endPageNumber) TextView mEndPage;
+    @BindView(R.id.no_scroll_pager) NoScrollViewPager mViewPager;
+    @BindView(R.id.chapter_header) Toolbar mToolbarHeader;
+    @BindView(R.id.chapter_header_2) Toolbar mToolbarHeader2;
+    @BindView(R.id.vertical_scroll_toggle) ImageButton mVerticalScrollButton;
+    @BindView(R.id.chapter_footer) Toolbar mToolbarFooter;
+    @BindView(R.id.chapterTitle) TextView mChapterTitle;
+    @BindView(R.id.mangaTitle) TextView mMangaTitle;
+    @BindView(R.id.currentPageNumber) TextView mCurrentPage;
+    @BindView(R.id.endPageNumber) TextView mEndPage;
 
-    @Bind(R.id.backPageButton) ImageButton mBackPageButton;
-    @Bind(R.id.forwardPageButton) ImageButton mForwardPageButton;
+    @BindView(R.id.backPageButton) ImageButton mBackPageButton;
+    @BindView(R.id.forwardPageButton) ImageButton mForwardPageButton;
 
 
     private IReader.ReaderActivityPresenter mReaderPresenter;
@@ -130,7 +130,6 @@ public class ReaderActivity extends AppCompatActivity implements IReader.ReaderA
     {
         super.onDestroy();
         mReaderPresenter.onDestroy();
-        ButterKnife.unbind(this);
         unbindService(mConnection);
     }
 

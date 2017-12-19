@@ -42,7 +42,7 @@ import com.teioh.m_feed.WebSources.SourceFactory;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -50,16 +50,16 @@ public class MainActivity extends AppCompatActivity implements IMain.ActivityVie
 {
     public final static String TAG = MainActivity.class.getSimpleName();
 
-    @Bind(R.id.search_view) SearchView mSearchView;
-    @Bind(R.id.filter_view) ImageView mFilterView;
-    @Bind(R.id.activityTitle) TextView mActivityTitle;
-    @Bind(R.id.no_scroll_pager) ViewPager mViewPager;
-    @Bind(R.id.tabs) SlidingTabLayout mTabLayout;
-    @Bind(R.id.tool_bar) Toolbar mToolBar;
-    @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-    @Bind(R.id.drawerLayoutListView) ExpandableListView mDrawerList;
+    @BindView(R.id.search_view) SearchView mSearchView;
+    @BindView(R.id.filter_view) ImageView mFilterView;
+    @BindView(R.id.activityTitle) TextView mActivityTitle;
+    @BindView(R.id.no_scroll_pager) ViewPager mViewPager;
+    @BindView(R.id.tabs) SlidingTabLayout mTabLayout;
+    @BindView(R.id.tool_bar) Toolbar mToolBar;
+    @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+    @BindView(R.id.drawerLayoutListView) ExpandableListView mDrawerList;
 
-    @Bind(R.id.actionMenu) FloatingActionsMenu mMultiActionMenu;
+    @BindView(R.id.actionMenu) FloatingActionsMenu mMultiActionMenu;
 
     private View mDrawerHeader;
     private Toast mToast;

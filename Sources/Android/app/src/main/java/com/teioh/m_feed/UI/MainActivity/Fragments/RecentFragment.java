@@ -13,15 +13,15 @@ import android.widget.ImageView;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.Presenters.RecentPresenter;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class RecentFragment extends MainFragmentBase
 {
     public final static String TAG = RecentFragment.class.getSimpleName();
 
-    @Bind(R.id.swipe_container) SwipeRefreshLayout mSwipeContainer;
-    @Bind(R.id.no_internet_image) ImageView mWifiView;
+    @BindView(R.id.swipe_container) SwipeRefreshLayout mSwipeContainer;
+    @BindView(R.id.no_internet_image) ImageView mWifiView;
 
     /***
      * This function creates and returns a new instance of the fragment.

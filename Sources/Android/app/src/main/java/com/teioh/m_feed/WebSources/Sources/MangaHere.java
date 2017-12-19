@@ -6,7 +6,6 @@ import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.Utils.MangaDB;
 import com.teioh.m_feed.Utils.MangaLogger;
 import com.teioh.m_feed.WebSources.RequestWrapper;
-import com.teioh.m_feed.WebSources.SourceBase;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -22,7 +21,7 @@ public class MangaHere extends SourceManga
 {
     final public static String TAG = MangaHere.class.getSimpleName();
 
-    final private String SourceKey = "MangaHere";
+    final public static String SourceKey = "MangaHere";
     final private String mBaseUrl = "http://mangahere.co/";
     final private String mUpdatesUrl = "http://mangahere.co/latest/";
     final private String mGenres[] = {
@@ -201,7 +200,14 @@ public class MangaHere extends SourceManga
 
         for (Element iUrl : lImageUpdates)
         {
-            lPageUrls.add(iUrl.attr("value"));
+            /***
+             * MangaHere hotfix -> html changes to url links
+             */
+            String link = iUrl.attr("value");
+            if (link.substring(0, 2).equals("//")) link = "http:" + link;
+            link = link.replace(".cc", ".co");
+
+            lPageUrls.add(link);
         }
 
         return lPageUrls;

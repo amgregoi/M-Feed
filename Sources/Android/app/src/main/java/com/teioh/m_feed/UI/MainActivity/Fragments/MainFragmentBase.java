@@ -20,7 +20,7 @@ import com.teioh.m_feed.UI.Maps.Listeners;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -30,7 +30,7 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
 {
     protected IMain.FragmentPresenter mFragmentPresenter;
     protected Listeners.MainFragmentListener mListener;
-    @Bind(R.id.manga_recycle_view) FastScrollRecyclerView mGridView;
+    @BindView(R.id.manga_recycle_view) FastScrollRecyclerView mGridView;
 
     /***
      * This function is called in the fragment lifecycle
@@ -121,7 +121,6 @@ public abstract class MainFragmentBase extends Fragment implements IMain.Fragmen
     {
         super.onDestroyView();
         mFragmentPresenter.onDestroy();
-        ButterKnife.unbind(this);
     }
 
     /***

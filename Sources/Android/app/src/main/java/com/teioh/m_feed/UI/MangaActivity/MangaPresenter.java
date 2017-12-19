@@ -69,7 +69,6 @@ public class MangaPresenter implements IManga.ActivityPresenter
 
             getMangaViewInfo();
             getChapterList();
-
         }
         catch (Exception aException)
         {
@@ -295,7 +294,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
             }
 
             mViewFlag = true;
-            if(mChapterFlag) showLayout();
+            if (mChapterFlag) showLayout();
         }
         catch (Exception aException)
         {
@@ -318,7 +317,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
                 mAdapter = new ChapterListAdapter(mMangaMapper.getContext(), R.layout.manga_chapter_list_item, mChapterList);
                 mMangaMapper.registerAdapter(mAdapter);
                 mChapterFlag = true;
-                if(mViewFlag) showLayout();
+                if (mViewFlag) showLayout();
             }
         }
         catch (Exception aException)
@@ -372,7 +371,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
 
         try
         {
-            MangaDB.getInstance().updateMangaFollow(mManga.getTitle(), aValue);
+            MangaDB.getInstance().updateMangaFollow(mManga.getMangaURL(), aValue);
             mManga.setFollowing(aValue);
         }
         catch (Exception lException)
@@ -395,7 +394,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
         try
         {
             mManga.setFollowing(0);
-            MangaDB.getInstance().updateMangaUnfollow(mManga.getTitle());
+            MangaDB.getInstance().updateMangaUnfollow(mManga.getMangaURL());
             MangaDB.getInstance().removeChapters(mManga);
         }
         catch (Exception lException)

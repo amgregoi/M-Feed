@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import nl.qbusict.cupboard.QueryResultIterable;
 
@@ -35,10 +35,10 @@ public class FilterDialogFragment extends DialogFragment
 {
     public final static String TAG = FilterDialogFragment.class.getSimpleName();
 
-    @Bind(R.id.genreList) GridView mGenreGridView;
-    @Bind(R.id.genre_search_button) Button mSearchButton;
-    @Bind(R.id.genre_cancel_button) Button mCancelButton;
-    @Bind(R.id.genre_clear_button) Button mClearButton;
+    @BindView(R.id.genreList) GridView mGenreGridView;
+    @BindView(R.id.genre_search_button) Button mSearchButton;
+    @BindView(R.id.genre_cancel_button) Button mCancelButton;
+    @BindView(R.id.genre_clear_button) Button mClearButton;
 
     private GenreListAdapter mAdapter;
 
@@ -83,7 +83,6 @@ public class FilterDialogFragment extends DialogFragment
     public void onDestroy()
     {
         super.onDestroy();
-        ButterKnife.unbind(this);
     }
 
     /***

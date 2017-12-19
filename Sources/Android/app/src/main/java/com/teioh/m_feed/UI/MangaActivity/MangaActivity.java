@@ -33,7 +33,7 @@ import com.teioh.m_feed.UI.MainActivity.MainActivity;
 import com.teioh.m_feed.UI.MangaActivity.Fragments.FImageDialogFragment;
 import com.teioh.m_feed.UI.Maps.Listeners;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
@@ -43,11 +43,11 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
 {
     final public static String TAG = MangaActivity.class.getSimpleName();
 
-    @Bind(R.id.activityTitle) TextView mActivityTitle;
-    @Bind(R.id.tool_bar) Toolbar mToolBar;
-    @Bind(R.id.swipe_container) SwipeRefreshLayout mSwipeRefresh;
-    @Bind(R.id.chapter_list) ListView mChapterList;
-    @Bind(R.id.failed_to_load_view) LinearLayout mFailedToLoad;
+    @BindView(R.id.activityTitle) TextView mActivityTitle;
+    @BindView(R.id.tool_bar) Toolbar mToolBar;
+    @BindView(R.id.swipe_container) SwipeRefreshLayout mSwipeRefresh;
+    @BindView(R.id.chapter_list) ListView mChapterList;
+    @BindView(R.id.failed_to_load_view) LinearLayout mFailedToLoad;
 
     //Views inside the manga information header
     private ImageView mMangaImage;
@@ -109,7 +109,6 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
     protected void onDestroy()
     {
         super.onDestroy();
-        ButterKnife.unbind(this);
         mMangaPresenter.onDestroy();
     }
 

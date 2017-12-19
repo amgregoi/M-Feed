@@ -14,7 +14,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.teioh.m_feed.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class FImageDialogFragment extends DialogFragment
@@ -22,7 +22,7 @@ public class FImageDialogFragment extends DialogFragment
     public final static String TAG = FImageDialogFragment.class.getSimpleName();
     public final static String IMAGE_URL_KEY = TAG + ":" + "IMAGE_URL_KEY";
 
-    @Bind(R.id.image_for_dialog) ImageView mImage;
+    @BindView(R.id.image_for_dialog) ImageView mImage;
 
     private String mImageUrl;
 
@@ -93,7 +93,6 @@ public class FImageDialogFragment extends DialogFragment
     @Override
     public void onDestroyView()
     {
-        ButterKnife.unbind(this);
         super.onDestroyView();
     }
 }

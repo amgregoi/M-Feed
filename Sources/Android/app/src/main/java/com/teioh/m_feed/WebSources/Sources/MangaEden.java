@@ -121,8 +121,7 @@ public class MangaEden extends SourceManga
                 lMangaList.add(lManga);
                 MangaDB.getInstance().putManga(lManga);
                 updateMangaObservable(new RequestWrapper(lManga)).subscribeOn(Schedulers.computation())
-                                                                 .doOnError(aThrowable -> MangaLogger
-                                                                         .logError(TAG, aThrowable.getMessage()))
+                                                                 .doOnError(aThrowable -> MangaLogger.logError(TAG, aThrowable.getMessage()))
                                                                  .subscribe();
             }
         }
@@ -166,8 +165,7 @@ public class MangaEden extends SourceManga
             lNewManga.setPicUrl("https://cdn.mangaeden.com/mangasimg/" + lParsedJsonObject.getString("image"));
             lNewManga.setInitialized(1);
 
-            MangaDB.getInstance().updateManga(lNewManga);
-            MangaLogger.logError(TAG, "Finished creating/update manga (" + lNewManga.getTitle() + ")");
+            MangaDB.getInstance().putManga(lNewManga);
             return lNewManga;
         }
         catch (Exception aException)

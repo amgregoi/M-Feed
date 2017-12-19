@@ -45,6 +45,7 @@ public class ImagePageAdapter extends PagerAdapter
     {
         this.mContext = aContext;
         this.mImageUrlList = aImageUrls;
+        notifyDataSetChanged();
     }
 
     /***
@@ -127,6 +128,7 @@ public class ImagePageAdapter extends PagerAdapter
     {
         (aContainer).removeView((RelativeLayout) aObject);
         mImageViews.remove(aPosition);
+        notifyDataSetChanged();
     }
 
     /***

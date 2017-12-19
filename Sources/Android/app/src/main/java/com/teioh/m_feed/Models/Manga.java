@@ -3,6 +3,8 @@ package com.teioh.m_feed.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.teioh.m_feed.WebSources.Sources.MangaHere;
+
 public class Manga implements Parcelable
 {
     public final static String TAG = "MANGA";
@@ -44,6 +46,14 @@ public class Manga implements Parcelable
         title = aTitle;
         link = aUrl;
         source = aSource;
+        recentChapter = "";
+        initialized = 0;
+        _id = null;
+    }
+
+    public Manga(String aUrl)
+    {
+        link = aUrl;
         recentChapter = "";
         initialized = 0;
         _id = null;
@@ -118,6 +128,15 @@ public class Manga implements Parcelable
 
     public String getMangaURL()
     {
+        /***
+         * MangaHere hotfix -> html changes to url links
+         */
+        if (source.equals(MangaHere.SourceKey))
+        {
+            if (link.substring(0, 2).equals("//")) link = "http:" + link;
+            link = link.replace(".cc", ".co");
+        }
+
         return link;
     }
 

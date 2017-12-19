@@ -19,7 +19,7 @@ import com.teioh.m_feed.Utils.MangaDB;
 import com.teioh.m_feed.Utils.MangaLogger;
 import com.teioh.m_feed.Utils.SharedPrefs;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -27,7 +27,7 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
 {
     public final static String TAG = SettingsFragment.class.getSimpleName();
 
-    @Bind(R.id.logging_toggle) ToggleButton mLoggingToggle;
+    @BindView(R.id.logging_toggle) ToggleButton mLoggingToggle;
 
     /***
      * This function creates and returns a new instance of the fragment.
@@ -64,7 +64,6 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
     public void onDestroyView()
     {
         super.onDestroyView();
-        ButterKnife.unbind(this);
     }
 
     /***
