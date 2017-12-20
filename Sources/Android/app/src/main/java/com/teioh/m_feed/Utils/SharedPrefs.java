@@ -271,4 +271,23 @@ public class SharedPrefs
     }
 
 
+    /***
+     * TODO: come back and update when I start working on actual backend
+     * This function gets the applications current Version.
+     *
+     * @return true if logging, false otherwise
+     */
+    public static String getApplicationVersion()
+    {
+        Context lContext = MFeedApplication.getInstance();
+        return PreferenceManager.getDefaultSharedPreferences(lContext).getString(lContext.getString(R.string.APPLICATION_VERSION), "0");
+    }
+
+    public static void setApplicationVersion(String aVersion)
+    {
+        Context lContext = MFeedApplication.getInstance();
+        SharedPreferences.Editor lEditor = PreferenceManager.getDefaultSharedPreferences(lContext).edit();
+        lEditor.putString(lContext.getString(R.string.NOVEL_TEXT_SIZE), aVersion);
+        lEditor.apply();
+    }
 }

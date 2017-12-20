@@ -5,11 +5,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
@@ -20,12 +20,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ToggleButton;
 
+import com.google.gson.Gson;
+import com.teioh.m_feed.MFeedApplication;
+import com.teioh.m_feed.Models.Version;
 import com.teioh.m_feed.R;
 import com.teioh.m_feed.UI.MainActivity.LoggingActivity;
 import com.teioh.m_feed.UI.MainActivity.MainActivity;
 import com.teioh.m_feed.UI.Maps.Listeners;
 import com.teioh.m_feed.Utils.MangaDB;
 import com.teioh.m_feed.Utils.MangaLogger;
+import com.teioh.m_feed.Utils.NetworkService;
 import com.teioh.m_feed.Utils.SharedPrefs;
 
 import java.io.File;
@@ -33,6 +37,7 @@ import java.io.File;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.android.schedulers.AndroidSchedulers;
 
 public class SettingsFragment extends Fragment implements Listeners.DialogYesNoListener
 {
@@ -239,7 +244,11 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
                 }
                 else
                 {
-                    updateDeviceAPK();
+                    NetworkService.getTemporaryInstance().
+                            getResponse("http://www.amgregoire.com/simple_manga_api.php?version")
+                                  .flatMap(aResponse -> NetworkService.mapResponseToString(aResponse))
+                                  .observeOn(AndroidSchedulers.mainThread())
+                                  .subscribe(aResponse -> updateDeviceAPK(aResponse));
                 }
 
                 break;
@@ -256,56 +265,80 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
         }
     }
 
-    private void updateDeviceAPK()
+    private void updateDeviceAPK(String aResposne)
     {
-        //get destination to update file and set Uri
-        //TODO: First I wanted to store my update .apk file on internal storage for my app but apparently android does not allow you to open and install
-        //aplication with existing package from there. So for me, alternative solution is Download directory in external storage. If there is better
-        //solution, please inform us in comment
-        String destination = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/";
-        String fileName = "AppName.apk";
-        destination += fileName;
-        final Uri uri = Uri.parse("file://" + destination);
-
-        //Delete update file if exists
-        File file = new File(destination);
-        if (file.exists())
-            //file.delete() - test this, I think sometimes it doesnt work
-            file.delete();
-
-        //get url of app on server
-        String url = "https://github.com/amgregoi/M-Feed/releases/download/v1.0.0-beta/MangaFeed-NR.apk";
-
-        //set downloadmanager
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-        request.setDescription("Downloading new MFeed APK");
-        request.setTitle("Manga Feed");
-
-        //set destination
-        request.setDestinationUri(uri);
-
-        // get download service and enqueue file
-        final DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
-        final long downloadId = manager.enqueue(request);
-
-        //set BroadcastReceiver to install app when .apk is downloaded
-        BroadcastReceiver onComplete = new BroadcastReceiver()
+        try
         {
-            public void onReceive(Context ctxt, Intent intent)
+            // map json response to version object
+            Gson gson = new Gson();
+            Version lVers = gson.fromJson(aResposne, Version.class);
+
+            //retrieve version name from application
+            PackageInfo pInfo = getContext().getPackageManager().getPackageInfo(MFeedApplication.getInstance().getPackageName(), 0);
+            String version = pInfo.versionName;
+
+
+            if (lVers.getData() == null)
             {
-                Intent install = new Intent(Intent.ACTION_INSTALL_PACKAGE);
-                install.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                install.setDataAndType(uri,
-                                       manager.getMimeTypeForDownloadedFile(downloadId));
-                startActivity(install);
-
-                getContext().unregisterReceiver(this);
-                //finish();
+                MangaLogger.makeToast("Failed to retrieve recorded Version, check your internet connection.");
             }
-        };
-        //register receiver for when .apk download is compete
-        getContext().registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+            else if (lVers.getData().compareTo(version) > 0)
+            {
+                /***
+                 * Download and request installation of new APK
+                 */
+                String destination = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/";
+                String fileName = "AppName.apk";
+                destination += fileName;
+                final Uri uri = Uri.parse("file://" + destination);
 
+                //Delete update file if exists
+                File file = new File(destination);
+                if (file.exists())
+                    file.delete();
+
+                //get url of app on server
+                String url = "https://github.com/amgregoi/M-Feed/releases/download/v1.0.0-beta/MangaFeed-NR.apk";
+
+                //set downloadmanager
+                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+                request.setDescription("Downloading new MFeed APK");
+                request.setTitle("Manga Feed");
+
+                //set destination
+                request.setDestinationUri(uri);
+
+                // get download service and enqueue file
+                final DownloadManager manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+                final long downloadId = manager.enqueue(request);
+
+                //set BroadcastReceiver to install app when .apk is downloaded
+                BroadcastReceiver onComplete = new BroadcastReceiver()
+                {
+                    public void onReceive(Context ctxt, Intent intent)
+                    {
+                        Intent install = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+                        install.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        install.setDataAndType(uri,
+                                               manager.getMimeTypeForDownloadedFile(downloadId));
+                        startActivity(install);
+
+                        getContext().unregisterReceiver(this);
+                    }
+                };
+                //register receiver for when .apk download is compete
+                getContext().registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
+            }
+            else
+            {
+                MangaLogger.makeToast("Application is up to date");
+            }
+        }
+        catch (PackageManager.NameNotFoundException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     /***

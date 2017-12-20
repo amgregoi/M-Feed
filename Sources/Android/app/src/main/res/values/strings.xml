@@ -40,6 +40,7 @@
     <string name="NOVEL_TEXT_SIZE">NOVEL_TEXT_SIZE</string>
     <string name="settings_update_apk">Are you sure you want to update your devices Manga Feed APK?</string>
 	<string name="update_apk">Update Device APK</string>
-	<!-- Next Section -->
+    <string name="APPLICATION_VERSION">APPLICATION_VERSION</string>
+    <!-- Next Section -->
 
 </resources>
