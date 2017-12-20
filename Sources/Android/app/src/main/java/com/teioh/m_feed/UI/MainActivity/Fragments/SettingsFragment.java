@@ -298,11 +298,11 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
                     file.delete();
 
                 //get url of app on server
-                String url = "https://github.com/amgregoi/M-Feed/releases/download/v1.0.0-beta/MangaFeed-NR.apk";
+                String url = "http://www.amgregoire.com/apks/MangaFeed.apk";
 
                 //set downloadmanager
                 DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-                request.setDescription("Downloading new MFeed APK");
+                request.setDescription("Downloading new MangaFeed APK");
                 request.setTitle("Manga Feed");
 
                 //set destination
@@ -319,8 +319,7 @@ public class SettingsFragment extends Fragment implements Listeners.DialogYesNoL
                     {
                         Intent install = new Intent(Intent.ACTION_INSTALL_PACKAGE);
                         install.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        install.setDataAndType(uri,
-                                               manager.getMimeTypeForDownloadedFile(downloadId));
+                        install.setDataAndType(uri, manager.getMimeTypeForDownloadedFile(downloadId));
                         startActivity(install);
 
                         getContext().unregisterReceiver(this);
