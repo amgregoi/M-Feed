@@ -115,7 +115,8 @@
 			android:layout_toEndOf="@+id/backPageButton"
 			android:layout_toStartOf="@+id/forwardPageButton"
 			android:max="4"
-			android:progress="0"/>
+			android:progress="0"
+			/>
 
 	</RelativeLayout>
 </android.support.v7.widget.Toolbar>

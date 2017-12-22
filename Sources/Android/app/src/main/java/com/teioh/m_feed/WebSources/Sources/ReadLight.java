@@ -80,25 +80,6 @@ public class ReadLight extends SourceNovel
                     lNovelList.add(lManga);
             }
 
-
-//            Document lParsedDocument = Jsoup.parse(aResponseBody);
-//            Elements lNovelBlocks = lParsedDocument.select("div.col-lg-8.content").select("div.list-by-word-body").select("li");
-//
-//            for (Element lNovel : lNovelBlocks) {
-//                Document lMenuItems = Jsoup.parse(lNovel.toString());
-//                String lMangaUrl = lMenuItems.select("a").first().attr("href");
-//                String lMangaTitle = lMenuItems.select("a").first().text();
-//
-//                if (!lMangaUrl.contains("#")) {
-//                    Manga lManga = MangaDB.getInstance().getManga(lMangaUrl);
-//                    if (lManga == null) {
-////                        Log.e(TAG, "INSERT INTO Manga (title,link,source) VALUES (\"" + lMangaTitle + "\",\"" + lMangaUrl + "\",\"" + SourceKey + "\");");
-//                    }
-//                    if (!lNovelList.contains(lManga))
-//                        lNovelList.add(lManga);
-//                }
-//            }
-
         }
         catch (Exception aException)
         {
@@ -244,17 +225,15 @@ public class ReadLight extends SourceNovel
     public String parseResponseToImageUrls(String aResponseBody, String aResponseUrl)
     {
 
-        String lText = "";
+        String lText = "<h1>Failed to retrieve chapter :'(</h1><br><h3>Try refreshing, or check your internet connection.</h3>";
 
         try
         {
             Document lParsedDocument = Jsoup.parse(aResponseBody);
-            Elements lContent = lParsedDocument.select("div.chapter-content3").select("p");
+            Element lContent = lParsedDocument.select("div.chapter-content3").first();
 
-            for (Element iElement : lContent)
-            {
-                    lText += iElement.text() + "\n\n";
-            }
+            if(lContent != null)
+                lText = lContent.html();
         }
         catch (Exception aException)
         {

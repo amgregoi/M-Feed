@@ -218,6 +218,8 @@ public class ReaderActivity extends AppCompatActivity implements IReader.ReaderA
             mEndPage.setVisibility(View.GONE);
             mCurrentPage.setVisibility(View.GONE);
 
+            mTextSizeSeekBar.getMax();
+
             mTextSizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
             {
                 @Override
@@ -434,7 +436,15 @@ public class ReaderActivity extends AppCompatActivity implements IReader.ReaderA
      */
     public void startToolbarTimer()
     {
-        mToolBarService.startToolBarTimer();
+        try
+        {
+            mToolBarService.startToolBarTimer();
+        }
+        catch (Exception aException)
+        {
+            MangaLogger.logError(TAG, aException.toString());
+
+        }
     }
 
     /***
@@ -448,14 +458,23 @@ public class ReaderActivity extends AppCompatActivity implements IReader.ReaderA
     @Override
     public void updateToolbar(String aTitle, String aChapterTitle, int aSize, int aCurrentPage, int aChapterPosition)
     {
-        if (mViewPager.getCurrentItem() == aChapterPosition)
+        try
         {
-            mMangaTitle.setText(aTitle);
-            mChapterTitle.setText(aChapterTitle);
-            mEndPage.setText(String.valueOf(aSize));
-            mCurrentPage.setText(String.valueOf(aCurrentPage));
-            mReaderPresenter.updateChapterViewStatus(mViewPager.getCurrentItem());
+            if (mViewPager.getCurrentItem() == aChapterPosition)
+            {
+                mMangaTitle.setText(aTitle);
+                mChapterTitle.setText(aChapterTitle);
+                mEndPage.setText(String.valueOf(aSize));
+                mCurrentPage.setText(String.valueOf(aCurrentPage));
+                mReaderPresenter.updateChapterViewStatus(mViewPager.getCurrentItem());
+            }
         }
+        catch (Exception aException)
+        {
+            MangaLogger.logError(TAG, aException.toString());
+
+        }
+
     }
 
     /***
