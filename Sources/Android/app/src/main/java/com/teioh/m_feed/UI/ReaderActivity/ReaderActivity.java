@@ -88,10 +88,10 @@ public class ReaderActivity extends AppCompatActivity implements IReader.ReaderA
      * @param aContext
      * @return
      */
-    public static Intent getNewInstance(Context aContext, ArrayList<Chapter> aChapterList, int aPosition, String aParentUrl)
+    public static Intent getNewInstance(Context aContext, int aPosition, String aParentUrl)
     {
         Intent lIntent = new Intent(aContext, ReaderActivity.class);
-        lIntent.putParcelableArrayListExtra(MangaPresenter.CHAPTER_LIST_KEY, aChapterList);
+//        lIntent.putParcelableArrayListExtra(MangaPresenter.CHAPTER_LIST_KEY, aChapterList);
         lIntent.putExtra(MangaPresenter.LIST_POSITION_KEY, aPosition);
         lIntent.putExtra(ReaderPresenter.PARENT_URL, aParentUrl);
 

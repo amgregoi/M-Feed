@@ -8,6 +8,7 @@ import com.teioh.m_feed.UI.MangaActivity.MangaPresenter;
 import com.teioh.m_feed.UI.ReaderActivity.Adapters.ChapterPageAdapter;
 import com.teioh.m_feed.UI.ReaderActivity.ChapterMangaFragment;
 import com.teioh.m_feed.UI.ReaderActivity.ChapterNovelFragment;
+import com.teioh.m_feed.UI.ReaderActivity.CurrentSelection;
 import com.teioh.m_feed.UI.ReaderActivity.IReader;
 import com.teioh.m_feed.UI.ReaderActivity.ReaderActivity;
 import com.teioh.m_feed.Utils.MangaDB;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 public class ReaderPresenter implements IReader.ReaderActivityPresenter
 {
     public final static String TAG = ReaderPresenter.class.getSimpleName();
-    public final static String CHAPTER_LIST_KEY = TAG + ":CHAPTER_LIST";
+//    public final static String CHAPTER_LIST_KEY = TAG + ":CHAPTER_LIST";
     public final static String CHAPTER_POSITION = TAG + ":POSITION";
     public final static String PARENT_URL = TAG + ":PARENT_URL";
 
@@ -52,7 +53,8 @@ public class ReaderPresenter implements IReader.ReaderActivityPresenter
         {
             if (mChapterList == null)
             {
-                mChapterList = new ArrayList<>(aBundle.getParcelableArrayList(MangaPresenter.CHAPTER_LIST_KEY));
+                mChapterList = new ArrayList<>(CurrentSelection.getChapters());
+//                mChapterList = new ArrayList<>(aBundle.getParcelableArrayList(MangaPresenter.CHAPTER_LIST_KEY));
                 mChapterPosition = aBundle.getInt(MangaPresenter.LIST_POSITION_KEY);
             }
 
@@ -82,7 +84,8 @@ public class ReaderPresenter implements IReader.ReaderActivityPresenter
     {
         try
         {
-            if (mChapterList != null) aSave.putParcelableArrayList(CHAPTER_LIST_KEY, mChapterList);
+//            if (mChapterList != null) aSave.putParcelableArrayList(CHAPTER_LIST_KEY, mChapterList);
+
             aSave.putInt(CHAPTER_POSITION, mChapterPosition);
         }
         catch (Exception lException)
@@ -101,9 +104,9 @@ public class ReaderPresenter implements IReader.ReaderActivityPresenter
     {
         try
         {
-            if (aRestore.containsKey(CHAPTER_LIST_KEY)) mChapterList = new ArrayList<>(aRestore.getParcelableArrayList(CHAPTER_LIST_KEY));
+//            if (aRestore.containsKey(CHAPTER_LIST_KEY)) mChapterList = new ArrayList<>(aRestore.getParcelableArrayList(CHAPTER_LIST_KEY));
             if (aRestore.containsKey(CHAPTER_POSITION)) mChapterPosition = aRestore.getInt(CHAPTER_POSITION);
-
+            mChapterList = new ArrayList<>(CurrentSelection.getChapters());
         }
         catch (Exception lException)
         {

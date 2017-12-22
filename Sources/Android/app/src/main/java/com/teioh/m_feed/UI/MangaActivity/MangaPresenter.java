@@ -7,6 +7,7 @@ import com.bumptech.glide.Glide;
 import com.teioh.m_feed.Models.Chapter;
 import com.teioh.m_feed.Models.Manga;
 import com.teioh.m_feed.R;
+import com.teioh.m_feed.UI.ReaderActivity.CurrentSelection;
 import com.teioh.m_feed.UI.ReaderActivity.ReaderActivity;
 import com.teioh.m_feed.Utils.MangaDB;
 import com.teioh.m_feed.Utils.MangaLogger;
@@ -87,7 +88,8 @@ public class MangaPresenter implements IManga.ActivityPresenter
         try
         {
             if (mManga != null) aSave.putParcelable(MANGA_KEY, mManga);
-            if (mChapterList != null) aSave.putParcelableArrayList(CHAPTER_LIST_KEY, mChapterList);
+//            if (mChapterList != null) aSave.putParcelableArrayList(CHAPTER_LIST_KEY, mChapterList);
+            CurrentSelection.setChapters(mChapterList);
             aSave.putBoolean(ORDER_DESCENDING_KEY, mChapterOrderDescending);
 
         }
@@ -112,8 +114,8 @@ public class MangaPresenter implements IManga.ActivityPresenter
 
             if (aRestore.containsKey(MANGA_KEY)) mManga = aRestore.getParcelable(MANGA_KEY);
 
-            if (aRestore.containsKey(CHAPTER_LIST_KEY)) mChapterList = new ArrayList<>(aRestore.getParcelableArrayList(CHAPTER_LIST_KEY));
-
+//            if (aRestore.containsKey(CHAPTER_LIST_KEY)) mChapterList = new ArrayList<>(aRestore.getParcelableArrayList(CHAPTER_LIST_KEY));
+            mChapterList = new ArrayList<>(CurrentSelection.getChapters());
             if (aRestore.containsKey(MANGA_KEY)) mManga = aRestore.getParcelable(MANGA_KEY);
 
             if (aRestore.containsKey(ORDER_DESCENDING_KEY)) mChapterOrderDescending = aRestore.getBoolean(ORDER_DESCENDING_KEY);
@@ -417,6 +419,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
         boolean lResult = true;
         try
         {
+
             ArrayList<Chapter> lNewChapterList = new ArrayList<>(mChapterList);
             if (mChapterOrderDescending) Collections.reverse(lNewChapterList);
             int lPosition = lNewChapterList.indexOf(aChapter);
@@ -424,7 +427,11 @@ public class MangaPresenter implements IManga.ActivityPresenter
             mManga.setRecentChapter(aChapter.getChapterUrl());
             MangaDB.getInstance().updateManga(mManga);
 
-            Intent lIntent = ReaderActivity.getNewInstance(mMangaMapper.getContext(), lNewChapterList, lPosition, mManga.getMangaURL());
+            //Set Current selection information
+            CurrentSelection.setChapters(lNewChapterList);
+            CurrentSelection.setManga(mManga);
+
+            Intent lIntent = ReaderActivity.getNewInstance(mMangaMapper.getContext(), lPosition, mManga.getMangaURL());
             mMangaMapper.getContext().startActivity(lIntent);
         }
         catch (Exception aException)
@@ -480,16 +487,17 @@ public class MangaPresenter implements IManga.ActivityPresenter
                 {
                     lChapter = iChapter;
                     mManga.setRecentChapter(lChapter.getChapterUrl());
-
                 }
             }
 
             // defaults to original chapter, if one is not set/found
             if (lChapter == null) lChapter = lNewChapterList.get(0);
-
             int lPosition = lNewChapterList.indexOf(lChapter);
 
-            Intent lIntent = ReaderActivity.getNewInstance(mMangaMapper.getContext(), lNewChapterList, lPosition, mManga.getMangaURL());
+            CurrentSelection.setManga(mManga);
+            CurrentSelection.setChapters(lNewChapterList);
+
+            Intent lIntent = ReaderActivity.getNewInstance(mMangaMapper.getContext(), lPosition, mManga.getMangaURL());
             mMangaMapper.getContext().startActivity(lIntent);
         }
         catch (Exception aException)
