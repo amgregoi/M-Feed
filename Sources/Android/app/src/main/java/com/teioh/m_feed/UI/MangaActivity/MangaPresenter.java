@@ -88,7 +88,6 @@ public class MangaPresenter implements IManga.ActivityPresenter
         try
         {
             if (mManga != null) aSave.putParcelable(MANGA_KEY, mManga);
-//            if (mChapterList != null) aSave.putParcelableArrayList(CHAPTER_LIST_KEY, mChapterList);
             CurrentSelection.setChapters(mChapterList);
             aSave.putBoolean(ORDER_DESCENDING_KEY, mChapterOrderDescending);
 
@@ -114,8 +113,8 @@ public class MangaPresenter implements IManga.ActivityPresenter
 
             if (aRestore.containsKey(MANGA_KEY)) mManga = aRestore.getParcelable(MANGA_KEY);
 
-//            if (aRestore.containsKey(CHAPTER_LIST_KEY)) mChapterList = new ArrayList<>(aRestore.getParcelableArrayList(CHAPTER_LIST_KEY));
             mChapterList = new ArrayList<>(CurrentSelection.getChapters());
+
             if (aRestore.containsKey(MANGA_KEY)) mManga = aRestore.getParcelable(MANGA_KEY);
 
             if (aRestore.containsKey(ORDER_DESCENDING_KEY)) mChapterOrderDescending = aRestore.getBoolean(ORDER_DESCENDING_KEY);

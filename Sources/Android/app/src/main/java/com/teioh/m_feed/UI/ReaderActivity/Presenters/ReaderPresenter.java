@@ -54,7 +54,6 @@ public class ReaderPresenter implements IReader.ReaderActivityPresenter
             if (mChapterList == null)
             {
                 mChapterList = new ArrayList<>(CurrentSelection.getChapters());
-//                mChapterList = new ArrayList<>(aBundle.getParcelableArrayList(MangaPresenter.CHAPTER_LIST_KEY));
                 mChapterPosition = aBundle.getInt(MangaPresenter.LIST_POSITION_KEY);
             }
 
@@ -84,8 +83,6 @@ public class ReaderPresenter implements IReader.ReaderActivityPresenter
     {
         try
         {
-//            if (mChapterList != null) aSave.putParcelableArrayList(CHAPTER_LIST_KEY, mChapterList);
-
             aSave.putInt(CHAPTER_POSITION, mChapterPosition);
         }
         catch (Exception lException)
@@ -104,7 +101,6 @@ public class ReaderPresenter implements IReader.ReaderActivityPresenter
     {
         try
         {
-//            if (aRestore.containsKey(CHAPTER_LIST_KEY)) mChapterList = new ArrayList<>(aRestore.getParcelableArrayList(CHAPTER_LIST_KEY));
             if (aRestore.containsKey(CHAPTER_POSITION)) mChapterPosition = aRestore.getInt(CHAPTER_POSITION);
             mChapterList = new ArrayList<>(CurrentSelection.getChapters());
         }
