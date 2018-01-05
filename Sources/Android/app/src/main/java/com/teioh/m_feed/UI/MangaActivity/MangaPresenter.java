@@ -166,6 +166,7 @@ public class MangaPresenter implements IManga.ActivityPresenter
             if (mAdapter != null) mAdapter.notifyDataSetChanged();
             mManga = MangaDB.getInstance().getManga(mManga.getMangaURL()); //get updates manga object
 
+            setContStartReadingButton();
         }
         catch (Exception lException)
         {
@@ -278,6 +279,8 @@ public class MangaPresenter implements IManga.ActivityPresenter
                     mMangaMapper.setMangaViews(aManga);
                 }
                 mManga = aManga;
+
+                setContStartReadingButton();
 
                 String lInitTest = mManga.getDescription();
                 if (!lInitTest.isEmpty())
@@ -526,6 +529,14 @@ public class MangaPresenter implements IManga.ActivityPresenter
         }
 
         return lResult;
+    }
+
+    private void setContStartReadingButton()
+    {
+        String lReadingButtonText = (mManga.getRecentChapter() != null && !mManga.getRecentChapter().isEmpty()) ?
+                "Continue.." : "Start!";
+        mMangaMapper.setReadingButtonText(lReadingButtonText);
+
     }
 
 

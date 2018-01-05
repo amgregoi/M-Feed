@@ -135,6 +135,12 @@ public class MangaActivity extends AppCompatActivity implements IManga.ActivityV
         mActivityTitle.setText(aTitle);
     }
 
+    @Override
+    public void setReadingButtonText(String aText)
+    {
+        mContinueReadingButton.setText(aText);
+    }
+
     /***
      * This function initializes the toolbar.
      */

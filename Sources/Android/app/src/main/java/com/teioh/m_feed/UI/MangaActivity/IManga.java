@@ -20,6 +20,8 @@ public interface IManga
 
         void setActivityTitle(String title);
 
+        void setReadingButtonText(String aText);
+
         void setupToolBar();
 
         void setMangaViews(com.teioh.m_feed.Models.Manga manga);
